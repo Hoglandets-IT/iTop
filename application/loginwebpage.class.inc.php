@@ -110,6 +110,17 @@ class LoginWebPage extends NiceWebPage
 		return Branding::GetLoginFavIconAbsoluteUrl();
 	}
 
+	/**
+	 * Return the absolute URL for the favicon
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return Branding::GetLoginFavIconAbsoluteUrl();
+	}
+
 	public static function SetLoginFailedMessage($sMessage)
 	{
 		self::$m_sLoginFailedMessage = $sMessage;

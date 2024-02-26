@@ -61,6 +61,17 @@ class UnauthenticatedWebPage extends NiceWebPage
 	protected string $sPortalPublicFolderAbsUrl;
 
 	/**
+	 * Return the absolute URL for the favicon
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return Branding::GetLoginFavIconAbsoluteUrl();
+	}
+
+	/**
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
