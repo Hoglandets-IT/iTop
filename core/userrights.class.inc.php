@@ -1875,6 +1875,54 @@ class UserRights
 		{
 			$aProfiles = self::$m_oAddOn->ListProfiles($oUser);
 		}
+
+		// portal ignored profiles
+		if(ContextTag::Check(ContextTag::TAG_PORTAL) && isset($_ENV['PORTAL_ID'])){
+			$aProfiles = self::FilterIgnoredPortalProfiles($aProfiles);
+		}
+
+		return $aProfiles;
+	}
+
+	/**
+	 * Filter out profiles that are ignored by the `portal_ignored_profiles` configuration.
+	 *
+	 * Important: Administrator profile is always kept.
+	 *
+	 * N°2298 - switch on "portal user" profile when I go to portal even if I'm support agent
+	 *
+	 * @param $aProfiles array array of initial user profiles
+	 *
+	 * @return array array of user profiles without ignored ones
+	 */
+	private static function FilterIgnoredPortalProfiles(array $aProfiles) : array
+	{
+		// retrieve configuration
+		$aPortalIgnoredProfiles = MetaModel::GetModuleSetting('itop-portal-base', 'ignored_profiles');
+
+		// no ignored profiles configuration
+		if($aPortalIgnoredProfiles === null){
+			return $aProfiles;
+		}
+
+		// handle each configuration items...
+		foreach ($aPortalIgnoredProfiles as $aItem){
+
+			// test if portal instances covers current portal instance
+			$aPortalInstances = explode(',', $aItem['portal_instances_id']);
+			$aPortalInstances = array_map('trim', $aPortalInstances);
+			if(!in_array($_ENV['PORTAL_ID'], $aPortalInstances)){
+				continue;
+			}
+
+			// ignore configured profiles
+			$aIgnoredProfiles = explode(',', $aItem['profiles_to_ignore']);
+			$aIgnoredProfiles = array_map('trim', $aIgnoredProfiles);
+			$aProfiles = array_filter($aProfiles, function($sProfile) use ($aIgnoredProfiles) {
+				return $sProfile === 'Administrator' || !in_array(trim($sProfile), $aIgnoredProfiles);
+			});
+		}
+
 		return $aProfiles;
 	}
 
@@ -2033,6 +2081,7 @@ class UserRights
 	{
 		return self::$m_sLastLoginStatus;
 	}
+
 }
 
 /**
