@@ -153,18 +153,18 @@ class InlineImage extends DBObject
 				//
 				if (MetaModel::IsValidClass('Person'))
 				{
-					$aCallSpec = array($sClass, 'MapContextParam');
-					if (is_callable($aCallSpec))
+                    $aCallSpecPerson = array('Person', 'MapContextParam');
+					if (is_callable($aCallSpecPerson))
 					{
-						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
-						if (MetaModel::IsValidAttCode($sClass, $sAttCode))
+						$sAttCodePerson = call_user_func($aCallSpecPerson, 'org_id'); // Returns null when there is no mapping for this parameter
+						if (MetaModel::IsValidAttCode('Person', $sAttCodePerson))
 						{
 							// OK - try it
 							//
 							$oCurrentPerson = MetaModel::GetObject('Person', UserRights::GetContactId(), false);
 							if ($oCurrentPerson)
 							{
-						 		$this->Set('item_org_id', $oCurrentPerson->Get($sAttCode));
+						 		$this->Set('item_org_id', $oCurrentPerson->Get($sAttCodePerson));
 						 	}
 						}
 					}
