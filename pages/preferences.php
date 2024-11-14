@@ -871,7 +871,7 @@ try {
 					if ($iNewsroomDisplaySize > 20) {
 						$iNewsroomDisplaySize = 20;
 					}
-					$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', $iNewsroomDisplaySize);
+					$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', 7);
 					if ($iCurrentDisplaySize != $iNewsroomDisplaySize) {
 						// Save the preference only if it differs from the current (or default) value
 						appUserPreferences::SetPref('newsroom_display_size', $iNewsroomDisplaySize);
