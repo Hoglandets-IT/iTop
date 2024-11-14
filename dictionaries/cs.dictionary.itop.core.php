@@ -807,6 +807,8 @@ Je-li čas vynechán, bude nastaveno 00:00:00
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => 'Chybní příkaz, nebo příkaz skončil s chybou (např chybný název skriptu)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing/runtime)',
 	'Core:ExplainWTC:ElapsedTime' => 'Uplynulý čas ("%1$s")',

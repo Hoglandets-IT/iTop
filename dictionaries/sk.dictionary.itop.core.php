@@ -825,6 +825,8 @@ Ak je čas vynechaný, predvolený čas je 00:00:00
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => 'Nesprávny príkaz alebo príkaz skončil s chybami (napr. nesprávne meno skriptu)',
 	'Core:ExecProcess:Code255' => 'PHP chyba (pri parsovaní, alebo počas behu)',
 	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")~~',

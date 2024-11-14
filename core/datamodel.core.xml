@@ -360,7 +360,13 @@
     } else {
       foreach ($aRecipientsIds as $iRecipientId) {
         $oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this, $iRecipientId, $oTrigger->GetKey(), $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+        try {
           $oEvent->DBInsertNoReload();
+        } catch(CoreCannotSaveObjectException $e) {
+          ExceptionLog::LogException($e);
+          $oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this, $iRecipientId, $oTrigger->GetKey(), Dict::Format('Core:EventNotificationNewsroom:ErrorOnDBInsert'), Dict::Format('Core:EventNotificationNewsroom:ErrorNotificationNotSent'), $sUrl, $iObjectId, $sObjectClass);
+          $oEvent->DBInsertNoReload();
+        }
       }
     }
 

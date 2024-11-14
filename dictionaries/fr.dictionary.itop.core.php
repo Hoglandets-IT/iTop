@@ -835,6 +835,8 @@ Si l\'heure n\'est pas spécifiée, cela revient à 00:00:00 (minuit)
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification non envoyée',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'Une erreur est survenue lors de l\'envoi de la notification',
 	'Core:ExecProcess:Code1' => 'Mauvaise commande ou commande se finissant avec des erreurs (e.g. mauvais nom de script)',
 	'Core:ExecProcess:Code255' => 'Erreur PHP (analyse de fichier, ou exécution)',
 	'Core:ExplainWTC:ElapsedTime' => 'Temps écoulé (enregistré dans "%1$s")',

@@ -822,6 +822,8 @@ Operators:<br/>
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => '命令错误或命令执行出错 (例如错误的脚本名称)',
 	'Core:ExecProcess:Code255' => 'PHP错误 (解析, 或运行时)',
 	'Core:ExplainWTC:ElapsedTime' => '耗时 (储存为 "%1$s")',

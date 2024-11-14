@@ -801,6 +801,8 @@ Se o tempo for omitido, o padrão é 00:00:00
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => 'Comando incorreto ou comando terminou com erros (por exemplo, nome do script errado)',
 	'Core:ExecProcess:Code255' => 'Erro PHP (parsing, ou runtime)',
 	'Core:ExplainWTC:ElapsedTime' => 'Tempo decorrido (armazenado como \"%1$s\")',

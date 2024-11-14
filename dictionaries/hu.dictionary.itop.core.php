@@ -801,6 +801,8 @@ Ha az időpontot nem adja meg, akkor az alapértelmezett értéke 00:00:00
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$d óra %2$d perc %3$d mp',
 	'Core:Duration_Minutes_Seconds' => '%1$d perc %2$d mp',
 	'Core:Duration_Seconds' => '%1$d mp',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => 'Helytelen parancs vagy hibásan befejezett parancs (pl. helytelen szkriptnév)',
 	'Core:ExecProcess:Code255' => 'PHP hiba (parsing, vagy runtime)',
 	'Core:ExplainWTC:ElapsedTime' => 'Eltelt idő (tárolva mint %1$s)',

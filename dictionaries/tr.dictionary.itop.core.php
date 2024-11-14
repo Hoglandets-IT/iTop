@@ -806,6 +806,8 @@ If the time is omitted, it defaults to 00:00:00
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => 'Yanlış komut veya komut hataları ile bitti (örneğin, yanlış senaryo adı)',
 	'Core:ExecProcess:Code255' => 'PHP hatası (ayrıştırma veya çalışma zamanı)',
 	'Core:ExplainWTC:ElapsedTime' => 'Geçen zaman (\"%1$s\" olarak saklanır)',

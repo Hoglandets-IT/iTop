@@ -514,6 +514,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification',
 ));
 
 //

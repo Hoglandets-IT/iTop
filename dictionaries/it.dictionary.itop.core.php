@@ -802,6 +802,8 @@ Se \'oraè omessa, di default è 00:00:00
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$sec',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => 'Comando errato o comando finito con errori (es. errato nome dello script)',
 	'Core:ExecProcess:Code255' => 'Errore PHP (parsing o runtime)',
 	'Core:ExplainWTC:ElapsedTime' => 'Tempo trascorso (memorizzato come \"%1$s\")',

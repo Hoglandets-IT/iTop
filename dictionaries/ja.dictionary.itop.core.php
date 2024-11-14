@@ -812,6 +812,8 @@ Operators:<br/>
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"~~',
 	'Core:FriendlyName-Description' => 'Friendly name',
 	'Core:FriendlyName-Label' => 'Name',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:Placeholder:CannotBeResolved' => '(%1$s : cannot be resolved)~~',
 	'Core:SyncDataExchangeComment' => '(データ同期)',
 	'Core:SyncDataSourceAccessRestriction' => '管理者またはデータ·ソースに指定されたユーザーのみ、この操作を実行することができます。操作はキャンセルされました。',

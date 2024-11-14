@@ -803,6 +803,8 @@ Jeśli czas zostanie pominięty, domyślnie to 00:00:00
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => 'Niewłaściwe polecenie lub polecenie zakończone błędami (np. zła nazwa skryptu)',
 	'Core:ExecProcess:Code255' => 'Błąd PHP (parsowanie lub środowisko uruchomieniowe)',
 	'Core:ExplainWTC:ElapsedTime' => 'Czas, który upłynął (przechowywany jako "%1$s")',

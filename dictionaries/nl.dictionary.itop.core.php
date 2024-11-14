@@ -804,6 +804,8 @@ Hier wordt standaard \'00:00:00\' van gemaakt als er geen tijd wordt opgegeven.
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => 'Verkeerde commando of commando beëindigd met fouten (bijvoorbeeld verkeerde scriptnaam)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, of runtime)',
 	'Core:ExplainWTC:ElapsedTime' => 'Tijd voorbij (opgeslagen als "%1$s")',

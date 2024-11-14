@@ -808,6 +808,8 @@ Falls der Zeit-Wert weggelassen wird, ist der Standardwert 00:00:00
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Seconds' => '%1$ds',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Core:ExecProcess:Code1' => 'Falscher Befehl oder Befehl mit Fehler beendet (z.B. falscher Skriptname).',
 	'Core:ExecProcess:Code255' => 'PHP-Fehler (Parsing oder Laufzeit)',
 	'Core:ExplainWTC:ElapsedTime' => 'Abgelaufene Zeit (gespeichert als \"%1$s\")',
