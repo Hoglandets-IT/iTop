@@ -355,20 +355,30 @@
       }
     }
 
-		if ($bIsAsync === true) {
-		    AsyncSendNewsroom::AddToQueue($this->GetKey(), $oTrigger->GetKey(), $aRecipientsIds, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
-    } else {
-      foreach ($aRecipientsIds as $iRecipientId) {
-        $oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this, $iRecipientId, $oTrigger->GetKey(), $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
-        try {
-          $oEvent->DBInsertNoReload();
-        } catch(CoreCannotSaveObjectException $e) {
-          ExceptionLog::LogException($e);
-          $oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this, $iRecipientId, $oTrigger->GetKey(), Dict::Format('Core:EventNotificationNewsroom:ErrorOnDBInsert'), Dict::Format('Core:EventNotificationNewsroom:ErrorNotificationNotSent'), $sUrl, $iObjectId, $sObjectClass);
-          $oEvent->DBInsertNoReload();
-        }
-      }
-    }
+		try {
+			if ($bIsAsync === true) {
+				AsyncSendNewsroom::AddToQueue($this->GetKey(), $oTrigger->GetKey(), $aRecipientsIds, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+			} else {
+				foreach ($aRecipientsIds as $iRecipientId) {
+					$oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this, $iRecipientId, $oTrigger->GetKey(), $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+					$oEvent->DBInsertNoReload();
+				}
+			}
+		} catch (CoreCannotSaveObjectException $e) {
+			ExceptionLog::LogException($e);
+			foreach($aRecipientsIds as $iRecipientId) {
+				$oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this,
+					$iRecipientId,
+					$oTrigger->GetKey(),
+					Dict::S('Core:EventNotificationNewsroom:ErrorOnDBInsert'),
+					Dict::S('Core:EventNotificationNewsroom:ErrorNotificationNotSent'),
+					$sUrl,
+					$iObjectId,
+					$sObjectClass
+				);
+				$oEvent->DBInsertNoReload();
+			}
+		}
 
 		$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
 	}
