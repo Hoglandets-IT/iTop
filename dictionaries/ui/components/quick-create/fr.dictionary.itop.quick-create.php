@@ -14,6 +14,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Component:QuickCreate:Input:Placeholder' => 'Type d\'objet...',
 	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Ouvrir la création rapide',
 	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Vous n\'avez pas encore créé d\'objet',
+	'UI:Component:QuickCreate:MostPopular:Title' => 'Populaires',
 	'UI:Component:QuickCreate:Recents:Title' => 'Types récents',
 	'UI:Component:QuickCreate:Tooltip' => 'Création rapide de n\'importe quel objet',
 ]);

@@ -14,6 +14,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Component:QuickCreate:Input:Placeholder' => 'Seleziona il tipo di oggetto...',
 	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Apri la creazione rapida',
 	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Non hai ancora creato alcun oggetto',
+	'UI:Component:QuickCreate:MostPopular:Title' => 'Più popolari',
 	'UI:Component:QuickCreate:Recents:Title' => 'Recenti',
 	'UI:Component:QuickCreate:Tooltip' => 'Crea rapidamente qualsiasi tipo di oggetto',
 ]);

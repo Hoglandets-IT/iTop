@@ -14,6 +14,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Component:QuickCreate:Input:Placeholder' => 'Objektumtípus kiválasztása...',
 	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Gyors létrehozás megnyitása',
 	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Még nem hozott létre objektumot',
+	'UI:Component:QuickCreate:MostPopular:Title' => 'Legnépszerűbb',
 	'UI:Component:QuickCreate:Recents:Title' => 'Legutóbbiak',
 	'UI:Component:QuickCreate:Tooltip' => 'Bármilyen típusú objektum gyors létrehozása',
 ]);

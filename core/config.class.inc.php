@@ -1436,6 +1436,14 @@ class Config
 		'quick_create.max_history_results' => [
 			'type' => 'integer',
 			'description' => 'Max. number of elements in the history',
+			'default' => 5,
+			'value' => 5,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'quick_create.max_popular_results' => [
+			'type' => 'integer',
+			'description' => 'Max. number of elements in the popular',
 			'default' => 10,
 			'value' => 10,
 			'source_of_value' => '',

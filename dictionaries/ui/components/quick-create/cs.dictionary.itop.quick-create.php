@@ -15,5 +15,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create~~',
 	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet~~',
 	'UI:Component:QuickCreate:Recents:Title' => 'Recents~~',
+	'UI:Component:QuickCreate:MostPopular:Title' => 'Populární',
 	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',
 ]);

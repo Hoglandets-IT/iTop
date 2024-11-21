@@ -10,6 +10,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...',
 	'UI:Component:QuickCreate:Recents:Title' => 'Recents',
 	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet',
+	'UI:Component:QuickCreate:MostPopular:Title' => 'Most popular',
 	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled',
 	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create',
 ));

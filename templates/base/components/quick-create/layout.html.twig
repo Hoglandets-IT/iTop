@@ -48,6 +48,22 @@
 					</div>
 				{% endif %}
 			</div>
+            <div class="ibo-quick-create--compartment-title" data-role="ibo-quick-create--compartment-title">
+                <span>{{ 'UI:Component:QuickCreate:MostPopular:Title'|dict_s }}</span>
+            </div>
+            <div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-content">
+                {% if oUIBlock.GetPopularClasses()|length > 0 %}
+                    {% for aClass in oUIBlock.GetPopularClasses() %}
+                        <a href="{{ aClass.target_url }}" class="ibo-quick-create--compartment-element" data-role="ibo-quick-create--compartment-element" data-class-code="{{ aQuery.class }}">
+                            {% if aClass.icon_url is defined and aClass.icon_url is not null%}
+                                {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
+                                <img src="{{ aClass.icon_url}}" alt="" class="ibo-quick-create--compartment-element-image">
+                            {% endif %}
+                            {{ aClass.label_html|raw }}
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            </div>
 		</div>
 	</div>
 </div>
