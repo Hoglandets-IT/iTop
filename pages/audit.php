@@ -9,14 +9,22 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Text\Text;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\CSVPage;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+use Combodo\iTop\Form\Field\SelectObjectField;
 
 /**
  * Adds the context parameters to the audit rule query
@@ -97,11 +105,11 @@ function FilterByContext(DBSearch &$oFilter, ApplicationContext $oAppContext)
  * @throws \CoreException
  * @throws \OQLException
  */
-function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
+function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext, $aParams  = [])
 {
 	$oRule = MetaModel::GetObject('AuditRule', $iRuleId);
 	$sOql = $oRule->Get('query');
-	$oRuleFilter = DBObjectSearch::FromOQL($sOql);
+	$oRuleFilter = DBObjectSearch::FromOQL($sOql, $aParams);
 	$oRuleFilter->UpdateContextFromUser();
 	FilterByContext($oRuleFilter, $oAppContext); // Not needed since this filter is a subset of the definition filter, but may speedup things
 
@@ -143,6 +151,322 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 	return $oFilter;
 }
 
+function MakeSelectField($oPage, string $sLabel, string $sFieldName, string $sOql, string $sCurrentValue)
+{
+    $oSearch = DBObjectSearch::FromOQL($sOql);
+    $oAllowedValues = new DBObjectSet($oSearch);
+    $oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
+    $iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
+
+    $bIsAutocomplete = $oAllowedValues->CountExceeds($iMaxComboLength);
+    $sWrapperCssClass = $bIsAutocomplete ? 'ibo-input-select-autocomplete-wrapper' : 'ibo-input-select-wrapper';
+    $sHTMLValue = "<div class=\"field_input_zone\">";
+
+    // We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
+    if (!$bIsAutocomplete) {
+        // Discrete list of values, use a SELECT or RADIO buttons depending on the config
+        $sHelpText = ''; 
+        $aOptions = [];
+        $aOptions['value'] = "";
+        $aOptions['label'] = Dict::S('UI:SelectOne');
+
+        $oAllowedValues->Rewind();
+        $sClassAllowed = $oAllowedValues->GetClass();
+        $bAddingValue = false;
+
+        $aFieldsToLoad = [];
+
+        $aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
+        $sFormatAdditionalField = $aComplementAttributeSpec[0];
+        $aAdditionalField = $aComplementAttributeSpec[1];
+
+        if (count($aAdditionalField) > 0) {
+            $bAddingValue = true;
+            $aFieldsToLoad[$sClassAllowed] = $aAdditionalField;
+        }
+        $sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+        if (!empty($sObjectImageAttCode)) {
+            $aFieldsToLoad[$sClassAllowed][] = $sObjectImageAttCode;
+        }
+        $aFieldsToLoad[$sClassAllowed][] = 'friendlyname';
+        $oAllowedValues->OptimizeColumnLoad($aFieldsToLoad);
+
+        $oSelect = SelectUIBlockFactory::MakeForSelect($sFieldName, $sFieldName);
+        $oSelect->AddCSSClass('ibo-input-field-wrapper');
+        
+        while ($oChoiceItem = $oAllowedValues->Fetch()) {
+
+            $sOptionName = utils::HtmlEntityDecode($oChoiceItem->GetName());
+            
+            if ($bAddingValue) {
+                $aArguments = [];
+                foreach ($aAdditionalField as $sAdditionalField) {
+                    array_push($aArguments, $oAllowedValues->Get($sAdditionalField));
+                }
+                $sOptionName.='<br><i>'.utils::HtmlEntities(vsprintf($sFormatAdditionalField, $aArguments)).'</i>'; ;
+            }
+            if (!empty($sObjectImageAttCode)) {
+                // Try to retrieve image for contact
+                /** @var \ormDocument $oImage */
+                $oImage = $oAllowedValues->Get($sObjectImageAttCode);
+                if (!$oImage->IsEmpty()) {
+                    $sPicturepictureUrl = $oImage->GetDisplayURL($sClassAllowed, $oChoiceItem->GetKey(), $sObjectImageAttCode);
+                    $sOptionName.=' <span class="ibo-input-select--autocomplete-item-image" style="background-image: url('.$sPicturepictureUrl.');"></span>';
+                } else {
+                    $sInitials = utils::FormatInitialsForMedallion(utils::ToAcronym($oChoiceItem->Get('friendlyname')));
+                    $sOptionName.=' <span class="ibo-input-select--autocomplete-item-image" ">'.$sInitials.'</span>';
+                }
+            }
+            $oOption = SelectOptionUIBlockFactory::MakeForSelectOption($oChoiceItem->GetKey(), $sOptionName, ($sCurrentValue == $oChoiceItem->GetKey()));
+            $oSelect->AddOption($oOption);
+        }
+        $sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
+        
+        $sJsonOptions = str_replace("'", "\'", str_replace('\\', '\\\\', json_encode($aOptions)));
+        $oPage->add_ready_script(
+            <<<JS
+        let select$sFieldName = $('#$sFieldName').selectize({
+                    plugins:['custom_itop', 'selectize-plugin-a11y'],                  
+                });
+JS
+        );
+        return $oSelect;
+    }
+    else
+    {
+        // Too many choices, use an autocomplete
+        // Check that the given value is allowed
+        $oSearch = $oAllowedValues->GetFilter();
+        $oSearch->AddCondition('id', $sCurrentValue);
+        $oSet = new DBObjectSet($oSearch);
+        $sClass = $oSet->GetClass();
+        if ($oSet->Count() == 0)
+        {
+            $sCurrentValue = null;
+        }
+
+        if (is_null($sCurrentValue) || ($sCurrentValue == 0)) // Null values are displayed as ''
+        {
+            $sDisplayValue = '';
+        } else {
+            $sDisplayValue = MetaModel::GetObject($sClass, $sCurrentValue)->GetName();
+        }
+        $iMinChars = MetaModel::GetConfig()->Get('min_autocomplete_chars'); //@@@ $this->oAttDef->GetMinAutoCompleteChars();
+
+        // the input for the auto-complete
+        $sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_AUTOCOMPLETE;
+        $sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$sFieldName\" value=\"$sDisplayValue\" placeholder='...'/>";
+
+        // another hidden input to store & pass the object's Id
+        $sHTMLValue .= "<input type=\"hidden\" id=\"$sFieldName\" name=\"{$sFieldName}\" value=\"".utils::HtmlEntities($sCurrentValue)."\" />\n";
+
+         // Scripts to start the autocomplete and bind some events to it
+        $oPage->add_ready_script(
+            <<<JS
+	   
+		var hasFocus = 0;
+		var cache = {};
+		$('#label_$sFieldName').data('selected_value', $('#label_$sFieldName').val());
+		$('#label_$sFieldName').attr('title', $('#label_$sFieldName').val());
+		$('#label_$sFieldName').autocomplete({
+				source: function (request, response) {
+					term = request.term.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
+
+					if (term in cache) {
+						response(cache[term]);
+						return;
+					}
+					if (term.indexOf(this.previous) >= 0 && cache[this.previous] != null && cache[this.previous].length < 120) {
+						//we have already all the possibility in cache
+						var data = [];
+						$.each(cache[this.previous], function (key, value) {
+							if (value.label.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "").indexOf(term) >= 0) {
+								data.push(value);
+							}
+						});
+						cache[term] = data;
+						response(data);
+					} else {
+						$.post({
+							url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+							dataType: "json",
+							data: {
+								q: request.term,
+								operation: 'ac_extkey',
+								sTargetClass: '$sClass',
+								sFilter: '$sOql',
+								bSearchMode: true,
+								sOutputFormat: 'json',
+								json: function () {
+									return '';
+								}
+							},
+							success: function (data) {
+								cache[term] = data;
+								response(data);
+							}
+						});
+
+					}
+				},
+				autoFocus: true,
+				minLength: $iMinChars,
+				focus: function (event, ui) {
+					return false;
+				},
+				select: function (event, ui) {
+					$('#$sFieldName').val(ui.item.value);
+					let labelValue = $('<div>').html(ui.item.label).text();
+					$('#label_$sFieldName').val(labelValue);
+					$('#label_$sFieldName').data('selected_value', labelValue);
+					$('#label_$sFieldName').attr('title',labelValue);
+					return false;
+				},
+				open: function (event, ui) {
+					// dialog tries to move above every .ui-front with _moveToTop(), we want to be above our parent dialog
+					var dialog = $(this).closest('.ui-dialog');
+					if (dialog.length > 0) {
+						$('.ui-autocomplete.ui-front').css('z-index', parseInt(dialog.css("z-index"))+1);
+					}
+				   // UpdateDropdownPosition = function (oControlElem, oDropdownElem) {
+                        // First fix width to ensure it's not too long
+                        const fControlWidth = $(this).outerWidth();
+                        $('.ui-autocomplete.selectize-dropdown:visible').css('width', fControlWidth);
+                
+                        // Then, fix height / position to ensure it's within the viewport
+                        const fWindowHeight = window.innerHeight;
+                
+                        const fControlTopY = $(this).offset().top;
+                        const fControlHeight = $(this).outerHeight();
+                
+                        const fDropdownTopY = $('.ui-autocomplete.selectize-dropdown:visible').offset().top;
+                        // This one is "let" as it might be updated if necessary
+                        let fDropdownHeight = $('.ui-autocomplete.selectize-dropdown:visible').outerHeight();
+                        const fDropdownBottomY = fDropdownTopY + fDropdownHeight;
+                
+                        if (fDropdownBottomY > fWindowHeight) {
+                            // Set dropdown max-height to 1/3 of the screen, this way we are sure the dropdown will fit in either the top / bottom half of the screen
+                            $('.ui-autocomplete.selectize-dropdown:visible').css('max-height', '30vh');
+                            fDropdownHeight = $('.ui-autocomplete.selectize-dropdown:visible').outerHeight();
+                
+                            // Position dropdown above input if not enough space on the bottom part of the screen
+                            if ((fDropdownTopY / fWindowHeight) > 0.6) {
+                                $('.ui-autocomplete.selectize-dropdown:visible').css('top', fDropdownTopY - fDropdownHeight - fControlHeight);
+                            }
+                        }
+                 //   this.ManageScroll = function () {
+                        if ($('#label_$sFieldName').scrollParent()[0].tagName != 'HTML') {
+                            $('#label_$sFieldName').scrollParent().on(['scroll.$sFieldName', 'resize.$sFieldName'].join(" "), function () {
+                                setTimeout(function () {
+                                    me.ManageScrollInElement();
+                                }, 50);
+                            });
+                            if ($('#label_$sFieldName').scrollParent().scrollParent()[0].tagName != 'HTML') {
+                                $('#label_$sFieldName').scrollParent().scrollParent().on(['scroll.$sFieldName', 'resize.$sFieldName'].join(" "), function () {
+                                    setTimeout(function () {
+                                        me.ManageScrollInElement();
+                                    }, 50);
+                                });
+                            }
+                        }
+				},
+				close: function (event, ui) {
+                    if ($('#label_$sFieldName').scrollParent()[0].tagName != 'HTML') {
+                        $('#label_$sFieldName').scrollParent().off('scroll.$sFieldName');
+                        $('#label_$sFieldName').scrollParent().off('resize.$sFieldName');
+                        if ($('#label_$sFieldName').scrollParent().scrollParent()[0].tagName != 'HTML') {
+                            $('#label_$sFieldName').scrollParent().scrollParent().off('scroll.$sFieldName');
+                            $('#label_$sFieldName').scrollParent().scrollParent().off('resize.$sFieldName');
+                        }
+                    }
+				}
+			})
+		.autocomplete("instance")._renderItem = function (ul, item) {
+			$(ul).addClass('selectize-dropdown');
+			let term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
+			let val = '';
+			if (item.initials != undefined) {
+				if (item.picture_url != undefined) {
+					val = '<span class="ibo-input-select--autocomplete-item-image" style="background-image: url('+item.picture_url+');">'+item.initials+'</span>';
+				} else {
+					val = '<span class="ibo-input-select--autocomplete-item-image");">'+item.initials+'</span>';
+				}
+			}
+			val = val+'<div class="ibo-input-select--autocomplete-item-txt" title="'+item.label+'">';
+			if (item.obsolescence_flag == '1') {
+				val = val+' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>';
+			}
+			let labelValue = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+			val = val+labelValue;
+			if (item.additional_field != undefined) {
+				val = val+'<br><i>'+item.additional_field+'</i>';
+			}
+			val = val+'</div>';
+			return $("<li>")
+				.append("<div data-selectable=\"\" class=\"ibo-input-select--autocomplete-item\">"+val+"</div>")
+				.appendTo(ul);
+		};
+
+		$('#label_$sFieldName').on('focus', function () {
+			// track whether the field has focus, we shouldn't process any
+			// results if the field no longer has focus
+			hasFocus++;
+		}).on('blur', function () {
+			hasFocus = 0;
+			if ($('#label_$sFieldName').val().length == 0) {
+				eval('oACWidget_$sFieldName').Clear();
+			} else {
+				$('#label_$sFieldName').val($('#label_$sFieldName').data('selected_value'));
+			}
+		}).on('click',
+			function () {
+				hasFocus++;
+				$('#label_$sFieldName').autocomplete("search");
+			}).on('keyup',function () {
+			if ($('#label_$sFieldName').val().length == 0) {
+				if (!$('#label_$sFieldName').parent().find('.ibo-input-select--action-button--clear').hasClass('ibo-is-hidden')) {
+					$('#label_$sFieldName').parent().find('.ibo-input-select--action-button--clear').addClass('ibo-is-hidden');
+				}
+			} else {
+				if ($('#label_$sFieldName').parent().find('.ibo-input-select--action-button--clear').hasClass('ibo-is-hidden')) {
+					$('#label_$sFieldName').parent().find('.ibo-input-select--action-button--clear').removeClass('ibo-is-hidden');
+				}
+			}
+		});
+
+		var iPaddingRight = $('#$sFieldName').parent().find('.ibo-input-select--action-buttons')[0].childElementCount * 20+15;
+		$('#$sFieldName').parent().find('.ibo-input-select').css('padding-right', iPaddingRight);
+        
+        
+        
+		if ($('#ac_dlg_{$sFieldName}').length == 0)
+		{
+			$('body').append('<div id="ac_dlg_{$sFieldName}"></div>');
+		}
+JS
+        );
+        $sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
+        $sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--clear ibo-is-hidden\"  id=\"mini_clear_{$sFieldName}\" onClick=\"$('#$sFieldName').val('');$('#label_$sFieldName').val('');		$('#label_$sFieldName').data('selected_value', '');\" data-tooltip-content='".Dict::S('UI:Button:Clear')."'><i class=\"fas fa-times\"></i></a>";
+    }
+ /*   if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false) {
+        $sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\" data-tooltip-content='".Dict::S('UI:Button:SearchInHierarchy')."'><i class=\"fas fa-sitemap\"></i></a>";
+        $oPage->add_ready_script(
+            <<<JS
+			if ($('#ac_tree_{$sFieldName}').length == 0)
+			{
+				$('body').append('<div id="ac_tree_{$sFieldName}"></div>');
+			}		
+JS
+        );
+    }
+    if ($oAllowedValues->CountExceeds($iMaxComboLength)) {
+        $sHTMLValue .= "	<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\" data-tooltip-content='".Dict::S('UI:Button:Search')."'><i class=\"fas fa-search\"></i></a>";
+    }*/
+    $sHTMLValue .= "</div>";
+    $sHTMLValue .= "</div>";
+
+    return new Html( $sHTMLValue);
+}
 try
 {
 	require_once('../approot.inc.php');
@@ -152,6 +476,11 @@ try
 
 	$bSelectionAuditRulesByDefault = utils::GetConfig()->Get('audit.enable_selection_landing_page');
 	$operation = utils::ReadParam('operation', $bSelectionAuditRulesByDefault ? 'selection' : 'audit');
+    $aAuditFilter = utils::GetConfig()->Get('audit.filter');
+    if ($aAuditFilter == null){
+        $aAuditFilter = [];
+    }
+
 	$oAppContext = new ApplicationContext();
 	
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
@@ -267,7 +596,38 @@ try
 				$oP->AddUiBlock($oButton);
 			}
 			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:Interactive:Selection:Title')));
-			$oP->AddUiBlock(new Text(Dict::S('UI:Audit:Interactive:Selection:SubTitle')));
+
+            if($aAuditFilter !=[] ){
+
+                $oP->AddUiBlock(new Text(Dict::S('UI:Audit:Interactive:Selection:SubTitleParams')));
+                foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
+
+                    $oBlock = FieldUIBlockFactory::MakeStandard($aFieldParam['label']);
+                    $oBlock->SetAttLabel($aFieldParam['label'])
+                        ->AddDataAttribute("input-id", $sFieldName)
+                        ->AddDataAttribute("input-type", 'input-type');
+                    $oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content", "ibo-input-field-wrapper"]);
+
+                    $sCurrentValue = utils::ReadParam($sFieldName, '');
+
+                    if (array_key_exists('oql', $aFieldParam) && utils::IsNotNullOrEmptyString($aFieldParam['oql'])) {
+                        $oValue->AddSubBlock(MakeSelectField( $oP, $aFieldParam['label'],  $sFieldName,  $aFieldParam['oql'],  $sCurrentValue));
+                    } else {//this is a list of values
+                        $aListValues = $aFieldParam['values'];
+                        $oSelect = SelectUIBlockFactory::MakeForSelect($sFieldName, $sFieldName);
+                        $oSelect->AddCSSClass('ibo-input-field-wrapper');
+
+                        foreach($aListValues as $sKey => $sValue) {
+                            $oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sKey, $sValue, ($sCurrentValue == $sKey)));
+                        }
+
+                        $oValue->AddSubBlock($oSelect);
+                    }
+                    $oBlock->AddSubBlock($oValue);
+                    $oP->AddUiBlock($oBlock);
+                 }
+            }
+            $oP->AddUiBlock(new Text(Dict::S('UI:Audit:Interactive:Selection:SubTitle')));
 
 			// Header block to select all audit categories
 			$oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
@@ -278,11 +638,23 @@ try
 			$oDashboardColumn = new DashboardColumn(false, true);
 			$oDashboardRow->AddDashboardColumn($oDashboardColumn);
 			$oAllCategoriesDashlet = new DashletContainer();
+
+            $sDomainUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit";
+            if($aAuditFilter !=[] ) {
+                //modif URLLink In order to send params
+                $sGetParams = '';
+                foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
+                    $sGetParams .= $sFieldName."=$('[name=$sFieldName]').val();";
+                    $sDomainUrl .= "&".$sFieldName."='+$sFieldName+'";
+                }
+                $sDomainUrl = 'javascript:'.$sGetParams.' window.location = \''.$sDomainUrl.'\'';
+            }
+
 			$oAllCategoriesDashlet
 				->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge'])
 				->AddSubBlock(DashletFactory::MakeForDashletBadge(
 					utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-audit.svg',
-					utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit",
+                    $sDomainUrl,
 					$iCategoryCount,
 					Dict::S('UI:Audit:Interactive:Selection:BadgeAll')
 				));
@@ -311,6 +683,17 @@ try
 					$sIconUrl = $oImage->GetDisplayURL(get_class($oAuditDomain), $oAuditDomain->GetKey(), 'icon');
 				}
 				$iCategoryCount = $oAuditDomain->Get('categories_list')->Count();
+
+                if($aAuditFilter !=[] ) {
+                     //modif URLLink In order to send params
+                    $sGetParams = '';
+                    foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
+                        $sGetParams .= $sFieldName."=$('[name=$sFieldName]').val();";
+                        $sDomainUrl .= "&".$sFieldName."=$sFieldName'+'";
+                    }
+                    $sDomainUrl = 'javascript:'.$sGetParams.' window.location = \''.$sDomainUrl.'\'';
+                }
+
 				$oDomainBlock = DashletFactory::MakeForDashletBadge($sIconUrl, $sDomainUrl, $iCategoryCount, $oAuditDomain->Get('name'));
 				$oDomainDashlet = new DashletContainer();
 				$oDomainDashlet->AddSubBlock($oDomainBlock)->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge']);
@@ -355,6 +738,32 @@ try
 			$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral("./audit.php?".$oAppContext->GetForLink(), Dict::S('UI:Audit:Interactive:Button:Back'), 'fas fa-chevron-left');
 			$oP->AddUiBlock($oBackButton);
 			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle));
+
+
+            $aFilterParams = [];
+            if($aAuditFilter !=[] ){
+                $sFilterText = Dict::S('UI:Audit:Interactive:FilterList') .'<dd/><ul>';
+
+                foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
+                    $sCurrentValue = utils::ReadParam($sFieldName, '');
+                    $aFilterParams[$sFieldName] = $sCurrentValue;
+                    IssueLog::Error($sFieldName.':'.$sCurrentValue);
+                    $sName = '';
+                    if (array_key_exists('oql', $aFieldParam) && utils::IsNotNullOrEmptyString($aFieldParam['oql'])) {
+                         $oSearch = new DBObjectSet(DBObjectSearch::FromOQL($aFieldParam['oql']));
+                         $sClass = $oSearch->GetClass();
+                        $oObject = MetaModel::GetObject($sClass, $sCurrentValue);
+                        $sName = $oObject->GetName();
+                    } else {//this is a list of values
+                        $sName = $aFieldParam['values'][$sCurrentValue];
+                    }
+
+                    $sFilterText .= '<li> <div class="fas fa-minus"></div>  '.$aFieldParam['label'].': '.$sName.'</li>';
+                }
+                $oP->AddUiBlock(new Html($sFilterText.'</ul></br>'));
+            }
+
+
 			$oP->AddUiBlock(new Text($sSubTitle));
 
 			$oTotalBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-audit.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsAudited'));
@@ -405,7 +814,8 @@ try
 				$aResults = array();
 				try {
 					$iCount = 0;
-					$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+                    IssueLog::Error('$aFilterParams'.json_encode($aFilterParams));
+					$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'),$aFilterParams);
 					$oDefinitionFilter->UpdateContextFromUser();
 					FilterByContext($oDefinitionFilter, $oAppContext);
 
@@ -415,10 +825,16 @@ try
 							$oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
 						}
 					}
+                    IssueLog::Error('Filtre: '.$oDefinitionFilter->ToOQL(true));
 					$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 					$iCount = $oDefinitionSet->Count();
 					$oRulesFilter = new DBObjectSearch('AuditRule');
 					$oRulesFilter->AddCondition('category_id', $oAuditCategory->GetKey(), '=');
+                    foreach ($aFilterParams as $sFieldName => $sCurrentValue) {
+                        $oRulesFilter->AddInternalParam($sFieldName, $sCurrentValue);
+                    }
+
+                    IssueLog::Error('2Filtre: '.$oRulesFilter->ToOQL(true));
 					$oRulesSet = new DBObjectSet($oRulesFilter);
 					while ($oAuditRule = $oRulesSet->fetch()) {
 						$aRow = array();
@@ -430,8 +846,9 @@ try
 							$aRow['class'] = $oAuditCategory->GetReportColor($iCount, 0);
 						} else {
 							try {
-								$oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext);
-							$aErrors = $oFilter->SelectAttributeToArray('id');
+								$oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext, $aFilterParams);
+                                IssueLog::Error('3Filtre: '.$oFilter->ToOQL(true));
+							    $aErrors = $oFilter->SelectAttributeToArray('id');
 								$iErrorsCount = count($aErrors);
 								foreach ($aErrors as $aErrorRow) {
 									$aObjectsWithErrors[$aErrorRow['id']] = true;
