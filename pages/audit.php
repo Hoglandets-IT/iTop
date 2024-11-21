@@ -111,6 +111,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext, $aParam
 	$oRule = MetaModel::GetObject('AuditRule', $iRuleId);
 	$sOql = $oRule->Get('query');
 	$oRuleFilter = DBObjectSearch::FromOQL($sOql, $aParams);
+
 	$oRuleFilter->UpdateContextFromUser();
 	FilterByContext($oRuleFilter, $oAppContext); // Not needed since this filter is a subset of the definition filter, but may speedup things
 
@@ -131,6 +132,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext, $aParam
 		}
 		/** @var \DBObjectSearch $oFilter */
 		$oFilter = $oDefinitionFilter->DeepClone();
+
 		if (count($aValidIds) > 0)
 		{
 			$aInDefSet = array();
@@ -499,19 +501,32 @@ try
 		// Therefore we don't use the standard "search_oql" operation of UI.php to display the CSV
 		$iCategory = utils::ReadParam('category', '');
 		$iRuleIndex = utils::ReadParam('rule', 0);
-	
-		$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
-		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+
+        $aFilterParams = [];
+        $sAddingParams = '';
+        if($aAuditFilter !=[] ){
+            foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
+                $sCurrentValue = utils::ReadParam($sFieldName, '');
+                $sAddingParams .= "&$sFieldName=$sCurrentValue";
+                $aFilterParams[$sFieldName] = $sCurrentValue;
+            }
+        }
+
+        $oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
+		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'),$aFilterParams);
 		$oDefinitionFilter->UpdateContextFromUser();
 		FilterByContext($oDefinitionFilter, $oAppContext);
 		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-		$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
+		$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext, $aFilterParams);
 		$oErrorObjectSet = new CMDBObjectSet($oFilter);
 		$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
 		$sFileName = utils::ReadParam('filename', null, true, 'string');
 		$bAdvanced = utils::ReadParam('advanced', false);
 		$sAdvanced = $bAdvanced ? '&advanced=1' : '';
-		
+
+
+
+
 		if ($sFileName != null)
 		{
 			$oP = new CSVPage("iTop - Export");
@@ -556,7 +571,7 @@ try
 			$oP->p("</div>");
 			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
 			$oP->add_ready_script(" $('#1>textarea').height(400);"); // adjust the size of the block			
-			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
+			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams;
 			$oDownloadButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
 
 			$oP->add_ready_script("$('a[href*=\"webservices/export.php?expression=\"]').attr('href', '".$sExportUrl."&filename=audit.csv".$sAdvanced."');");
@@ -569,12 +584,34 @@ try
 			$iCategory = utils::ReadParam('category', '');
 			$iRuleIndex = utils::ReadParam('rule', 0);
 
+            $aFilterParams = [];
+            $sAddingParams = '';
+            $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:FilterList'));
+            if($aAuditFilter !=[] ){
+                foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
+                    $sCurrentValue = utils::ReadParam($sFieldName, '');
+                    $sAddingParams .= "&$sFieldName=$sCurrentValue";
+                    $aFilterParams[$sFieldName] = $sCurrentValue;
+                    $sName = '';
+                    if (array_key_exists('oql', $aFieldParam) && utils::IsNotNullOrEmptyString($aFieldParam['oql'])) {
+                        $oSearch = new DBObjectSet(DBObjectSearch::FromOQL($aFieldParam['oql']));
+                        $sClass = $oSearch->GetClass();
+                        $oObject = MetaModel::GetObject($sClass, $sCurrentValue);
+                        $sName = $oObject->GetName();
+                    } else {//this is a list of values
+                        $sName = $aFieldParam['values'][$sCurrentValue];
+                    }
+                    $sFilterText .= '<li>'.$aFieldParam['label'].': '.$sName.'</li>';
+                }
+                $oPanel->AddSubBlock(new Html($sFilterText.'</ul>'));
+            }
+
 			$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
-			$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+			$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'), $aFilterParams);
 			$oDefinitionFilter->UpdateContextFromUser();
 			FilterByContext($oDefinitionFilter, $oAppContext);
 			$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-			$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
+			$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext,$aFilterParams);
 			$oErrorObjectSet = new CMDBObjectSet($oFilter);
 			$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
 			$sDescription = get_class($oAuditRule).": ".$oAuditRule->GetName();
@@ -583,12 +620,16 @@ try
 			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:Interactive:Button:Back'), "./audit.php?".$oAppContext->GetForLink());
 			$oP->AddUiBlock($oBackButton);
 			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
+            if($aAuditFilter !=[] ){
+                $oP->AddUiBlock($oPanel);
+                $oP->AddUiBlock(new Html('<br>'));
+            }
 			$sBlockId = 'audit_errors';
 			$oP->p("<div id=\"$sBlockId\">");
 			$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list', array('show_obsolete_data' => true));
 			$oBlock->Display($oP, 1);
 			$oP->p("</div>");
-			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
+			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams;
 			$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
 			break;
 
@@ -703,7 +744,6 @@ try
 				$oDomainDashlet->AddSubBlock($oDomainBlock)->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge']);
 				$oDashboardRow->GetSubBlocks()[$iDomainCnt % 3]->AddUIBlock($oDomainDashlet); // ;
 				$iDomainCnt++;
-                IssueLog::Error('domaine numero'.$iDomainCnt);
 			}
             $oP->AddUiBlock($oDashboardRow);
 
@@ -746,14 +786,15 @@ try
 
 
             $aFilterParams = [];
+            $sAddingParams = '';
             if($aAuditFilter !=[] ){
                 $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:FilterList'));
                 $oP->AddUiBlock($oPanel);
 
                 foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
                     $sCurrentValue = utils::ReadParam($sFieldName, '');
+                    $sAddingParams .= "&$sFieldName=$sCurrentValue";
                     $aFilterParams[$sFieldName] = $sCurrentValue;
-                    IssueLog::Error($sFieldName.':'.$sCurrentValue);
                     $sName = '';
                     if (array_key_exists('oql', $aFieldParam) && utils::IsNotNullOrEmptyString($aFieldParam['oql'])) {
                          $oSearch = new DBObjectSet(DBObjectSearch::FromOQL($aFieldParam['oql']));
@@ -763,12 +804,11 @@ try
                     } else {//this is a list of values
                         $sName = $aFieldParam['values'][$sCurrentValue];
                     }
-
                     $sFilterText .= '<li>'.$aFieldParam['label'].': '.$sName.'</li>';
                 }
                 $oPanel->AddSubBlock(new Html($sFilterText.'</ul>'));
             }
-        $oP->AddUiBlock(new Html('<br>'));
+            $oP->AddUiBlock(new Html('<br>'));
 
 			$oP->AddUiBlock(new Text($sSubTitle));
 
@@ -815,12 +855,11 @@ try
 				// Add a button in the above toolbar
 				$sAuditCategoryClass = get_class($oAuditCategory);
 				if (UserRights::IsActionAllowed($sAuditCategoryClass, UR_ACTION_READ)) {
-					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-wrench fa-lg', Dict::S('UI:Audit:ViewRules'), ApplicationContext::MakeObjectUrl($sAuditCategoryClass, $oAuditCategory->GetKey()).'&#ObjectProperties=tab_ClassAuditCategoryAttributerules_list'),);
+					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-wrench fa-lg', Dict::S('UI:Audit:ViewRules'), ApplicationContext::MakeObjectUrl($sAuditCategoryClass, $oAuditCategory->GetKey()).$sAddingParams.'&#ObjectProperties=tab_ClassAuditCategoryAttributerules_list'),);
 				}
 				$aResults = array();
 				try {
 					$iCount = 0;
-                    IssueLog::Error('$aFilterParams'.json_encode($aFilterParams));
 					$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'),$aFilterParams);
 					$oDefinitionFilter->UpdateContextFromUser();
 					FilterByContext($oDefinitionFilter, $oAppContext);
@@ -831,7 +870,6 @@ try
 							$oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
 						}
 					}
-                    IssueLog::Error('Filtre: '.$oDefinitionFilter->ToOQL(true));
 					$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 					$iCount = $oDefinitionSet->Count();
 					$oRulesFilter = new DBObjectSearch('AuditRule');
@@ -840,26 +878,24 @@ try
                         $oRulesFilter->AddInternalParam($sFieldName, $sCurrentValue);
                     }
 
-                    IssueLog::Error('2Filtre: '.$oRulesFilter->ToOQL(true));
 					$oRulesSet = new DBObjectSet($oRulesFilter);
 					while ($oAuditRule = $oRulesSet->fetch()) {
 						$aRow = array();
 						$aRow['description'] = $oAuditRule->GetName();
 						if ($iCount == 0) {
 							// nothing to check, really !
-							$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."\">0</a>";
+							$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams."\">0</a>";
 							$aRow['percent_ok'] = '100.00';
 							$aRow['class'] = $oAuditCategory->GetReportColor($iCount, 0);
 						} else {
 							try {
 								$oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext, $aFilterParams);
-                                IssueLog::Error('3Filtre: '.$oFilter->ToOQL(true));
 							    $aErrors = $oFilter->SelectAttributeToArray('id');
 								$iErrorsCount = count($aErrors);
 								foreach ($aErrors as $aErrorRow) {
 									$aObjectsWithErrors[$aErrorRow['id']] = true;
 								}
-								$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\"><img src=\"" . utils::GetAbsoluteUrlAppRoot() . "images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>";
+								$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams."&".$oAppContext->GetForLink()."\"><img src=\"" . utils::GetAbsoluteUrlAppRoot() . "images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>";
 								$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
 								$aRow['class'] = $oAuditCategory->GetReportColor($iCount, $iErrorsCount);
 							}
