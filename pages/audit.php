@@ -15,6 +15,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Text\Text;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
@@ -414,7 +415,9 @@ JS
 		}).on('blur', function () {
 			hasFocus = 0;
 			if ($('#label_$sFieldName').val().length == 0) {
-				eval('oACWidget_$sFieldName').Clear();
+                $('#$sFieldName').val('');
+                $('#label_$sFieldName').val('');
+                $('#label_$sFieldName').data('selected_value', '');
 			} else {
 				$('#label_$sFieldName').val($('#label_$sFieldName').data('selected_value'));
 			}
@@ -598,8 +601,8 @@ try
 			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:Interactive:Selection:Title')));
 
             if($aAuditFilter !=[] ){
-
-                $oP->AddUiBlock(new Text(Dict::S('UI:Audit:Interactive:Selection:SubTitleParams')));
+                $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:Selection:SubTitleParams'));
+                $oP->AddUiBlock($oPanel);
                 foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
 
                     $oBlock = FieldUIBlockFactory::MakeStandard($aFieldParam['label']);
@@ -624,10 +627,11 @@ try
                         $oValue->AddSubBlock($oSelect);
                     }
                     $oBlock->AddSubBlock($oValue);
-                    $oP->AddUiBlock($oBlock);
+                    $oPanel->AddSubBlock($oBlock);
                  }
+
             }
-            $oP->AddUiBlock(new Text(Dict::S('UI:Audit:Interactive:Selection:SubTitle')));
+            $oP->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Audit:Interactive:Selection:SubTitle'),2));
 
 			// Header block to select all audit categories
 			$oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
@@ -689,7 +693,7 @@ try
                     $sGetParams = '';
                     foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
                         $sGetParams .= $sFieldName."=$('[name=$sFieldName]').val();";
-                        $sDomainUrl .= "&".$sFieldName."=$sFieldName'+'";
+                        $sDomainUrl .= "&".$sFieldName."='+$sFieldName+'";
                     }
                     $sDomainUrl = 'javascript:'.$sGetParams.' window.location = \''.$sDomainUrl.'\'';
                 }
@@ -699,9 +703,10 @@ try
 				$oDomainDashlet->AddSubBlock($oDomainBlock)->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge']);
 				$oDashboardRow->GetSubBlocks()[$iDomainCnt % 3]->AddUIBlock($oDomainDashlet); // ;
 				$iDomainCnt++;
+                IssueLog::Error('domaine numero'.$iDomainCnt);
 			}
+            $oP->AddUiBlock($oDashboardRow);
 
-			$oP->AddUiBlock($oDashboardRow);
 			break;
 
 		case 'audit':
@@ -742,7 +747,8 @@ try
 
             $aFilterParams = [];
             if($aAuditFilter !=[] ){
-                $sFilterText = Dict::S('UI:Audit:Interactive:FilterList') .'<dd/><ul>';
+                $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:FilterList'));
+                $oP->AddUiBlock($oPanel);
 
                 foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
                     $sCurrentValue = utils::ReadParam($sFieldName, '');
@@ -758,11 +764,11 @@ try
                         $sName = $aFieldParam['values'][$sCurrentValue];
                     }
 
-                    $sFilterText .= '<li> <div class="fas fa-minus"></div>  '.$aFieldParam['label'].': '.$sName.'</li>';
+                    $sFilterText .= '<li>'.$aFieldParam['label'].': '.$sName.'</li>';
                 }
-                $oP->AddUiBlock(new Html($sFilterText.'</ul></br>'));
+                $oPanel->AddSubBlock(new Html($sFilterText.'</ul>'));
             }
-
+        $oP->AddUiBlock(new Html('<br>'));
 
 			$oP->AddUiBlock(new Text($sSubTitle));
 

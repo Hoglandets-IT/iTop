@@ -780,6 +780,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Audit:Dashboard:ObjectsInError'            => 'Objects in errors',
 	'UI:Audit:Dashboard:ObjectsValidated'          => 'Objects validated',
 	'UI:Audit:AuditCategory:Subtitle'              => '%1$s errors ouf of %2$s - %3$s%% of the object are valid',
+    'UI:Audit:Interactive:Selection:SubTitleParams'  => 'Please select the following parameters: ',
+    'UI:Audit:Interactive:FilterList'  => 'With following parameters: ',
 
 
 	'UI:RunQuery:Title'                => ITOP_APPLICATION_SHORT.' - OQL Query Evaluation',
