@@ -10,7 +10,7 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
-        <category>bizmodel,searchable,requestmgmt</category>
+        <category>bizmodel,searchable,requestmgmt,popular</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>ticket_request</db_table>

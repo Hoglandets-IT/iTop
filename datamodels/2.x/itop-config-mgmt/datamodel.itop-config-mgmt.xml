@@ -4,7 +4,7 @@
     <class id="FunctionalCI" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
-        <category>bizmodel,searchable</category>
+        <category>bizmodel,searchable,popular</category>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>functionalci</db_table>

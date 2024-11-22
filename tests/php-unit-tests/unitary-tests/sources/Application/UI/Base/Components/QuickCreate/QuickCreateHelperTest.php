@@ -13,11 +13,11 @@ class QuickCreateHelperTest extends ItopDataTestCase
 	 */
 	public function testNoDuplicateInPopularAndLast()
 	{
-		$sPopularClass = 'Server';
+		$sPopularClass = 'UserRequest';
 		$aClasses = ['ApplicationSolution', 'BusinessProcess', 'DatabaseSchema', 'MiddlewareInstance', 'Enclosure'];
-		$aPopularClassesInitial = QuickCreateHelper::GetPopularClasses();
+		$aPopularClassesInitial = QuickCreateHelper::GetPopularClasses(); // Should contain UserRequest
 		QuickCreateHelper::AddClassToHistory($sPopularClass);
-		$aPopularClassNoParam = QuickCreateHelper::GetPopularClasses();
+		$aPopularClassNoParam = QuickCreateHelper::GetPopularClasses(); // UserRequest should now be in Recents and no longer in Popular
 
 		for($iIdx = 0; $iIdx < count($aPopularClassNoParam); $iIdx++)
 		{
@@ -36,9 +36,9 @@ class QuickCreateHelperTest extends ItopDataTestCase
 
 		foreach($aClasses as $sClass)
 		{
-			QuickCreateHelper::AddClassToHistory($sClass);
+			QuickCreateHelper::AddClassToHistory($sClass); // Creating as many classes as needed for UserRequest to no longer be in the Recent classes
 		}
-		$aPopularClassesFinal = QuickCreateHelper::GetPopularClasses();
+		$aPopularClassesFinal = QuickCreateHelper::GetPopularClasses(); // Should contain UserRequest
 		$this->assertEquals($aPopularClassesInitial, $aPopularClassesFinal);
 	}
 }

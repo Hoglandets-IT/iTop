@@ -1443,7 +1443,7 @@ class Config
 		],
 		'quick_create.max_popular_results' => [
 			'type' => 'integer',
-			'description' => 'Max. number of elements in the popular',
+			'description' => 'Max. number of elements in the popular classes section',
 			'default' => 10,
 			'value' => 10,
 			'source_of_value' => '',

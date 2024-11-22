@@ -63,7 +63,7 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 	protected $bShowHistory;
 	/** @var int $iMaxHistoryResults Max. number of elements in the history */
 	protected $iMaxHistoryResults;
-	/** @var int $iMaxPopularResults Max. number of elements in popular */
+	/** @var int $iMaxPopularResults Max. number of elements in the popular section */
 	protected $iMaxPopularResults;
 	/** @var array $aPopularClasses */
 	protected $aPopularClasses;

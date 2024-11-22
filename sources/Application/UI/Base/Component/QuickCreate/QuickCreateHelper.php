@@ -178,7 +178,7 @@ class QuickCreateHelper
 	}
 
 	/**
-	 * Truncate $aHistoryEntries to 'global_search.max_history_results' entries OR $aPopularClasses to 'global_search.max_popular_results'
+	 * Truncate an array to $sMaxEntriesParam
 	 *
 	 * @param array $aEntries
 	 * @param string $sMaxEntriesParam
