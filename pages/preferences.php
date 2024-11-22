@@ -33,6 +33,10 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
+const MAX_NEWSROOM_DISPLAY_SIZE = 20;
+const MIN_NEWSROOM_DISPLAY_SIZE = 1;
+const DEFAULT_NEWSROOM_DISPLAY_SIZE = 7;
+
 /**
  * Displays the user's changeable preferences
  * @param $oP WebPage The web page used for the output
@@ -269,10 +273,10 @@ JS
 
 		$sNewsroomHtml = '';
 		$sNewsroomHtml .= '<form method="post">';
-		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', 7);
+		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', DEFAULT_NEWSROOM_DISPLAY_SIZE);
 
-		if ($iNewsroomDisplaySize < 1) $iNewsroomDisplaySize = 1;
-		if ($iNewsroomDisplaySize > 20) $iNewsroomDisplaySize = 20;
+		if ($iNewsroomDisplaySize < MIN_NEWSROOM_DISPLAY_SIZE) $iNewsroomDisplaySize = MIN_NEWSROOM_DISPLAY_SIZE;
+		if ($iNewsroomDisplaySize > MAX_NEWSROOM_DISPLAY_SIZE) $iNewsroomDisplaySize = MAX_NEWSROOM_DISPLAY_SIZE;
 		$sInput = '<input min="1" max="20" id="newsroom_display_size" type="number" size="2" name="newsroom_display_size" value="'.$iNewsroomDisplaySize.'">';
 		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-bell" style="top: 0;"></i>';
 		$sNewsroomHtml .= Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon);
@@ -852,6 +856,8 @@ try {
 				DisplayPreferences($oPage);
 				break;
 			case 'apply_newsroom_preferences':
+
+
 				$iCountProviders = 0;
 				$oUser = UserRights::GetUserObject();
 				/** @var iNewsroomProvider[] $aProviders */
@@ -864,14 +870,14 @@ try {
 				}
 				$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
 				if ($bNewsroomEnabled && ($iCountProviders > 0)) {
-					$iNewsroomDisplaySize = (int)utils::ReadParam('newsroom_display_size', 7);
-					if ($iNewsroomDisplaySize < 1) {
-						$iNewsroomDisplaySize = 1;
+					$iNewsroomDisplaySize = (int)utils::ReadParam('newsroom_display_size', DEFAULT_NEWSROOM_DISPLAY_SIZE);
+					if ($iNewsroomDisplaySize < MIN_NEWSROOM_DISPLAY_SIZE) {
+						$iNewsroomDisplaySize = MIN_NEWSROOM_DISPLAY_SIZE;
 					}
-					if ($iNewsroomDisplaySize > 20) {
-						$iNewsroomDisplaySize = 20;
+					if ($iNewsroomDisplaySize > MAX_NEWSROOM_DISPLAY_SIZE) {
+						$iNewsroomDisplaySize = MAX_NEWSROOM_DISPLAY_SIZE;
 					}
-					$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', 7);
+					$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', DEFAULT_NEWSROOM_DISPLAY_SIZE);
 					if ($iCurrentDisplaySize != $iNewsroomDisplaySize) {
 						// Save the preference only if it differs from the current (or default) value
 						appUserPreferences::SetPref('newsroom_display_size', $iNewsroomDisplaySize);
