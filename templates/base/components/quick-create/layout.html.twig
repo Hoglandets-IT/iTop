@@ -21,10 +21,10 @@
 			<div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-results">
 			</div>
             {# History section #}
-			<div class="ibo-quick-create--compartment-title" data-role="ibo-quick-create--compartment-title">
+			<div class="ibo-quick-create--compartment-title ibo-quick-create--history-classes--title" data-role="ibo-quick-create--compartment-title">
 				<span>{{ 'UI:Component:QuickCreate:Recents:Title'|dict_s }}</span>
 			</div>
-			<div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-content">
+			<div class="ibo-quick-create--compartment-content ibo-quick-create--history-classes--content" data-role="ibo-quick-create--compartment-content">
 				{% if oUIBlock.GetShowHistory == false %}
 					<div class="ibo-quick-create--compartment--placeholder">
 						<div class="ibo-quick-create--compartment--placeholder-hint">{{ 'UI:Component:QuickCreate:HistoryDisabled'|dict_s }}</div>
@@ -50,10 +50,10 @@
 				{% endif %}
 			</div>
             {# Popular classes section #}
-            <div class="ibo-quick-create--compartment-title" data-role="ibo-quick-create--compartment-title">
+            <div class="ibo-quick-create--compartment-title ibo-quick-create--popular-classes--title" data-role="ibo-quick-create--compartment-title">
                 <span>{{ 'UI:Component:QuickCreate:MostPopular:Title'|dict_s }}</span>
             </div>
-            <div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-content">
+            <div class="ibo-quick-create--compartment-content ibo-quick-create--popular-classes--content" data-role="ibo-quick-create--compartment-content">
                 {% if oUIBlock.GetPopularClasses()|length > 0 %}
                     {% for aClass in oUIBlock.GetPopularClasses() %}
                         <a href="{{ aClass.target_url }}" class="ibo-quick-create--compartment-element" data-role="ibo-quick-create--compartment-element" data-class-code="{{ aQuery.class }}">
