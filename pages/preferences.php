@@ -24,6 +24,7 @@ use Combodo\iTop\Application\UI\Preferences\BlockShortcuts\BlockShortcuts;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Controller\Newsroom\iTopNewsroomController;
 use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Router\Router;
@@ -33,9 +34,6 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
-const MAX_NEWSROOM_DISPLAY_SIZE = 20;
-const MIN_NEWSROOM_DISPLAY_SIZE = 1;
-const DEFAULT_NEWSROOM_DISPLAY_SIZE = 7;
 
 /**
  * Displays the user's changeable preferences
@@ -273,10 +271,10 @@ JS
 
 		$sNewsroomHtml = '';
 		$sNewsroomHtml .= '<form method="post">';
-		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', DEFAULT_NEWSROOM_DISPLAY_SIZE);
+		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', iTopNewsroomController::DEFAULT_NEWSROOM_DISPLAY_SIZE);
 
-		if ($iNewsroomDisplaySize < MIN_NEWSROOM_DISPLAY_SIZE) $iNewsroomDisplaySize = MIN_NEWSROOM_DISPLAY_SIZE;
-		if ($iNewsroomDisplaySize > MAX_NEWSROOM_DISPLAY_SIZE) $iNewsroomDisplaySize = MAX_NEWSROOM_DISPLAY_SIZE;
+		if ($iNewsroomDisplaySize < iTopNewsroomController::DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE) $iNewsroomDisplaySize = iTopNewsroomController::DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE;
+		if ($iNewsroomDisplaySize > iTopNewsroomController::DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE) $iNewsroomDisplaySize = iTopNewsroomController::DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE;
 		$sInput = '<input min="1" max="20" id="newsroom_display_size" type="number" size="2" name="newsroom_display_size" value="'.$iNewsroomDisplaySize.'">';
 		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-bell" style="top: 0;"></i>';
 		$sNewsroomHtml .= Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon);
@@ -870,14 +868,14 @@ try {
 				}
 				$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
 				if ($bNewsroomEnabled && ($iCountProviders > 0)) {
-					$iNewsroomDisplaySize = (int)utils::ReadParam('newsroom_display_size', DEFAULT_NEWSROOM_DISPLAY_SIZE);
-					if ($iNewsroomDisplaySize < MIN_NEWSROOM_DISPLAY_SIZE) {
-						$iNewsroomDisplaySize = MIN_NEWSROOM_DISPLAY_SIZE;
+					$iNewsroomDisplaySize = (int)utils::ReadParam('newsroom_display_size', iTopNewsroomController::DEFAULT_NEWSROOM_DISPLAY_SIZE);
+					if ($iNewsroomDisplaySize < iTopNewsroomController::DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE) {
+						$iNewsroomDisplaySize = iTopNewsroomController::DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE;
 					}
-					if ($iNewsroomDisplaySize > MAX_NEWSROOM_DISPLAY_SIZE) {
-						$iNewsroomDisplaySize = MAX_NEWSROOM_DISPLAY_SIZE;
+					if ($iNewsroomDisplaySize > iTopNewsroomController::DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE) {
+						$iNewsroomDisplaySize = iTopNewsroomController::DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE;
 					}
-					$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', DEFAULT_NEWSROOM_DISPLAY_SIZE);
+					$iCurrentDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', iTopNewsroomController::DEFAULT_NEWSROOM_DISPLAY_SIZE);
 					if ($iCurrentDisplaySize != $iNewsroomDisplaySize) {
 						// Save the preference only if it differs from the current (or default) value
 						appUserPreferences::SetPref('newsroom_display_size', $iNewsroomDisplaySize);

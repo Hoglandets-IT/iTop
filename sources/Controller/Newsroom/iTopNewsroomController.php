@@ -48,6 +48,10 @@ use appUserPreferences;
 class iTopNewsroomController extends Controller
 {
 	public const ROUTE_NAMESPACE = 'itopnewsroom';
+	public const DEFAULT_NEWSROOM_DISPLAY_SIZE = 7;
+	public const DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE = 1;
+	public const DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE = 20;
+
 
 	/**
 	 * @return iTopWebPage
