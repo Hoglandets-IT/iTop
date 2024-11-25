@@ -763,7 +763,7 @@ class ActivityPanel extends UIBlock
 	 */
 	public function IsComposeButtonEnabled(): bool
 	{
-		return $this->HasAnEditableCaseLogTab() && $this->IsCaseLogsSubmitAutonomous();
+		return $this->HasAnEditableCaseLogTab() && $this->IsCaseLogsSubmitAutonomous() && $this->HasUserModifyRights();
 	}
 
 	/**
@@ -973,5 +973,13 @@ class ActivityPanel extends UIBlock
 		// Note 2: Do not invert the test to "=== 'true'" as it won't work. Default value is a bool ("true"), values from the DB are strings (true|false)
 		$this->bShowMultipleEntriesSubmitConfirmation = appUserPreferences::GetPref('activity_panel.show_multiple_entries_submit_confirmation', static::DEFAULT_SHOW_MULTIPLE_ENTRIES_SUBMI_CONFIRMATION) !== 'false';
 		return $this;
+	}
+
+	/**
+	 * @return bool
+	 * @throws \CoreException
+	 */
+	protected function HasUserModifyRights(): bool {
+		return \UserRights::IsActionAllowed($this->GetObjectClass(), UR_ACTION_MODIFY);
 	}
 }
