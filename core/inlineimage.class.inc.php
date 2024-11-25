@@ -140,36 +140,19 @@ class InlineImage extends DBObject
 	 */
 	public function SetDefaultOrgId()
 	{
-		// First check that the organization CAN be fetched from the target class
-		//
-		$sClass = $this->Get('item_class');
-		$aCallSpec = array($sClass, 'MapContextParam');
-		if (is_callable($aCallSpec))
-		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
-				// Second: check that the organization CAN be fetched from the current user
-				//
-				if (MetaModel::IsValidClass('Person'))
-				{
-                    $aCallSpecPerson = array('Person', 'MapContextParam');
-					if (is_callable($aCallSpecPerson))
-					{
-						$sAttCodePerson = call_user_func($aCallSpecPerson, 'org_id'); // Returns null when there is no mapping for this parameter
-						if (MetaModel::IsValidAttCode('Person', $sAttCodePerson))
-						{
-							// OK - try it
-							//
-							$oCurrentPerson = MetaModel::GetObject('Person', UserRights::GetContactId(), false);
-							if ($oCurrentPerson)
-							{
-						 		$this->Set('item_org_id', $oCurrentPerson->Get($sAttCodePerson));
-						 	}
-						}
-					}
-				}
-			}
+		if (is_null(UserRights::GetOwnerOrganizationAttCode( $this->Get('item_class')))) {
+			// No need for silos
+			return;
+		}
+		$sOrgAttrCodeForPerson = UserRights::GetOwnerOrganizationAttCode('Person');
+		if (is_null($sOrgAttrCodeForPerson)) {
+			// No need for silos
+			return;
+		}
+
+		$oCurrentPerson = MetaModel::GetObject('Person', UserRights::GetContactId(), false);
+		if ($oCurrentPerson) {
+			$this->Set('item_org_id', $oCurrentPerson->Get($sOrgAttrCodeForPerson));
 		}
 	}
 

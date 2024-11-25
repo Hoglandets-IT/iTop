@@ -160,26 +160,24 @@
  		$this->Set('item_class', $sClass);
  		$this->Set('item_id', $iItemId);
 
-		$aCallSpec = array($sClass, 'MapContextParam');
-		if (is_callable($aCallSpec))
-		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
-				$iOrgId = $oItem->Get($sAttCode);
-				if ($iOrgId > 0)
-				{
-					if ($iOrgId != $this->Get('item_org_id'))
-					{
-						$this->Set('item_org_id', $iOrgId);
-						if ($bUpdateOnChange)
-						{
-							$this->DBUpdate();
-						}
-					}
-				}
-			}
+
+		$sAttCode = UserRights::GetOwnerOrganizationAttCode( $sClass);
+		if (is_null($sAttCode)) {
+			// No need for silos
+			return;
 		}
+    $iOrgId = $oItem->Get($sAttCode);
+    if ($iOrgId > 0)
+    {
+      if ($iOrgId != $this->Get('item_org_id'))
+      {
+        $this->Set('item_org_id', $iOrgId);
+        if ($bUpdateOnChange)
+        {
+          $this->DBUpdate();
+        }
+      }
+    }
 	}]]></code>
         </method>
         <method id="SetDefaultOrgId">
