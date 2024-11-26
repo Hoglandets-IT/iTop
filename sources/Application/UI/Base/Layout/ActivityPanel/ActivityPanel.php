@@ -979,7 +979,8 @@ class ActivityPanel extends UIBlock
 	 * @return bool
 	 * @throws \CoreException
 	 */
-	protected function HasUserModifyRights(): bool {
+	protected function HasUserModifyRights(): bool
+	{
 		return \UserRights::IsActionAllowed($this->GetObjectClass(), UR_ACTION_MODIFY);
 	}
 }
