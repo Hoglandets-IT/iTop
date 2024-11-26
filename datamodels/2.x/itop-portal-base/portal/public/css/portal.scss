@@ -1150,12 +1150,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 }
 .form_field .form_mandatory .control-label:after{
-	content: "\1F6C8";
+	content: "\002a";
 	position: relative;
 	left: 3px;
 	color: $brand-primary;
 	font-size: 0.9em;
-  font-weight: 200;
 };
 /* Note: We don't put the .form_field selector as it must work for read-only */
 .form-control-static img{
