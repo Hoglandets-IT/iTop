@@ -1140,13 +1140,14 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 
 .form_field_label > .control-label[data-tooltip-instantiated="true"] {
 	&::after {
-		content: "?";
+		content: "\1F6C8";
 		padding-left: 3px;
 		vertical-align: top;
 
 		cursor: pointer;
 		color: $gray;
 		font-size: 0.85em;
+    font-weight: 200;
 	}
 }
 .form_field .form_mandatory .control-label:after{
