@@ -8,52 +8,53 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class QuickCreateHelperTest extends ItopDataTestCase
 {
-	private array $aInitialUserPref = [];
-	protected function setUp(): void {
-		parent::setUp();
-		$this->aInitialUserPref = appUserPreferences::GetPref(QuickCreateHelper::USER_PREF_CODE, []);
-	}
-
-	protected function tearDown(): void{
-		parent::tearDown();
-		appUserPreferences::SetPref(QuickCreateHelper::USER_PREF_CODE, $this->aInitialUserPref);
-	}
-
-	/**
-	 * Test class removal from popular when it is in recent classes
-	 */
-	public function testNoDuplicateInPopularAndLast()
+	public function testPopularClassesShouldBeLeftUnchangedWhenNotInRecent()
 	{
-		$aClasses = ['ApplicationSolution', 'BusinessProcess', 'DatabaseSchema', 'MiddlewareInstance', 'Enclosure'];
-		// Should contain the first Popular class (FunctionalCI if default)
-		$aPopularClassesInitial = QuickCreateHelper::GetPopularClasses();
-		$sPopularClass = $aPopularClassesInitial[0]['class'];
-		QuickCreateHelper::AddClassToHistory($sPopularClass);
-		// Popular class should now be in Recents and no longer in Popular
-		$aPopularClassNoParam = QuickCreateHelper::GetPopularClasses();
+		// Given popular classes = ['FunctionalCI', 'UserRequest'], as defined in datamodel
+		$this->GivenRecentClasses(['Person']);
 
-		for($iIdx = 0; $iIdx < count($aPopularClassNoParam); $iIdx++)
-		{
-			$this->assertNotEquals($aPopularClassNoParam[$iIdx]['class'], $sPopularClass);
-		}
-
-		return [$aClasses, $aPopularClassesInitial];
+		$aPopularClasses = QuickCreateHelper::GetPopularClasses();
+		$this->AssertPopularClassesMatches(['Server', 'FunctionalCI', 'UserRequest'], $aPopularClasses, "");
 	}
 
-	/**
-	 *  Test class addition in popular after being removed from recent classes
-	 *  @depends testNoDuplicateInPopularAndLast
-	 */
-	public function testPopularClassBackAfterRecent(array $aNoDuplicateResult){
-		[$aClasses, $aPopularClassesInitial] = $aNoDuplicateResult;
+	public function testPopularClassesShouldBeLeftUnchangedWhenNoRecent()
+	{
+		// Given popular classes = ['FunctionalCI', 'UserRequest'], as defined in datamodel
+		$this->GivenRecentClasses([]);
 
-		foreach($aClasses as $sClass)
-		{
-			// Creating as many classes as needed for UserRequest to no longer be in the Recent classes (at least equal to 'quick_create.max_history_results')
-			QuickCreateHelper::AddClassToHistory($sClass);
+		$aPopularClasses = QuickCreateHelper::GetPopularClasses();
+		$this->AssertPopularClassesMatches(['Server', 'FunctionalCI', 'UserRequest'], $aPopularClasses, "");
+	}
+
+	public function testClassInRecentShouldNotBeInPopular()
+	{
+		// Given popular classes = ['FunctionalCI', 'UserRequest'], as defined in datamodel
+		$this->GivenRecentClasses(['UserRequest']);
+
+		$aPopularClasses = QuickCreateHelper::GetPopularClasses();
+		$this->AssertPopularClassesMatches(['Server', 'FunctionalCI'], $aPopularClasses, "");
+	}
+	private function GivenRecentClasses(array $aGivenClasses)
+	{
+		$aRecentClasses = [];
+		// User preferences will be reset during the rollback
+		foreach($aGivenClasses as $sClass) {
+			$aRecentClasses[] =  array(
+				'class' => $sClass,
+			);
 		}
-		// Should contain the first Popular class (FunctionalCI if default)
-		$aPopularClassesFinal = QuickCreateHelper::GetPopularClasses();
-		$this->assertEquals($aPopularClassesInitial, $aPopularClassesFinal);
+
+		appUserPreferences::SetPref(QuickCreateHelper::USER_PREF_CODE, $aRecentClasses);
+	}
+
+	private function AssertPopularClassesMatches(array $aExpectedClasses, array $aPopularClasses, string $sMessage = '')
+	{
+		$aFoundClasses = [];
+		foreach($aPopularClasses as $aClassData) {
+			$aFoundClasses[] = $aClassData['class'];
+		}
+		sort($aFoundClasses);
+		sort($aExpectedClasses);
+		$this->assertEquals($aExpectedClasses, $aFoundClasses, $sMessage);
 	}
 }
