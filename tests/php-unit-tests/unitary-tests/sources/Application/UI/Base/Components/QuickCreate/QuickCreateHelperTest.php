@@ -14,7 +14,7 @@ class QuickCreateHelperTest extends ItopDataTestCase
 		$this->GivenRecentClasses(['Person']);
 
 		$aPopularClasses = QuickCreateHelper::GetPopularClasses();
-		$this->AssertPopularClassesMatches(['Server', 'FunctionalCI', 'UserRequest'], $aPopularClasses, "");
+		$this->AssertPopularClassesMatches(['FunctionalCI', 'UserRequest'], $aPopularClasses, "");
 	}
 
 	public function testPopularClassesShouldBeLeftUnchangedWhenNoRecent()
@@ -23,7 +23,7 @@ class QuickCreateHelperTest extends ItopDataTestCase
 		$this->GivenRecentClasses([]);
 
 		$aPopularClasses = QuickCreateHelper::GetPopularClasses();
-		$this->AssertPopularClassesMatches(['Server', 'FunctionalCI', 'UserRequest'], $aPopularClasses, "");
+		$this->AssertPopularClassesMatches(['FunctionalCI', 'UserRequest'], $aPopularClasses, "");
 	}
 
 	public function testClassInRecentShouldNotBeInPopular()
@@ -32,7 +32,7 @@ class QuickCreateHelperTest extends ItopDataTestCase
 		$this->GivenRecentClasses(['UserRequest']);
 
 		$aPopularClasses = QuickCreateHelper::GetPopularClasses();
-		$this->AssertPopularClassesMatches(['Server', 'FunctionalCI'], $aPopularClasses, "");
+		$this->AssertPopularClassesMatches(['FunctionalCI'], $aPopularClasses, "");
 	}
 	private function GivenRecentClasses(array $aGivenClasses)
 	{
