@@ -1228,6 +1228,8 @@ class ObjectController extends BrickController
 		$oRequestManipulator = $this->get('request_manipulator');
 		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 		$oScopeValidator = $this->get('scope_validator');
+        /** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
+        $oSecurityHelper = $this->get('security_helper');
 
 		$aData = array();
 
@@ -1246,7 +1248,8 @@ class ObjectController extends BrickController
 		$bIgnoreSilos = $oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
 		$aParams = array('objects_id' => $aObjectIds);
 		$oSearch = DBObjectSearch::FromOQL("SELECT $sObjectClass WHERE id IN (:objects_id)");
-		if ($bIgnoreSilos === true)
+        $oScopeValidator->AddScopeToQuery($oSearch, $sObjectClass);
+        if ($bIgnoreSilos === true)
 		{
 			$oSearch->AllowAllData();
 		}
@@ -1263,6 +1266,12 @@ class ObjectController extends BrickController
 		// Retrieving objects
 		while ($oObject = $oSet->Fetch())
 		{
+            $sObjectId = $oObject->Get('id');
+            if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sObjectClass, $sObjectId))
+            {
+                IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to read '.$sObjectClass.'::'.$sObjectId.' object.');
+                throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+            }
 			$aData['items'][] = $this->PrepareObjectInformation($oObject, $aObjectAttCodes);
 		}
 
