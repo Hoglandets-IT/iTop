@@ -18,6 +18,8 @@ use CMDBObject;
 use CMDBSource;
 use Combodo\iTop\Service\Events\EventService;
 use Contact;
+use CoreException;
+use CoreUnexpectedValue;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
@@ -29,6 +31,9 @@ use lnkContactToFunctionalCI;
 use lnkContactToTicket;
 use lnkFunctionalCIToTicket;
 use MetaModel;
+use MissingQueryArgument;
+use MySQLException;
+use MySQLHasGoneAwayException;
 use Person;
 use PluginManager;
 use Server;
@@ -1438,5 +1443,25 @@ abstract class ItopDataTestCase extends ItopTestCase
 		if (!file_exists(\utils::GetAbsoluteModulePath($sModule))) {
 			self::markTestSkipped("Test skipped: module '$sModule' is not present");
 		}
+	}
+
+	/**
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws ArchivedObjectException
+	 * @throws MissingQueryArgument
+	 * @throws MySQLException
+	 * @throws MySQLHasGoneAwayException
+	 * @throws Exception
+	 */
+	protected function AssertUniqueObjectInDB(string $sClass, array $aCriteria, string $sMessage = ''): void
+	{
+		$oSearch = new \DBObjectSearch($sClass);
+		foreach($aCriteria as $sAttCode => $value)
+		{
+			$oSearch->AddCondition($sAttCode, $value);
+		}
+		$oSet = new DBObjectSet($oSearch);
+		$this->assertEquals(1, $oSet->Count(), $sMessage);
 	}
 }
