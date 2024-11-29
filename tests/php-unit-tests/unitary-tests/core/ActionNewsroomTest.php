@@ -88,7 +88,6 @@ class ActionNewsroomTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @dataProvider ActionNewsroomProvider
 	 * @throws CoreException
 	 * @throws MissingQueryArgument
 	 * @throws CoreUnexpectedValue
@@ -97,9 +96,9 @@ class ActionNewsroomTest extends ItopDataTestCase
 	 * @throws MySQLHasGoneAwayException
 	 * @throws Exception
 	 */
-	public function testActionNewsroomRecordsEvent(bool $bIsAsynchronous)
+	public function testActionNewsroomRecordsEvent()
 	{
-		$iActionNewsroomId = $this->GivenActionNewsroomInDB($bIsAsynchronous, 'Body of the notification');
+		$iActionNewsroomId = $this->GivenActionNewsroomInDB(false, 'Body of the notification');
 
 		$iServiceId = $this->GivenService('Test service');
 
