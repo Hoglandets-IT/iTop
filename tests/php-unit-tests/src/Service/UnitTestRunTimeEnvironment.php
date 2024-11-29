@@ -63,6 +63,8 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 			return true;
 		}
 
+		echo "files in $sDestDir: ". var_export(glob("$sDestDir/*"), true) . "\n" ;
+
 	    $sLastCompilationDate = date("Y-m-d H:i:s", $fLastCompilationTime);
 	    echo "filemtime($sDestDir): $fLastCompilationTime " .$sLastCompilationDate." \n";
 
@@ -84,7 +86,7 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 			return false;
         }
 
-		return true;
+		return false;
     }
 
 	private function PrintFiles(array $aFiles, string $sMsg = "The following files have been modified after the last compilation") : void
