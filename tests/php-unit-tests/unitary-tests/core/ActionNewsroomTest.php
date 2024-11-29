@@ -59,11 +59,43 @@ class ActionNewsroomTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @throws CoreException
+	 * @throws MissingQueryArgument
+	 * @throws CoreUnexpectedValue
+	 * @throws ArchivedObjectException
+	 * @throws MySQLException
+	 * @throws MySQLHasGoneAwayException
+	 * @throws Exception
+	 */
+	public function testActionNewsroomRecordsEvent()
+	{
+		$iActionNewsroomId = $this->GivenActionNewsroomInDB(false, 'Body of the notification');
+
+		$this->CreateUserRequest(1,
+			[
+				'title'       => '[TEST] ActionNewsroom',
+				'org_id'      => $this->getTestOrgId(),
+				'caller_id'   => $this->iRecipientId,
+				'description' => 'PHPUnit Test',
+			]
+		);
+
+		$this->AssertUniqueObjectInDB(
+			'EventNotificationNewsroom',
+			[
+				'action_id' => $iActionNewsroomId,
+				'message' => 'Body of the notification',
+				'title' => 'Title'
+			]
+		);
+	}
+
+	/**
 	 * @dataProvider ActionNewsroomProvider
 	 * @return void
 	 * @throws Exception
 	 */
-	public function testActionNewsroomRecordsEventIfAMandatoryFieldIsEmpty(bool $bIsAsynchronous)
+	public function testActionNewsroomRecordsSpecificEventIfAMandatoryFieldIsEmpty(bool $bIsAsynchronous)
 	{
 		$iActionNewsroomId = $this->GivenActionNewsroomInDB($bIsAsynchronous, '$this->service_name$');
 
@@ -86,43 +118,6 @@ class ActionNewsroomTest extends ItopDataTestCase
 			]
 		);
 	}
-
-	/**
-	 * @throws CoreException
-	 * @throws MissingQueryArgument
-	 * @throws CoreUnexpectedValue
-	 * @throws ArchivedObjectException
-	 * @throws MySQLException
-	 * @throws MySQLHasGoneAwayException
-	 * @throws Exception
-	 */
-	public function testActionNewsroomRecordsEvent()
-	{
-		$iActionNewsroomId = $this->GivenActionNewsroomInDB(false, 'Body of the notification');
-
-		$iServiceId = $this->GivenService('Test service');
-
-		$this->CreateUserRequest(1,
-			[
-				'title'       => '[TEST] ActionNewsroom',
-				'org_id'      => $this->getTestOrgId(),
-				'caller_id'   => $this->iRecipientId,
-				'description' => 'PHPUnit Test',
-				'service_id' => 0
-			]
-		);
-
-
-
-		$this->AssertUniqueObjectInDB(
-			'EventNotificationNewsroom',
-			[
-				'action_id' => $iActionNewsroomId,
-				'message' => 'Body of the notification'
-			]
-		);
-	}
-
 
 	/**
 	 * @throws Exception
