@@ -63,14 +63,19 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 			return true;
 		}
 
+	    $sLastCompilationDate = date("Y-m-d H:i:s", $fLastCompilationTime);
+	    echo "filemtime($sDestDir): $fLastCompilationTime " .$sLastCompilationDate." \n";
+
 	    $aModifiedFiles = [];
-	    $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'datamodels/2.x', $aModifiedFiles);
-	    $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'extensions', $aModifiedFiles);
-	    $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'data/production-modules', $aModifiedFiles);
 
 		foreach ($aCustomDatamodelFiles as $sCustomDatamodelFile) {
-            if (filemtime($sCustomDatamodelFile) > $fLastCompilationTime) {
+			$iFilemtime = filemtime($sCustomDatamodelFile);
+			if ($iFilemtime > $fLastCompilationTime) {
                 $aModifiedFiles[] = $sCustomDatamodelFile;
+            } else {
+				//nervous breakdown troubleshooting!
+	            echo sprintf("%s:\nlast compilation: %s vs (mtime of current file) %s \n",
+		            $sCustomDatamodelFile, $sLastCompilationDate, date("Y-m-d H:i:s", $iFilemtime));
             }
         }
 
