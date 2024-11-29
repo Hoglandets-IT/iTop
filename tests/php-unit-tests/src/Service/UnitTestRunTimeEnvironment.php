@@ -50,24 +50,46 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
     public function IsUpToDate()
     {
         clearstatcache();
-        $fLastCompilationTime = filemtime(APPROOT.'env-'.$this->sFinalEnv);
-        $aModifiedFiles = [];
-        $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'datamodels/2.x', $aModifiedFiles);
-        $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'extensions', $aModifiedFiles);
-        $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'data/production-modules', $aModifiedFiles);
-        foreach ($this->GetCustomDatamodelFiles() as $sCustomDatamodelFile) {
+	    $aCustomDatamodelFiles = $this->GetCustomDatamodelFiles();
+	    $sDestDir = APPROOT.'env-'.$this->sFinalEnv;
+	    if (! is_dir($sDestDir) && count($aCustomDatamodelFiles) > 0){
+		    $this->PrintFiles($aCustomDatamodelFiles);
+		    return true;
+		}
+
+	    $fLastCompilationTime = filemtime($sDestDir);
+		if (false === $fLastCompilationTime){
+			echo "Issue when calling filemtime($sDestDir) \n";
+			return false;
+		}
+
+	    $aModifiedFiles = [];
+	    $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'datamodels/2.x', $aModifiedFiles);
+	    $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'extensions', $aModifiedFiles);
+	    $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'data/production-modules', $aModifiedFiles);
+
+		foreach ($aCustomDatamodelFiles as $sCustomDatamodelFile) {
             if (filemtime($sCustomDatamodelFile) > $fLastCompilationTime) {
                 $aModifiedFiles[] = $sCustomDatamodelFile;
             }
         }
+
         if (count($aModifiedFiles) > 0) {
-            echo "The following files have been modified after the last compilation:\n";
-            foreach ($aModifiedFiles as $sFile) {
-                echo " - $sFile\n";
-            }
+	        $this->PrintFiles($aModifiedFiles);
+			return true;
         }
-        return (count($aModifiedFiles) === 0);
+
+		return false;
     }
+
+	private function PrintFiles(array $aFiles, string $sMsg = "The following files have been modified after the last compilation") : void
+	{
+		echo "$sMsg:\n";
+		foreach ($aFiles as $sFile) {
+			echo " - $sFile\n";
+		}
+		echo "\n";
+	}
 
     /**
 	 * @inheritDoc
@@ -130,12 +152,14 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 				if ($sClass === '') {
 					continue;
 				}
+
 				if (in_array($sClass, $aLoadedTestClasses)) {
-					echo "class $sClass already loaded somehow \n";
 					continue;
 				}
+
 				$aLoadedTestClasses[]=$sClass;
                 require_once $sFile;
+
 				$oReflectionClass = new ReflectionClass($sClass);
 				if ($oReflectionClass->isAbstract()) {
 					continue;
@@ -159,6 +183,7 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 			}
 		}
 
+		$this->PrintFiles($this->aCustomDatamodelFiles, "Found XML delta files");
 		return $this->aCustomDatamodelFiles;
 	}
 
