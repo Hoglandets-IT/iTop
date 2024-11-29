@@ -54,13 +54,13 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 	    $sDestDir = APPROOT.'env-'.$this->sFinalEnv;
 	    if (! is_dir($sDestDir) && count($aCustomDatamodelFiles) > 0){
 		    $this->PrintFiles($aCustomDatamodelFiles);
-		    return true;
+		    return false;
 		}
 
 	    $fLastCompilationTime = filemtime($sDestDir);
 		if (false === $fLastCompilationTime){
 			echo "Issue when calling filemtime($sDestDir) \n";
-			return false;
+			return true;
 		}
 
 	    $aModifiedFiles = [];
@@ -76,10 +76,10 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 
         if (count($aModifiedFiles) > 0) {
 	        $this->PrintFiles($aModifiedFiles);
-			return true;
+			return false;
         }
 
-		return false;
+		return true;
     }
 
 	private function PrintFiles(array $aFiles, string $sMsg = "The following files have been modified after the last compilation") : void
