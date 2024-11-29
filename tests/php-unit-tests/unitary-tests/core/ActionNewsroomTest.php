@@ -65,7 +65,7 @@ class ActionNewsroomTest extends ItopDataTestCase
 	 */
 	public function testActionNewsroomRecordsEventIfAMandatoryFieldIsEmpty(bool $bIsAsynchronous)
 	{
-		$iActionNewsroomId = $this->GivenActionNewsroom($bIsAsynchronous, '$this->service_name$');
+		$iActionNewsroomId = $this->GivenActionNewsroomInDB($bIsAsynchronous, '$this->service_name$');
 
 		$this->CreateUserRequest(1,
 			[
@@ -87,11 +87,48 @@ class ActionNewsroomTest extends ItopDataTestCase
 		);
 	}
 
+	/**
+	 * @dataProvider ActionNewsroomProvider
+	 * @throws CoreException
+	 * @throws MissingQueryArgument
+	 * @throws CoreUnexpectedValue
+	 * @throws ArchivedObjectException
+	 * @throws MySQLException
+	 * @throws MySQLHasGoneAwayException
+	 * @throws Exception
+	 */
+	public function testActionNewsroomRecordsEvent(bool $bIsAsynchronous)
+	{
+		$iActionNewsroomId = $this->GivenActionNewsroomInDB($bIsAsynchronous, 'Body of the notification');
+
+		$iServiceId = $this->GivenService('Test service');
+
+		$this->CreateUserRequest(1,
+			[
+				'title'       => '[TEST] ActionNewsroom',
+				'org_id'      => $this->getTestOrgId(),
+				'caller_id'   => $this->iRecipientId,
+				'description' => 'PHPUnit Test',
+				'service_id' => 0
+			]
+		);
+
+
+
+		$this->AssertUniqueObjectInDB(
+			'EventNotificationNewsroom',
+			[
+				'action_id' => $iActionNewsroomId,
+				'message' => 'Body of the notification'
+			]
+		);
+	}
+
 
 	/**
 	 * @throws Exception
 	 */
-	private function GivenActionNewsroom(bool $bIsAsynchronous, string $sMessage): int
+	private function GivenActionNewsroomInDB(bool $bIsAsynchronous, string $sMessage): int
 	{
 		$this->GivenObjectInDB('UserLocal', [
 			'login' => 'demo_test_'.uniqid(__CLASS__, true),
@@ -113,5 +150,17 @@ class ActionNewsroomTest extends ItopDataTestCase
 				"trigger_id:$this->iTrigger"
 			],
 		]);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	private function GivenService(string $sName): int
+	{
+		return $this->GivenObjectInDB('Service', [
+				'name' => $sName,
+				'org_id' => $this->getTestOrgId()
+			]
+		);
 	}
 }
