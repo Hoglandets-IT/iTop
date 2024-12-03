@@ -1299,6 +1299,11 @@ class ObjectController extends BrickController
 		$bIgnoreSilos = $this->oScopeValidatorHelper->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
 		$aParams = array('objects_id' => $aObjectIds);
 		$oSearch = DBObjectSearch::FromOQL("SELECT $sObjectClass WHERE id IN (:objects_id)");
+		if (!$this->oScopeValidatorHelper->AddScopeToQuery($oSearch, $sObjectClass)
+		) {
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to read '.$sObjectClass.' object.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
 		if ($bIgnoreSilos === true) {
 			$oSearch->AllowAllData();
 		}
@@ -1349,7 +1354,10 @@ class ObjectController extends BrickController
 		$aObjectAttCodes = $this->oRequestManipulatorHelper->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 		$aLinkAttCodes = $this->oRequestManipulatorHelper->ReadParam('aLinkAttCodes', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 		$sDateTimePickerWidgetParent = $this->oRequestManipulatorHelper->ReadParam('sDateTimePickerWidgetParent', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
-
+		if (!MetaModel::IsLinkClass($sLinkClass)) {
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' asked for wrong lnk class '.$sLinkClass);
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
 		if (empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes)) {
 			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass, aObjectIds and aObjectAttCodes expected, "'.$sObjectClass.'", "'.implode('/',
 					$aObjectIds).'" given.');
@@ -1360,6 +1368,10 @@ class ObjectController extends BrickController
 		$bIgnoreSilos = $this->oScopeValidatorHelper->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
 		$aParams = array('objects_id' => $aObjectIds);
 		$oSearch = DBObjectSearch::FromOQL("SELECT $sObjectClass WHERE id IN (:objects_id)");
+		if (!$this->oScopeValidatorHelper->AddScopeToQuery($oSearch, $sObjectClass)) {
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to read '.$sObjectClass.' object.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
 		if ($bIgnoreSilos === true)
 		{
 			$oSearch->AllowAllData();
@@ -1378,10 +1390,35 @@ class ObjectController extends BrickController
 			// Prepare link data
 			$aObjectData = $this->PrepareObjectInformation($oObject, $aObjectAttCodes);
 			// New link object (needed for renderers)
-			$oNewLink = new $sLinkClass();
+			$aAttCodes = MetaModel::GetAttributesList($sLinkClass, ['AttributeExternalKey']);
+			$sAttCodeToObject = '';
+			foreach ($aAttCodes as $sAttCode) {
+				$oAttDef = MetaModel::GetAttributeDef($sLinkClass, $sAttCode);
+				/** @var \AttributeExternalKey $oAttDef */
+				if ($oAttDef->GetTargetClass() === $sObjectClass) {
+					$sAttCodeToObject = $sAttCode;
+				}
+			}
+			if ($sAttCodeToObject === '') {
+				IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' asked for incoherent lnk class '.$sLinkClass.' with object class '.$sObjectClass);
+				throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+			}
+			$oNewLink = MetaModel::NewObject($sLinkClass, [
+				$sAttCodeToObject => $oObject->GetKey(), // so later placeholders in filters will be applied on external keys on the same link
+			]);
 			foreach ($aLinkAttCodes as $sAttCode) {
 				$oAttDef = MetaModel::GetAttributeDef($sLinkClass, $sAttCode);
+				/** @var \Combodo\iTop\Form\Field\SelectObjectField $oField */
 				$oField = $oAttDef->MakeFormField($oNewLink);
+				if ($oAttDef::GetFormFieldClass() === '\\Combodo\\iTop\\Form\\Field\\SelectObjectField') {
+					$oFieldSearch = $oField->GetSearch();
+					$sFieldClass = $oFieldSearch->GetClass();
+					if ($this->oScopeValidatorHelper->AddScopeToQuery($oFieldSearch, $sFieldClass)){
+						$oField->SetSearch($oFieldSearch);
+					} else {
+						$oField->SetSearch(DBObjectSearch::FromOQL("SELECT $sFieldClass WHERE 1=0"));
+					}
+				}
 				// Prevent datetimepicker popup to be truncated
 				if ($oField instanceof DateTimeField) {
 					$oField->SetDateTimePickerWidgetParent($sDateTimePickerWidgetParent);
