@@ -144,7 +144,6 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 					continue;
 				}
 				if (in_array($sClass, $aLoadedTestClasses)) {
-					echo "class $sClass already loaded somehow \n";
 					continue;
 				}
 				$aLoadedTestClasses[]=$sClass;
