@@ -140,10 +140,12 @@ class InlineImage extends DBObject
 	 */
 	public function SetDefaultOrgId()
 	{
+        // If the item class has no organization attribute, then no need to set the organization id
 		if (is_null(UserRights::GetOwnerOrganizationAttCode( $this->Get('item_class')))) {
 			// No need for silos
 			return;
 		}
+        // get  organization attribute code for the person class
 		$sOrgAttrCodeForPerson = UserRights::GetOwnerOrganizationAttCode('Person');
 		if (is_null($sOrgAttrCodeForPerson)) {
 			// No need for silos

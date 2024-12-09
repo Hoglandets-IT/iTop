@@ -142,7 +142,7 @@ if (!class_exists('StructureInstaller'))
 
 				$sPersonClass = 'Person';
 				$sPersonStateAttCode = MetaModel::GetStateAttributeCode($sPersonClass);
-				$sPersonOwnerOrgAttCode = UserRightsProfile::GetOwnerOrganizationAttCode($sPersonClass);
+				$sPersonOwnerOrgAttCode = UserRights::GetOwnerOrganizationAttCode($sPersonClass);
 
 				$iClassesWithLogCount = 0;
 				$aCreatedTriggerIds = [];
@@ -177,7 +177,7 @@ if (!class_exists('StructureInstaller'))
 							);
 
 							// Filter on class owner org. if any
-							$sClassOwnerOrgAttCode = UserRightsProfile::GetOwnerOrganizationAttCode($sClass);
+							$sClassOwnerOrgAttCode = UserRights::GetOwnerOrganizationAttCode($sClass);
 							$oOwnerOrgExpr = empty($sClassOwnerOrgAttCode) ? null : new BinaryExpression(
 								new FieldExpression($sPersonOwnerOrgAttCode),
 								'=',

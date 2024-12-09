@@ -648,7 +648,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$aConditions =  array();
 
 		// Determine if this class is part of a silo and build the filter for it
-		$sAttCode = self::GetOwnerOrganizationAttCode($sClass);
+		$sAttCode = UserRights::GetOwnerOrganizationAttCode($sClass);
 		if (!is_null($sAttCode))
 		{
 			$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
@@ -834,7 +834,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 					// But currently we are checking wether the objects might be written...
 					// Let's exclude the objects based on the relevant criteria
 
-					$sOrgAttCode = self::GetOwnerOrganizationAttCode($sClass);
+					$sOrgAttCode = UserRights::GetOwnerOrganizationAttCode($sClass);
 					if (!is_null($sOrgAttCode))
 					{
 						$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);

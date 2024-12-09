@@ -778,7 +778,7 @@ exit;
 
 		// Determine how to position the objects of this class
 		//
-		$sAttCode = self::GetOwnerOrganizationAttCode($sClass);
+		$sAttCode = UserRights::GetOwnerOrganizationAttCode($sClass);
 		if (is_null($sAttCode))
 		{
 			// No filtering for this object
@@ -909,7 +909,7 @@ exit;
 					// But currently we are checking wether the objects might be written...
 					// Let's exclude the objects based on the relevant criteria
 
-					$sOrgAttCode = self::GetOwnerOrganizationAttCode($sClass);
+					$sOrgAttCode = UserRights::GetOwnerOrganizationAttCode($sClass);
 					if (!is_null($sOrgAttCode))
 					{
 						$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
@@ -1015,28 +1015,7 @@ exit;
 	 */	 	
 	public static function GetOwnerOrganizationAttCode($sClass)
 	{
-		$sAttCode = null;
-
-		$aCallSpec = array($sClass, 'MapContextParam');
-		if (($sClass == 'Organization') || is_subclass_of($sClass, 'Organization'))
-		{
-			$sAttCode = 'id';
-		}
-		elseif (is_callable($aCallSpec))
-		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
-			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
-				// Skip silently. The data model checker will tell you something about this...
-				$sAttCode = null;
-			}
-		}
-		elseif(MetaModel::IsValidAttCode($sClass, 'org_id'))
-		{
-			$sAttCode = 'org_id';
-		}
-
-		return $sAttCode;
+		return UserRights::GetOwnerOrganizationAttCode($sClass);;
 	}
 
 	/**
