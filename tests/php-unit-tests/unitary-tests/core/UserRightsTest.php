@@ -488,4 +488,18 @@ class UserRightsTest extends ItopDataTestCase
 			'with Admins hidden' => [true, 0],
 		];
 	}
+
+	public function testGetOwnerOrganizationAttCode()
+	{
+		$this->assertEquals('id', UserRights::GetOwnerOrganizationAttCode('Organization'));
+
+		$this->assertEquals('org_id', UserRights::GetOwnerOrganizationAttCode('Server'));
+		$this->assertEquals('org_id', UserRights::GetOwnerOrganizationAttCode('UserRequest'));
+
+		$this->assertEquals('item_org_id', UserRights::GetOwnerOrganizationAttCode('InlineImage'));
+		$this->assertEquals('item_org_id', UserRights::GetOwnerOrganizationAttCode('Attachment'));
+
+		$this->assertNull(UserRights::GetOwnerOrganizationAttCode('TriggerOnObjectCreation'));
+		$this->assertNull(UserRights::GetOwnerOrganizationAttCode('lnkPersonToTeam'));
+	}
 }
