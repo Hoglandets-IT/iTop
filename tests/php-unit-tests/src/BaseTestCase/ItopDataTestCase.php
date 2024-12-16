@@ -1406,4 +1406,37 @@ abstract class ItopDataTestCase extends ItopTestCase
 			self::markTestSkipped("Test skipped: module '$sModule' is not present");
 		}
 	}
+
+	protected function GivenUserLoggedInWithContact(int $iContactOrgId)
+	{
+		$iContactId = $this->GivenObjectInDB('Person', [
+			'first_name' => 'TestContact',
+			'name' => 'TestContact',
+			'org_id' => $iContactOrgId]);
+		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+		$iUser = $this->GivenObjectInDB('UserLocal', [
+			'login' => $sLogin,
+			'password' => 'tagada-Secret,007',
+			'language' => 'EN US',
+			'contactid' => $iContactId,
+			'profile_list' => [
+				'profileid:'.self::$aURP_Profiles['Configuration Manager']
+			]
+		]);
+		\UserRights::Login($sLogin);
+	}
+
+	protected function GivenUserLoggedInWithoutContact()
+	{
+		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+		$iUser = $this->GivenObjectInDB('UserLocal', [
+			'login' => $sLogin,
+			'password' => 'tagada-Secret,007',
+			'language' => 'EN US',
+			'profile_list' => [
+				'profileid:'.self::$aURP_Profiles['Configuration Manager']
+			]
+		]);
+		\UserRights::Login($sLogin);
+	}
 }

@@ -90,4 +90,25 @@ class TestAttachment extends ItopDataTestCase
 		$oAttachment->SetItem($oUserRequest);
 		$this->assertEquals(0, $oAttachment->Get('item_org_id'),'The org_id should be the one of the contact');
 	}
+
+
+	public function testSetDefaultOrgIdWhenLoggedInWithContact()
+	{
+		$iContactOrgId = $this->GivenObjectInDB('Organization', ['name' => 'TestOrg']);
+		$this->GivenUserLoggedInWithContact($iContactOrgId);
+
+		$oAttachment = new \Attachment();
+		$oAttachment->SetDefaultOrgId();
+		$this->assertEquals($iContactOrgId, $oAttachment->Get('item_org_id'),'The org_id should be the one of the contact');
+	}
+
+
+	public function testSetDefaultOrgIdWhenLoggedInWithoutContact()
+	{
+		$this->GivenUserLoggedInWithoutContact();
+
+		$oAttachment = new \Attachment();
+		$oAttachment->SetDefaultOrgId();
+		$this->assertEquals(0, $oAttachment->Get('item_org_id'),'The org_id should be left undefined');
+	}
 }
