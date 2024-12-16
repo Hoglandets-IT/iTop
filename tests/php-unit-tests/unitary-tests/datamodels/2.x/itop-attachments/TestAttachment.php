@@ -69,4 +69,25 @@ class TestAttachment extends ItopDataTestCase
 		$oDocument = $oAttachment->Get('contents');
 		$this->sRemoveAttachmentName = $oDocument->GetFileName();
 	}
+
+
+	public function testSetItemOnObjectWithDefinedOrganization()
+	{
+		$iOrgId = $this->GivenObjectInDB('Organization', ['name' => 'TestOrg']);
+		$oUserRequest = $this->GivenObject('UserRequest', ['title' => 'TestUserRequest', 'org_id'=>$iOrgId]);
+
+		$oAttachment = new \Attachment();
+		$oAttachment->SetItem($oUserRequest);
+		$this->assertEquals($iOrgId, $oAttachment->Get('item_org_id'),'The org_id should be the one of the contact');
+	}
+
+
+	public function testSetItemOnObjectWithoutDefinedOrganization()
+	{
+		$oUserRequest = $this->GivenObject('TriggerOnObjectCreate', ['target_class' => 'UserRequest','description'=>'TestUserRequest']);
+
+		$oAttachment = new \Attachment();
+		$oAttachment->SetItem($oUserRequest);
+		$this->assertEquals(0, $oAttachment->Get('item_org_id'),'The org_id should be the one of the contact');
+	}
 }

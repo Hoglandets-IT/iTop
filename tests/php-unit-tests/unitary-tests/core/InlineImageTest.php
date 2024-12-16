@@ -69,7 +69,7 @@ class InlineImageTest extends ItopDataTestCase
 		$oInlineImage->SetDefaultOrgId();
 		$this->assertEquals($iContactOrgId, $oInlineImage->Get('item_org_id'),'The org_id should be the one of the contact');
 
-		$oInlineImage = \MetaModel::NewObject('InlineImage',['item_class' => 'TriggerOnObjectCreation']);
+		$oInlineImage = \MetaModel::NewObject('InlineImage',['item_class' => 'TriggerOnObjectCreate']);
 		$oInlineImage->SetDefaultOrgId();
 		$this->assertEquals(0, $oInlineImage->Get('item_org_id'),'The org_id should be left undefined');
 	}
@@ -83,7 +83,7 @@ class InlineImageTest extends ItopDataTestCase
 		$oInlineImage->SetDefaultOrgId();
 		$this->assertEquals(0, $oInlineImage->Get('item_org_id'),'The org_id should be left undefined');
 
-		$oInlineImage = \MetaModel::NewObject('InlineImage',['item_class' => 'TriggerOnObjectCreation']);
+		$oInlineImage = \MetaModel::NewObject('InlineImage',['item_class' => 'TriggerOnObjectCreate']);
 		$oInlineImage->SetDefaultOrgId();
 		$this->assertEquals(0, $oInlineImage->Get('item_org_id'),'The org_id should be left undefined');
 	}
