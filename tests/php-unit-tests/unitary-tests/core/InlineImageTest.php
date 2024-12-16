@@ -59,4 +59,64 @@ class InlineImageTest extends ItopDataTestCase
 			],
 		];
 	}
+
+	public function testSetDefaultOrgIdWhenLoggedInWithContact()
+	{
+		$iContactOrgId = $this->GivenObjectInDB('Organization', ['name' => 'TestOrg']);
+		$this->GivenUserLoggedInWithContact($iContactOrgId);
+
+		$oInlineImage = \MetaModel::NewObject('InlineImage',['item_class' => 'UserRequest']);
+		$oInlineImage->SetDefaultOrgId();
+		$this->assertEquals($iContactOrgId, $oInlineImage->Get('item_org_id'),'The org_id should be the one of the contact');
+
+		$oInlineImage = \MetaModel::NewObject('InlineImage',['item_class' => 'TriggerOnObjectCreation']);
+		$oInlineImage->SetDefaultOrgId();
+		$this->assertEquals(0, $oInlineImage->Get('item_org_id'),'The org_id should be left undefined');
+	}
+
+
+	public function testSetDefaultOrgIdWhenLoggedInWithoutContact()
+	{
+		$this->GivenUserLoggedInWithoutContact();
+
+		$oInlineImage = \MetaModel::NewObject('InlineImage',['item_class' => 'UserRequest']);
+		$oInlineImage->SetDefaultOrgId();
+		$this->assertEquals(0, $oInlineImage->Get('item_org_id'),'The org_id should be left undefined');
+
+		$oInlineImage = \MetaModel::NewObject('InlineImage',['item_class' => 'TriggerOnObjectCreation']);
+		$oInlineImage->SetDefaultOrgId();
+		$this->assertEquals(0, $oInlineImage->Get('item_org_id'),'The org_id should be left undefined');
+	}
+
+	private function GivenUserLoggedInWithContact(int $iContactOrgId)
+	{
+		$iContactId = $this->GivenObjectInDB('Person', [
+			'first_name' => 'TestContact',
+			'name' => 'TestContact',
+			'org_id' => $iContactOrgId]);
+		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+		$iUser = $this->GivenObjectInDB('UserLocal', [
+			'login' => $sLogin,
+			'password' => 'tagada-Secret,007',
+			'language' => 'EN US',
+			'contactid' => $iContactId,
+			'profile_list' => [
+				'profileid:'.self::$aURP_Profiles['Configuration Manager']
+			]
+		]);
+		\UserRights::Login($sLogin);
+	}
+	private function GivenUserLoggedInWithoutContact()
+	{
+		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+		$iUser = $this->GivenObjectInDB('UserLocal', [
+			'login' => $sLogin,
+			'password' => 'tagada-Secret,007',
+			'language' => 'EN US',
+			'profile_list' => [
+				'profileid:'.self::$aURP_Profiles['Configuration Manager']
+			]
+		]);
+		\UserRights::Login($sLogin);
+	}
 }

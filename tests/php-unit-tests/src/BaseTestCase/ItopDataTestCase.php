@@ -1087,10 +1087,10 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @param string $sClass
 	 * @param array $aValues
 	 *
-	 * @return DBObject
+	 * @return int
 	 * @throws Exception
 	 */
-	protected function GivenObjectInDB($sClass, $aValues)
+	protected function GivenObjectInDB($sClass, $aValues):int
 	{
 		// Check and complete the values
 		foreach ($aValues as $sAttCode => $oValue) {
