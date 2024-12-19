@@ -1,58 +1,44 @@
 <?php
-namespace Combodo\iTop\Test\UnitTest;
+
+namespace Combodo\iTop\Test\UnitTest\Application\TwigBase;
 
 use Combodo\iTop\Portal\Twig\AppExtension;
-use Twig_Environment;
-use Twig_Loader_Array;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class TwigTest extends ItopDataTestCase
 {
-	protected function setUp(): void
-	{
-		parent::setUp();
-		$this->RequireOnceItopFile('core/config.class.inc.php');
-	}
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->RequireOnceItopFile('core/config.class.inc.php');
+    }
 
-	/**
-	 * Test the fix for ticket N°4384
-	 *
-	 * @dataProvider TemplateProvider
-	 *
-	 */
-	public function testTemplate($sFileName, $sExpected)
-	{
-		$sId = 'TestTwig';
-		$oAppExtension = new AppExtension();
+    /**
+     * Test the fix for ticket N°4384
+     *
+     */
+    public function testTemplate()
+    {
+        // Creating sandbox twig env. to load and test the custom form template
+        $oTwig = new Environment(new FilesystemLoader(__DIR__.'/'));
 
-		// Creating sandbox twig env. to load and test the custom form template
-		$oTwig = new Twig_Environment(new Twig_Loader_Array([$sId => $sFileName]));
+        // Manually registering filters and functions as we didn't find how to do it automatically
+        $oAppExtension = new AppExtension();
+        $aFilters = $oAppExtension->getFilters();
+        foreach ($aFilters as $oFilter)
+        {
+            $oTwig->addFilter($oFilter);
+        }
+        $aFunctions = $oAppExtension->getFunctions();
+        foreach ($aFunctions as $oFunction)
+        {
+            $oTwig->addFunction($oFunction);
+        }
 
-		// Manually registering filters and functions as we didn't find how to do it automatically
-		$aFilters = $oAppExtension->getFilters();
-		foreach ($aFilters as $oFilter)
-		{
-			$oTwig->addFilter($oFilter);
-		}
-		$aFunctions = $oAppExtension->getFunctions();
-		foreach ($aFunctions as $oFunction)
-		{
-			$oTwig->addFunction($oFunction);
-		}
-	}
+        $sOutput = $oTwig->render('test.html');
 
-	public static function testTemplateProvider()
-	{
-		$aReturn = array();
-		$aReturn['filter_system'] = [
-				'sFileName' => 'test.html',
-				'expected' =>file_get_contents(dirname(__FILE__).'/test.html'),
-			];
-
-		return $aReturn;
-	}
+        $this->assertEquals(file_get_contents(__DIR__.'/test.html'), $sOutput);
+    }
 }
