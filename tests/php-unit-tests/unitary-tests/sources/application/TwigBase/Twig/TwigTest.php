@@ -16,7 +16,7 @@ class TwigTest extends ItopDataTestCase
     }
 
     /**
-     * Test the fix for ticket N°4384
+     * @covers N°4384 N°7810
      *
      */
     public function testTemplate()
@@ -37,7 +37,7 @@ class TwigTest extends ItopDataTestCase
             $oTwig->addFunction($oFunction);
         }
 
-        $sOutput = $oTwig->render('test.html');
+        $sOutput = $oTwig->render('test.html.twig');
 
         $this->assertEquals(file_get_contents(__DIR__.'/test.html'), $sOutput);
     }
