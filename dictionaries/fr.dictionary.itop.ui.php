@@ -6,6 +6,24 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * 
  */
+//
+// Class: AuditFilterField
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+    'Class:AuditFilterField'                                    => 'Filtre pour les audits',
+    'Class:AuditFilterField+'                                   => 'Dans les Périmètres et les règles d\'audit, vous pouvez utiliser les filtres définis ici pour limiter les objets audités',
+    'Class:AuditCategory/Attribute:label'                     => 'Libellé',
+    'Class:AuditCategory/Attribute:label+'                    => 'Libellé affiché dans l\'écran d\audit',
+    'Class:AuditCategory/Attribute:placeholder'              => 'Nom de la variable',
+    'Class:AuditCategory/Attribute:placeholder+'             => 'Nom  de la variable utilisé dans les requêtes des Périmètres et des règles d\'audit',
+    'Class:AuditCategory/Attribute:oql'           => 'Query for select~~',
+    'Class:AuditCategory/Attribute:oql+'          => 'OQL query defining the set of objects to be selected in audit rules and audit categories~~',
+    'Class:AuditCategory/Attribute:values'               => 'List of avalaible values~~',
+    'Class:AuditCategory/Attribute:values+'              => ' defining the list of values to be selected in audit rules and audit categories~~',
+));
+
+
 /**
  *
  */

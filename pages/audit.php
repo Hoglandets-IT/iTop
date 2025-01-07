@@ -11,7 +11,6 @@ use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
@@ -25,7 +24,6 @@ use Combodo\iTop\Application\WebPage\CSVPage;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
-use Combodo\iTop\Form\Field\SelectObjectField;
 
 /**
  * Adds the context parameters to the audit rule query
@@ -156,6 +154,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext, $aParam
 
 function MakeSelectField($oPage, string $sLabel, string $sFieldName, string $sOql, string $sCurrentValue)
 {
+
     $oSearch = DBObjectSearch::FromOQL($sOql);
     $oAllowedValues = new DBObjectSet($oSearch);
     $oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
@@ -206,7 +205,7 @@ function MakeSelectField($oPage, string $sLabel, string $sFieldName, string $sOq
                 foreach ($aAdditionalField as $sAdditionalField) {
                     array_push($aArguments, $oAllowedValues->Get($sAdditionalField));
                 }
-                $sOptionName.='<br><i>'.utils::HtmlEntities(vsprintf($sFormatAdditionalField, $aArguments)).'</i>'; ;
+                $sOptionName .= '<br><i>' . utils::HtmlEntities(vsprintf($sFormatAdditionalField, $aArguments)) . '</i>';;
             }
             if (!empty($sObjectImageAttCode)) {
                 // Try to retrieve image for contact
@@ -214,10 +213,10 @@ function MakeSelectField($oPage, string $sLabel, string $sFieldName, string $sOq
                 $oImage = $oAllowedValues->Get($sObjectImageAttCode);
                 if (!$oImage->IsEmpty()) {
                     $sPicturepictureUrl = $oImage->GetDisplayURL($sClassAllowed, $oChoiceItem->GetKey(), $sObjectImageAttCode);
-                    $sOptionName.=' <span class="ibo-input-select--autocomplete-item-image" style="background-image: url('.$sPicturepictureUrl.');"></span>';
+                    $sOptionName .= ' <span class="ibo-input-select--autocomplete-item-image" style="background-image: url(' . $sPicturepictureUrl . ');"></span>';
                 } else {
                     $sInitials = utils::FormatInitialsForMedallion(utils::ToAcronym($oChoiceItem->Get('friendlyname')));
-                    $sOptionName.=' <span class="ibo-input-select--autocomplete-item-image" ">'.$sInitials.'</span>';
+                    $sOptionName .= ' <span class="ibo-input-select--autocomplete-item-image" ">' . $sInitials . '</span>';
                 }
             }
             $oOption = SelectOptionUIBlockFactory::MakeForSelectOption($oChoiceItem->GetKey(), $sOptionName, ($sCurrentValue == $oChoiceItem->GetKey()));
@@ -234,17 +233,14 @@ function MakeSelectField($oPage, string $sLabel, string $sFieldName, string $sOq
 JS
         );
         return $oSelect;
-    }
-    else
-    {
+    } else {
         // Too many choices, use an autocomplete
         // Check that the given value is allowed
         $oSearch = $oAllowedValues->GetFilter();
         $oSearch->AddCondition('id', $sCurrentValue);
         $oSet = new DBObjectSet($oSearch);
         $sClass = $oSet->GetClass();
-        if ($oSet->Count() == 0)
-        {
+        if ($oSet->Count() == 0) {
             $sCurrentValue = null;
         }
 
@@ -261,7 +257,7 @@ JS
         $sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$sFieldName\" value=\"$sDisplayValue\" placeholder='...'/>";
 
         // another hidden input to store & pass the object's Id
-        $sHTMLValue .= "<input type=\"hidden\" id=\"$sFieldName\" name=\"{$sFieldName}\" value=\"".utils::HtmlEntities($sCurrentValue)."\" />\n";
+        $sHTMLValue .= "<input type=\"hidden\" id=\"$sFieldName\" name=\"{$sFieldName}\" value=\"" . utils::HtmlEntities($sCurrentValue) . "\" />\n";
 
         $sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
         $oPage->add_ready_script(
@@ -276,10 +272,10 @@ JS
 EOF
         );
         $sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
-        $sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--clear ibo-is-hidden\"  id=\"mini_clear_{$sFieldName}\" onClick=\"$('#$sFieldName').val('');$('#label_$sFieldName').val('');		$('#label_$sFieldName').data('selected_value', '');\" data-tooltip-content='".Dict::S('UI:Button:Clear')."'><i class=\"fas fa-times\"></i></a>";
-        $sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$sFieldName}\" onClick=\"oACWidget_{$sFieldName}.Search();\" data-tooltip-content='".Dict::S('UI:Button:Search')."'><i class=\"fas fa-search\"></i></a>";
+        $sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--clear ibo-is-hidden\"  id=\"mini_clear_{$sFieldName}\" onClick=\"$('#$sFieldName').val('');$('#label_$sFieldName').val('');		$('#label_$sFieldName').data('selected_value', '');\" data-tooltip-content='" . Dict::S('UI:Button:Clear') . "'><i class=\"fas fa-times\"></i></a>";
+        $sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$sFieldName}\" onClick=\"oACWidget_{$sFieldName}.Search();\" data-tooltip-content='" . Dict::S('UI:Button:Search') . "'><i class=\"fas fa-search\"></i></a>";
         if (MetaModel::IsHierarchicalClass($sClass) !== false) {
-            $sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$sFieldName}\" onClick=\"oACWidget_{$sFieldName}.HKDisplay();\" data-tooltip-content='".Dict::S('UI:Button:SearchInHierarchy')."'><i class=\"fas fa-sitemap\"></i></a>";
+            $sHTMLValue .= "<a href=\"#\" class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$sFieldName}\" onClick=\"oACWidget_{$sFieldName}.HKDisplay();\" data-tooltip-content='" . Dict::S('UI:Button:SearchInHierarchy') . "'><i class=\"fas fa-sitemap\"></i></a>";
             $oPage->add_ready_script(
                 <<<JS
                if ($('#ac_tree_{$sFieldName}').length == 0)
@@ -294,8 +290,9 @@ EOF
     $sHTMLValue .= "</div>";
     $sHTMLValue .= "</div>";
 
-    return new Html( $sHTMLValue);
+    return new Html($sHTMLValue);
 }
+
 try
 {
     require_once('../approot.inc.php');
@@ -305,11 +302,11 @@ try
 
     $bSelectionAuditRulesByDefault = utils::GetConfig()->Get('audit.enable_selection_landing_page');
     $operation = utils::ReadParam('operation', $bSelectionAuditRulesByDefault ? 'selection' : 'audit');
-    $aAuditFilter = utils::GetConfig()->Get('audit.filter');
-    if ($aAuditFilter == null){
-        $aAuditFilter = [];
-    }
-
+    $sOQL = 'SELECT AuditFilterField';
+    $oSearch = DBObjectSearch::FromOQL($sOQL);
+    $oAuditFilterSet = new DBObjectSet($oSearch, array(), array());
+    $bHasAudiFilter= ($oAuditFilterSet->Count()>0) ;
+    $oAuditFilterSet->Rewind();
     $oAppContext = new ApplicationContext();
 
     require_once(APPROOT.'/application/loginwebpage.class.inc.php');
@@ -328,11 +325,11 @@ try
 
             $aFilterParams = [];
             $sAddingParams = '';
-            if($aAuditFilter !=[] ){
-                foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
-                    $sCurrentValue = utils::ReadParam($sFieldName, '');
-                    $sAddingParams .= "&$sFieldName=$sCurrentValue";
-                    $aFilterParams[$sFieldName] = $sCurrentValue;
+            if ($bHasAudiFilter) {
+                while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
+                    $sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
+                    $sAddingParams .= '&'.$oAuditFilter->Get('placeholder').'='.$sCurrentValue;
+                    $aFilterParams[$oAuditFilter->Get('placeholder')] = $sCurrentValue;
                 }
             }
 
@@ -347,9 +344,6 @@ try
             $sFileName = utils::ReadParam('filename', null, true, 'string');
             $bAdvanced = utils::ReadParam('advanced', false);
             $sAdvanced = $bAdvanced ? '&advanced=1' : '';
-
-
-
 
             if ($sFileName != null)
             {
@@ -384,7 +378,7 @@ try
                 $sTitle = Dict::S('UI:Audit:AuditErrors');
                 $oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
+			    $oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
                 $oP->AddUiBlock($oBackButton);
                 $oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
 
@@ -395,8 +389,8 @@ try
                 $oP->p("</div>");
                 // Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
                 $oP->add_ready_script(" $('#1>textarea').height(400);"); // adjust the size of the block
-			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams;
-			$oDownloadButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
+                $sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams;
+                $oDownloadButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
 
                 $oP->add_ready_script("$('a[href*=\"webservices/export.php?expression=\"]').attr('href', '".$sExportUrl."&filename=audit.csv".$sAdvanced."');");
                 $oP->add_ready_script("$('#1 :checkbox').removeAttr('onclick').on('click', function() { var sAdvanced = ''; if (this.checked) sAdvanced = '&advanced=1'; window.location.href='$sExportUrl'+sAdvanced; } );");
@@ -411,21 +405,21 @@ try
             $aFilterParams = [];
             $sAddingParams = '';
             $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:FilterList'));
-            if($aAuditFilter !=[] ){
-                foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
-                    $sCurrentValue = utils::ReadParam($sFieldName, '');
-                    $sAddingParams .= "&$sFieldName=$sCurrentValue";
-                    $aFilterParams[$sFieldName] = $sCurrentValue;
+            if ($bHasAudiFilter) {
+                while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
+                    $sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
+                    $sAddingParams .= "&".$oAuditFilter->Get('placeholder')."=$sCurrentValue";
+                    $aFilterParams[$oAuditFilter->Get('placeholder')] = $sCurrentValue;
                     $sName = '';
-                    if (array_key_exists('oql', $aFieldParam) && utils::IsNotNullOrEmptyString($aFieldParam['oql'])) {
-                        $oSearch = new DBObjectSet(DBObjectSearch::FromOQL($aFieldParam['oql']));
+                    if (utils::IsNotNullOrEmptyString($oAuditFilter->Get('oql'))) {
+                        $oSearch = new DBObjectSet(DBObjectSearch::FromOQL($oAuditFilter->Get('oql')));
                         $sClass = $oSearch->GetClass();
                         $oObject = MetaModel::GetObject($sClass, $sCurrentValue);
                         $sName = $oObject->GetName();
                     } else {//this is a list of values
-                        $sName = $aFieldParam['values'][$sCurrentValue];
+                        $sName = $oAuditFilter->Get('values')[$sCurrentValue];
                     }
-                    $sFilterText .= '<li>'.$aFieldParam['label'].': '.$sName.'</li>';
+                    $sFilterText .= '<li>'.$oAuditFilter->Get('label').': '.$sName.'</li>';
                 }
                 $oPanel->AddSubBlock(new Html($sFilterText.'</ul>'));
             }
@@ -444,7 +438,7 @@ try
 			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:Interactive:Button:Back'), "./audit.php?".$oAppContext->GetForLink());
             $oP->AddUiBlock($oBackButton);
             $oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
-            if($aAuditFilter !=[] ){
+            if ($bHasAudiFilter) {
                 $oP->AddUiBlock($oPanel);
                 $oP->AddUiBlock(new Html('<br>'));
             }
@@ -458,6 +452,8 @@ try
             break;
 
         case 'selection':
+            $sEnableDisableButtonJS ='';
+            $aAllFields = [];
             $oP->SetBreadCrumbEntry('ui-tool-auditselection', Dict::S('UI:Audit:Interactive:Selection:BreadCrumb'), Dict::S('UI:Audit:Interactive:Selection:BreadCrumb+'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
             if (UserRights::IsActionAllowed('AuditCategory', UR_ACTION_MODIFY)) {
                 $oButton = ButtonUIBlockFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot()."pages/UI.php?c[menu]=AuditCategories", Dict::S('UI:Audit:Interactive:Button:Configuration'), 'fas fa-wrench');
@@ -465,36 +461,49 @@ try
             }
             $oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:Interactive:Selection:Title')));
 
-            if($aAuditFilter !=[] ){
-                $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:Selection:SubTitleParams'));
-                $oP->AddUiBlock($oPanel);
-                foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
+            $sAuditUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit";
+            $sGetParams = '';
 
-                    $oBlock = FieldUIBlockFactory::MakeStandard($aFieldParam['label']);
-                    $oBlock->SetAttLabel($aFieldParam['label'])
-                        ->AddDataAttribute("input-id", $sFieldName)
+            if ($bHasAudiFilter) {
+                $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:Selection:SubTitleParams'));
+                $sPanelFilterId =$oPanel->GetId();
+                $oP->AddUiBlock($oPanel);
+
+                while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
+                    $oBlock = FieldUIBlockFactory::MakeStandard($oAuditFilter->Get('label'));
+                    $oBlock->SetAttLabel($oAuditFilter->Get('label'))
+                        ->AddDataAttribute("input-id", $oAuditFilter->Get('placeholder'))
                         ->AddDataAttribute("input-type", 'input-type');
                     $oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content", "ibo-input-field-wrapper"]);
 
-                    $sCurrentValue = utils::ReadParam($sFieldName, '');
+                    $sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
 
-                    if (array_key_exists('oql', $aFieldParam) && utils::IsNotNullOrEmptyString($aFieldParam['oql'])) {
-                        $oValue->AddSubBlock(MakeSelectField( $oP, $aFieldParam['label'],  $sFieldName,  $aFieldParam['oql'],  $sCurrentValue));
+                    if (utils::IsNotNullOrEmptyString($oAuditFilter->Get('oql'))) {
+                        $oValue->AddSubBlock(MakeSelectField( $oP, $oAuditFilter->Get('label'),  $oAuditFilter->Get('placeholder'),  $oAuditFilter->Get('oql'),  $sCurrentValue));
                     } else {//this is a list of values
-                        $aListValues = $aFieldParam['values'];
-                        $oSelect = SelectUIBlockFactory::MakeForSelect($sFieldName, $sFieldName);
+                        $aListValues = explode(',',$oAuditFilter->Get('values'));
+                        $oSelect = SelectUIBlockFactory::MakeForSelect($oAuditFilter->Get('placeholder'), $oAuditFilter->Get('placeholder'));
                         $oSelect->AddCSSClass('ibo-input-field-wrapper');
 
-                        foreach($aListValues as $sKey => $sValue) {
-                            $oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sKey, $sValue, ($sCurrentValue == $sKey)));
+                        //foreach($aListValues as $sKey => $sValue) {
+                        //    $oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sKey, $sValue, ($sCurrentValue == $sKey)));
+                        foreach($aListValues as $sValue) {
+                            $oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sValue, $sValue, ($sCurrentValue == $sValue)));
                         }
 
                         $oValue->AddSubBlock($oSelect);
                     }
                     $oBlock->AddSubBlock($oValue);
                     $oPanel->AddSubBlock($oBlock);
-                }
 
+                    //for links
+                    $sGetParams .= $oAuditFilter->Get('placeholder').'=$("[name='.$oAuditFilter->Get('placeholder').']").val();';
+                    $sAuditUrl .= '&'.$oAuditFilter->Get('placeholder').'=\'+'.$oAuditFilter->Get('placeholder').'+\'';
+
+                    //for JS
+                    $aAllFields[$oAuditFilter->Get('placeholder')] = 0;
+                }
+                $sAllDomainUrl = 'javascript:'.$sGetParams.' window.location = \''.$sAuditUrl.'\'';
             }
             $oP->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Audit:Interactive:Selection:SubTitle'),2));
 
@@ -508,22 +517,11 @@ try
             $oDashboardRow->AddDashboardColumn($oDashboardColumn);
             $oAllCategoriesDashlet = new DashletContainer();
 
-            $sDomainUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit";
-            if($aAuditFilter !=[] ) {
-                //modif URLLink In order to send params
-                $sGetParams = '';
-                foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
-                    $sGetParams .= $sFieldName."=$('[name=$sFieldName]').val();";
-                    $sDomainUrl .= "&".$sFieldName."='+$sFieldName+'";
-                }
-                $sDomainUrl = 'javascript:'.$sGetParams.' window.location = \''.$sDomainUrl.'\'';
-            }
-
             $oAllCategoriesDashlet
                 ->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge'])
                 ->AddSubBlock(DashletFactory::MakeForDashletBadge(
                     utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-audit.svg',
-                    $sDomainUrl,
+                    $sAllDomainUrl,
                     $iCategoryCount,
                     Dict::S('UI:Audit:Interactive:Selection:BadgeAll')
                 ));
@@ -544,7 +542,7 @@ try
             $iDomainCnt = 0;
             /** @var AuditDomain $oAuditDomain */
             while($oAuditDomain = $oDomainSet->Fetch()) {
-				$sDomainUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit&domain=".$oAuditDomain->GetKey();
+				$sDomainUrl = $sAuditUrl.'&domain='.$oAuditDomain->GetKey();
                 $sIconUrl = utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-puzzle.svg';
                 /** @var \ormDocument $oImage */
                 $oImage = $oAuditDomain->Get('icon');
@@ -553,13 +551,8 @@ try
                 }
                 $iCategoryCount = $oAuditDomain->Get('categories_list')->Count();
 
-                if($aAuditFilter !=[] ) {
+                if ($bHasAudiFilter) {
                     //modif URLLink In order to send params
-                    $sGetParams = '';
-                    foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
-                        $sGetParams .= $sFieldName."=$('[name=$sFieldName]').val();";
-                        $sDomainUrl .= "&".$sFieldName."='+$sFieldName+'";
-                    }
                     $sDomainUrl = 'javascript:'.$sGetParams.' window.location = \''.$sDomainUrl.'\'';
                 }
 
@@ -568,8 +561,42 @@ try
                 $oDomainDashlet->AddSubBlock($oDomainBlock)->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge']);
                 $oDashboardRow->GetSubBlocks()[$iDomainCnt % 3]->AddUIBlock($oDomainDashlet); // ;
                 $iDomainCnt++;
+                if ($bHasAudiFilter) {
+                    $sFieldCondition = '';
+                  //JS sEnableDisableButtonJS .= 'if ('.implode(' && ', array_keys($aAllFields)).' == 0) {';
+                    foreach ($oAuditDomain->GetDependentFields() as $sPlaceholder) {
+                        if($sFieldCondition != ''){
+                            $sFieldCondition .= ' && ';
+                        }
+                        $sFieldCondition .= '$("[name=' . $sPlaceholder . ']").val() != "" ';
+                    }
+                    IssueLog::Error('$sFieldCondition: ' . $sFieldCondition);
+                    if ($sFieldCondition != '') {
+                        $sEnableDisableButtonJS .= 'if(' . $sFieldCondition . '){ $("#' . $oDomainDashlet->GetId() . ' a").removeClass("ibo-dashlet-badge--disabled"); } else { $("#' . $oDomainDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled"); }';
+                        $oP->add_ready_script('$("#' . $oDomainDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled")');
+                    }
+                }
             }
             $oP->AddUiBlock($oDashboardRow);
+            if ($bHasAudiFilter) {
+                //add function in order to disable some audit button if necessaries values are not selected
+                $sListFieldsJS = implode(',', array_keys($aAllFields));
+                $sJS = <<<JS
+            var observerOrgFromId = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutationRecord) {
+                    if ($.inArray(mutationRecord.target.id, [$sListFieldsJS])) {
+                        $sEnableDisableButtonJS
+                    }
+                });
+            });
+            observerOrgFromId.observe(document.getElementById('$sPanelFilterId'), { attributes : true, attributeFilter : ['value'], subtree: true,childList: true });
+            console.warn('yo');
+            $('body').on('click', 'a.ibo-dashlet-badge--disabled', function(event) {
+                event.preventDefault();
+            });
+JS;
+               $oP->add_ready_script($sJS);
+            }
 
             break;
 
@@ -608,30 +635,34 @@ try
             $oP->AddUiBlock($oBackButton);
             $oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle));
 
+                $aFilterParams = [];
+                $sAddingParams = '';
+                if ($bHasAudiFilter) {
+                    $oPanel = PanelUIBlockFactory::MakeNeutral('', Dict::S('UI:Audit:Interactive:FilterList'));
+                    $oP->AddUiBlock($oPanel);
 
-            $aFilterParams = [];
-            $sAddingParams = '';
-            if($aAuditFilter !=[] ){
-                $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:FilterList'));
-                $oP->AddUiBlock($oPanel);
+                    while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
+                        $sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
+                        try {
+                            $sAddingParams .= '&' . $oAuditFilter->Get('placeholder') . '=' . $sCurrentValue;
+                            $aFilterParams[$oAuditFilter->Get('placeholder')] = $sCurrentValue;
+                            $sName = '';
+                            if (utils::IsNotNullOrEmptyString($oAuditFilter->Get('oql'))) {
+                                $oSearch = new DBObjectSet(DBObjectSearch::FromOQL($oAuditFilter->Get('oql')));
+                                $sClass = $oSearch->GetClass();
+                                $oObject = MetaModel::GetObject($sClass, $sCurrentValue);
+                                $sName = $oObject->GetName();
+                            } else {//this is a list of values
+                                $sName = $sCurrentValue;//$oAuditFilter->Get('values')[$sCurrentValue];
+                            }
+                            $sFilterText .= '<li>' . $oAuditFilter->Get('label') . ': ' . $sName . '</li>';
+                        } catch (Exception $e) {
+                            $sFilterText .= '<li> no '.$oAuditFilter->Get('label').' filter' . '</li>';
+                        }
 
-                foreach ($aAuditFilter as $sFieldName => $aFieldParam) {
-                    $sCurrentValue = utils::ReadParam($sFieldName, '');
-                    $sAddingParams .= "&$sFieldName=$sCurrentValue";
-                    $aFilterParams[$sFieldName] = $sCurrentValue;
-                    $sName = '';
-                    if (array_key_exists('oql', $aFieldParam) && utils::IsNotNullOrEmptyString($aFieldParam['oql'])) {
-                        $oSearch = new DBObjectSet(DBObjectSearch::FromOQL($aFieldParam['oql']));
-                        $sClass = $oSearch->GetClass();
-                        $oObject = MetaModel::GetObject($sClass, $sCurrentValue);
-                        $sName = $oObject->GetName();
-                    } else {//this is a list of values
-                        $sName = $aFieldParam['values'][$sCurrentValue];
                     }
-                    $sFilterText .= '<li>'.$aFieldParam['label'].': '.$sName.'</li>';
+                    $oPanel->AddSubBlock(new Html($sFilterText . '</ul>'));
                 }
-                $oPanel->AddSubBlock(new Html($sFilterText.'</ul>'));
-            }
             $oP->AddUiBlock(new Html('<br>'));
 
             $oP->AddUiBlock(new Text($sSubTitle));

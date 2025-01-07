@@ -25,6 +25,7 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+require_once(APPROOT.'/application/audit.AuditFilterField.class.inc.php');
 
 /**
  * @since 3.1.0
@@ -70,6 +71,36 @@ class AuditDomain extends cmdbAbstractObject
 
 		return $aShortcutActions;
 	}
+    public function GetDependentFields():array
+    {
+        $aListFields=[];
+        foreach ($this->Get('categories_list') as $oLnkToCategory) {
+            $aMatches = [];
+            $oCategory = MetaModel::GetObject('AuditCategory', $oLnkToCategory->Get('category_id'));
+            if (preg_match_all('/:\w+/', $oCategory->Get('definition_set'), $aMatches)) {
+                foreach ($aMatches as $aMatchesList) {
+                    foreach ($aMatchesList as $sPlaceholder) {
+                        if (!in_array(substr($sPlaceholder, 1), $aListFields)) {
+                            $aListFields[] = substr($sPlaceholder, 1);
+                        }
+                    }
+                }
+            }
+            foreach ($oCategory->Get('rules_list') as $oRule) {
+                $aMatches = [];
+                if (preg_match_all('/:\w+/', $oRule->Get('query'), $aMatches)) {
+                    foreach ($aMatches as $aMatchesList) {
+                        foreach ($aMatchesList as $sPlaceholder) {
+                            if (!in_array(substr($sPlaceholder, 1), $aListFields)) {
+                                $aListFields[] = substr($sPlaceholder, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $aListFields;
+    }
 
 }
 

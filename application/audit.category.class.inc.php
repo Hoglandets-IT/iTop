@@ -26,6 +26,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+
 require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 
 class AuditCategory extends cmdbAbstractObject
@@ -92,5 +95,13 @@ class AuditCategory extends cmdbAbstractObject
 
 		return $aShortcutActions;
 	}
+
+	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+	{
+        AuditFilterField::DisplayListOfFields($oPage);
+        $aFieldsMap = parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);;
+		return $aFieldsMap;
+	}
+
+
 }
-?>

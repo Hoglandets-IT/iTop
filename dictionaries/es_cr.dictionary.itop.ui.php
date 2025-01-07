@@ -7,7 +7,28 @@
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
  * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+//
+// Class: AuditFilterField
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+    'Class:AuditFilterField'                                    => 'Audit Filter Fields~~',
+    'Class:AuditFilterField+'                                   => 'In Audit rules and Audit categories you can use Filter Fields defined here.~~',
+    'Class:AuditCategory/Attribute:label'                     => 'Label~~',
+    'Class:AuditCategory/Attribute:label+'                    => 'Label for select field~~',
+    'Class:AuditCategory/Attribute:placeholder'              => 'Placeholder~~',
+    'Class:AuditCategory/Attribute:placeholder+'             => 'The field can be used in Audit rules and Audit categories requests~~',
+    'Class:AuditCategory/Attribute:oql'           => 'Query for select~~',
+    'Class:AuditCategory/Attribute:oql+'          => 'OQL query defining the set of objects to be selected in audit rules and audit categories~~',
+    'Class:AuditCategory/Attribute:values'               => 'List of avalaible values~~',
+    'Class:AuditCategory/Attribute:values+'              => ' defining the list of values to be selected in audit rules and audit categories~~',
+));
+
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'BooleanLabel:no' => 'No',
+	'BooleanLabel:yes' => 'Si',
+	'Calendar-FirstDayOfWeek' => '0',
 	'Class:AuditCategory' => 'Auditoría de Categorías',
 	'Class:AuditCategory+' => 'Auditoría de Categorías',
 	'Class:AuditCategory/Attribute:name' => 'Nombre de Categoría',

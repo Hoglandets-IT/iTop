@@ -9,7 +9,29 @@
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+
+//
+// Class: AuditFilterField
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+    'Class:AuditFilterField'                                    => 'Audit Filter Fields~~',
+    'Class:AuditFilterField+'                                   => 'In Audit rules and Audit categories you can use Filter Fields defined here.~~',
+    'Class:AuditCategory/Attribute:label'                     => 'Label~~',
+    'Class:AuditCategory/Attribute:label+'                    => 'Label for select field~~',
+    'Class:AuditCategory/Attribute:placeholder'              => 'Placeholder~~',
+    'Class:AuditCategory/Attribute:placeholder+'             => 'The field can be used in Audit rules and Audit categories requests~~',
+    'Class:AuditCategory/Attribute:oql'           => 'Query for select~~',
+    'Class:AuditCategory/Attribute:oql+'          => 'OQL query defining the set of objects to be selected in audit rules and audit categories~~',
+    'Class:AuditCategory/Attribute:values'               => 'List of avalaible values~~',
+    'Class:AuditCategory/Attribute:values+'              => ' defining the list of values to be selected in audit rules and audit categories~~',
+));
+
+
+Dict::Add('JA JP', 'Japanese', '日本語', [
+	'BooleanLabel:no' => 'いいえ',
+	'BooleanLabel:yes' => 'はい',
+	'Calendar-FirstDayOfWeek' => '0~~',
 	'Class:AuditCategory' => '監査カテゴリ',
 	'Class:AuditCategory+' => '監査全体の内部セクション',
 	'Class:AuditCategory/Attribute:name' => 'カテゴリ名',
@@ -26,7 +48,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-));
+]);
 
 //
 // Class: AuditRule
