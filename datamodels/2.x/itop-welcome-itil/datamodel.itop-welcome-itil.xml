@@ -116,8 +116,8 @@
                         <dashlets>
                             <dashlet id="AuditConfiguration_row3_col1_1" xsi:type="DashletObjectList">
                                 <rank>0</rank>
-                                <title>Class:AuditFilterField</title>
-                                <query>SELECT AuditFilterField</query>
+                                <title>Class:AuditRule</title>
+                                <query>SELECT AuditRule</query>
                                 <menu>true</menu>
                             </dashlet>
                         </dashlets>
@@ -127,8 +127,8 @@
                         <dashlets>
                             <dashlet id="AuditConfiguration_row3_col2_1" xsi:type="DashletObjectList">
                                 <rank>0</rank>
-                                <title>Class:AuditRule</title>
-                                <query>SELECT AuditRule</query>
+                                <title>Class:AuditFilterField</title>
+                                <query>SELECT AuditFilterField</query>
                                 <menu>true</menu>
                             </dashlet>
                         </dashlets>
