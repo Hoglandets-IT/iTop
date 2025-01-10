@@ -132,10 +132,8 @@ class ObjectFormHandlerHelper
 		$bModal = ($oRequest->isXmlHttpRequest() && empty($sOperation));
 
 		// - Retrieve form properties
-		if ($aFormProperties === null)
-		{
-			$aFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
-		}
+		$aFormProperties = $aFormProperties ?? ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
+
 		// - Create and
 		if (empty($sOperation))
 		{
@@ -282,7 +280,8 @@ class ObjectFormHandlerHelper
 				->SetActionRulesToken($sActionRulesToken)
 				->SetRenderer($oFormRenderer)
 				->SetFormProperties($aFormProperties);
-
+			$oFormManager->PrepareFormAndHTMLDocument();
+			$oFormManager->PrepareFields();
 			$oFormManager->Build();
 			$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 			// Check the number of editable fields
