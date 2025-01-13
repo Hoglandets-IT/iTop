@@ -29,7 +29,7 @@ Dict::Add('EN US', 'English', 'English', array(
     'Class:AuditCategory/Attribute:oql'           => 'Query for select',
     'Class:AuditCategory/Attribute:oql+'          => 'OQL query defining the set of objects to be selected in audit rules and audit categories',
     'Class:AuditCategory/Attribute:values'               => 'List of avalaible values',
-    'Class:AuditCategory/Attribute:values+'              => ' defining the list of values to be selected in audit rules and audit categories',
+    'Class:AuditCategory/Attribute:values+'              => ' Defining the list of values to be selected in audit rules and audit categories',
 ));
 
 //

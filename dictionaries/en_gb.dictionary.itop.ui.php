@@ -19,7 +19,7 @@
 // Class: AuditFilterField
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
     'Class:AuditFilterField'                                    => 'Audit Filter Fields~~',
     'Class:AuditFilterField+'                                   => 'In Audit rules and Audit categories you can use Filter Fields defined here.~~',
     'Class:AuditCategory/Attribute:label'                     => 'Label~~',
@@ -29,8 +29,8 @@ Dict::Add('EN US', 'English', 'English', array(
     'Class:AuditCategory/Attribute:oql'           => 'Query for select~~',
     'Class:AuditCategory/Attribute:oql+'          => 'OQL query defining the set of objects to be selected in audit rules and audit categories~~',
     'Class:AuditCategory/Attribute:values'               => 'List of avalaible values~~',
-    'Class:AuditCategory/Attribute:values+'              => ' defining the list of values to be selected in audit rules and audit categories~~',
-));
+    'Class:AuditCategory/Attribute:values+'              => ' Defining the list of values to be selected in audit rules and audit categories~~',
+]);
 
 
 //
@@ -796,6 +796,8 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated',
 	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors out of %2$s - %3$s%% of the object are valid',
+    'UI:Audit:Interactive:Selection:SubTitleParams'  => 'Please select the following parameters: ',
+    'UI:Audit:Interactive:FilterList'  => 'With following parameters: ',
 
 
 	'UI:RunQuery:Title'                => ITOP_APPLICATION_SHORT.' - OQL Query Evaluation',
