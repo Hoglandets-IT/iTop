@@ -13,14 +13,16 @@
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
     'Class:AuditFilterField'                                    => 'Audit Filter Fields~~',
     'Class:AuditFilterField+'                                   => 'In Audit rules and Audit categories you can use Filter Fields defined here.~~',
-    'Class:AuditCategory/Attribute:label'                     => 'Label~~',
-    'Class:AuditCategory/Attribute:label+'                    => 'Label for select field~~',
-    'Class:AuditCategory/Attribute:placeholder'              => 'Placeholder~~',
-    'Class:AuditCategory/Attribute:placeholder+'             => 'The field can be used in Audit rules and Audit categories requests~~',
-    'Class:AuditCategory/Attribute:oql'           => 'Query for select~~',
-    'Class:AuditCategory/Attribute:oql+'          => 'OQL query defining the set of objects to be selected in audit rules and audit categories~~',
-    'Class:AuditCategory/Attribute:values'               => 'List of avalaible values~~',
-    'Class:AuditCategory/Attribute:values+'              => ' Defining the list of values to be selected in audit rules and audit categories~~',
+    'Class:AuditFilterField/Attribute:label'                     => 'Label~~',
+    'Class:AuditFilterField/Attribute:label+'                    => 'Label for select field~~',
+    'Class:AuditFilterField/Attribute:placeholder'              => 'Placeholder~~',
+    'Class:AuditFilterField/Attribute:placeholder+'             => 'The field can be used in Audit rules and Audit categories requests~~',
+    'Class:AuditFilterField/Attribute:placeholder:Error:StartWithThis' => 'The placeholder can not start with the reserved word "%1$s"~~',
+    'Class:AuditFilterField/Attribute:placeholder:Error:ReservedWord' => 'The placeholder can not be the reserved word "%1$s"~~',
+    'Class:AuditFilterField/Attribute:oql'           => 'Query for select~~',
+    'Class:AuditFilterField/Attribute:oql+'          => 'OQL query defining the set of objects to be selected in audit rules and audit categories~~',
+    'Class:AuditFilterField/Attribute:values'               => 'List of avalaible values~~',
+    'Class:AuditFilterField/Attribute:values+'              => ' Defining the list of values to be selected in audit rules and audit categories~~',
 ]);
 
 

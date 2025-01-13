@@ -13,14 +13,16 @@
 Dict::Add('FR FR', 'French', 'Français', [
     'Class:AuditFilterField'                                    => 'Filtre pour les audits',
     'Class:AuditFilterField+'                                   => 'Dans les Périmètres et les règles d\'audit, vous pouvez utiliser les filtres définis ici pour limiter les objets audités',
-    'Class:AuditCategory/Attribute:label'                     => 'Libellé',
-    'Class:AuditCategory/Attribute:label+'                    => 'Libellé affiché dans l\'écran d\audit',
-    'Class:AuditCategory/Attribute:placeholder'              => 'Nom de la variable',
-    'Class:AuditCategory/Attribute:placeholder+'             => 'Nom  de la variable utilisé dans les requêtes des Périmètres et des règles d\'audit',
-    'Class:AuditCategory/Attribute:oql'           => 'Requête',
-    'Class:AuditCategory/Attribute:oql+'          => 'Requête de définition de l\'ensemble des objets pouvant être selectionnés pour les règles et les catégories d\'audit',
-    'Class:AuditCategory/Attribute:values'               => ' Liste des valeurs possibles',
-    'Class:AuditCategory/Attribute:values+'              => ' Liste des valeurs pouvant être selectionnés pour les règles et les catégories d\'audit',
+    'Class:AuditFilterField/Attribute:label'                     => 'Libellé',
+    'Class:AuditFilterField/Attribute:label+'                    => 'Libellé affiché dans l\'écran d\audit',
+    'Class:AuditFilterField/Attribute:placeholder'              => 'Nom de la variable',
+    'Class:AuditFilterField/Attribute:placeholder+'             => 'Nom  de la variable utilisé dans les requêtes des Périmètres et des règles d\'audit',
+    'Class:AuditFilterField/Attribute:placeholder:Error:StartWithThis' => 'Le nom de la vaiable ne peut pas commencer par le mot réservé "%1$s"',
+    'Class:AuditFilterField/Attribute:placeholder:Error:ReservedWord' => 'Le nom de la vaiable ne peut  être le mot réservé "%1$s"',
+    'Class:AuditFilterField/Attribute:oql'           => 'Requête',
+    'Class:AuditFilterField/Attribute:oql+'          => 'Requête de définition de l\'ensemble des objets pouvant être selectionnés pour les règles et les catégories d\'audit',
+    'Class:AuditFilterField/Attribute:values'               => ' Liste des valeurs possibles',
+    'Class:AuditFilterField/Attribute:values+'              => ' Liste des valeurs pouvant être selectionnés pour les règles et les catégories d\'audit',
 ]);
 
 
