@@ -45,6 +45,10 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
 			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'modal/layout.html.twig'),
+			TemplateDefinitionDto::Create('loader', static::TEMPLATES_BASE_PATH.'helpers/loader.html.twig'),
+			TemplateDefinitionDto::Create('tagset_clic_handler_js', static::TEMPLATES_BASE_PATH.'helpers/tagset_clic_handler.js.twig'),
+			TemplateDefinitionDto::Create('session_message', static::TEMPLATES_BASE_PATH.'helpers/session_messages/session_message.html.twig'),
+			TemplateDefinitionDto::Create('session_messages', static::TEMPLATES_BASE_PATH.'helpers/session_messages/session_messages.html.twig'),
 		);
 	}
 

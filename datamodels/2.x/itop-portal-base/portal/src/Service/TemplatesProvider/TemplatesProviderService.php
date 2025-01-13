@@ -180,6 +180,7 @@ class TemplatesProviderService
 	 *
 	 * @return string|null
 	 * @throws \ReflectionException
+	 * @throws \Exception
 	 */
 	public function GetTemplatePath(string $sProviderClass, string $sTemplateId, bool $bIsInitial = false): ?string
 	{
