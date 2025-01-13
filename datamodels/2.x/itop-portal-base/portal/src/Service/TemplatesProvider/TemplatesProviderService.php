@@ -194,17 +194,8 @@ class TemplatesProviderService
 			// search for the template definition
 			$oTemplateDefinition = $this->oTemplateRegister->GetTemplateDefinition($sProviderClass, $sTemplateId);
 
-			if ($oTemplateDefinition !== null)
-			{
-
-				// return the template path
-				return $oTemplateDefinition->GetPath($bIsInitial);
-			}
-			else
-			{
-				throw new Exception("Template definition not found for provider class `$sProviderClass` and template id `$sTemplateId` (provider is known by the service)");
-			}
-
+			// return the template path
+			return $oTemplateDefinition?->GetPath($bIsInitial);
 
 		} else {
 
@@ -213,18 +204,7 @@ class TemplatesProviderService
 			// the provider class is unknown by service
 			// the class register its templates with legacy constants
 
-			$sTemplatePath = $this->GetLegacyTemplatePath($sProviderClass, $sTemplateId);
-
-			if ($sTemplatePath !== null)
-			{
-
-				// return the template path
-				return $sTemplatePath;
-			}
-			else
-			{
-				throw new Exception("Template definition not found for provider class `$sProviderClass` and template id `$sTemplateId` (provider is unknown by the service)");
-			}
+			return $this->GetLegacyTemplatePath($sProviderClass, $sTemplateId);
 		}
 	}
 
