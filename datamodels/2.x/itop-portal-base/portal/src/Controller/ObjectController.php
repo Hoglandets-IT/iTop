@@ -84,7 +84,13 @@ class ObjectController extends BrickController
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH. 'bricks/object/layout.html.twig'),
 			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH. 'bricks/object/modal.html.twig'),
 			TemplateDefinitionDto::Create('mode_create', static::TEMPLATES_BASE_PATH.'bricks/object/mode_create.html.twig', true, 'create'),
-			TemplateDefinitionDto::Create('mode_loader', static::TEMPLATES_BASE_PATH.'modal/mode_loader.html.twig', true, 'loader'),
+			TemplateDefinitionDto::Create('mode_edit', static::TEMPLATES_BASE_PATH.'bricks/object/mode_edit.html.twig', true, 'edit'),
+			TemplateDefinitionDto::Create('mode_search_hierarchy', static::TEMPLATES_BASE_PATH.'bricks/object/mode_search_hierarchy.html.twig', true, 'search_hierarchy'),
+			TemplateDefinitionDto::Create('mode_search_regular', static::TEMPLATES_BASE_PATH.'bricks/object/mode_search_regular.html.twig', true, 'search_regular'),
+			TemplateDefinitionDto::Create('mode_view', static::TEMPLATES_BASE_PATH.'bricks/object/mode_view.html.twig', true, 'view'),
+			TemplateDefinitionDto::Create('mode_apply_stimulus', static::TEMPLATES_BASE_PATH.'bricks/object/mode_apply_stimulus.html.twig', true, 'apply_stimulus'),
+			TemplateDefinitionDto::Create('mode_loader', static::TEMPLATES_BASE_PATH.'modal/mode_loader.html.twig'),
+			TemplateDefinitionDto::Create('plugins_buttons', static::TEMPLATES_BASE_PATH.'bricks/object/plugins_buttons.html.twig'),
 		);
 	}
 

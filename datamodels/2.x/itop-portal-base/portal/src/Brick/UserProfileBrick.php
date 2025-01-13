@@ -63,6 +63,8 @@ class UserProfileBrick extends PortalBrick
 		parent::RegisterTemplates($oTemplatesRegister);
 		$oTemplatesRegister->RegisterTemplates(self::class,
 			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'user-profile/layout.html.twig'),
+			TemplateDefinitionDto::Create('user_info', static::TEMPLATES_BASE_PATH.'user-profile/user_info.html.twig'),
+			TemplateDefinitionDto::Create('user_info_ready_js', static::TEMPLATES_BASE_PATH.'user-profile/user_info.ready.js.twig'),
 		);
 	}
 

@@ -180,6 +180,7 @@ class TemplatesProviderService
 	 *
 	 * @return string|null
 	 * @throws \ReflectionException
+	 * @throws \Exception
 	 */
 	public function GetTemplatePath(string $sProviderClass, string $sTemplateId, bool $bIsInitial = false): ?string
 	{
@@ -193,8 +194,17 @@ class TemplatesProviderService
 			// search for the template definition
 			$oTemplateDefinition = $this->oTemplateRegister->GetTemplateDefinition($sProviderClass, $sTemplateId);
 
-			// return the template path
-			return $oTemplateDefinition?->GetPath($bIsInitial);
+			if ($oTemplateDefinition !== null)
+			{
+
+				// return the template path
+				return $oTemplateDefinition->GetPath($bIsInitial);
+			}
+			else
+			{
+				throw new Exception("Template definition not found for provider class `$sProviderClass` and template id `$sTemplateId` (provider is known by the service)");
+			}
+
 
 		} else {
 
@@ -203,7 +213,18 @@ class TemplatesProviderService
 			// the provider class is unknown by service
 			// the class register its templates with legacy constants
 
-			return $this->GetLegacyTemplatePath($sProviderClass, $sTemplateId);
+			$sTemplatePath = $this->GetLegacyTemplatePath($sProviderClass, $sTemplateId);
+
+			if ($sTemplatePath !== null)
+			{
+
+				// return the template path
+				return $sTemplatePath;
+			}
+			else
+			{
+				throw new Exception("Template definition not found for provider class `$sProviderClass` and template id `$sTemplateId` (provider is unknown by the service)");
+			}
 		}
 	}
 
