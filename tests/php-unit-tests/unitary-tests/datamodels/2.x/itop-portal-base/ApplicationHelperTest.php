@@ -35,7 +35,6 @@ class ApplicationHelperTest extends ItopDataTestCase
 	protected function LoadRequiredItopFiles(): void
 	{
 		parent::LoadRequiredItopFiles();
-		$this->RequireOnceItopFile('datamodels/2.x/itop-portal-base/portal/src/Helper/ApplicationHelper.php');
 	}
 
 	public static function LoadBrickSecurityProvider()
