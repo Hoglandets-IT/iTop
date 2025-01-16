@@ -296,10 +296,10 @@ class AuditFilterField extends cmdbAbstractObject
                 $sFieldName = $this->Get('placeholder');
                 $sDateFormatDatePicker = AttributeDate::GetFormat()->ToDatePicker();
 
-                $oInput = HtmlFactory::MakeRaw('<input type="text" id="'.$sFieldName.'" name="'.$sFieldName.'" value="'.$sCurrentValue.'"/>');
+                $oInput = HtmlFactory::MakeRaw('<input class="date date-pick ibo-input ibo-input-date" type="text" id="'.$sFieldName.'" name="'.$sFieldName.'" value="'.$sCurrentValue.'"/>');
 
                 $oPage->add_ready_script(<<<EOF
-                    $('i#$sFieldName').datepicker({
+                    $('#$sFieldName').datepicker({
                             showOn: 'button',
                             buttonImage: '../images/calendar.png',
                             buttonImageOnly: true,
