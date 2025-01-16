@@ -418,7 +418,7 @@ try
                         $sEnableDisableButtonJS .= 'if(' . $sFieldCondition . '){ $("#' . $oDomainDashlet->GetId() . ' a").removeClass("ibo-dashlet-badge--disabled"); } else { $("#' . $oDomainDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled"); }';
                         $oP->add_ready_script('$("#' . $oDomainDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled")');
                     }
-                    $oDomainBlock->SetClassDescription($oDomainBlock->GetClassDescription() . Dict::S('Class:AuditDomain/Select:DependentFields', implode(', ', $aDependentFields)));
+                    $oDomainBlock->SetClassDescription($oDomainBlock->GetClassDescription() . Dict::Format('Class:AuditDomain/Select:DependentFields', implode(', <br>- ', $aDependentFields)));
                 }
             }
             $oP->AddUiBlock($oDashboardRow);

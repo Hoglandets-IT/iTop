@@ -39,6 +39,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
     'Class:AuditFilterField/Attribute:values+' => ' Defining the list of values to be selected in audit rules and audit categories~~',
     'Class:AuditFilterField/Attribute:oql/Error:Empty' => 'If selected type is "Select defined by OQL", Oql field is mandatory~~',
     'Class:AuditFilterField/Attribute:values/Error:Empty' => 'If selected type is "Select defined by values", Values field is mandatory~~',
+    'Class:AuditDomain/Select:DependentFields' => 'Please select necessary parameters: <br>- %1$s~~',
 ]);
 
 

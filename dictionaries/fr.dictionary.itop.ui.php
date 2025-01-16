@@ -35,7 +35,7 @@ Dict::Add('FR FR', 'French', 'Français', [
     'Class:AuditFilterFieldSelectValues/Attribute:values+' => ' Liste des valeurs pouvant être selectionnés pour les règles et les catégories d\'audit',
     'Class:AuditFilterField/Attribute:oql/Error:Empty' => 'Si le type sélectionné est "Select définit par OQL", le champ "Oql" est obligatoire',
     'Class:AuditFilterField/Attribute:values/Error:Empty' => 'Si le type sélectionné est "Select définit avec une liste de valeurs", le champ "Liste des valeurs" est obligatoire',
-    'Class:AuditDomain/Select:DependentFields' => 'Veuillez sélectionner tous les champs nécessaires :<br>%1%s',
+    'Class:AuditDomain/Select:DependentFields' => 'Veuillez sélectionner tous les champs nécessaires :<br>- %1$s',
 ]);
 
 
