@@ -3819,7 +3819,7 @@ abstract class DBObject implements iDisplay
 				}
 
 				try {
-					$this->PostUpdateActions($aChanges, $sClass);
+					$this->PostUpdateActions($this->m_aPreviousValuesForUpdatedAttributes, $sClass);
 				}
 				catch (Exception $e) {
 					$this->LogCRUDExit(__METHOD__, 'Error: '.$e->getMessage());
