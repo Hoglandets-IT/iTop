@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
@@ -319,34 +320,70 @@ try
             $oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:Interactive:Selection:Title')));
 
             $sAuditUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit";
+            $sAllDomainUrl = $sAuditUrl;
+            $sOpenDashlet = '';
             $sGetParams = '';
 
             if ($bHasAudiFilter) {
+                $aAuditPreferences= appUserPreferences::GetPref('audit_pref', []);
+                IssueLog::Error('bbb'.json_encode($aAuditPreferences));
                 $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:Selection:SubTitleParams'));
                 $sPanelFilterId =$oPanel->GetId();
-                $oP->AddUiBlock($oPanel);
+                $oForm = FormUIBlockFactory::MakeStandard('audit_filter_form');
+                $oForm->AddSubBlock($oPanel);
+                $oP->AddUiBlock($oForm);
 
                 while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
-
-                    $sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
+                    $sPlaceholder = $oAuditFilter->Get('placeholder');
+                    $sCurrentValue = utils::ReadParam($sPlaceholder, isset($aAuditPreferences[$sPlaceholder])?$aAuditPreferences[$sPlaceholder]:'');
 
                     $oBlock = FieldUIBlockFactory::MakeStandard($oAuditFilter->Get('label'));
                     $oBlock->SetAttLabel($oAuditFilter->Get('label'))
-                        ->AddDataAttribute("input-id", $oAuditFilter->Get('placeholder'))
+                        ->AddDataAttribute("input-id", $sPlaceholder)
                         ->AddDataAttribute("input-type", 'input-type');
                     $oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content", "ibo-input-field-wrapper"]);
                     $oValue->AddSubBlock($oAuditFilter->GetFieldBlock($oP, $sCurrentValue));
+                    $oP->add_ready_script('$("#'.$sPlaceholder.'").on("change", enableDisableButton)');
                     $oBlock->AddSubBlock($oValue);
                     $oPanel->AddSubBlock($oBlock);
 
                     //for links
-                    $sGetParams .= $oAuditFilter->Get('placeholder').'=$("[name='.$oAuditFilter->Get('placeholder').']").val();';
-                    $sAuditUrl .= '&'.$oAuditFilter->Get('placeholder').'=\'+'.$oAuditFilter->Get('placeholder').'+\'';
+                    $sGetParams .= $sPlaceholder.'=$("[name='.$sPlaceholder.']").val();';
+                    $sAuditUrl .= '&'.$sPlaceholder.'=\'+'.$sPlaceholder.'+\'';
 
                     //for JS
-                    $aAllFields[$oAuditFilter->Get('placeholder')] = 0;
+                    $aAllFields[$sPlaceholder] = 0;
                 }
-                $sAllDomainUrl = 'javascript:'.$sGetParams.' window.location = \''.$sAuditUrl.'\'';
+
+            $sSavePrefJs = <<<EOF
+function saveAuditPref(paramFunction){
+    var aPref = {};
+    $('#audit_filter_form input').each(function(){
+        if($(this).attr('name')!=undefined){
+            if($(this).val()!=undefined){
+                aPref[$(this).attr('name')] = $(this).val();
+            } else {
+                aPref[$(this).attr('name')] = '';
+            }
+        }
+    });
+    $('#audit_filter_form select').each(function(){
+        if($(this).attr('name')!=undefined){
+            if($(this).val()!=undefined){
+                aPref[$(this).attr('name')] = $(this).val();
+            } else {
+                aPref[$(this).attr('name')] = '';
+            }
+        }
+    });
+     $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			{operation: 'set_pref', code: 'audit_pref', value: aPref})
+	.done(paramFunction); 
+}
+EOF;
+            $oP->add_script($sSavePrefJs);
+                $sAllDomainUrl = '#';
+                $sOpenDashlet = 'saveAuditPref(function(){'.$sGetParams.' window.location = \''.$sAuditUrl.'\';});stop_propagation(event);';
             }
             $oP->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Audit:Interactive:Selection:SubTitle'),2));
 
@@ -368,6 +405,18 @@ try
                     $iCategoryCount,
                     Dict::S('UI:Audit:Interactive:Selection:BadgeAll')
                 ));
+            if ($bHasAudiFilter) {
+                foreach ($aAllFields as $sPlaceholder => $iValue) {
+                    if($sFieldCondition != ''){
+                        $sFieldCondition .= ' && ';
+                    }
+                    $sFieldCondition .= '$("[name=' . $sPlaceholder . ']").val() != "" ';
+                }
+                if ($sFieldCondition != '') {
+                    $sEnableDisableButtonJS .= 'if(' . $sFieldCondition . '){ $("#' . $oAllCategoriesDashlet->GetId() . ' a").removeClass("ibo-dashlet-badge--disabled"); } else { $("#' . $oAllCategoriesDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled"); }';
+               }
+                $oP->add_ready_script('$("#'.$oAllCategoriesDashlet->GetId().' a").click(function(){'.$sOpenDashlet.'});');
+            }
             $oDashboardColumn->AddUIBlock($oAllCategoriesDashlet);
             $oP->AddUiBlock($oDashboardRow);
 
@@ -396,7 +445,8 @@ try
 
                 if ($bHasAudiFilter) {
                     //modif URLLink In order to send params
-                    $sDomainUrl = 'javascript:'.$sGetParams.' window.location = \''.$sDomainUrl.'\'';
+                    $sOpenDashlet = 'saveAuditPref(function(){'.$sGetParams.' window.location = \''.$sDomainUrl.'\';});stop_propagation(event);';
+                    $sDomainUrl = '#';
                 }
 
                 $oDomainBlock = DashletFactory::MakeForDashletBadge($sIconUrl, $sDomainUrl, $iCategoryCount, $oAuditDomain->Get('name'));
@@ -406,7 +456,7 @@ try
                 $iDomainCnt++;
                 if ($bHasAudiFilter) {
                     $sFieldCondition = '';
-                  //JS sEnableDisableButtonJS .= 'if ('.implode(' && ', array_keys($aAllFields)).' == 0) {';
+
                     $aDependentFields = $oAuditDomain->GetDependentFields();
                     foreach ($aDependentFields as $sPlaceholder) {
                         if($sFieldCondition != ''){
@@ -418,18 +468,22 @@ try
                         $sEnableDisableButtonJS .= 'if(' . $sFieldCondition . '){ $("#' . $oDomainDashlet->GetId() . ' a").removeClass("ibo-dashlet-badge--disabled"); } else { $("#' . $oDomainDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled"); }';
                         $oP->add_ready_script('$("#' . $oDomainDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled")');
                     }
+                    $oP->add_ready_script('$("#'.$oDomainBlock->GetId().' a").click(function(){'.$sOpenDashlet.'});');
                     $oDomainBlock->SetClassDescription($oDomainBlock->GetClassDescription() . Dict::Format('Class:AuditDomain/Select:DependentFields', implode(', <br>- ', $aDependentFields)));
                 }
             }
             $oP->AddUiBlock($oDashboardRow);
             if ($bHasAudiFilter) {
                 //add function in order to disable some audit button if necessaries values are not selected
+
+                $oP->add_script('function enableDisableButton() {'.$sEnableDisableButtonJS.'}');
                 $sListFieldsJS = implode(',', array_keys($aAllFields));
                 $sJS = <<<JS
             var observerOrgFromId = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutationRecord) {
                     if ($.inArray(mutationRecord.target.id, [$sListFieldsJS])) {
-                        $sEnableDisableButtonJS
+                        console.warn('llllaaaa');
+                        enableDisableButton();
                     }
                 });
             });
@@ -439,6 +493,8 @@ try
             });
 JS;
                $oP->add_ready_script($sJS);
+               // initialise state of dashlet buttons
+               $oP->add_ready_script('enableDisableButton();');
             }
 
             break;

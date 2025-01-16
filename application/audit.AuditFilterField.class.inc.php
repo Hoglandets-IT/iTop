@@ -76,7 +76,10 @@ class AuditFilterField extends cmdbAbstractObject
                 $sHtml .= '<li><i>:' . $oAuditFilter->Get('placeholder') . '</i> for ' .  $oAuditFilter->Get('label') . '</li>';
             }
             $sHtml .= '</ul>';
-            $oPage->AddUiBlock(AlertUIBlockFactory::MakeForInformation('In OQL query, you can use this placeholders:', '')->AddSubBlock(new Html($sHtml)));
+            $oInfoBlock = AlertUIBlockFactory::MakeForInformation('In OQL query, you can use this placeholders:', '')
+                    ->AddSubBlock(new Html($sHtml))
+            ->SetOpenedByDefault(false);
+            $oPage->AddUiBlock($oInfoBlock);
         }
     }
 
