@@ -124,17 +124,15 @@ class ObjectFormHandlerHelper
 	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public function HandleForm(Request $oRequest, $sMode, $sObjectClass, $sObjectId = null, $aFormProperties = null)
+	public function HandleForm(Request $oRequest, $sMode, $sObjectClass, $sObjectId = null, array $aFormProperties = null)
 	{
 		$aFormData = array();
 		$sOperation = $this->oRequestManipulator->ReadParam('operation', '');
 		$bModal = ($oRequest->isXmlHttpRequest() && empty($sOperation));
 
 		// - Retrieve form properties
-		if ($aFormProperties === null)
-		{
-			$aFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
-		}
+		$aFormProperties = $aFormProperties ?? ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
+
 		// - Create and
 		if (empty($sOperation))
 		{
