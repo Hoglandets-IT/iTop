@@ -131,8 +131,10 @@ class ObjectFormHandlerHelper
 		$bModal = ($oRequest->isXmlHttpRequest() && empty($sOperation));
 
 		// - Retrieve form properties
-		$aFormProperties = $aFormProperties ?? ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
-
+		if ($aFormProperties === null)
+		{
+			$aFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
+		}
 		// - Create and
 		if (empty($sOperation))
 		{
@@ -398,7 +400,7 @@ class ObjectFormHandlerHelper
 				ApplicationContext::MakeObjectUrl($sObjectClass, $sObjectId)
 			);
 		}
-		
+
 		return $aFormData;
 	}
 
