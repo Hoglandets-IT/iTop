@@ -729,7 +729,7 @@ PHP;
 		// Compile the branding
 		//
 		/** @var \MFElement $oBrandingNode */
-		$oBrandingNode = $this->oFactory->GetNodes('brandings')->item(0);
+		$oBrandingNode = $this->oFactory->GetNodes('branding')->item(0);
 		$this->CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir);
 
 		if (array_key_exists('_core_', $this->aSnippets))
@@ -3565,7 +3565,27 @@ EOF;
 			}
 		}
 		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart)*1000.0, count($aThemes)));
-	}
+
+        $aDataBranding = [];
+        $oLocalBrandingsNodes = $oBrandingNode->GetNodes('local_brandings/local_branding/');
+        foreach($oLocalBrandingsNodes as $oLocalBrandingNode) {
+            $sLocalBrandingId = $oLocalBrandingNode->getAttribute('id');
+            $oThemesNodes = $oLocalBrandingNode->GetNodes('allowed_themes/allowed_theme/');
+            foreach($oThemesNodes as $oThemesNodes) {
+                $sThemeId = $oThemesNodes->GetText();
+                $aDataBranding[$sLocalBrandingId]['allowed_theme'][] = $sThemeId;
+            }
+            $sDefaultTheme = $oLocalBrandingNode->GetChildText('default_theme/value');
+            $aDataBranding[$sLocalBrandingId]['default_theme'] = $sDefaultTheme;
+        }
+
+        if ($sTempTargetDir == null) {
+            $sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+        } else {
+            $sWorkingPath = $sTempTargetDir;
+        }
+        file_put_contents($sWorkingPath.'/branding/theme.json', json_encode($aDataBranding));
+    }
 
 	public static function SetThemeHandlerService(ThemeHandlerService $oThemeHandlerService): void {
 		self::$oThemeHandlerService = $oThemeHandlerService;
@@ -3639,22 +3659,42 @@ EOF;
 	}
 
 	/**
-	 * @param \MFElement $oBrandingsNode
+	 * @param \MFElement $oBrandingNode
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 *
 	 * @throws \DOMFormatException
 	 * @throws \Exception
 	 */
-	protected function CompileBranding($oBrandingsNode, $sTempTargetDir, $sFinalTargetDir)
+	protected function CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
 	{
 		// Enable relative paths
 		SetupUtils::builddir($sTempTargetDir.'/branding');
-		if ($oBrandingsNode) {
+        // Transform file refs into files in the images folder
+        $this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
+        $aDataBranding = [];
+
+        $aLogosToCompile = [
+            ['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
+            ['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
+            ['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
+            ['sNodeName' => 'portal_logo', 'sTargetFile' => 'portal-logo', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
+            ['sNodeName' => 'login_favicon', 'sTargetFile' => 'login_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_FAVICON],
+            ['sNodeName' => 'main_favicon', 'sTargetFile' => 'main_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_FAVICON],
+            ['sNodeName' => 'portal_favicon', 'sTargetFile' => 'portal_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_FAVICON],
+        ];
+        foreach ($aLogosToCompile as $aLogo) {
+            $sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);
+            if ($sLogo != null) {
+                $aDataBranding[$aLogo['sType']] = $sLogo;
+            }
+        }
+        $oLocalBrandingsNode = $oBrandingNode->GetNodes('local_brandings');
+        if ($oLocalBrandingsNode) {
 			$aDataBranding = [];
-			foreach ($oBrandingsNode->childNodes as $oBrandingNode) {
+			foreach ($oLocalBrandingsNode->childNodes as $oLocalBrandingNode) {
 				// Transform file refs into files in the images folder
-				$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
+				$this->CompileFiles($oLocalBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
 
 				$aLogosToCompile = [
 					['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
@@ -3665,12 +3705,12 @@ EOF;
 					['sNodeName' => 'main_favicon', 'sTargetFile' => 'main_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_FAVICON],
 					['sNodeName' => 'portal_favicon', 'sTargetFile' => 'portal_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_FAVICON],
 				];
-				$sEnvironment = $oBrandingNode->getAttribute('id');
+				$sEnvironment = $oLocalBrandingNode->getAttribute('id');
 				SetupUtils::builddir($sTempTargetDir.'/branding/'.$sEnvironment);
 				foreach ($aLogosToCompile as $aLogo) {
-					$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sEnvironment, $aLogo['sNodeName'], $aLogo['sTargetFile']);
+					$sLogo = $this->CompileLogo($oLocalBrandingNode, $sTempTargetDir, $sEnvironment, $aLogo['sNodeName'], $aLogo['sTargetFile']);
 					if ($sLogo != null) {
-						$aDataBranding[$oBrandingNode->getAttribute('id')][$aLogo['sType']] = $sLogo;
+						$aDataBranding[$oLocalBrandingNode->getAttribute('id')][$aLogo['sType']] = $sLogo;
 					}
 				}
 			}
@@ -3689,7 +3729,7 @@ EOF;
 			}
 
 			// Compile themes 
-			$this->CompileThemes($oBrandingsNode, $sTempTargetDir);
+			$this->CompileThemes($oBrandingNode, $sTempTargetDir);
 		}
 	}
 

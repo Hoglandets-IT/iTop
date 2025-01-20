@@ -73,8 +73,22 @@ class ThemeHandler
 	 */
 	public static function GetApplicationThemeId(): string
 	{
+        //yo
 		try {
-			$sThemeId = utils::GetConfig()->Get('backoffice_default_theme');
+            $sThemeId = utils::GetConfig()->Get('backoffice_default_theme');
+
+            if (is_null($sThemeId)) {
+                $sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+                $aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/theme.json'), true);
+                //environment type from config.php
+                $sEnvType = MetaModel::GetConfig()->Get('local_branding');
+                if (utils::IsNullOrEmptyString($sEnvType)) {
+                    $sEnvType = '';
+                }
+                if (isset($aThemeParameters[$sEnvType]) && isset($aThemeParameters[$sEnvType]['default_theme'])) {
+                    $aThemeId = $aThemeParameters[$sEnvType]['default_theme'];
+                }
+            }
 		}
 		catch (CoreException $oCompileException) {
 			// Fallback on our default theme in case the config. is not available yet
@@ -91,6 +105,7 @@ class ThemeHandler
 	 */
 	public static function GetCurrentUserThemeId(): string
 	{
+        //yo
 		$sThemeId = null;
 
 		try {
@@ -101,6 +116,20 @@ class ThemeHandler
 		catch (Exception $oException) {
 			// Do nothing, already handled by $sThemeId null by default
 		}
+
+        $sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+        $aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/theme.json'), true);
+        //environment type from config.php
+        $sEnvType = MetaModel::GetConfig()->Get('local_branding');
+        if (utils::IsNullOrEmptyString($sEnvType)) {
+            $sEnvType = '';
+        }
+        if (isset($aThemeParameters[$sEnvType]) && isset($aThemeParameters[$sEnvType]['allowed_theme'])) {
+            $aThemeId = $aThemeParameters[$sEnvType]['allowed_theme'];
+            if (! in_array($sThemeId,$aThemeId)) {
+                $sThemeId = null;
+            }
+        }
 
 		// Fallback on the app. theme
 		if (is_null($sThemeId)) {
@@ -130,7 +159,18 @@ class ThemeHandler
 	 */
 	public static function GetAvailableThemes(): array
 	{
+        //yo
 		$aThemes = [];
+
+        $sEnvType = MetaModel::GetConfig()->Get('local_branding');
+        if (!utils::IsNullOrEmptyString($sEnvType)) {
+            $sWorkingPath = APPROOT . 'env-' . utils::GetCurrentEnvironment() . '/';
+            $aThemeParameters = json_decode(@file_get_contents($sWorkingPath . 'branding/theme.json'), true);
+            //environment type from config.php
+            if (isset($aThemeParameters[$sEnvType])) {
+
+            }
+        }
 
 		foreach (glob(static::GetCompiledThemesFolderAbsolutePath().'/*') as $sPath) {
 			if (is_dir($sPath)) {

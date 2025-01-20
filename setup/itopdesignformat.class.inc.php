@@ -1101,39 +1101,17 @@ class iTopDesignFormat
 
 	/**
 	 * Upgrade the format from version 3.1 to 3.2
-	 *
 	 * @param \ModelFactory $oFactory
-	 *
 	 * @return void (Errors are logged)
 	 */
 	protected function From31To32($oFactory)
 	{
-		$oXPath = new DOMXPath($this->oDocument);
-
-		// N°3363 - Add favicon in branding
-		$oNodeDesign = $oXPath->query("/itop_design")->item(0);
-		$oNodeBranding = $oXPath->query("/itop_design/branding")->item(0);
-		if ($oNodeBranding) {
-			$oNodeBrandings = $oNodeDesign->ownerDocument->createElement("brandings");
-			$oNodeDesign->appendChild($oNodeBrandings);
-			$oNodeBrandingTheme = $oXPath->query("/itop_design/branding/themes")->item(0);
-			if ($oNodeBrandingTheme) {
-				$oNodeBrandings->appendChild($oNodeBrandingTheme);
-			}
-			$oNodeBrandingThemeCommon = $oXPath->query("/itop_design/branding/themes_common")->item(0);
-			if ($oNodeBrandingThemeCommon) {
-				$oNodeBrandings->appendChild($oNodeBrandingThemeCommon);
-			}
-			$oNodeBranding->setAttribute('id', 'default');
-			$oNodeBrandings->appendChild($oNodeBranding);
-		}
+		// Nothing for now...
 	}
 
 	/**
 	 * Downgrade the format from version 3.2 to 3.1
-	 *
 	 * @param \ModelFactory $oFactory
-	 *
 	 * @return void (Errors are logged)
 	 */
 	protected function From32To31($oFactory)
@@ -1161,7 +1139,7 @@ class iTopDesignFormat
 	 */
 	protected function From33To32($oFactory)
 	{
-		// Nothing for now...
+        $this->RemoveNodeFromXPath('/itop_design/branding/local_brandings');
 	}
 
 	/**

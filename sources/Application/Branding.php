@@ -96,7 +96,7 @@ class Branding
 		$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
 		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/logos.json'), true);
 		//environment type from config.php
-		$sEnvType = MetaModel::GetConfig()->Get('branding_environment');
+		$sEnvType = MetaModel::GetConfig()->Get('local_branding');
 		if (utils::IsNullOrEmptyString($sEnvType)) {
 			$sEnvType = 'default';
 		}

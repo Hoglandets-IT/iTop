@@ -209,9 +209,9 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'branding_environment' => [
+		'local_branding' => [
 			'type'                => 'string',
-			'description'         => 'type of branding. usefull for put different logo depending environment',
+			'description'         => 'type of branding. useful for put different logo depending environment',
 			'default'             => null,
 			'value'               => null,
 			'source_of_value'     => '',
