@@ -281,7 +281,8 @@ class ObjectFormHandlerHelper
 				->SetActionRulesToken($sActionRulesToken)
 				->SetRenderer($oFormRenderer)
 				->SetFormProperties($aFormProperties);
-
+			$oFormManager->PrepareFormAndHTMLDocument();
+			$oFormManager->PrepareFields();
 			$oFormManager->Build();
 			$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 			// Check the number of editable fields
