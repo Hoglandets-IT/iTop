@@ -132,8 +132,7 @@ class UserProfileBrickController extends BrickController
 			$sCurContactId = $oCurContact->GetKey();
 
 			// Preparing forms
-			$aData['forms']['contact'] = $ObjectFormHandler->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId,
-				);
+			$aData['forms']['contact'] = $ObjectFormHandler->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId);
 			$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
 			// - If user can change password, we display the form
 			$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $sFormMode) : null;
