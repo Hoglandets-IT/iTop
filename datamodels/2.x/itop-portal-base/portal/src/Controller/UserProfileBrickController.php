@@ -152,7 +152,7 @@ class UserProfileBrickController extends BrickController
 				// Preparing forms
 				$aData['forms']['contact'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $sFormMode, $sCurContactClass,
 					$sCurContactId,
-					$oBrick->GetForm());
+				);
 				$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
 				// - If user can change password, we display the form
 				$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $sFormMode) : null;
@@ -428,7 +428,7 @@ class UserProfileBrickController extends BrickController
 					'sObjectField' => $sPictureAttCode,
 					'cache' => 86400,
 					's' => $oOrmDoc->GetSignature(),
-					]);
+				]);
 				$aFormData['validation'] = array(
 					'valid' => true,
 					'messages' => array(),
