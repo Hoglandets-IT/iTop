@@ -1113,8 +1113,10 @@ HTML
 		}
 
 		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
-		/** @var iTopWebPage $oPage */
+		/** @var \iTopWebPage $oPage */
+		$oKPI = new ExecutionKPI();
 		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode);
+		$oKPI->ComputeStatsForExtension($this, 'DisplayBareHeader');
 		if (false === empty($aHeadersBlocks['subtitle'])) {
 			$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
 		}
@@ -1127,8 +1129,12 @@ HTML
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
+		$oKPI = new ExecutionKPI();
 		$this->DisplayBareProperties($oPage, $bEditMode);
+		$oKPI->ComputeStatsForExtension($this, 'DisplayBareProperties');
+		$oKPI = new ExecutionKPI();
 		$this->DisplayBareRelations($oPage, $bEditMode);
+		$oKPI->ComputeStatsForExtension($this, 'DisplayBareRelations');
 
 
 		// Note: Adding the JS snippet which enables the image upload should have been done directly by the ActivityPanel which would have kept the independance principle
