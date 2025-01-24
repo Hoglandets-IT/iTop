@@ -6103,7 +6103,9 @@ JS
 		// We want to avoid launching the listener twice, first here, and secondly after saving the Ticket in the listener
 		// By disabling the event to be fired, we can remove the current object from the attribute !
 		$oObject = MetaModel::GetObject($sClass, $sId, false);
-		self::FireEventDbLinksChangedForObject($oObject);
+		if (!is_null($oObject)) {
+			self::FireEventDbLinksChangedForObject($oObject);
+		}
 		self::RemoveObjectAwaitingEventDbLinksChanged($sClass, $sId);
 	}
 

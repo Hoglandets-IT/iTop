@@ -99,6 +99,28 @@ $ibo-color-pink-800: $common-color-pink-800 !default;
 $ibo-color-pink-900: $common-color-pink-900 !default;
 $ibo-color-pink-950: $common-color-pink-950 !default;
 
+$ibo-color-yellow-100: $common-color-yellow-100 !default;
+$ibo-color-yellow-200: $common-color-yellow-200 !default;
+$ibo-color-yellow-300: $common-color-yellow-300 !default;
+$ibo-color-yellow-400: $common-color-yellow-400 !default;
+$ibo-color-yellow-500: $common-color-yellow-500 !default;
+$ibo-color-yellow-600: $common-color-yellow-600 !default;
+$ibo-color-yellow-700: $common-color-yellow-700 !default;
+$ibo-color-yellow-800: $common-color-yellow-800 !default;
+$ibo-color-yellow-900: $common-color-yellow-900 !default;
+$ibo-color-yellow-950: $common-color-yellow-950 !default;
+
+$ibo-color-purple-100: $common-color-purple-100 !default;
+$ibo-color-purple-200: $common-color-purple-200 !default;
+$ibo-color-purple-300: $common-color-purple-300 !default;
+$ibo-color-purple-400: $common-color-purple-400 !default;
+$ibo-color-purple-500: $common-color-purple-500 !default;
+$ibo-color-purple-600: $common-color-purple-600 !default;
+$ibo-color-purple-700: $common-color-purple-700 !default;
+$ibo-color-purple-800: $common-color-purple-800 !default;
+$ibo-color-purple-900: $common-color-purple-900 !default;
+$ibo-color-purple-950: $common-color-purple-950 !default;
+
 $ibo-colors: $common-colors;
 
 /* CSS variables */
@@ -196,4 +218,26 @@ $ibo-colors: $common-colors;
 	--ibo-color-pink-800: #{$ibo-color-pink-800};
 	--ibo-color-pink-900: #{$ibo-color-pink-900};
 	--ibo-color-pink-950: #{$ibo-color-pink-950};
+  
+  --ibo-color-yellow-100: #{$ibo-color-yellow-100};
+  --ibo-color-yellow-200: #{$ibo-color-yellow-200};
+  --ibo-color-yellow-300: #{$ibo-color-yellow-300};
+  --ibo-color-yellow-400: #{$ibo-color-yellow-400};
+  --ibo-color-yellow-500: #{$ibo-color-yellow-500};
+  --ibo-color-yellow-600: #{$ibo-color-yellow-600};
+  --ibo-color-yellow-700: #{$ibo-color-yellow-700};
+  --ibo-color-yellow-800: #{$ibo-color-yellow-800};
+  --ibo-color-yellow-900: #{$ibo-color-yellow-900};
+  --ibo-color-yellow-950: #{$ibo-color-yellow-950};
+
+  --ibo-color-purple-100: #{$ibo-color-purple-100};
+  --ibo-color-purple-200: #{$ibo-color-purple-200};
+  --ibo-color-purple-300: #{$ibo-color-purple-300};
+  --ibo-color-purple-400: #{$ibo-color-purple-400};
+  --ibo-color-purple-500: #{$ibo-color-purple-500};
+  --ibo-color-purple-600: #{$ibo-color-purple-600};
+  --ibo-color-purple-700: #{$ibo-color-purple-700};
+  --ibo-color-purple-800: #{$ibo-color-purple-800};
+  --ibo-color-purple-900: #{$ibo-color-purple-900};
+  --ibo-color-purple-950: #{$ibo-color-purple-950};
 }

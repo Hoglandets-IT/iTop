@@ -99,4 +99,26 @@ $common-color-pink-800: hsla(322, 60%, 37%, 1) !default;
 $common-color-pink-900: hsla(318, 51%, 29%, 1) !default;
 $common-color-pink-950: hsla(318, 51%, 21%, 1) !default;
 
-$common-colors: ('grey', 'blue-grey', 'blue', 'cyan', 'green', 'orange', 'red', 'pink', 'primary', 'secondary', 'information', 'success', 'warning', 'danger');
+$common-color-yellow-100: hsla(60, 100%, 97.06%, 1) !default;
+$common-color-yellow-200: hsla(58.1, 96.92%, 87.25%, 1) !default;
+$common-color-yellow-300: hsla(54.69, 91.87%, 75.88%, 1) !default;
+$common-color-yellow-400: hsla(51.32, 89.41%, 66.67%, 1) !default;
+$common-color-yellow-500: hsla(46.96, 80.9%, 60.98%, 1) !default;
+$common-color-yellow-600: hsla(40, 67.2%, 50.98%, 1) !default;
+$common-color-yellow-700: hsla(35.53, 71.03%, 41.96%, 1) !default;
+$common-color-yellow-800: hsla(31.63, 74.57%, 33.92%, 1) !default;
+$common-color-yellow-900: hsla(30, 75.76%, 25.88%, 1) !default;
+$common-color-yellow-950: hsla(29, 80%, 17%, 1) !default;
+
+$common-color-purple-100: hsla(251.43, 91.3%, 95.49%, 1) !default;
+$common-color-purple-200: hsla(250.5, 95.24%, 91.76%, 1) !default;
+$common-color-purple-300: hsla(252.5, 94.74%, 85.1%, 1) !default;
+$common-color-purple-400: hsla(255.14, 91.74%, 76.27%, 1) !default;
+$common-color-purple-500: hsla(258.31, 89.53%, 66.27%, 1) !default;
+$common-color-purple-600: hsla(262.12, 83.26%, 57.84%, 1) !default;
+$common-color-purple-700: hsla(263.39, 69.96%, 50.39%, 1) !default;
+$common-color-purple-800: hsla(263.36, 69.3%, 42.16%, 1) !default;
+$common-color-purple-900: hsla(263.5, 67.42%, 34.9%, 1) !default;
+$common-color-purple-950: hsla(263, 71%, 26%, 1) !default;
+
+$common-colors: ('grey', 'blue-grey', 'blue', 'cyan', 'green', 'orange', 'red', 'pink', 'yellow', 'purple', 'primary', 'secondary', 'information', 'success', 'warning', 'danger');
