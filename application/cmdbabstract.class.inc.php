@@ -6116,13 +6116,11 @@ JS
 	{
 		self::SetEventDBLinksChangedBlocked(true);
 		// N°6408 The object can have been deleted
-		if (!is_null($oObject)) {
-			$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
+		$oObject->FireEvent(EVENT_DB_LINKS_CHANGED);
 
-			// Update the object if needed
-			if (count($oObject->ListChanges()) !== 0) {
-				$oObject->DBUpdate();
-			}
+		// Update the object if needed
+		if (count($oObject->ListChanges()) !== 0) {
+			$oObject->DBUpdate();
 		}
 		cmdbAbstractObject::SetEventDBLinksChangedBlocked(false);
 	}
