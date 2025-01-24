@@ -54,7 +54,7 @@ class InlineImage extends DBObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeDateTime("expire", array("allowed_values"=>null, "sql"=>'expire', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("expire", array("allowed_values" => null, "sql" => 'expire', "default_value" => 'DATE_ADD(NOW(), INTERVAL 1 DAY)', "is_null_allowed" => false, "depends_on" => array(), "always_load_in_tables" => false)));
 		MetaModel::Init_AddAttribute(new AttributeString("temp_id", array("allowed_values"=>null, "sql"=>'temp_id', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeString("item_class", array("allowed_values"=>null, "sql"=>'item_class', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeObjectKey("item_id", array("class_attcode"=>'item_class', "allowed_values"=>null, "sql"=>'item_id', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));

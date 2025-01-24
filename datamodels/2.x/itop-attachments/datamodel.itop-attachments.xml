@@ -57,7 +57,7 @@
       <fields>
         <field id="expire" xsi:type="AttributeDateTime">
           <sql>expire</sql>
-          <default_value/>
+          <default_value>DATE_ADD(NOW(), INTERVAL 1 DAY)</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="temp_id" xsi:type="AttributeString">
