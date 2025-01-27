@@ -4510,6 +4510,8 @@ abstract class DBObject implements iDisplay
 	 */
 	public function ApplyStimulus($sStimulusCode, $bDoNotWrite = false)
 	{
+		$this->LogCRUDEnter(__METHOD__, "Code: $sStimulusCode");
+
 		$sClass = get_class($this);
 		if (!MetaModel::HasLifecycle($sClass))
 		{
@@ -4641,6 +4643,7 @@ abstract class DBObject implements iDisplay
 				$this->m_aCurrValues[$sAttCode] = $aBackupValues[$sAttCode];
 			}
 		}
+		$this->LogCRUDExit(__METHOD__, 'Current State: '.$this->Get($sStateAttCode));
 		return $bSuccess;
 	}
 
