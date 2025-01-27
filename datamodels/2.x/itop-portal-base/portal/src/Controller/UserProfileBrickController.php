@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
 use utils;
-
+use Dict;
 /**
  * Class UserProfileBrickController
  *
@@ -66,34 +66,9 @@ class UserProfileBrickController extends BrickController
 		$oRequestManipulator = $this->get('request_manipulator');
 		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $ObjectFormHandler */
 		$ObjectFormHandler = $this->get('object_form_handler');
-		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
-		$oBrickCollection = $this->get('brick_collection');
+        $oBrick = $this->GetBrick($sBrickId);
 
-		// If the brick id was not specified, we get the first one registered that is an instance of UserProfileBrick as default
-		if ($sBrickId === null)
-		{
-			/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oTmpBrick */
-			foreach ($oBrickCollection->GetBricks() as $oTmpBrick)
-			{
-				if ($oTmpBrick instanceof UserProfileBrick)
-				{
-					$oBrick = $oTmpBrick;
-				}
-			}
-
-			// We make sure a UserProfileBrick was found
-			if (!isset($oBrick) || $oBrick === null)
-			{
-				$oBrick = new UserProfileBrick();
-				//throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'UserProfileBrick : Brick could not be loaded as there was no UserProfileBrick loaded in the application.');
-			}
-		}
-		else
-		{
-			$oBrick = $oBrickCollection->GetBrickById($sBrickId);
-		}
-
-		$aData = array();
+        $aData = array();
 
 		// Setting form mode regarding the demo mode parameter
 		$bDemoMode = MetaModel::GetConfig()->Get('demo_mode');
@@ -130,10 +105,11 @@ class UserProfileBrickController extends BrickController
 			$oCurContact = UserRights::GetContactObject();
 			$sCurContactClass = get_class($oCurContact);
 			$sCurContactId = $oCurContact->GetKey();
-
+            $aForm = $oBrick->GetForm();
+            $aForm['submit_endpoint'] = $this->generateUrl('p_user_profile_brick_edit_person', ['sBrickId' => $sBrickId]);
 			// Preparing forms
             $aData['forms']['contact'] = $ObjectFormHandler->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId,
-                    $oBrick->GetForm());
+                    $aForm);
             $aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
 			// - If user can change password, we display the form
 			$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $sFormMode) : null;
@@ -149,6 +125,35 @@ class UserProfileBrickController extends BrickController
 
 		return $oResponse;
 	}
+
+    public function EditPerson(Request $oRequest)
+    {
+        /** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandler */
+        $oObjectFormHandler = $this->get('object_form_handler');
+        /** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
+        $oSecurityHelper = $this->get('security_helper');
+
+        $oCurContact = UserRights::GetContactObject();
+        $sObjectClass = get_class($oCurContact);
+        $sObjectId = $oCurContact->GetKey();
+
+        // Checking security layers
+        // Warning : This is a dirty quick fix to allow editing its own contact information
+        $bAllowWrite = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
+        if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId) && !$bAllowWrite) {
+            IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to modify ' . $sObjectClass . '::' . $sObjectId . ' object.');
+            throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+        }
+
+        $aForm = $this->GetBrick()->GetForm();
+        $aForm['submit_endpoint'] = $this->generateUrl('p_user_profile_brick_edit_person');
+
+        $aData = ['sMode' => 'edit'];
+        $aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aForm);
+
+        return new JsonResponse($aData);
+    }
+
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
@@ -387,5 +392,35 @@ class UserProfileBrickController extends BrickController
 
 		return $aFormData;
 	}
+
+    /**
+     * @param $sBrickId
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick|UserProfileBrick
+     * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+     */
+    public function GetBrick($sBrickId = null)
+    {
+        /** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
+        $oBrickCollection = $this->get('brick_collection');
+
+        // If the brick id was not specified, we get the first one registered that is an instance of UserProfileBrick as default
+        if ($sBrickId === null) {
+            /** @var \Combodo\iTop\Portal\Brick\PortalBrick $oTmpBrick */
+            foreach ($oBrickCollection->GetBricks() as $oTmpBrick) {
+                if ($oTmpBrick instanceof UserProfileBrick) {
+                    $oBrick = $oTmpBrick;
+                }
+            }
+
+            // We make sure a UserProfileBrick was found
+            if (!isset($oBrick) || $oBrick === null) {
+                $oBrick = new UserProfileBrick();
+                //throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'UserProfileBrick : Brick could not be loaded as there was no UserProfileBrick loaded in the application.');
+            }
+        } else {
+            $oBrick = $oBrickCollection->GetBrickById($sBrickId);
+        }
+        return $oBrick;
+    }
 
 }

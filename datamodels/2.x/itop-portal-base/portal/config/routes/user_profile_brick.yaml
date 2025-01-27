@@ -15,6 +15,11 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+p_user_profile_brick_edit_person:
+  path: '/user/edit_person'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\UserProfileBrickController::EditPerson'
+
 p_user_profile_brick:
   path: '/user/{sBrickId}'
   defaults:
