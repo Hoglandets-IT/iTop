@@ -43,7 +43,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
 use utils;
-
+use Dict;
 /**
  * Class UserProfileBrickController
  *
@@ -136,7 +136,6 @@ class UserProfileBrickController extends BrickController
 					throw new Exception('Unknown form type.');
 				}
 			}
-
 			$oResponse = new JsonResponse($aData);
 		}
 		// Else, we are displaying page for first time
@@ -148,9 +147,11 @@ class UserProfileBrickController extends BrickController
 				$oCurContact = UserRights::GetContactObject();
 				$sCurContactClass = get_class($oCurContact);
 				$sCurContactId = $oCurContact->GetKey();
+				$aForm = $oBrick->GetForm();
+				$aForm['submit_endpoint'] = $this->generateUrl('p_user_profile_brick_edit_person', ['sBrickId' => $sBrickId]);
 
 				// Preparing forms
-				$aData['forms']['contact'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId, $oBrick->GetForm());
+				$aData['forms']['contact'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId, $aForm);
 				$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
 				// - If user can change password, we display the form
 				$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $sFormMode) : null;
@@ -208,6 +209,30 @@ class UserProfileBrickController extends BrickController
 			$aData['aPluginFormData'][] =  $oPortalTabSectionExtension->GetPortalTabContentTwigs();
 		}
 	}
+
+
+    public function EditPerson(Request $oRequest)
+    {
+        $oCurContact = UserRights::GetContactObject();
+        $sObjectClass = get_class($oCurContact);
+        $sObjectId = $oCurContact->GetKey();
+
+        // Checking security layers
+        // Warning : This is a dirty quick fix to allow editing its own contact information
+        $bAllowWrite = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
+        if (!$this->oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId) && !$bAllowWrite) {
+            IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to modify ' . $sObjectClass . '::' . $sObjectId . ' object.');
+            throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+        }
+
+        $aForm = $this->GetBrick()->GetForm();
+        $aForm['submit_endpoint'] = $this->generateUrl('p_user_profile_brick_edit_person');
+
+        $aData = ['sMode' => 'edit'];
+        $aData['form'] = $this->oObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aForm);
+
+        return new JsonResponse($aData);
+    }
 
 
 	/**
@@ -438,4 +463,31 @@ class UserProfileBrickController extends BrickController
 
 		return $aFormData;
 	}
+
+    /**
+     * @param $sBrickId
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick|UserProfileBrick
+     * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+     */
+    public function GetBrick($sBrickId = null)
+    {
+        // If the brick id was not specified, we get the first one registered that is an instance of UserProfileBrick as default
+        if ($sBrickId === null) {
+            /** @var \Combodo\iTop\Portal\Brick\PortalBrick $oTmpBrick */
+            foreach ($this->oBrickCollection->GetBricks() as $oTmpBrick) {
+                if ($oTmpBrick instanceof UserProfileBrick) {
+                    $oBrick = $oTmpBrick;
+                }
+            }
+
+            // We make sure a UserProfileBrick was found
+            if (!isset($oBrick) || $oBrick === null) {
+                $oBrick = new UserProfileBrick();
+                //throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'UserProfileBrick : Brick could not be loaded as there was no UserProfileBrick loaded in the application.');
+            }
+        } else {
+            $oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
+        }
+        return $oBrick;
+    }
 }
