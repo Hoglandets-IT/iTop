@@ -242,13 +242,17 @@ class ObjectFormHandlerHelper
 				case static::ENUM_MODE_CREATE:
 				case static::ENUM_MODE_EDIT:
 				case static::ENUM_MODE_VIEW:
-					$sFormEndpoint = $this->oUrlGenerator->generate(
-						'p_object_'.$sMode,
-						array(
-							'sObjectClass' => $sObjectClass,
-							'sObjectId' => $sObjectId,
-						)
-					);
+                    if(array_key_exists('submit_endpoint', $aFormProperties)) {
+                        $sFormEndpoint = $aFormProperties['submit_endpoint'];
+                    } else {
+                        $sFormEndpoint = $this->oUrlGenerator->generate(
+                                'p_object_' . $sMode,
+                                array(
+                                        'sObjectClass' => $sObjectClass,
+                                        'sObjectId' => $sObjectId,
+                                )
+                        );
+                    }
 					break;
 
 				case static::ENUM_MODE_APPLY_STIMULUS:
