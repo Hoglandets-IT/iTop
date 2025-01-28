@@ -27,6 +27,7 @@ use Combodo\iTop\Portal\Form\PreferencesFormManager;
 use Combodo\iTop\Portal\Helper\ExtensibilityHelper;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
 use Combodo\iTop\Portal\Helper\RequestManipulatorHelper;
+use Combodo\iTop\Portal\Helper\SecurityHelper;
 use Combodo\iTop\Portal\Hook\iAbstractPortalTabContentExtension;
 use Combodo\iTop\Portal\Hook\iAbstractPortalTabExtension;
 use Combodo\iTop\Portal\Hook\iUserProfileTabContentExtension;
@@ -58,6 +59,8 @@ class UserProfileBrickController extends BrickController
 	 * @param \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $ObjectFormHandlerHelper
 	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
 	 * @param \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator
+	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper
+ 
 	 *
 	 * @since 3.2.0 N°6933
 	 */
@@ -65,7 +68,8 @@ class UserProfileBrickController extends BrickController
 		protected RequestManipulatorHelper $oRequestManipulatorHelper,
 		protected ObjectFormHandlerHelper $ObjectFormHandlerHelper,
 		protected BrickCollection $oBrickCollection,
-		protected UrlGenerator $oUrlGenerator
+		protected UrlGenerator $oUrlGenerator,
+		protected SecurityHelper $oSecurityHelper
 	)
 	{
 	}
@@ -229,7 +233,7 @@ class UserProfileBrickController extends BrickController
         $aForm['submit_endpoint'] = $this->generateUrl('p_user_profile_brick_edit_person');
 
         $aData = ['sMode' => 'edit'];
-        $aData['form'] = $this->oObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aForm);
+        $aData['form'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aForm);
 
         return new JsonResponse($aData);
     }
