@@ -19,15 +19,23 @@
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
           <validation_pattern/>
-          <tracking_level>all</tracking_level>
+          <tracking_level>none</tracking_level>
         </field>
-        <field id="parent_id" xsi:type="AttributeHierarchicalKey">
+        <field id="parent_id" xsi:type="AttributeExternalKey">
           <sql>parent_id</sql>
           <filter/>
           <dependencies/>
           <is_null_allowed>true</is_null_allowed>
+          <target_class>TestDBObject</target_class>
           <on_target_delete>DEL_AUTO</on_target_delete>
-          <tracking_level>all</tracking_level>
+          <tracking_level>none</tracking_level>
+          <label>Test Object</label>
+        </field>
+        <field id="children_list" xsi:type="AttributeLinkedSet">
+          <linked_class>TestDBObject</linked_class>
+          <ext_key_to_me>parent_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
           <with_php_computation>true</with_php_computation>
         </field>
       </fields>

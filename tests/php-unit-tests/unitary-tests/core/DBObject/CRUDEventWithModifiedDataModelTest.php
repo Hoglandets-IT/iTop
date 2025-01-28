@@ -8,6 +8,7 @@ namespace Combodo\iTop\Test\UnitTest\Core\DBObject;
 
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use DBObject\Utils\ClassesWithDebug;
+use DBObject\Utils\CRUDEventReceiver;
 use DBObject\Utils\EventTest;
 use IssueLog;
 use LogChannels;
@@ -34,14 +35,14 @@ class CRUDEventWithModifiedDataModelTest extends ItopCustomDatamodelTestCase
 	{
 		static::CleanCallCount();
 		parent::setUp();
-		static::$DEBUG_UNIT_TEST = false;
+		static::$DEBUG_UNIT_TEST = true;
 
 		if (static::$DEBUG_UNIT_TEST) {
 			echo '--- logging in '.APPROOT.static::$sLogFile."\n\n";
 			@unlink(APPROOT.static::$sLogFile);
 			IssueLog::Enable(APPROOT.static::$sLogFile);
 			$oConfig = utils::GetConfig();
-			$oConfig->Set('log_level_min', [LogChannels::DM_CRUD => 'Trace', LogChannels::EVENT_SERVICE => 'Trace']);
+			$oConfig->Set('log_level_min', [LogChannels::DM_CRUD => 'Debug', LogChannels::EVENT_SERVICE => 'Trace']);
 		}
 	}
 
@@ -56,16 +57,24 @@ class CRUDEventWithModifiedDataModelTest extends ItopCustomDatamodelTestCase
 		parent::tearDown();
 	}
 
+	/*
+	 * Test that when an object is deleted while having a link set with php computation
+	 * linked to a nullable external key, the db_links_changed event is not fired
+	 */
 	public function testDBLinksChangedNotCalledOnDeletedObjects()
 	{
+		$oEventReceiver = new CRUDEventReceiver($this);
+		$oEventReceiver->RegisterCRUDEventListeners(EVENT_DB_LINKS_CHANGED, 'TestDBObject');
+
 		$sObjectParentKey = $this->GivenObjectInDB('TestDBObject', ['name' => 'parent']);
-		$sObjectChildKey = $this->GivenObjectInDB('TestDBObject', ['name' => 'child', 'parent_id' => $sObjectParentKey]);
+		$oChild = $this->createObject('TestDBObject', ['name' => 'child', 'parent_id' => $sObjectParentKey]);
+		$this->AssertEventCountEquals(1, EVENT_DB_LINKS_CHANGED, 'Event EVENT_DB_LINKS_CHANGED should have been thrown on child creation');
 
 		$oParent = MetaModel::GetObject('TestDBObject', $sObjectParentKey);
 		static::CleanCallCount();
 		$oParent->DBDelete();
 
-		$oChild = MetaModel::GetObject('TestDBObject', $sObjectChildKey);
+		$oChild->Reload();
 		$this->assertEquals(0, $oChild->Get('parent_id'));
 		$this->AssertEventCountEquals(0, EVENT_DB_LINKS_CHANGED, 'Event EVENT_DB_LINKS_CHANGED should not have been thrown on deleted objects');
 	}
