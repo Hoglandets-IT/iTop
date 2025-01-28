@@ -35,7 +35,7 @@ class CRUDEventWithModifiedDataModelTest extends ItopCustomDatamodelTestCase
 	{
 		static::CleanCallCount();
 		parent::setUp();
-		static::$DEBUG_UNIT_TEST = true;
+		static::$DEBUG_UNIT_TEST = false;
 
 		if (static::$DEBUG_UNIT_TEST) {
 			echo '--- logging in '.APPROOT.static::$sLogFile."\n\n";
