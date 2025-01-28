@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <classes>
+    <class id="TestDBObject" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>testdbobject</db_table>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="parent_id" xsi:type="AttributeHierarchicalKey">
+          <sql>parent_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+          <with_php_computation>true</with_php_computation>
+        </field>
+      </fields>
+      <presentation/>
+      <methods/>
+    </class>
+  </classes>
+</itop_design>
