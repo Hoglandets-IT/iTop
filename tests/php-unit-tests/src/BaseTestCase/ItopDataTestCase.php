@@ -1119,7 +1119,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @param string $sClass
 	 * @param array $aValues
 	 *
-	 * @return DBObject
+	 * @return string created object key
 	 * @throws Exception
 	 */
 	protected function GivenObjectInDB($sClass, $aValues)

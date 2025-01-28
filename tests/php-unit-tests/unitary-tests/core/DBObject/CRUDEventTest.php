@@ -6,15 +6,16 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core\CRUD;
 
-use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContactType;
 use CoreException;
 use DBObject;
+use DBObject\Utils\CRUDEventReceiver;
 use DBObjectSet;
 use IssueLog;
 use lnkFunctionalCIToTicket;
 use lnkPersonToTeam;
+use LogChannels;
 use MetaModel;
 use ormLinkSet;
 use Person;
@@ -37,9 +38,9 @@ class CRUDEventTest extends ItopDataTestCase
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = true;
 
-	// Count the events by name
-	private static array $aEventCallsCount = [];
-	private static int $iEventCallsTotalCount = 0;
+	use DBObject\Utils\EventTest;
+	use DBObject\Utils\ClassesWithDebug;
+
 	private static string $sLogFile = 'log/test_error_CRUDEventTest.log';
 
 	protected function setUp(): void
@@ -53,7 +54,7 @@ class CRUDEventTest extends ItopDataTestCase
 			@unlink(APPROOT.static::$sLogFile);
 			IssueLog::Enable(APPROOT.static::$sLogFile);
 			$oConfig = utils::GetConfig();
-			$oConfig->Set('log_level_min', ['DMCRUD' => 'Trace', 'EventService' => 'Trace']);
+			$oConfig->Set('log_level_min', [LogChannels::DM_CRUD => 'Trace', LogChannels::EVENT_SERVICE => 'Trace']);
 		}
 	}
 
@@ -66,18 +67,6 @@ class CRUDEventTest extends ItopDataTestCase
 		}
 
 		parent::tearDown();
-	}
-
-	public static function IncrementCallCount(string $sEvent)
-	{
-		self::$aEventCallsCount[$sEvent] = (self::$aEventCallsCount[$sEvent] ?? 0) + 1;
-		self::$iEventCallsTotalCount++;
-	}
-
-	public static function CleanCallCount()
-	{
-		self::$aEventCallsCount = [];
-		self::$iEventCallsTotalCount = 0;
 	}
 
 	/**
@@ -95,17 +84,12 @@ class CRUDEventTest extends ItopDataTestCase
 		]);
 		$oPerson->DBInsert();
 
-		$this->assertEquals(
-			[EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE],
-			array_keys(self::$aEventCallsCount),
-			'CRUD events must be fired in the following order: EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE'
-		);
-
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(4, self::$iEventCallsTotalCount);
+		$this->AssertReceivedEventsEquals([EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE], 'CRUD events must be fired in the following order: EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE');
+		$this->AssertEventCountEquals(1, EVENT_DB_COMPUTE_VALUES);
+		$this->AssertEventCountEquals(1, EVENT_DB_BEFORE_WRITE);
+		$this->AssertEventCountEquals(1, EVENT_DB_CHECK_TO_WRITE);
+		$this->AssertEventCountEquals(1, EVENT_DB_AFTER_WRITE);
+		$this->AssertTotalEventCountEquals(4);
 	}
 
 	/**
@@ -126,17 +110,12 @@ class CRUDEventTest extends ItopDataTestCase
 		$oPerson->Set('first_name', 'TestToTouch');
 		$oPerson->DBUpdate();
 
-		$this->assertEquals(
-			[EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE],
-			array_keys(self::$aEventCallsCount),
-			'CRUD events must be fired in the following order: EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE'
-		);
-
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(4, self::$iEventCallsTotalCount);
+		$this->AssertReceivedEventsEquals([EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE], 'CRUD events must be fired in the following order: EVENT_DB_COMPUTE_VALUES, EVENT_DB_BEFORE_WRITE, EVENT_DB_CHECK_TO_WRITE, EVENT_DB_AFTER_WRITE');
+		$this->AssertEventCountEquals(1, EVENT_DB_COMPUTE_VALUES);
+		$this->AssertEventCountEquals(1, EVENT_DB_CHECK_TO_WRITE);
+		$this->AssertEventCountEquals(1, EVENT_DB_BEFORE_WRITE);
+		$this->AssertEventCountEquals(1, EVENT_DB_AFTER_WRITE);
+		$this->AssertTotalEventCountEquals(4);
 	}
 
 	/**
@@ -155,7 +134,7 @@ class CRUDEventTest extends ItopDataTestCase
 
 		$oPerson->DBUpdate();
 
-		$this->assertEquals(0, self::$iEventCallsTotalCount);
+		$this->AssertTotalEventCountEquals(0);
 	}
 
 	/**
@@ -176,7 +155,7 @@ class CRUDEventTest extends ItopDataTestCase
 		]);
 		$oPerson->DBInsert();
 
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
+		$this->AssertEventCountEquals(1, EVENT_DB_COMPUTE_VALUES);
 
 		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
 		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_COMPUTE_VALUES handler');
@@ -202,7 +181,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$oPerson->Set('first_name', 'TestToTouch');
 		$oPerson->DBUpdate();
 
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
+		$this->AssertEventCountEquals(1, EVENT_DB_COMPUTE_VALUES);
 
 		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
 		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_COMPUTE_VALUES handler');
@@ -226,7 +205,7 @@ class CRUDEventTest extends ItopDataTestCase
 		]);
 		$oPerson->DBInsert();
 
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
+		$this->AssertEventCountEquals(1, EVENT_DB_BEFORE_WRITE);
 
 		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
 		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_BEFORE_WRITE handler');
@@ -260,7 +239,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$oPerson->Set('first_name', 'TestToTouch');
 		$oPerson->DBUpdate();
 
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
+		$this->AssertEventCountEquals(1, EVENT_DB_BEFORE_WRITE);
 
 		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
 		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_BEFORE_WRITE handler');
@@ -336,8 +315,8 @@ class CRUDEventTest extends ItopDataTestCase
 		$oPerson->DBInsert();
 
 		// 1 for insert and 1 for update
-		$this->assertEquals(2, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE], 'EVENT_DB_AFTER_WRITE is called once on DBInsert and once to persist the modifications done by the event handler');
-		$this->assertEquals(8, self::$iEventCallsTotalCount, 'Each events is called twice due to the modifications done by the EVENT_DB_AFTER_WRITE handler');
+		$this->AssertEventCountEquals(2, EVENT_DB_AFTER_WRITE, 'EVENT_DB_AFTER_WRITE is called once on DBInsert and once to persist the modifications done by the event handler');
+		$this->AssertTotalEventCountEquals(8, 'Each events is called twice due to the modifications done by the EVENT_DB_AFTER_WRITE handler');
 
 		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
 		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_AFTER_WRITE handler');
@@ -367,8 +346,8 @@ class CRUDEventTest extends ItopDataTestCase
 		$oPerson->Set('first_name', 'TestToTouch');
 		$oPerson->DBUpdate();
 
-		$this->assertEquals(2, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE], 'EVENT_DB_AFTER_WRITE is called once on DBUpdate and once to persist the modifications done by the event handler');
-		$this->assertEquals(8, self::$iEventCallsTotalCount, 'Each events is called twice due to the modifications done by the EVENT_DB_AFTER_WRITE handler');
+		$this->AssertEventCountEquals(2, EVENT_DB_AFTER_WRITE, 'EVENT_DB_AFTER_WRITE is called once on DBUpdate and once to persist the modifications done by the event handler');
+		$this->AssertTotalEventCountEquals(8, 'Each events is called twice due to the modifications done by the EVENT_DB_AFTER_WRITE handler');
 
 		$oPerson = MetaModel::GetObject(\Person::class, $oPerson->GetKey());
 		$this->assertStringStartsWith('CRUD', $oPerson->Get('first_name'), 'The object should have been modified and recorded in DB by EVENT_DB_AFTER_WRITE handler');
@@ -392,7 +371,7 @@ class CRUDEventTest extends ItopDataTestCase
 
 		$oFetchPerson->DBDelete();
 
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_AFTER_DELETE], 'EVENT_DB_AFTER_DELETE must be called when deleting an object and the object attributes must remain accessible');
+		$this->AssertEventCountEquals(1, EVENT_DB_AFTER_DELETE, 'EVENT_DB_AFTER_DELETE must be called when deleting an object and the object attributes must remain accessible');
 	}
 
 	/**
@@ -419,7 +398,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$oPerson->Set('first_name', 'test'.rand());
 		$oPerson->DBUpdate();
 
-		$this->assertEquals(DBObject::MAX_UPDATE_LOOP_COUNT, self::$iEventCallsTotalCount);
+		$this->AssertTotalEventCountEquals(DBObject::MAX_UPDATE_LOOP_COUNT);
 	}
 
 	public function testDBLinksChangedNotFiredOnDBUpdateWhenLinksAreModifiedAsLinkSetAttribute()
@@ -443,7 +422,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$oUserRequest->Set('functionalcis_list', $oLinkSet);
 		$oUserRequest->DBUpdate();
 
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'Event EVENT_DB_LINKS_CHANGED must not be fired on host object update');
+		$this->AssertEventNotReceived(EVENT_DB_LINKS_CHANGED, 'Event EVENT_DB_LINKS_CHANGED must not be fired on host object update');
 	}
 
 	public function testAllEventsForDBInsertAndDBDeleteForObjectWithLinkSet()
@@ -468,12 +447,12 @@ class CRUDEventTest extends ItopDataTestCase
 		$oUserRequest->DBInsert();
 
 		// 1 insert for UserRequest, 3 insert for lnkFunctionalCIToTicket
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE]);
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'Event must not be fired if host object is created with links');
-		$this->assertEquals(16, self::$iEventCallsTotalCount);
+		$this->AssertEventCountEquals(4,EVENT_DB_COMPUTE_VALUES);
+		$this->AssertEventCountEquals(4,EVENT_DB_CHECK_TO_WRITE);
+		$this->AssertEventCountEquals(4,EVENT_DB_BEFORE_WRITE);
+		$this->AssertEventCountEquals(4,EVENT_DB_AFTER_WRITE);
+		$this->AssertEventNotReceived(EVENT_DB_LINKS_CHANGED, 'Event must not be fired if host object is created with links');
+		$this->AssertTotalEventCountEquals(16);
 
 		$this->debug("\n-------------> Delete Starts HERE\n");
 
@@ -481,11 +460,11 @@ class CRUDEventTest extends ItopDataTestCase
 		$oUserRequest->DBDelete();
 
 		// 1 delete for UserRequest, 3 delete for lnkFunctionalCIToTicket
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_CHECK_TO_DELETE]);
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_ABOUT_TO_DELETE]);
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_DELETE]);
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'Event not to be sent on delete');
-		$this->assertEquals(12, self::$iEventCallsTotalCount);
+		$this->AssertEventCountEquals(4, EVENT_DB_CHECK_TO_DELETE);
+		$this->AssertEventCountEquals(4, EVENT_DB_ABOUT_TO_DELETE);
+		$this->AssertEventCountEquals(4, EVENT_DB_AFTER_DELETE);
+		$this->AssertEventNotReceived(EVENT_DB_LINKS_CHANGED, 'Event not to be sent on delete');
+		$this->AssertTotalEventCountEquals(12);
 
 	}
 
@@ -515,11 +494,11 @@ class CRUDEventTest extends ItopDataTestCase
 		$oTeam->DBInsert();
 
 		// 1 for Team, 1 for lnkPersonToTeam, 1 for ContactType and 1 for the update of lnkPersonToTeam
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_COMPUTE_VALUES]);
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_CHECK_TO_WRITE]);
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_BEFORE_WRITE]);
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE]);
-		$this->assertEquals(16, self::$iEventCallsTotalCount);
+		$this->AssertEventCountEquals(4, EVENT_DB_COMPUTE_VALUES);
+		$this->AssertEventCountEquals(4, EVENT_DB_CHECK_TO_WRITE);
+		$this->AssertEventCountEquals(4, EVENT_DB_BEFORE_WRITE);
+		$this->AssertEventCountEquals(4, EVENT_DB_AFTER_WRITE);
+		$this->AssertTotalEventCountEquals(16);
 
 		// Read the object explicitly from the DB to check that the role has been set
 		$oTeam = MetaModel::GetObject(Team::class, $oTeam->GetKey());
@@ -611,8 +590,8 @@ class CRUDEventTest extends ItopDataTestCase
 
 		// 2 for insert => 2 modifications generate ONE update
 		// 2 for update (if 2 updates were done then 4 events would have been counted)
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE], 'DBUpdate must be postponed to the end of all EVENT_DB_AFTER_WRITE calls');
-		$this->assertEquals(4, self::$iEventCallsTotalCount, 'Updates must be postponed to the end of all EVENT_DB_AFTER_WRITE events');
+		$this->AssertEventCountEquals(4, EVENT_DB_AFTER_WRITE, 'DBUpdate must be postponed to the end of all EVENT_DB_AFTER_WRITE calls');
+		$this->AssertTotalEventCountEquals(4, 'Updates must be postponed to the end of all EVENT_DB_AFTER_WRITE events');
 	}
 
 	/**
@@ -642,8 +621,8 @@ class CRUDEventTest extends ItopDataTestCase
 
 		// Each DBUpdate fires 2 times the EVENT_DB_AFTER_WRITE
 		// Each callback modifies the object but only one DBUpdate is called again, firing again 2 times the EVENT_DB_AFTER_WRITE
-		$this->assertEquals(4, self::$aEventCallsCount[EVENT_DB_AFTER_WRITE], 'Updates must be postponed to the end of all events');
-		$this->assertEquals(4, self::$iEventCallsTotalCount, 'Updates must be postponed to the end of all events');
+		$this->AssertEventCountEquals(4, EVENT_DB_AFTER_WRITE, 'Updates must be postponed to the end of all events');
+		$this->AssertTotalEventCountEquals(4, 'Updates must be postponed to the end of all events');
 	}
 
 	public function testDBLinksChangedNotFiredWhenLinksAreManipulatedOutsideAnObjectWithoutFlag()
@@ -663,7 +642,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$oLnk = MetaModel::NewObject(lnkPersonToTeam::class, ['person_id' => $oPerson->GetKey(), 'team_id' => $oTeam->GetKey()]);
 		$oLnk->DBInsert();
 
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'LinkSet without with_php_computation attribute should not receive EVENT_DB_LINKS_CHANGED');
+		$this->AssertEventNotReceived(EVENT_DB_LINKS_CHANGED, 'LinkSet without with_php_computation attribute should not receive EVENT_DB_LINKS_CHANGED');
 
 		// Modify link
 		$oContactType = MetaModel::NewObject(ContactType::class, ['name' => 'test_'.$oLnk->GetKey()]);
@@ -671,12 +650,12 @@ class CRUDEventTest extends ItopDataTestCase
 		$oLnk->Set('role_id', $oContactType->GetKey());
 		$oLnk->DBUpdate();
 
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'LinkSet without with_php_computation attribute should not receive EVENT_DB_LINKS_CHANGED');
+		$this->AssertEventNotReceived(EVENT_DB_LINKS_CHANGED, 'LinkSet without with_php_computation attribute should not receive EVENT_DB_LINKS_CHANGED');
 
 		// Delete link
 		$oLnk->DBDelete();
 
-		$this->assertArrayNotHasKey(EVENT_DB_LINKS_CHANGED, self::$aEventCallsCount, 'LinkSet without with_php_computation attribute should not receive EVENT_DB_LINKS_CHANGED');
+		$this->AssertEventNotReceived(EVENT_DB_LINKS_CHANGED, 'LinkSet without with_php_computation attribute should not receive EVENT_DB_LINKS_CHANGED');
 	}
 
 	public function testDBLinksChangedFiredWhenLinksAreManipulatedOutsideAnObjectWithFlag()
@@ -692,8 +671,8 @@ class CRUDEventTest extends ItopDataTestCase
 		$oLink->DBInsert();
 
 		// one link where added outside the object
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_LINKS_CHANGED], 'LinkSet with with_php_computation attribute should receive EVENT_DB_LINKS_CHANGED');
-		$this->assertEquals(1, self::$iEventCallsTotalCount, 'Only EVENT_DB_LINKS_CHANGED event must be fired on host class during link modification');
+		$this->AssertEventCountEquals(1, EVENT_DB_LINKS_CHANGED, 'LinkSet with with_php_computation attribute should receive EVENT_DB_LINKS_CHANGED');
+		$this->AssertTotalEventCountEquals(1, 'Only EVENT_DB_LINKS_CHANGED event must be fired on host class during link modification');
 
 		self::CleanCallCount();
 		// Update the link with a new server
@@ -702,16 +681,16 @@ class CRUDEventTest extends ItopDataTestCase
 		$oLink->DBUpdate();
 
 		// one link where modified outside the object
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_LINKS_CHANGED], 'LinkSet with with_php_computation attribute should receive EVENT_DB_LINKS_CHANGED');
-		$this->assertEquals(1, self::$iEventCallsTotalCount, 'Only EVENT_DB_LINKS_CHANGED event must be fired on host class during link modification');
+		$this->AssertEventCountEquals(1, EVENT_DB_LINKS_CHANGED, 'LinkSet with with_php_computation attribute should receive EVENT_DB_LINKS_CHANGED');
+		$this->AssertTotalEventCountEquals(1, 'Only EVENT_DB_LINKS_CHANGED event must be fired on host class during link modification');
 
 		self::CleanCallCount();
 		// Delete link
 		$oLink->DBDelete();
 
 		// one link where deleted outside the object
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_DB_LINKS_CHANGED], 'LinkSet with with_php_computation attribute should receive EVENT_DB_LINKS_CHANGED');
-		$this->assertEquals(1, self::$iEventCallsTotalCount, 'Only EVENT_DB_LINKS_CHANGED event must be fired on host class during link modification');
+		$this->AssertEventCountEquals(1, EVENT_DB_LINKS_CHANGED, 'LinkSet with with_php_computation attribute should receive EVENT_DB_LINKS_CHANGED');
+		$this->AssertTotalEventCountEquals(1, 'Only EVENT_DB_LINKS_CHANGED event must be fired on host class during link modification');
 	}
 
 	public function testDenyTransitionsWithEventEnumTransitions()
@@ -725,7 +704,7 @@ class CRUDEventTest extends ItopDataTestCase
 		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, Person::class, 'DenyAllTransitions');
 		self::CleanCallCount();
 		$oPerson->EnumTransitions();
-		$this->assertEquals(0, self::$iEventCallsTotalCount, 'EVENT_ENUM_TRANSITIONS should not be fired for objects without lifecycle');
+		$this->AssertTotalEventCountEquals(0, 'EVENT_ENUM_TRANSITIONS should not be fired for objects without lifecycle');
 
 		// Object with lifecycle
 		$oTicket = $this->CreateTicket(1);
@@ -733,227 +712,16 @@ class CRUDEventTest extends ItopDataTestCase
 		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, UserRequest::class, 'DenyAllTransitions');
 		self::CleanCallCount();
 		$aTransitions = $oTicket->EnumTransitions();
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_ENUM_TRANSITIONS], 'EVENT_ENUM_TRANSITIONS should be fired for objects with lifecycle');
-		$this->assertEquals(1, self::$iEventCallsTotalCount, 'EVENT_ENUM_TRANSITIONS is the only event fired by DBObject::EnumTransitions()');
+		$this->AssertEventCountEquals(1, EVENT_ENUM_TRANSITIONS, 'EVENT_ENUM_TRANSITIONS should be fired for objects with lifecycle');
+		$this->AssertTotalEventCountEquals(1, 'EVENT_ENUM_TRANSITIONS is the only event fired by DBObject::EnumTransitions()');
 		$this->assertCount(0, $aTransitions, 'All transitions should have been denied');
 
 		$oEventReceiver->AddCallback(EVENT_ENUM_TRANSITIONS, UserRequest::class, 'DenyAssignTransition');
 		self::CleanCallCount();
 		$aTransitions = $oTicket->EnumTransitions();
-		$this->assertEquals(1, self::$aEventCallsCount[EVENT_ENUM_TRANSITIONS], 'EVENT_ENUM_TRANSITIONS should be fired for objects with lifecycle');
-		$this->assertEquals(1, self::$iEventCallsTotalCount, 'EVENT_ENUM_TRANSITIONS is the only event fired by DBObject::EnumTransitions()');
+		$this->AssertEventCountEquals(1, EVENT_ENUM_TRANSITIONS, 'EVENT_ENUM_TRANSITIONS should be fired for objects with lifecycle');
+		$this->AssertTotalEventCountEquals(1, 'EVENT_ENUM_TRANSITIONS is the only event fired by DBObject::EnumTransitions()');
 		$this->assertArrayNotHasKey('ev_assign', $aTransitions, 'Assign transition should have been removed by EVENT_ENUM_TRANSITIONS handler');
 		$this->assertEquals(1, count($aRefTransitions) - count($aTransitions), 'Only one transition should have been removed');
-	}
-
-	public static function DebugStatic($sMsg)
-	{
-		if (static::$DEBUG_UNIT_TEST) {
-			if (is_string($sMsg)) {
-				echo "$sMsg\n";
-			} else {
-				print_r($sMsg);
-			}
-		}
-	}
-}
-
-/**
- * Add debug feature to test support class
- */
-class ClassesWithDebug
-{
-	/**
-	 * static version of the debug to be accessible from other objects
-	 *
-	 * @param $sMsg
-	 */
-	public static function DebugStatic($sMsg)
-	{
-		CRUDEventTest::DebugStatic($sMsg);
-	}
-
-	/**
-	 * @param $sMsg
-	 */
-	public function Debug($sMsg)
-	{
-		CRUDEventTest::DebugStatic($sMsg);
-	}
-}
-
-/**
- * Test support class used to count events received
- * And allow callbacks on events
- */
-class CRUDEventReceiver extends ClassesWithDebug
-{
-	public bool $bDBUpdateCalledSuccessfullyDuringEvent = false;
-
-	private $oTestCase;
-	private $aCallbacks = [];
-
-	public function __construct(ItopDataTestCase $oTestCase)
-	{
-		$this->oTestCase = $oTestCase;
-	}
-
-	//
-
-	/**
-	 * Add a specific callback for an event
-	 *
-	 * @param string $sEvent event name
-	 * @param string $sClass event source class name
-	 * @param string $sFct   function to call on CRUDEventReceiver object
-	 * @param int $iCount    limit the number of calls to the callback
-	 *
-	 * @return void
-	 */
-	public function AddCallback(string $sEvent, string $sClass, string $sFct, int $iCount = 1): void
-	{
-		$this->aCallbacks[$sEvent][$sClass] = [
-			'callback' => [$this, $sFct],
-			'count' => $iCount,
-		];
-	}
-
-	public function CleanCallbacks()
-	{
-		$this->aCallbacks = [];
-		$this->bDBUpdateCalledSuccessfullyDuringEvent = false;
-	}
-
-
-	/**
-	 * Event callbacks => this function counts the received events by event name and source class
-	 * If AddCallback() method has been called a specific callback is called, else only the count is done
-	 *
-	 * @param \Combodo\iTop\Service\Events\EventData $oData
-	 *
-	 * @return void
-	 */
-	public function OnEvent(EventData $oData)
-	{
-		$sEvent = $oData->GetEvent();
-		$oObject = $oData->Get('object');
-		$sClass = get_class($oObject);
-		$iKey = $oObject->GetKey();
-		$this->Debug(__METHOD__.": received event '$sEvent' for $sClass::$iKey");
-		CRUDEventTest::IncrementCallCount($sEvent);
-
-		if (isset($this->aCallbacks[$sEvent][$sClass])) {
-			$aCallBack = $this->aCallbacks[$sEvent][$sClass];
-			if ($aCallBack['count'] > 0) {
-				$this->aCallbacks[$sEvent][$sClass]['count']--;
-				call_user_func($this->aCallbacks[$sEvent][$sClass]['callback'], $oData);
-			}
-		}
-	}
-
-	public function RegisterCRUDEventListeners(string $sEvent = null, $mEventSource = null)
-	{
-		$this->Debug('Registering Test event listeners');
-		if (is_null($sEvent)) {
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_COMPUTE_VALUES, [$this, 'OnEvent'], $mEventSource);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_CHECK_TO_WRITE, [$this, 'OnEvent'], $mEventSource);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_CHECK_TO_DELETE, [$this, 'OnEvent'], $mEventSource);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_BEFORE_WRITE, [$this, 'OnEvent'], $mEventSource);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_AFTER_WRITE, [$this, 'OnEvent'], $mEventSource);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_ABOUT_TO_DELETE, [$this, 'OnEvent'], $mEventSource);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_AFTER_DELETE, [$this, 'OnEvent'], $mEventSource);
-			$this->oTestCase->EventService_RegisterListener(EVENT_DB_LINKS_CHANGED, [$this, 'OnEvent'], $mEventSource);
-			$this->oTestCase->EventService_RegisterListener(EVENT_ENUM_TRANSITIONS, [$this, 'OnEvent'], $mEventSource);
-
-			return;
-		}
-		$this->oTestCase->EventService_RegisterListener($sEvent, [$this, 'OnEvent'], $mEventSource);
-	}
-
-	/**
-	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
-	 */
-	private function AddRoleToLink(EventData $oData): void
-	{
-		$this->Debug(__METHOD__);
-		$oObject = $oData->Get('object');
-		$oContactType = MetaModel::NewObject(ContactType::class, ['name' => 'test_'.$oObject->GetKey()]);
-		$oContactType->DBInsert();
-		$oObject->Set('role_id', $oContactType->GetKey());
-	}
-
-	/**
-	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
-	 */
-	private function SetRandomPersonFunction(EventData $oData): void
-	{
-		$this->Debug(__METHOD__);
-		$oObject = $oData->Get('object');
-		$oObject->Set('function', 'CRUD_function_'.rand());
-	}
-
-	/**
-	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
-	 */
-	private function SetRandomPersonFirstNameStartingWithCRUD(EventData $oData): void
-	{
-		$this->Debug(__METHOD__);
-		$oObject = $oData->Get('object');
-		$oObject->Set('first_name', 'CRUD_first_name_'.rand());
-	}
-
-	/**
-	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
-	 */
-	private function GetObjectAttributesValues(EventData $oData): void
-	{
-		$this->Debug(__METHOD__);
-		$oObject = $oData->Get('object');
-		foreach (MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef) {
-			if (!$oAttDef->IsLinkSet()) {
-				$oObject->Get($sAttCode);
-			}
-		}
-	}
-
-	/**
-	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
-	 */
-	private function SetRandomPersonFunctionAndVerifyThatUpdateIsIgnored(EventData $oData): void
-	{
-		$this->Debug(__METHOD__);
-		$oObject = $oData->Get('object');
-		$oObject->Set('function', 'CRUD_function_'.rand());
-		$oObject->DBUpdate(); // Should be ignored
-		if (empty($oObject->ListChanges())) {
-			$this->bDBUpdateCalledSuccessfullyDuringEvent = true;
-		}
-	}
-
-	/**
-	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
-	 */
-	private function DenyAllTransitions(EventData $oData): void
-	{
-		$this->Debug(__METHOD__);
-		/** @var \DBObject $oObject */
-		$oObject = $oData->Get('object');
-		$aAllowedStimuli = $oData->Get('allowed_stimuli');
-		// Deny all transitions
-		foreach ($aAllowedStimuli as $sStimulus) {
-			$this->debug(" * Deny $sStimulus");
-			$oObject->DenyTransition($sStimulus);
-		}
-	}
-
-	/**
-	 * @noinspection PhpUnusedPrivateMethodInspection Used as a callback
-	 */
-	private function DenyAssignTransition(EventData $oData): void
-	{
-		$this->Debug(__METHOD__);
-		/** @var \DBObject $oObject */
-		$oObject = $oData->Get('object');
-		$oObject->DenyTransition('ev_assign');
 	}
 }

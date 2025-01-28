@@ -3624,13 +3624,13 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBUpdate()
 	{
+		$this->LogCRUDEnter(__METHOD__);
 		if (!MetaModel::StartReentranceProtection($this)) {
 			$this->LogCRUDExit(__METHOD__, 'Rejected (reentrance)');
 
 			return false;
 		}
 
-		$this->LogCRUDEnter(__METHOD__);
 		if (!$this->m_bIsInDB)
 		{
 			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
@@ -4510,6 +4510,8 @@ abstract class DBObject implements iDisplay
 	 */
 	public function ApplyStimulus($sStimulusCode, $bDoNotWrite = false)
 	{
+		$this->LogCRUDEnter(__METHOD__, "Code: $sStimulusCode");
+
 		$sClass = get_class($this);
 		if (!MetaModel::HasLifecycle($sClass))
 		{
@@ -4543,7 +4545,6 @@ abstract class DBObject implements iDisplay
 
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
-		$sPreviousState = $this->Get($sStateAttCode);
 		$sNewState = $aTransitionDef['target_state'];
 		$this->Set($sStateAttCode, $sNewState);
 
@@ -4551,64 +4552,64 @@ abstract class DBObject implements iDisplay
 		//    array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD
 
 		$bSuccess = true;
-		$sActionDesc = '';
-		foreach ($aTransitionDef['actions'] as $actionHandler)
-		{
-			if (is_string($actionHandler))
-			{
-				// Old (pre-2.1.0 modules) action definition without any parameter
-				$aActionCallSpec = array($this, $actionHandler);
-				$sActionDesc = $sClass.'::'.$actionHandler;
+		// Prevent current object from being updated by the actions
+		$this->AddCurrentObjectInCrudStack('APPLY_STIMULUS');
+		MetaModel::StartReentranceProtection($this);
+		try {
+			foreach ($aTransitionDef['actions'] as $actionHandler) {
+				if (is_string($actionHandler)) {
+					// Old (pre-2.1.0 modules) action definition without any parameter
+					$aActionCallSpec = array($this, $actionHandler);
+					$sActionDesc = $sClass.'::'.$actionHandler;
 
-				if (!is_callable($aActionCallSpec))
-				{
-					throw new CoreException("Unable to call action: $sClass::$actionHandler");
-				}
-				$bRet = call_user_func($aActionCallSpec, $sStimulusCode);
-			}
-			else // if (is_array($actionHandler))
-			{
-				// New syntax: 'verb' and typed parameters
-				$sAction = $actionHandler['verb'];
-				$sActionDesc = "$sClass::$sAction";
-				$aParams = array();
-				foreach($actionHandler['params'] as $aDefinition)
-				{
-					$sParamType = array_key_exists('type', $aDefinition) ? $aDefinition['type'] : 'string';
-					switch($sParamType)
-					{
-						case 'int':
-							$value = (int)$aDefinition['value'];
-							break;
-
-						case 'float':
-							$value = (float)$aDefinition['value'];
-							break;
-
-						case 'bool':
-							$value = (bool)$aDefinition['value'];
-							break;
-
-						case 'reference':
-							$value = ${$aDefinition['value']};
-							break;
-
-						case 'string':
-						default:
-							$value = (string)$aDefinition['value'];
+					if (!is_callable($aActionCallSpec)) {
+						throw new CoreException("Unable to call action: $sClass::$actionHandler");
 					}
-					$aParams[] = $value;
+					$bRet = call_user_func($aActionCallSpec, $sStimulusCode);
+				} else // if (is_array($actionHandler))
+				{
+					// New syntax: 'verb' and typed parameters
+					$sAction = $actionHandler['verb'];
+					$sActionDesc = "$sClass::$sAction";
+					$aParams = array();
+					foreach ($actionHandler['params'] as $aDefinition) {
+						$sParamType = array_key_exists('type', $aDefinition) ? $aDefinition['type'] : 'string';
+						switch ($sParamType) {
+							case 'int':
+								$value = (int)$aDefinition['value'];
+								break;
+
+							case 'float':
+								$value = (float)$aDefinition['value'];
+								break;
+
+							case 'bool':
+								$value = (bool)$aDefinition['value'];
+								break;
+
+							case 'reference':
+								$value = ${$aDefinition['value']};
+								break;
+
+							case 'string':
+							default:
+								$value = (string)$aDefinition['value'];
+						}
+						$aParams[] = $value;
+					}
+					$aCallSpec = array($this, $sAction);
+					$bRet = call_user_func_array($aCallSpec, $aParams);
 				}
-				$aCallSpec = array($this, $sAction);
-				$bRet = call_user_func_array($aCallSpec, $aParams);
+				// if one call fails, the whole is considered as failed
+				// (in case there is no returned value, null is obtained and means "ok")
+				if ($bRet === false) {
+					IssueLog::Info("Lifecycle action $sActionDesc returned false on object #$sClass:".$this->GetKey());
+					$bSuccess = false;
+				}
 			}
-			// if one call fails, the whole is considered as failed
-			// (in case there is no returned value, null is obtained and means "ok")
-			if ($bRet === false)
-			{
-				IssueLog::Info("Lifecycle action $sActionDesc returned false on object #$sClass:".$this->GetKey());
-				$bSuccess = false;
-			}
+		} finally {
+			MetaModel::StopReentranceProtection($this);
+			$this->RemoveCurrentObjectInCrudStack();
 		}
 		if ($bSuccess)
 		{
@@ -4641,6 +4642,7 @@ abstract class DBObject implements iDisplay
 				$this->m_aCurrValues[$sAttCode] = $aBackupValues[$sAttCode];
 			}
 		}
+		$this->LogCRUDExit(__METHOD__, 'Current State: '.$this->Get($sStateAttCode));
 		return $bSuccess;
 	}
 
