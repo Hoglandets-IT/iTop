@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
+use DateTime;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
@@ -551,6 +552,31 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
+	 * @since 3.2.1
+	 */
+	static protected function AssertDateEqualsNow($sActualDate, $sMessage = ''): void
+	{
+		$oActualDate = \DateTime::createFromFormat(\AttributeDate::GetInternalFormat(), $sActualDate);
+		$oNow = new DateTime();
+
+		$iTimeInterval = $oNow->diff($oActualDate)->s;
+
+		self::assertLessThan(2, $iTimeInterval, $sMessage);
+	}
+	/**
+	 * @since 3.2.1
+	 */
+	static protected function AssertDateTimeEqualsNow($sActualDate, $sMessage = ''): void
+	{
+		$oActualDateTime = \DateTime::createFromFormat(\AttributeDateTime::GetInternalFormat(), $sActualDate);
+		$oNow = new DateTime();
+
+		$iTimeInterval = $oNow->diff($oActualDateTime)->s;
+
+		self::assertLessThan(2, $iTimeInterval, $sMessage);
+	}
+
+	/**
 	 * Control which Kernel will be loaded when invoking the bootKernel method
 	 *
 	 * @see static::bootKernel(), static::getContainer()
@@ -571,5 +597,38 @@ abstract class ItopTestCase extends TestCase
 			throw new \LogicException('static::SetKernelClass() must be called before booting the kernel.');
 		}
 		return parent::bootKernel($options);
+	}
+
+	/**
+	 * @author Ain Tohvri <https://mstdn.social/@tekkie>
+	 *
+	 * @since 3.2.1
+	 */
+	static protected function ReadTail($sFilename, $iLines = 1)
+	{
+		$handle = fopen($sFilename, "r");
+		$iLineCounter = $iLines;
+		$iPos = -2;
+		$bBeginning = false;
+		$aLines = array();
+		while ($iLineCounter > 0) {
+			$sChar = " ";
+			while ($sChar != "\n") {
+				if(fseek($handle, $iPos, SEEK_END) == -1) {
+					$bBeginning = true;
+					break;
+				}
+				$sChar = fgetc($handle);
+				$iPos --;
+			}
+			$iLineCounter --;
+			if ($bBeginning) {
+				rewind($handle);
+			}
+			$aLines[$iLines - $iLineCounter - 1] = fgets($handle);
+			if ($bBeginning) break;
+		}
+		fclose ($handle);
+		return array_reverse($aLines);
 	}
 }

@@ -243,84 +243,75 @@ PHP
 
 	public function testDateTimeEmptyDefaultReturnsNullAsDefaultValue()
 	{
-		// Given
-		$oDateAttribute = new AttributeDateTime('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => '', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
-		$oDateAttribute->SetHostClass('WorkOrder');
+		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDateTime::class, '', false);
 
-		//When
 		$defaultValue = $oDateAttribute->GetDefaultValue();
 
-		// Then
 		self::assertNull($defaultValue, 'Empty default value for DateTime attribute should give null default value');
+	}
+
+	public function testDateTimeInvalidDefaultReturnsNullAsDefaultValue()
+	{
+		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDateTime::class, 'zabugomeuh', false);
+
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		self::assertNull($defaultValue, 'Invalid default value for DateTime attribute should give null default value');
+		self::AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
 	}
 
 	public function testDateEmptyDefaultReturnsNullAsDefaultValue()
 	{
-		// Given
-		$oDateAttribute = new AttributeDate('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => '', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
-		$oDateAttribute->SetHostClass('WorkOrder');
+		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, '', false);
 
-		//When
 		$defaultValue = $oDateAttribute->GetDefaultValue();
 
-		// Then
 		self::assertNull($defaultValue, 'Empty default value for Date attribute should give null default value');
 	}
 
+	public function testDateInvalidDefaultReturnsNullAsDefaultValue_Case1()
+	{
+		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, 'zabugomeuh', false);
+
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		self::AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
+		self::assertNull($defaultValue, 'Invalid default value for Date attribute should give null default value');
+	}
+
+	public function testDateInvalidDefaultReturnsNullAsDefaultValue_Case2()
+	{
+		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, '"27/01/2025"', false);
+
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		self::AssertLastErrorLogEntryContains("Invalid default value '\"27/01/2025\"' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
+		self::assertNull($defaultValue, 'Invalid default value for Date attribute should give null default value');
+	}
 
 	public function testDateTimeNowAsDefaultGivesCurrentDateAsDefaultValue()
 	{
-		// Given
-		$oDateAttribute = new AttributeDateTime('start_date', [
-			'sql' => 'start_date',
-			'is_null_allowed' => false,
-			'default_value' => 'NOW()',
-			'allowed_values' => null,
-			'depends_on' => [],
-			'always_load_in_tables' => false
-		]);
-		$oDateAttribute->SetHostClass('WorkOrder');
+		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDateTime::class, 'NOW()', false);
 
-		//When
-		$defaultValue = $oDateAttribute->GetDefaultValue();
+		$sDefaultValue = $oDateAttribute->GetDefaultValue();
 
-		// Then
-		$sNow = date($oDateAttribute->GetInternalFormat());
-		self::assertEquals($sNow, $defaultValue, 'Now as default value for DateTime attribute should give current date as default value');
+		self::AssertDateTimeEqualsNow($sDefaultValue, 'NOW() should be evaluated as the current date and time');
 	}
-
-
 	public function testDateNowAsDefaultGivesCurrentDateAsDefaultValue()
 	{
-		// Given
-		$oDateAttribute = new AttributeDate('start_date', [
-			'sql' => 'start_date',
-			'is_null_allowed' => false,
-			'default_value' => 'NOW()',
-			'allowed_values' => null,
-			'depends_on' => [],
-			'always_load_in_tables' => false
-		]);
-		$oDateAttribute->SetHostClass('WorkOrder');
+		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, 'NOW()', false);
 
-		//When
-		$defaultValue = $oDateAttribute->GetDefaultValue();
+		$sDefaultValue = $oDateAttribute->GetDefaultValue();
 
-		// Then
-		$sNow = date($oDateAttribute->GetInternalFormat());
-		self::assertEquals($sNow, $defaultValue, 'Now as default value for Date attribute should give current date as default value');
+		self::AssertDateEqualsNow($sDefaultValue, 'NOW() should be evaluated as the current date');
 	}
 
 	public function testDateTimeIntervalAsDefaultGivesCorrectDateAsDefaultValue()
 	{
-		// Given
-		$oDateAttribute = new AttributeDateTime('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => 'DATE_ADD(NOW(), INTERVAL 1 DAY)', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
-		$oDateAttribute->SetHostClass('WorkOrder');
+		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDateTime::class, 'DATE_ADD(NOW(), INTERVAL 1 DAY)', false);
 
-		//When
 		$defaultValue = $oDateAttribute->GetDefaultValue();
 
-		// Then
 		$oDate = new \DateTimeImmutable('+1day');
 		$sExpected = $oDate->format($oDateAttribute->GetInternalFormat());
 		self::assertEquals($sExpected, $defaultValue, 'Interval as default value for DateTime attribute should give correct date as default value');
@@ -328,17 +319,27 @@ PHP
 
 	public function testDateIntervalAsDefaultGivesCorrectDateAsDefaultValue()
 	{
-		// Given
-		$oDateAttribute = new AttributeDate('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => 'DATE_ADD(NOW(), INTERVAL 1 DAY)', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
-		$oDateAttribute->SetHostClass('WorkOrder');
+		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, 'DATE_ADD(NOW(), INTERVAL 1 DAY)', false);
 
-		//When
 		$defaultValue = $oDateAttribute->GetDefaultValue();
 
-		// Then
 		$oDate = new \DateTimeImmutable('+1day');
 		$sExpected = $oDate->format($oDateAttribute->GetInternalFormat());
 		self::assertEquals($sExpected, $defaultValue, 'Interval as default value for Date attribute should give correct date as default value');
+	}
+
+	public function GivenAttribute(string $sHostClass, string $sAttCode, string $sAttributeClass, mixed $defaultValue, bool $bIsNullAllowed): \AttributeDefinition
+	{
+		$oAttribute = new $sAttributeClass($sAttCode, [
+			'sql'                   => $sAttCode,
+			'is_null_allowed'       => $bIsNullAllowed,
+			'default_value'         => $defaultValue,
+			'allowed_values'        => null,
+			'depends_on'            => [],
+			'always_load_in_tables' => false
+		]);
+		$oAttribute->SetHostClass($sHostClass);
+		return $oAttribute;
 	}
 
 }

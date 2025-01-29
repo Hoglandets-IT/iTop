@@ -6458,9 +6458,20 @@ class AttributeDateTime extends AttributeDBField
 		$sDefaultValue = $this->Get('default_value');
 		if (utils::IsNotNullOrEmptyString($sDefaultValue)) {
 			try {
-				$oDate = new DateTimeImmutable($sDefaultValue);
+				$sDefaultDate = Expression::FromOQL($sDefaultValue)->Evaluate([]);
 			} catch (Exception $e) {
-				$oDate = new DateTimeImmutable(Expression::FromOQL($sDefaultValue)->Evaluate([]));
+				try {
+					$sDefaultDate = Expression::FromOQL('"'.$sDefaultValue.'"')->Evaluate([]);
+				} catch (Exception $e) {
+					IssueLog::Error("Invalid default value '$sDefaultValue' for field '{$this->GetCode()}' on class '{$this->GetHostClass()}', defaulting to null");
+					return $this->GetNullValue();
+				}
+			}
+			try {
+				$oDate = new DateTimeImmutable($sDefaultDate);
+			} catch (Exception $e) {
+				IssueLog::Error("Invalid default value '$sDefaultValue' for field '{$this->GetCode()}' on class '{$this->GetHostClass()}', defaulting to null");
+				return $this->GetNullValue();
 			}
 			return $oDate->format($this->GetInternalFormat());
 		}
