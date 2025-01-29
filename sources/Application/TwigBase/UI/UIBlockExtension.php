@@ -30,7 +30,9 @@ class UIBlockExtension extends AbstractExtension
 
 		$aFactoryClasses = InterfaceDiscovery::GetInstance()->FindItopClasses(iUIBlockFactory::class);
 		foreach ($aFactoryClasses as $sFactoryClass) {
-			$aParsers[] = new UIBlockParser($sFactoryClass);
+			if (class_exists($sFactoryClass)){
+				$aParsers[] = new UIBlockParser($sFactoryClass);
+			}
 		}
 
 		return $aParsers;
