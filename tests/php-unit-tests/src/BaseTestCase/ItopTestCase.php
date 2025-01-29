@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
+use DateTime;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
 use PHPUnit\Framework\TestCase;
@@ -551,6 +552,31 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
+	 * @since 3.2.1
+	 */
+	static protected function AssertDateEqualsNow($sActualDate, $sMessage = ''): void
+	{
+		$oActualDate = \DateTime::createFromFormat(\AttributeDate::GetInternalFormat(), $sActualDate);
+		$oNow = new DateTime();
+
+		$iTimeInterval = $oNow->diff($oActualDate)->s;
+
+		self::assertLessThan(2, $iTimeInterval, $sMessage);
+	}
+	/**
+	 * @since 3.2.1
+	 */
+	static protected function AssertDateTimeEqualsNow($sActualDate, $sMessage = ''): void
+	{
+		$oActualDateTime = \DateTime::createFromFormat(\AttributeDateTime::GetInternalFormat(), $sActualDate);
+		$oNow = new DateTime();
+
+		$iTimeInterval = $oNow->diff($oActualDateTime)->s;
+
+		self::assertLessThan(2, $iTimeInterval, $sMessage);
+	}
+
+	/**
 	 * Control which Kernel will be loaded when invoking the bootKernel method
 	 *
 	 * @see static::bootKernel(), static::getContainer()
@@ -575,6 +601,8 @@ abstract class ItopTestCase extends TestCase
 
 	/**
 	 * @author Ain Tohvri <https://mstdn.social/@tekkie>
+	 *
+	 * @since 3.2.1
 	 */
 	static protected function ReadTail($sFilename, $iLines = 1)
 	{
