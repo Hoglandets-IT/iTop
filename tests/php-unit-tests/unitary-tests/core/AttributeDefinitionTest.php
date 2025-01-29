@@ -254,6 +254,20 @@ PHP
 		self::assertNull($defaultValue, 'Empty default value for DateTime attribute should give null default value');
 	}
 
+	public function testDateTimeInvalidDefaultReturnsNullAsDefaultValue()
+	{
+		// Given
+		$oDateAttribute = new AttributeDateTime('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => 'zabugomeuh', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
+		$oDateAttribute->SetHostClass('WorkOrder');
+
+		//When
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+
+		// Then
+		self::assertNull($defaultValue, 'Invalid default value for DateTime attribute should give null default value');
+		self::AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
+	}
+
 	public function testDateEmptyDefaultReturnsNullAsDefaultValue()
 	{
 		// Given
@@ -265,6 +279,20 @@ PHP
 
 		// Then
 		self::assertNull($defaultValue, 'Empty default value for Date attribute should give null default value');
+	}
+
+	public function testDateInvalidDefaultReturnsNullAsDefaultValue()
+	{
+		// Given
+		$oDateAttribute = new AttributeDate('start_date', ['sql' => 'start_date', 'is_null_allowed' => false, 'default_value' => 'zabugomeuh', 'allowed_values' => null, 'depends_on' => [], 'always_load_in_tables' => false]);
+		$oDateAttribute->SetHostClass('WorkOrder');
+
+		//When
+		$defaultValue = $oDateAttribute->GetDefaultValue();
+		self::AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
+
+		// Then
+		self::assertNull($defaultValue, 'Invalid default value for Date attribute should give null default value');
 	}
 
 
@@ -287,6 +315,7 @@ PHP
 		// Then
 		$sNow = date($oDateAttribute->GetInternalFormat());
 		self::assertEquals($sNow, $defaultValue, 'Now as default value for DateTime attribute should give current date as default value');
+
 	}
 
 

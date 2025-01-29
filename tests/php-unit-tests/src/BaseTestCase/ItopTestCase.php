@@ -572,4 +572,35 @@ abstract class ItopTestCase extends TestCase
 		}
 		return parent::bootKernel($options);
 	}
+
+	/**
+	 * @author Ain Tohvri <https://mstdn.social/@tekkie>
+	 */
+	static protected function ReadTail($sFilename, $iLines = 1)
+	{
+		$handle = fopen($sFilename, "r");
+		$iLineCounter = $iLines;
+		$iPos = -2;
+		$bBeginning = false;
+		$aLines = array();
+		while ($iLineCounter > 0) {
+			$sChar = " ";
+			while ($sChar != "\n") {
+				if(fseek($handle, $iPos, SEEK_END) == -1) {
+					$bBeginning = true;
+					break;
+				}
+				$sChar = fgetc($handle);
+				$iPos --;
+			}
+			$iLineCounter --;
+			if ($bBeginning) {
+				rewind($handle);
+			}
+			$aLines[$iLines - $iLineCounter - 1] = fgets($handle);
+			if ($bBeginning) break;
+		}
+		fclose ($handle);
+		return array_reverse($aLines);
+	}
 }
