@@ -4538,6 +4538,8 @@ abstract class DBObject implements iDisplay
 				} else {
 					$aBackupValues[$sAttCode] = $value;
 				}
+			} else {
+				$aBackupValues[$sAttCode] = $oAttDef->GetNullValue();
 			}
 		}
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="TestDBObject" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -12,7 +12,77 @@
             <attribute id="name"/>
           </attributes>
         </reconciliation>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
       </properties>
+      <lifecycle>
+        <highlight_scale>
+          <item id="closed">
+            <rank>3</rank>
+            <color>HIGHLIGHT_CLASS_NONE</color>
+            <icon>images/user-request-closed.svg</icon>
+          </item>
+        </highlight_scale>
+        <stimuli>
+          <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_resolve" xsi:type="StimulusUserAction"/>
+        </stimuli>
+        <states>
+          <state id="new">
+            <flags/>
+            <transitions>
+              <transition id="ev_assign">
+                <target>assigned</target>
+                <actions>
+                  <action>
+                    <verb>Assign</verb>
+                    <params/>
+                  </action>
+                  <action>
+                    <verb>Assign2</verb>
+                    <params/>
+                  </action>
+                </actions>
+              </transition>
+            </transitions>
+          </state>
+          <state id="assigned">
+            <inherit_flags_from>new</inherit_flags_from>
+            <flags/>
+            <transitions>
+              <transition id="ev_resolve">
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>Resolve</verb>
+                    <params/>
+                  </action>
+                </actions>
+              </transition>
+              <transition id="ev_reassign">
+                <target>assigned</target>
+                <actions>
+                  <action>
+                    <verb>Reassign</verb>
+                    <params/>
+                  </action>
+                </actions>
+                <flags/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="resolved">
+            <highlight>
+              <code>closed</code>
+            </highlight>
+            <inherit_flags_from>assigned</inherit_flags_from>
+            <flags/>
+            <transitions/>
+          </state>
+        </states>
+      </lifecycle>
       <fields>
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
@@ -38,9 +108,90 @@
           <count_max>0</count_max>
           <with_php_computation>true</with_php_computation>
         </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <sort_type>rank</sort_type>
+          <values>
+            <value id="new">
+              <code>new</code>
+              <rank>10</rank>
+            </value>
+            <value id="assigned">
+              <code>assigned</code>
+              <rank>60</rank>
+            </value>
+            <value id="resolved">
+              <code>resolved</code>
+              <rank>100</rank>
+            </value>
+          </values>
+          <sql>status</sql>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
       </fields>
       <presentation/>
-      <methods/>
+      <methods>
+        <method id="Assign">
+          <comment><![CDATA[/**
+	 * @return true (returning false would stop the ongoing transition)
+	 */]]></comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <arguments>
+          </arguments>
+          <code><![CDATA[	public function Assign()
+	{
+	  $this->ApplyStimulus('ev_assign');
+		return true;
+	}]]></code>
+        </method>
+        <method id="Assign2">
+          <comment><![CDATA[/**
+	 * @return true (returning false would stop the ongoing transition)
+	 */]]></comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <arguments>
+          </arguments>
+          <code><![CDATA[	public function Assign2()
+	{
+		return false;
+	}]]></code>
+        </method>
+        <method id="Resolve">
+          <comment><![CDATA[/**
+	 * @return true (returning false would stop the ongoing transition)
+	 */]]></comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <arguments>
+          </arguments>
+          <code><![CDATA[	public function Resolve()
+	{
+	  $this->ApplyStimulus('ev_resolve');
+		return true;
+	}]]></code>
+        </method>
+        <method id="Reassign">
+          <comment><![CDATA[/**
+	 * @return true (returning false would stop the ongoing transition)
+	 */]]></comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <arguments>
+          </arguments>
+          <code><![CDATA[	public function Reassign()
+	{
+	  $this->ApplyStimulus('ev_resolve');
+		return true;
+	}]]></code>
+        </method>
+      </methods>
     </class>
   </classes>
 </itop_design>
