@@ -22,6 +22,7 @@ class InterfaceDiscovery
 	private static InterfaceDiscovery $oInstance;
 	private DataModelDependantCache $oCacheService;
 	private ?array $aForcedClassMap = null; // For testing purposes
+	private bool $bCheckInterfaceImplementation = true; // false only for testing purposes
 
 	const CACHE_NONE = 'CACHE_NONE';
 	const CACHE_DYNAMIC = 'CACHE_DYNAMIC';  // rebuild cache when files changes
@@ -86,9 +87,15 @@ class InterfaceDiscovery
 				continue;
 			}
 
-			if ($this->IsInterfaceImplementation($sPHPClass, $sInterface)) {
-				$aMatchingClasses[] = $sPHPClass;
+			if ($this->bCheckInterfaceImplementation && ! $this->IsInterfaceImplementation($sPHPClass, $sInterface)) {
+				continue;
 			}
+
+			if (! class_exists($sPHPClass)){
+				continue;
+			}
+
+			$aMatchingClasses[] = $sPHPClass;
 		}
 
 		if ($this->GetCacheMode() !== self::CACHE_NONE) {
@@ -241,7 +248,17 @@ class InterfaceDiscovery
 
 	public function ReadClassesFromCache(string $sKey): array
 	{
-		return $this->oCacheService->Fetch('InterfaceDiscovery', $sKey);
+		$aClasses = $this->oCacheService->Fetch('InterfaceDiscovery', $sKey);
+
+		$aRealClasses = [];
+		foreach ($aClasses as $sPHPClass){
+			if (! class_exists($sPHPClass)){
+				continue;
+			}
+
+			$aRealClasses[]=$sPHPClass;
+		}
+		return $aRealClasses;
 	}
 
 	protected function SaveClassesToCache(string $sKey, array $aMatchingClasses, array $aMoreInfo): void

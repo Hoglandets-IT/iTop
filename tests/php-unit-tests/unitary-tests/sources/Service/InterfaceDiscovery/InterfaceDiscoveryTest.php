@@ -26,6 +26,7 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 
 	protected function tearDown(): void
 	{
+		$this->SetNonPublicProperty($this->oInterfaceDiscovery, 'bCheckInterfaceImplementation', true);
 		$this->SetNonPublicProperty(InterfaceDiscovery::GetInstance(), 'aForcedClassMap', null);
 		$this->oCacheService->SetStorageRootDir(null);
 		self::RecurseRmdir($this->sCacheRootDir);
@@ -47,6 +48,40 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 			],
 			$this->oInterfaceDiscovery->FindItopClasses(iUIBlockFactory::class)
 		);
+	}
+
+	/**
+	 * @covers N°8143 - Setup page in error
+	 */
+	public function testShouldSelectTheRequestedItopClassesAndExcludeUnexistingOnes()
+	{
+		$this->SetNonPublicProperty($this->oInterfaceDiscovery, 'bCheckInterfaceImplementation', false);
+		$this->GivenClassMap([
+			'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory2' => APPROOT . '/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
+			'Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory2' => APPROOT . '/sources/Application/UI/Base/Component/ButtonGroup/ButtonGroupUIBlockFactory.php',
+		]);
+
+		$this->AssertArraysHaveSameItems([], $this->oInterfaceDiscovery->FindItopClasses(iUIBlockFactory::class));
+	}
+
+	/**
+	 * @covers N°8143 - Setup page in error
+	 */
+	public function testReadClassesFromCache_ShouldExcludeUnexistingClasses()
+	{
+		$oCacheService = $this->createMock(DataModelDependantCache::class);
+		$aCachedRealClasses = [
+			'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory',
+			'Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory2',
+		];
+		$oCacheService->expects($this->once())
+			->method('Fetch')
+			->with('InterfaceDiscovery', '123')
+			->willReturn($aCachedRealClasses);
+
+		$this->oInterfaceDiscovery->SetCacheService($oCacheService);
+
+		$this->AssertArraysHaveSameItems([ 'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory'], $this->oInterfaceDiscovery->ReadClassesFromCache('123'));
 	}
 
 	public function testShouldExcludeAliases()
@@ -87,7 +122,7 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 		$this->assertGreaterThan(0, count($this->oInterfaceDiscovery->FindItopClasses(iUIBlockFactory::class)));
 		$this->AssertDirectoryListingEquals([
 			'autoload_classmaps.php',
-			'1ab1e62be3e9984a8176deeb20f049b1_iUIBlockFactory.php'
+			'1ab1e62be3e9984a8176deeb20f049b1_iUIBlockFactory.php',
 		],
 			$this->sCacheRootDir.'/InterfaceDiscovery');
 	}
