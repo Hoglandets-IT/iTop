@@ -556,7 +556,7 @@ abstract class ItopTestCase extends TestCase
 	static protected function AssertDateEqualsNow($sActualDate, $sMessage = ''): void
 	{
 		$oActualDate = \DateTime::createFromFormat(\AttributeDate::GetInternalFormat(), $sActualDate);
-		$oNow = new DateTime();
+		$oNow = new \DateTime();
 		$iTimeInterval = $oNow->diff($oActualDate)->s;
 		self::assertLessThan(2, $iTimeInterval, $sMessage);
 	}
@@ -566,7 +566,7 @@ abstract class ItopTestCase extends TestCase
 	static protected function AssertDateTimeEqualsNow($sActualDate, $sMessage = ''): void
 	{
 		$oActualDateTime = \DateTime::createFromFormat(\AttributeDateTime::GetInternalFormat(), $sActualDate);
-		$oNow = new DateTime();
+		$oNow = new \DateTime();
 		$iTimeInterval = $oNow->diff($oActualDateTime)->s;
 		self::assertLessThan(2, $iTimeInterval, $sMessage);
 	}
