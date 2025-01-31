@@ -143,6 +143,8 @@ $sDBUser = $aDBXmlSettings['user'];
 $sDBPwd = $aDBXmlSettings['pwd'];
 $sDBName = $aDBXmlSettings['name'];
 $sDBPrefix = $aDBXmlSettings['prefix'];
+$bDBTlsEnabled = $aDBXmlSettings['db_tls_enabled'];
+$sDBTlsCa = $aDBXmlSettings['db_tls_ca'];
 
 if ($sMode == 'install')
 {
@@ -219,13 +221,10 @@ if ($sMode == 'install')
 			die("Cleanup not implemented for a partial database (prefix= '$sDBPrefix')\nExiting.");
 		}
 
-		$oMysqli = new mysqli($sDBServer, $sDBUser, $sDBPwd);
-		if ($oMysqli->connect_errno)
+		try
 		{
-		    die("Cannot connect to the MySQL server (".$oMysqli->connect_errno . ") ".$oMysqli->connect_error."\nExiting");
-		}
-		else
-		{
+			$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
+
 			if ($oMysqli->select_db($sDBName))
 			{
 				echo "Deleting database '$sDBName'\n";
@@ -235,6 +234,10 @@ if ($sMode == 'install')
 			{
 				echo "The database '$sDBName' does not seem to exist. Nothing to cleanup.\n";
 			}
+		}
+		catch (MySQLException $e)
+		{
+		    die($e->getMessage()."\nExiting");
 		}
 	}
 }
@@ -312,9 +315,9 @@ if ($bInstall)
 	}
 	else
 	{
-		$oMysqli = new mysqli($sDBServer, $sDBUser, $sDBPwd);
-		if (!$oMysqli->connect_errno)
+		try
 		{
+			$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
 			if ($oMysqli->select_db($sDBName))
 			{
 				// Check the presence of a table to record information about the MTP (from the Designer)
@@ -356,6 +359,10 @@ if ($bInstall)
 					}
 				}
 			}
+		}
+		catch (MySQLException $e)
+		{
+		    // Continue anyway
 		}
 	}
 }
