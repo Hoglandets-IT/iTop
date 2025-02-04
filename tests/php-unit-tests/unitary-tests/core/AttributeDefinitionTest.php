@@ -273,7 +273,7 @@ PHP
 	{
 		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, 'zabugomeuh', false);
 
-		$defaultValue = $oDateAttribute->GetDefaultValue()
+		$defaultValue = $oDateAttribute->GetDefaultValue();
 		$this->AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
 
 		self::assertNull($defaultValue, 'Invalid default value for Date attribute should give null default value');
