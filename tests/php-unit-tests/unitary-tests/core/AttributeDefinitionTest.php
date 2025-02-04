@@ -257,7 +257,7 @@ PHP
 		$defaultValue = $oDateAttribute->GetDefaultValue();
 
 		self::assertNull($defaultValue, 'Invalid default value for DateTime attribute should give null default value');
-		self::AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
+		$this->AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
 	}
 
 	public function testDateEmptyDefaultReturnsNullAsDefaultValue()
@@ -274,7 +274,7 @@ PHP
 		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, 'zabugomeuh', false);
 
 		$defaultValue = $oDateAttribute->GetDefaultValue()
-		self::AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
+		$this->AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
 
 		self::assertNull($defaultValue, 'Invalid default value for Date attribute should give null default value');
 	}
@@ -286,7 +286,7 @@ PHP
 
 		$defaultValue = $oDateAttribute->GetDefaultValue();
 
-		self::AssertLastErrorLogEntryContains("Invalid default value '\"27/01/2025\"' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
+		$this->AssertLastErrorLogEntryContains("Invalid default value '\"27/01/2025\"' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
 		self::assertNull($defaultValue, 'Invalid default value for Date attribute should give null default value');
 	}
 

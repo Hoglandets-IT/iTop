@@ -1166,6 +1166,14 @@ class ObjectController extends BrickController
 		$aHeaders['Content-Type'] = $oDocument->GetMimeType();
 		$aHeaders['Content-Disposition'] = (($sOperation === 'display') ? 'inline' : 'attachment').';filename="'.$oDocument->GetFileName().'"';
 
+		if (MetaModel::GetImageAttributeCode($sObjectClass) === $sObjectField) {
+			$sRequestedHash = $oRequest->get('s');
+			$sComputedHash = md5($oDocument->GetData());
+			if ($sRequestedHash !== $sComputedHash) {
+				throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+			}
+		}
+
 		// N°4129 - Prevent XSS attacks & other script executions
 		if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
 			$aHeaders['Content-Security-Policy'] = 'sandbox';
