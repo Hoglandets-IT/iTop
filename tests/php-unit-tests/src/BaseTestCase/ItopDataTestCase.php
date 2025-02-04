@@ -992,6 +992,10 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 	}
 
+	/**
+	 * @since 3.2.1
+	 */
+
 	protected function AssertLastErrorLogEntryContains(string $sNeedle, string $sMessage = ''): void
 	{
 		$aLastLines = self::ReadTail(APPROOT.'/log/error.log');
@@ -1500,14 +1504,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$this->assertEquals(1, $oSet->Count(), $sMessage);
 	}
 
-	/**
-	 * @since 3.2.1
-	 */
-	protected function AssertLastErrorLogEntryContains(string $sNeedle, string $sMessage = ''): void
-	{
-		$aLastLines = self::ReadTail(APPROOT.'/log/error.log');
-		$this->assertStringContainsString($sNeedle, $aLastLines[0], $sMessage);
-	}
 
 	static protected function StartStopwatchInThePast(DBObject $oObject, string $sStopwatchAttCode, int $iDelayInSecond)
 	{
