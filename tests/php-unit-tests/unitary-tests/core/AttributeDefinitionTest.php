@@ -273,11 +273,12 @@ PHP
 	{
 		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, 'zabugomeuh', false);
 
-		$defaultValue = $oDateAttribute->GetDefaultValue();
-
+		$defaultValue = $oDateAttribute->GetDefaultValue()
 		self::AssertLastErrorLogEntryContains("Invalid default value 'zabugomeuh' for field 'start_date' on class 'WorkOrder', defaulting to null", "Last error log entry should contain a meaningful message");
+
 		self::assertNull($defaultValue, 'Invalid default value for Date attribute should give null default value');
 	}
+
 
 	public function testDateInvalidDefaultReturnsNullAsDefaultValue_Case2()
 	{
@@ -292,18 +293,18 @@ PHP
 	public function testDateTimeNowAsDefaultGivesCurrentDateAsDefaultValue()
 	{
 		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDateTime::class, 'NOW()', false);
-
 		$sDefaultValue = $oDateAttribute->GetDefaultValue();
 
 		self::AssertDateTimeEqualsNow($sDefaultValue, 'NOW() should be evaluated as the current date and time');
 	}
+
 	public function testDateNowAsDefaultGivesCurrentDateAsDefaultValue()
 	{
 		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, 'NOW()', false);
 
-		$sDefaultValue = $oDateAttribute->GetDefaultValue();
+		$defaultValue = $oDateAttribute->GetDefaultValue();
 
-		self::AssertDateEqualsNow($sDefaultValue, 'NOW() should be evaluated as the current date');
+		self::AssertDateEqualsNow($defaultValue, 'NOW() should be evaluated as the current date');
 	}
 
 	public function testDateTimeIntervalAsDefaultGivesCorrectDateAsDefaultValue()

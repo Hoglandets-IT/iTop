@@ -992,6 +992,14 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 	}
 
+	protected function AssertLastErrorLogEntryContains(string $sNeedle, string $sMessage = ''): void
+	{
+		$aLastLines = self::ReadTail(APPROOT.'/log/error.log');
+		$this->assertStringContainsString($sNeedle, $aLastLines[0], $sMessage);
+	}
+
+
+
 	/**
 	 * Import a set of XML files describing a consistent set of iTop objects
 	 * @param string[] $aFiles

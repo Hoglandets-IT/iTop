@@ -388,7 +388,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 					<<<JS
 $sPageJS
 $sPageReadyJS
-$(window).on('load', function() {
+$(document).ready(function() {
 	$('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').on('extkeychange', function() { 
 		$('[data-role="ibo-navigation-menu--silo-selection--form"]').submit();
 	});

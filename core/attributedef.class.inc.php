@@ -6464,6 +6464,7 @@ class AttributeDateTime extends AttributeDBField
 					$sDefaultDate = Expression::FromOQL('"'.$sDefaultValue.'"')->Evaluate([]);
 				} catch (Exception $e) {
 					IssueLog::Error("Invalid default value '$sDefaultValue' for field '{$this->GetCode()}' on class '{$this->GetHostClass()}', defaulting to null");
+
 					return $this->GetNullValue();
 				}
 			}
