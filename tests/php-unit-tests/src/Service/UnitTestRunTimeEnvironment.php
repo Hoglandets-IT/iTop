@@ -73,12 +73,20 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
                 $aModifiedFiles[] = $sCustomDatamodelFile;
             }
         }
-        if (count($aModifiedFiles) > 0) {
-            echo "The following files have been modified after the last compilation:\n";
-            foreach ($aModifiedFiles as $sFile) {
-			echo " - $sFile\n";
+		// Keep only xml files
+		$aFilesToCompile = [];
+		foreach ($aModifiedFiles as $sModifiedFile) {
+			if (utils::EndsWith($sModifiedFile, '.xml')) {
+				$aFilesToCompile[] = $sModifiedFile;
+			}
 		}
-        }
+	    $aModifiedFiles = $aFilesToCompile;
+	    if (count($aModifiedFiles) > 0) {
+		    echo "The following files have been modified after the last compilation:\n";
+		    foreach ($aModifiedFiles as $sFile) {
+			    echo " - $sFile\n";
+		    }
+	    }
         return (count($aModifiedFiles) === 0);
 	}
 
