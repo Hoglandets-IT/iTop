@@ -629,6 +629,20 @@ class BulkChangeTest extends ItopDataTestCase
 				"expectedResult"=>
 					[  1 => "'' is an invalid value", "id" => 1, "__STATUS__" => 'Issue: Not the expected number of columns (found: 1, expected: 2)'],
 			],
+			"Case 14 : Missing 1 of 2 AttributeExternalKey need 2 cells for reconciliation cell should issue an error" => [
+				"initData"=>
+					["1", "ServerTest", "production", "2020-02-01"],
+				"csvData"=>
+					[[ "1", "Demo"]], // missing org_code
+				"attributes"=>
+					[ "id" => 0],
+				"extKeys"=>
+					["org_id" => ["name" => 1, "code" => 2]],
+				"reconcilKeys"=>
+					["id"],
+				"expectedResult"=>
+					[  1 => 'Demo', "id" => 1, "__STATUS__" => 'Issue: Not the expected number of columns (found: 2, expected: 3)'],
+			],
 		];
 	}
 
