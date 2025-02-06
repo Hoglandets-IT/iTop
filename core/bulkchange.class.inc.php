@@ -1236,7 +1236,10 @@ class BulkChange
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
-		$iNBFields = count($this->m_aAttList) +  count($this->m_aExtKeys);
+		$iNBFields = count($this->m_aAttList);
+		foreach ($this->m_aExtKeys as $aReconcilKeys) {
+			$iNBFields += count($aReconcilKeys);
+		}
 
 		// Avoid too many events
 		cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
