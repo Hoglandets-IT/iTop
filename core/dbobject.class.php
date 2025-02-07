@@ -6732,12 +6732,13 @@ abstract class DBObject implements iDisplay
 		$oRootClass = MetaModel::GetRootClass($sClass);
 
 		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
-			if (($oRootClass === $aCrudStackEntry['class'])
-				&& ($sConvertedId === $aCrudStackEntry['id'])) {
+			if (($oRootClass === $aCrudStackEntry['class']) && ($sConvertedId === $aCrudStackEntry['id'])) {
+				IssueLog::Trace('CRUD '.__METHOD__." $sClass:$sId IS in CRUD Stack", LogChannels::DM_CRUD);
 				return true;
 			}
 		}
 
+		IssueLog::Trace('CRUD '.__METHOD__." $sClass:$sId NOT in CRUD Stack", LogChannels::DM_CRUD);
 		return false;
 	}
 
@@ -6750,19 +6751,17 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreException
 	 * @since 3.1.0 N°5609
 	 */
-	final public static function IsClassCurrentlyInCrud(string $sClass, string $sId = null): bool
+	final public static function IsClassCurrentlyInCrud(string $sClass): bool
 	{
 		$sRootClass = MetaModel::GetRootClass($sClass);
 		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
-			if ($sRootClass === $aCrudStackEntry['class'] && (is_null($sId) || $aCrudStackEntry['id'] === $sId)) {
-				$sId = $sId ?? '';
-				IssueLog::Trace("CRUD ".__METHOD__." $sClass:$sId IS in CRUD Stack", LogChannels::DM_CRUD);
+			if ($sRootClass === $aCrudStackEntry['class']) {
+				IssueLog::Trace("CRUD ".__METHOD__." $sClass IS in CRUD Stack", LogChannels::DM_CRUD);
 				return true;
 			}
 		}
 
-		$sId = $sId ?? '';
-		IssueLog::Trace('CRUD '.__METHOD__." $sClass:$sId NOT in CRUD Stack", LogChannels::DM_CRUD);
+		IssueLog::Trace('CRUD '.__METHOD__." $sClass NOT in CRUD Stack", LogChannels::DM_CRUD);
 		return false;
 	}
 
@@ -6772,6 +6771,7 @@ abstract class DBObject implements iDisplay
 	 * @param string $sCrudType
 	 *
 	 * @return void
+	 * @throws \CoreException
 	 * @since 3.1.0 N°5609
 	 */
 	private function AddCurrentObjectInCrudStack(string $sCrudType): void
