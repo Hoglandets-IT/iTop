@@ -4556,7 +4556,7 @@ abstract class DBObject implements iDisplay
 		$bSuccess = true;
 		// Prevent current object from being updated by the actions
 		$this->AddCurrentObjectInCrudStack('APPLY_STIMULUS');
-		MetaModel::StartReentranceProtection($this);
+		$bIsNewlyProtected = MetaModel::StartReentranceProtection($this);
 		try {
 			foreach ($aTransitionDef['actions'] as $actionHandler) {
 				if (is_string($actionHandler)) {
@@ -4610,7 +4610,10 @@ abstract class DBObject implements iDisplay
 				}
 			}
 		} finally {
-			MetaModel::StopReentranceProtection($this);
+			if ($bIsNewlyProtected) {
+				// Stops protection only if the object was not already protected
+				MetaModel::StopReentranceProtection($this);
+			}
 			$this->RemoveCurrentObjectInCrudStack();
 		}
 		if ($bSuccess)
