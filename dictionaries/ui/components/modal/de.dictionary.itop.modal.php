@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', [
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Modal:Confirmation:DefaultTitle' => 'Bestätigung',
 	'UI:Modal:Informative:Title' => 'Informations-Modal',
 	'UI:Modal:InformativeError:Title' => 'Fehler',
+	'UI:Modal:InformativeWarning:Title' => 'Warnung',
 	'UI:Modal:InformativeInformation:Title' => 'Information',
 	'UI:Modal:InformativeSuccess:Title' => 'Erfolgreich',
-	'UI:Modal:InformativeWarning:Title' => 'Warnung',
-]);
+));

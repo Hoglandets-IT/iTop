@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'theme:light-grey' => 'Világosszürke (elavult)',
-]);
+));

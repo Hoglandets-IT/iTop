@@ -9,8 +9,17 @@
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', [
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserLDAP' => 'Utilisateur LDAP',
 	'Class:UserLDAP+' => 'Utilisateur authentifié par un serveur LDAP',
 	'UserLDAP:server' => 'Champs spécifiques pour LDAP',
-]);
+));
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+));

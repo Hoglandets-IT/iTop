@@ -9,9 +9,9 @@
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'UI:ErrorPage:UnstableVersion' => 'Používáte nestabilní verzi, která může obsahovat chyby. Pokud si myslíte, že k chybě došlo z tohoto důvodu, pošlete nám prosím zpětnou vazbu!',
 	'UI:ErrorPage:KittyDisclaimer' => 'Při tvorbě tohoto GIFu a vydání nebyla zraněna žádná kočička.
 
 - The R&amp;D Team',
-	'UI:ErrorPage:UnstableVersion' => 'Používáte nestabilní verzi, která může obsahovat chyby. Pokud si myslíte, že k chybě došlo z tohoto důvodu, pošlete nám prosím zpětnou vazbu!',
-]);
+));

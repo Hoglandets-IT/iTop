@@ -23,3 +23,12 @@
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	// Dictionary entries go here
 ));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+));

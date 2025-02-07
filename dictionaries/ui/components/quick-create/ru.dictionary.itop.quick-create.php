@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:Component:QuickCreate:HistoryDisabled' => 'История отключена',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Выбрать тип объекта...',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Открыть быстрое создание объекта',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Вы ещё не создавали объекты',
-	'UI:Component:QuickCreate:Recents:Title' => 'Недавние',
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Component:QuickCreate:Tooltip' => 'Быстрое создание объекта любого типа',
-]);
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Выбрать тип объекта...',
+	'UI:Component:QuickCreate:Recents:Title' => 'Недавние',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Вы ещё не создавали объекты',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'История отключена',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Открыть быстрое создание объекта',
+));

@@ -10,7 +10,7 @@
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', [
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserExternal' => 'Внешний пользователь',
 	'Class:UserExternal+' => 'Пользователь, аутентифицируемый вне '.ITOP_APPLICATION_SHORT,
-]);
+));

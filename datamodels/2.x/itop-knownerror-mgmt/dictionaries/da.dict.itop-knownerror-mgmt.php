@@ -10,15 +10,29 @@
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:KnownError' => 'Known Error',
 	'Class:KnownError+' => 'Dokumenterede fejl for et bestående Issue',
-	'Class:KnownError/Attribute:ci_list' => 'CIs',
-	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
+	'Class:KnownError/Attribute:name' => 'Navn',
+	'Class:KnownError/Attribute:name+' => '',
+	'Class:KnownError/Attribute:org_id' => 'Kunde',
+	'Class:KnownError/Attribute:org_id+' => '',
 	'Class:KnownError/Attribute:cust_name' => 'Kundennavn',
 	'Class:KnownError/Attribute:cust_name+' => '',
-	'Class:KnownError/Attribute:document_list' => 'Dokumenter',
-	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
+	'Class:KnownError/Attribute:problem_id' => 'Tilhørende problem',
+	'Class:KnownError/Attribute:problem_id+' => '',
+	'Class:KnownError/Attribute:problem_ref' => 'Reference',
+	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:KnownError/Attribute:symptom' => 'Symptom',
+	'Class:KnownError/Attribute:symptom+' => '',
+	'Class:KnownError/Attribute:root_cause' => 'Grund årsag',
+	'Class:KnownError/Attribute:root_cause+' => '',
+	'Class:KnownError/Attribute:workaround' => 'Workaround',
+	'Class:KnownError/Attribute:workaround+' => '',
+	'Class:KnownError/Attribute:solution' => 'Løsning',
+	'Class:KnownError/Attribute:solution+' => '',
+	'Class:KnownError/Attribute:error_code' => 'Fejlkode',
+	'Class:KnownError/Attribute:error_code+' => '',
 	'Class:KnownError/Attribute:domain' => 'Område',
 	'Class:KnownError/Attribute:domain+' => '',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Anvendelse',
@@ -29,32 +43,46 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:KnownError/Attribute:domain/Value:Network+' => 'Netværk',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Server',
 	'Class:KnownError/Attribute:domain/Value:Server+' => 'Server',
-	'Class:KnownError/Attribute:error_code' => 'Fejlkode',
-	'Class:KnownError/Attribute:error_code+' => '',
-	'Class:KnownError/Attribute:model' => 'Model',
-	'Class:KnownError/Attribute:model+' => '',
-	'Class:KnownError/Attribute:name' => 'Navn',
-	'Class:KnownError/Attribute:name+' => '',
-	'Class:KnownError/Attribute:org_id' => 'Kunde',
-	'Class:KnownError/Attribute:org_id+' => '',
-	'Class:KnownError/Attribute:problem_id' => 'Tilhørende problem',
-	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Reference',
-	'Class:KnownError/Attribute:problem_ref+' => '',
-	'Class:KnownError/Attribute:root_cause' => 'Grund årsag',
-	'Class:KnownError/Attribute:root_cause+' => '',
-	'Class:KnownError/Attribute:solution' => 'Løsning',
-	'Class:KnownError/Attribute:solution+' => '',
-	'Class:KnownError/Attribute:symptom' => 'Symptom',
-	'Class:KnownError/Attribute:symptom+' => '',
 	'Class:KnownError/Attribute:vendor' => 'Leverandør',
 	'Class:KnownError/Attribute:vendor+' => '',
+	'Class:KnownError/Attribute:model' => 'Model',
+	'Class:KnownError/Attribute:model+' => '',
 	'Class:KnownError/Attribute:version' => 'Version',
 	'Class:KnownError/Attribute:version+' => '',
-	'Class:KnownError/Attribute:workaround' => 'Workaround',
-	'Class:KnownError/Attribute:workaround+' => '',
+	'Class:KnownError/Attribute:ci_list' => 'CIs',
+	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
+	'Class:KnownError/Attribute:document_list' => 'Dokumenter',
+	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
+));
+
+//
+// Class: lnkErrorToFunctionalCI
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:lnkErrorToFunctionalCI' => 'Sammenhæng Fejl/FunctionalCI',
+	'Class:lnkErrorToFunctionalCI+' => '',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI-Navn',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Fejl',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Fejlnavn',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Årsag',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
+));
+
+//
+// Class: lnkDocumentToError
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDocumentToError' => 'Sammenhæng Dokumenter/Fejl',
 	'Class:lnkDocumentToError+' => '',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokument',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Dokumentnavn',
@@ -65,27 +93,16 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Sammenhængstype',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
-	'Class:lnkErrorToFunctionalCI' => 'Sammenhæng Fejl/FunctionalCI',
-	'Class:lnkErrorToFunctionalCI+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Fejl',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Fejlnavn',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI-Navn',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Årsag',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
-	'Menu:NewError' => 'Ny kendt fejl',
-	'Menu:NewError+' => '',
-	'Menu:Problem:KnownErrors' => 'Alle kendte Fejl',
-	'Menu:Problem:KnownErrors+' => 'Alle kendte Fejl',
-	'Menu:Problem:Shortcuts' => 'Genvej',
+));
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Problem Management',
+	'Menu:Problem:Shortcuts' => 'Genvej',
+	'Menu:NewError' => 'Ny kendt fejl',
+	'Menu:NewError+' => '',
 	'Menu:SearchError' => 'Søg efter kendte fejl',
 	'Menu:SearchError+' => '',
-]);
+	'Menu:Problem:KnownErrors' => 'Alle kendte Fejl',
+	'Menu:Problem:KnownErrors+' => 'Alle kendte Fejl',
+));

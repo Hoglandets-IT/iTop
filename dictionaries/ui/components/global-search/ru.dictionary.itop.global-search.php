@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'История отключена',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Поиск...',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Открыть глобальный поиск',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Поиск ещё не выполнялся',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Недавние',
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Component:GlobalSearch:Tooltip' => 'Глобальный поиск',
-]);
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Поиск...',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Недавние',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Поиск ещё не выполнялся',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'История отключена',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Открыть глобальный поиск',
+));

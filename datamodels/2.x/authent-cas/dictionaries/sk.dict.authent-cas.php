@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'CAS:Error:UserNotAllowed' => 'User not allowed~~',
 	'CAS:Login:SignIn' => 'Sign in with CAS~~',
 	'CAS:Login:SignInTooltip' => 'Click here to authenticate yourself with the CAS server~~',
-]);
+));

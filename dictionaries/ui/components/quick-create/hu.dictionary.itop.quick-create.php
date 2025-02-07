@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'UI:Component:QuickCreate:HistoryDisabled' => 'Az előzmények le lettek tiltva',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Objektumtípus kiválasztása...',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Gyors létrehozás megnyitása',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Még nem hozott létre objektumot',
-	'UI:Component:QuickCreate:Recents:Title' => 'Legutóbbiak',
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Component:QuickCreate:Tooltip' => 'Bármilyen típusú objektum gyors létrehozása',
-]);
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Objektumtípus kiválasztása...',
+	'UI:Component:QuickCreate:Recents:Title' => 'Legutóbbiak',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Még nem hozott létre objektumot',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'Az előzmények le lettek tiltva',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Gyors létrehozás megnyitása',
+));

@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', [
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'CAS:Error:UserNotAllowed' => 'Benutzer ist nicht zugelassen',
 	'CAS:Login:SignIn' => 'Anmeldung mit CAS',
 	'CAS:Login:SignInTooltip' => 'Hier klicken, um sich am CAS-Server zu authentifizieren',
-]);
+));

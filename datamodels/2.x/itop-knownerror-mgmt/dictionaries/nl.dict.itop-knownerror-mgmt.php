@@ -11,15 +11,29 @@
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:KnownError' => 'Gekende fout',
 	'Class:KnownError+' => 'Gedocumenteerde fout voor een gekend probleem',
-	'Class:KnownError/Attribute:ci_list' => 'Configuratie-items',
-	'Class:KnownError/Attribute:ci_list+' => 'Alle configuratie-items gerelateerd aan deze gekende fout',
+	'Class:KnownError/Attribute:name' => 'Naam',
+	'Class:KnownError/Attribute:name+' => '',
+	'Class:KnownError/Attribute:org_id' => 'Organisatie',
+	'Class:KnownError/Attribute:org_id+' => '',
 	'Class:KnownError/Attribute:cust_name' => 'Naam klant',
 	'Class:KnownError/Attribute:cust_name+' => '',
-	'Class:KnownError/Attribute:document_list' => 'Documenten',
-	'Class:KnownError/Attribute:document_list+' => 'Alle documenten gerelateerd aan deze gekende fout',
+	'Class:KnownError/Attribute:problem_id' => 'Gerelateerd probleem',
+	'Class:KnownError/Attribute:problem_id+' => '',
+	'Class:KnownError/Attribute:problem_ref' => 'Ref. gerelateerd probleem',
+	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:KnownError/Attribute:symptom' => 'Symptoom',
+	'Class:KnownError/Attribute:symptom+' => '',
+	'Class:KnownError/Attribute:root_cause' => 'Hoofdoorzaak',
+	'Class:KnownError/Attribute:root_cause+' => '',
+	'Class:KnownError/Attribute:workaround' => 'Work around',
+	'Class:KnownError/Attribute:workaround+' => '',
+	'Class:KnownError/Attribute:solution' => 'Oplossing',
+	'Class:KnownError/Attribute:solution+' => '',
+	'Class:KnownError/Attribute:error_code' => 'Foutcode',
+	'Class:KnownError/Attribute:error_code+' => '',
 	'Class:KnownError/Attribute:domain' => 'Domein',
 	'Class:KnownError/Attribute:domain+' => '',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Applicatie',
@@ -30,32 +44,46 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:KnownError/Attribute:domain/Value:Network+' => 'Netwerk',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Server',
 	'Class:KnownError/Attribute:domain/Value:Server+' => 'Server',
-	'Class:KnownError/Attribute:error_code' => 'Foutcode',
-	'Class:KnownError/Attribute:error_code+' => '',
-	'Class:KnownError/Attribute:model' => 'Model',
-	'Class:KnownError/Attribute:model+' => '',
-	'Class:KnownError/Attribute:name' => 'Naam',
-	'Class:KnownError/Attribute:name+' => '',
-	'Class:KnownError/Attribute:org_id' => 'Organisatie',
-	'Class:KnownError/Attribute:org_id+' => '',
-	'Class:KnownError/Attribute:problem_id' => 'Gerelateerd probleem',
-	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Ref. gerelateerd probleem',
-	'Class:KnownError/Attribute:problem_ref+' => '',
-	'Class:KnownError/Attribute:root_cause' => 'Hoofdoorzaak',
-	'Class:KnownError/Attribute:root_cause+' => '',
-	'Class:KnownError/Attribute:solution' => 'Oplossing',
-	'Class:KnownError/Attribute:solution+' => '',
-	'Class:KnownError/Attribute:symptom' => 'Symptoom',
-	'Class:KnownError/Attribute:symptom+' => '',
 	'Class:KnownError/Attribute:vendor' => 'Verkoper',
 	'Class:KnownError/Attribute:vendor+' => '',
+	'Class:KnownError/Attribute:model' => 'Model',
+	'Class:KnownError/Attribute:model+' => '',
 	'Class:KnownError/Attribute:version' => 'Versie',
 	'Class:KnownError/Attribute:version+' => '',
-	'Class:KnownError/Attribute:workaround' => 'Work around',
-	'Class:KnownError/Attribute:workaround+' => '',
+	'Class:KnownError/Attribute:ci_list' => 'Configuratie-items',
+	'Class:KnownError/Attribute:ci_list+' => 'Alle configuratie-items gerelateerd aan deze gekende fout',
+	'Class:KnownError/Attribute:document_list' => 'Documenten',
+	'Class:KnownError/Attribute:document_list+' => 'Alle documenten gerelateerd aan deze gekende fout',
+));
+
+//
+// Class: lnkErrorToFunctionalCI
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:lnkErrorToFunctionalCI' => 'Link Fout / Functioneel CI',
+	'Class:lnkErrorToFunctionalCI+' => 'Infrastructuur gelinkt aan een gekende fout',
+	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Naam CI',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Fout',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Naam fout',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reden',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
+));
+
+//
+// Class: lnkDocumentToError
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkDocumentToError' => 'Link Document / Fout',
 	'Class:lnkDocumentToError+' => 'Een link tussen een document en een gekende fout',
+	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Naam document',
@@ -66,27 +94,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Soort link',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
-	'Class:lnkErrorToFunctionalCI' => 'Link Fout / Functioneel CI',
-	'Class:lnkErrorToFunctionalCI+' => 'Infrastructuur gelinkt aan een gekende fout',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Fout',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Naam fout',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Naam CI',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reden',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
-	'Menu:NewError' => 'Nieuwe gekende fout',
-	'Menu:NewError+' => 'Maak een nieuwe gekende fout aan',
-	'Menu:Problem:KnownErrors' => 'Alle gekende fouten',
-	'Menu:Problem:KnownErrors+' => 'Alle gekende fouten',
-	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',
+));
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:ProblemManagement' => 'Probleem Management',
 	'Menu:ProblemManagement+' => 'Probleem Management',
+	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',
+	'Menu:NewError' => 'Nieuwe gekende fout',
+	'Menu:NewError+' => 'Maak een nieuwe gekende fout aan',
 	'Menu:SearchError' => 'Zoek naar gekende fouten',
 	'Menu:SearchError+' => 'Zoek naar gekende fouten',
-]);
+	'Menu:Problem:KnownErrors' => 'Alle gekende fouten',
+	'Menu:Problem:KnownErrors+' => 'Alle gekende fouten',
+));

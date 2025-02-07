@@ -9,9 +9,11 @@
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'FilesInformation:Error:CantWriteToFile' => 'A %1$s nem írható',
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'FilesInformation:Error:MissingFile' => 'Hiányzó fájl: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'A %1$s fájl megsérült',
 	'FilesInformation:Error:ListCorruptedFile' => 'Sérült fájl(ok): %1$s',
-	'FilesInformation:Error:MissingFile' => 'Hiányzó fájl: %1$s',
-]);
+	'FilesInformation:Error:CantWriteToFile' => 'A %1$s nem írható',
+));
+
+

@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'CAS:Error:UserNotAllowed' => 'Utente non autorizzato',
 	'CAS:Login:SignIn' => 'Accedi con CAS',
 	'CAS:Login:SignInTooltip' => 'Clicca qui per autenticarti con il server CAS',
-]);
+));

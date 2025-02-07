@@ -7,10 +7,11 @@
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
  * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:NotificationsCenter:Page:Title' => 'Centro de notificaciones',
 	'UI:NotificationsCenter:Panel:Title' => 'Centro de notificaciones',
 	'UI:NotificationsCenter:Panel:SubTitle' => 'Gestionar las notificaciones que ha recibido: cancelar la suscripción o limitarlas a un solo canal',
+	'UI:NotificationsCenter:Panel:Toolbar:ViewAllNews:Title' => 'View all my news~~',
 	'UI:NotificationsCenter:Panel:Table:Channels' => 'Canales',
 	'UI:NotificationsCenter:Unsubscribe:Success' => 'Se ha cancelado correctamente su suscripción a las notificaciones seleccionadas.',
 	'UI:NotificationsCenter:Unsubscribe:Error' => 'Se produjo un error al cancelar la suscripción a las notificaciones seleccionadas.',
@@ -18,4 +19,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:NotificationsCenter:Subscribe:Error' => 'Se produjo un error al suscribirse a las notificaciones seleccionadas.',
 	'UI:NotificationsCenter:Channel:OutOf:Text' => '%1$s de %2$s',
 	'UI:NotificationsCenter:Advanced:Input:Label' => '%1$s: %2$s',
-]);
+));

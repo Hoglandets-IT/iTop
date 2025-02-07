@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
-]);
+));

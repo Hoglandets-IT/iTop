@@ -3,8 +3,7 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => '服务台提供者',
@@ -36,7 +35,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => '打开的需求 (按客户)',
 	'Class:UserRequest:KnownErrorList' => '已知错误',
 	'Class:UserRequest:KnownErrorList+' => '和当前工单关联的功能配置项相关的已知错误',
-]);
+));
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -52,7 +51,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 // Class: UserRequest
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest' => '用户需求',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => '状态',
@@ -248,14 +247,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '等待批准',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => '无法分配父级需求给自己',
-
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
 	'Class:UserRequest/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案信息',
-]);
+));
 
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Organization:Overview:UserRequests' => '此组织的所有用户需求',
 	'Organization:Overview:MyUserRequests' => '我在此组织发起的需求',
 	'Organization:Overview:Tickets' => '此组织内的所有工单',
-	'Organization:Overview:UserRequests' => '此组织的所有用户需求',
-]);
+));

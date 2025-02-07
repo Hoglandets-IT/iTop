@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'theme:darkmoon' => 'Dark moon~~',
-]);
+));

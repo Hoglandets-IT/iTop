@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'CAS:Error:UserNotAllowed' => 'User not allowed~~',
 	'CAS:Login:SignIn' => 'Sign in with CAS~~',
 	'CAS:Login:SignInTooltip' => 'Click here to authenticate yourself with the CAS server~~',
-]);
+));

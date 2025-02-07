@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', [
+Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
-]);
+));

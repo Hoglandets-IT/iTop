@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', [
-	'UI:Component:QuickCreate:HistoryDisabled' => 'Historia jest wyłączona',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Wybierz typ obiektu...',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Otwórz szybkie tworzenie',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Nie utworzyłeś jeszcze żadnego obiektu',
-	'UI:Component:QuickCreate:Recents:Title' => 'Ostatnie',
+Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Component:QuickCreate:Tooltip' => 'Szybko utwórz dowolny rodzaj obiektu',
-]);
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Wybierz typ obiektu...',
+	'UI:Component:QuickCreate:Recents:Title' => 'Ostatnie',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Nie utworzyłeś jeszcze żadnego obiektu',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'Historia jest wyłączona',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Otwórz szybkie tworzenie',
+));

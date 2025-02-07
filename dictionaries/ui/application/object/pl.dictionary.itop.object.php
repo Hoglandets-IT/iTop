@@ -9,9 +9,9 @@
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', [
-	'UI:Object:Modal:Create:MandatoryAttributeBlobInputs:Warning:Text' => 'Formularz ten zawiera obowiązkowy atrybut pliku, którego nie można ustawić w trybie modalnym. Utworzenie tego obiektu będzie niekompletne, edytuj go w formie całostronicowej, aby go ukończyć.',
-	'UI:Object:Modal:Modify:Filled:MandatoryAttributeBlobInputs:Warning:Text' => 'Formularz ten zawiera obowiązkowy atrybut pliku, którego nie można modyfikować w trybie modalnym.',
-	'UI:Object:Modal:Modify:MandatoryAttributeBlobInputs:Warning:Text' => 'Formularz ten zawiera obowiązkowy atrybut pliku, którego nie można ustawić w trybie modalnym. Obiekt ten jest niekompletny. Aby go uzupełnić, edytuj go w formie całostronicowej.',
+Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Object:Modal:Title' => 'Utwórz obiekt',
-]);
+	'UI:Object:Modal:Create:MandatoryAttributeBlobInputs:Warning:Text' => 'Formularz ten zawiera obowiązkowy atrybut pliku, którego nie można ustawić w trybie modalnym. Utworzenie tego obiektu będzie niekompletne, edytuj go w formie całostronicowej, aby go ukończyć.',
+	'UI:Object:Modal:Modify:MandatoryAttributeBlobInputs:Warning:Text' => 'Formularz ten zawiera obowiązkowy atrybut pliku, którego nie można ustawić w trybie modalnym. Obiekt ten jest niekompletny. Aby go uzupełnić, edytuj go w formie całostronicowej.',
+	'UI:Object:Modal:Modify:Filled:MandatoryAttributeBlobInputs:Warning:Text' => 'Formularz ten zawiera obowiązkowy atrybut pliku, którego nie można modyfikować w trybie modalnym.',
+));

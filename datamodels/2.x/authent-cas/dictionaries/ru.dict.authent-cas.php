@@ -10,8 +10,8 @@
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', [
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'CAS:Error:UserNotAllowed' => 'Вход не разрешён',
 	'CAS:Login:SignIn' => 'Вход через CAS',
 	'CAS:Login:SignInTooltip' => 'Нажмите здесь, чтобы войти через CAS сервер',
-]);
+));

@@ -9,8 +9,17 @@
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserLDAP' => 'Utente LDAP',
 	'Class:UserLDAP+' => 'Utente autenticato da LDAP',
 	'UserLDAP:server' => 'Specifiche LDAP',
-]);
+));
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+));

@@ -16,10 +16,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
-	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Your ' . ITOP_APPLICATION_SHORT.' news~~',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Your '.ITOP_APPLICATION_SHORT.' news~~',
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Manage your news, flag them as read or unread, delete them, etc.~~',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Read:Label' => '已读',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Unread:Label' => '未读',
@@ -30,11 +29,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Success:Message' => '全部 %1$s 条消息已被删除',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Title' => '删除全部消息',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Message' => 'Are you sure you want to delete all news?~~',
-	
 	'UI:Newsroom:iTopNotification:ViewAllPage:Empty:Title' => '没有消息, 已是最新!',
 
 	// Actions
-	// - Unitary buttons
+ // - Unitary buttons
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label' => '删除这条消息',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label' => 'Go to the news url~~',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label' => '标记为已读',

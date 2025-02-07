@@ -20,8 +20,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ChangeManagement' => '变更管理',
 	'Menu:Change:Overview' => '概况',
 	'Menu:Change:Overview+' => '',
@@ -45,7 +44,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => '最近一周的变更 (按状态)',
 	'Tickets:Related:OpenChanges' => '打开的变更',
 	'Tickets:Related:RecentChanges' => '最近的变更 (72小时)',
-]);
+));
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -62,7 +61,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 // Class: Change
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change' => '变更',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => '状态',
@@ -159,13 +158,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => '完成',
 	'Class:Change/Stimulus:ev_finish+' => '',
-]);
+));
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:RoutineChange' => '例行变更',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => '同意',
@@ -190,13 +189,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => '完成',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-]);
+));
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ApprovedChange' => '已批准的变更',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => '批准日期',
@@ -225,13 +224,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => '完成',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-]);
+));
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:NormalChange' => '正常变更',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => '审核日期',
@@ -260,13 +259,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => '完成',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-]);
+));
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EmergencyChange' => '紧急变更',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => '同意',
@@ -291,4 +290,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => '完成',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-]);
+));

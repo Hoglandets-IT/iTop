@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'theme:darkmoon' => 'Dark moon',
-]);
+));

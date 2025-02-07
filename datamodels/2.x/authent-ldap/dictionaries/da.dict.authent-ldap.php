@@ -10,8 +10,17 @@
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserLDAP' => 'LDAP-Bruger',
 	'Class:UserLDAP+' => 'Bruger der godkendes via LDAP',
 	'UserLDAP:server' => 'LDAP specifics~~',
-]);
+));
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+));

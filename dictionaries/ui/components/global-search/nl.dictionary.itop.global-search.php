@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'Zoekgeschiedenis staat uit',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Zoek…',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open globale zoekopdracht',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Je hebt nog geen enkele zoekopdracht gemaakt',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Recente',
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Component:GlobalSearch:Tooltip' => 'Doorzoek de volledige applicatie',
-]);
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Zoek…',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Recente',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Je hebt nog geen enkele zoekopdracht gemaakt',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'Zoekgeschiedenis staat uit',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open globale zoekopdracht',
+));

@@ -9,7 +9,7 @@
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserExternal' => 'Externý užívateľ',
 	'Class:UserExternal+' => 'User authentified outside of '.ITOP_APPLICATION_SHORT.'~~',
-]);
+));

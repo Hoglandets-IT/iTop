@@ -9,9 +9,9 @@
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'UI:ErrorPage:UnstableVersion' => 'Stai utilizzando una versione instabile che potrebbe contenere errori. Se pensi che questo errore sia dovuto a questo, ti preghiamo di inviarci il tuo feedback!',
 	'UI:ErrorPage:KittyDisclaimer' => 'Nessun gattino è stato ferito durante la creazione di questo GIF e rilascio.
 	
 	- Il Team R&D',
-	'UI:ErrorPage:UnstableVersion' => 'Stai utilizzando una versione instabile che potrebbe contenere errori. Se pensi che questo errore sia dovuto a questo, ti preghiamo di inviarci il tuo feedback!',
-]);
+));

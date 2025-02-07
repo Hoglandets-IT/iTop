@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -31,13 +30,20 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+//
+// Class: UserLDAP
+//
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:UserLDAP' => 'LDAP用户',
+	'Class:UserLDAP+' => '用户身份由LDAP认证',
+	'UserLDAP:server' => 'LDAP详情',
+));
 
 //
 // Class: UserLDAP
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:UserLDAP' => 'LDAP用户',
-	'Class:UserLDAP+' => '用户身份由LDAP认证',
-	'UserLDAP:server' => 'LDAP详情',
-]);
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+));

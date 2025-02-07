@@ -23,3 +23,12 @@
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	// Dictionary entries go here
 ));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+));

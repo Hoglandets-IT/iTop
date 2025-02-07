@@ -11,8 +11,17 @@
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserLDAP' => 'LDAP uživatel',
 	'Class:UserLDAP+' => 'Uživatel ověřen přes LDAP',
 	'UserLDAP:server' => 'Specifika LDAP',
-]);
+));
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+));

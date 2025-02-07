@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', [
+Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Component:Input:ChangeNotAllowed' => 'Ta zmiana jest niedozwolona',
 	'UI:Component:Input:Password:DoesNotMatch' => 'Hasła nie pasują',
 	'UI:Component:Input:Set:MinimumItems' => 'Wymagane są co najmniej %1$s elementy',
-]);
+));

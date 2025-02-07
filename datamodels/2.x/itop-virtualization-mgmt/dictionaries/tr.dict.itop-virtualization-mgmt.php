@@ -23,3 +23,12 @@
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	// Dictionary entries go here
 ));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+));

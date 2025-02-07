@@ -10,5 +10,15 @@
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', [
-]);
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	// Dictionary entries go here
+));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+));

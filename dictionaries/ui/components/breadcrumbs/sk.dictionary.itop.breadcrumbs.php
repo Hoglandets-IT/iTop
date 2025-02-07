@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages~~',
-]);
+));

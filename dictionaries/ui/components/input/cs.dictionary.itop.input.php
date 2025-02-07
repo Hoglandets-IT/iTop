@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Component:Input:ChangeNotAllowed' => 'Tato změna není povolena',
 	'UI:Component:Input:Password:DoesNotMatch' => 'Hesla se neshodují',
 	'UI:Component:Input:Set:MinimumItems' => 'Vyžaduje minimálně %1$s položku (položky)',
-]);
+));

@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'theme:light-grey' => 'Light Grey (deprecated)~~',
-]);
+));

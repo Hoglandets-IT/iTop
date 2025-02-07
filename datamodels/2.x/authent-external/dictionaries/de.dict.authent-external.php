@@ -10,7 +10,7 @@
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', [
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserExternal' => 'Externer Benutzer',
 	'Class:UserExternal+' => 'Extern authentifizierter '.ITOP_APPLICATION_SHORT.'-Benutzer',
-]);
+));

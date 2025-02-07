@@ -9,9 +9,11 @@
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', [
-	'FilesInformation:Error:CantWriteToFile' => 'Datei %1$s kann nicht geschrieben werden',
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'FilesInformation:Error:MissingFile' => 'Fehlende Datei: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Datei %1$s ist beschädigt',
 	'FilesInformation:Error:ListCorruptedFile' => 'Beschädigte Datei(en): %1$s',
-	'FilesInformation:Error:MissingFile' => 'Fehlende Datei: %1$s',
-]);
+	'FilesInformation:Error:CantWriteToFile' => 'Datei %1$s kann nicht geschrieben werden',
+));
+
+

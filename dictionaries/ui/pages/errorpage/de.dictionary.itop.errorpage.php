@@ -9,9 +9,9 @@
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', [
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'UI:ErrorPage:UnstableVersion' => 'Sie nutzeng gerade eine Unstable-Version, die eventuell Bugs enthält. Wenn Sie glauben, dieser Fehler liegt an einem solchen Bug, bitte senden Sie uns Ihr Feedback!',
 	'UI:ErrorPage:KittyDisclaimer' => 'Keine klitzekleinen Kätzchen wurden während des Erstellens dieses GIFs und Releases verletzt!
 
 - Das Entwicklungsteam',
-	'UI:ErrorPage:UnstableVersion' => 'Sie nutzeng gerade eine Unstable-Version, die eventuell Bugs enthält. Wenn Sie glauben, dieser Fehler liegt an einem solchen Bug, bitte senden Sie uns Ihr Feedback!',
-]);
+));

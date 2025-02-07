@@ -10,7 +10,7 @@
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:UserExternal' => 'Harici kullanıcı',
 	'Class:UserExternal+' => ITOP_APPLICATION_SHORT.' dışında yetki kontrolü yapılan kullanıcı',
-]);
+));

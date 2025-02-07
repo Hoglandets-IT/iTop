@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>~~',
-	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel security warning~~',
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Bulk:modify:IncompatibleAttribute' => 'This attribute can\'t be edited in bulk context~~',
-]);
+	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel security warning~~',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>~~',
+));

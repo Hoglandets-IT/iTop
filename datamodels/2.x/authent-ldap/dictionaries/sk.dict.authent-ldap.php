@@ -9,8 +9,17 @@
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserLDAP' => 'LDAP užívateľ',
 	'Class:UserLDAP+' => 'User authenticated by LDAP~~',
 	'UserLDAP:server' => 'LDAP specifics~~',
-]);
+));
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+));

@@ -5,16 +5,13 @@
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  */
-
- Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:CreateMailbox' => '创建邮箱...',
 	'Menu:OAuthClient' => 'OAuth Mail Access~~',
 	'Menu:OAuthClient+' => '',
 	'Menu:GenerateTokens' => '生成访问令牌...',
 	'Menu:RegenerateTokens' => '重新生成访问令牌...',
-
 	'itop-oauth-client/Operation:CreateMailBox/Title' => '邮箱创建',
-
 	'itop-oauth-client:UsedForSMTP' => '此OAuth客户端用户SMTP',
 	'itop-oauth-client:TestSMTP' => '发送测试邮件',
 	'itop-oauth-client:MissingOAuthClient' => '没有Oauth客户端给用户%1$s',
@@ -23,9 +20,7 @@
 	'itop-oauth-client:Message:TokenCreated' => '访问令牌已生成',
 	'itop-oauth-client:Message:TokenRecreated' => '访问令牌已重新生成',
 	'itop-oauth-client:Message:TokenError' => '由于服务错误没有生成访问令牌',
-
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => '此组合登录 (%1$s) 和使用于SMTP (%2$s) 已经在OAuth客户端使用',
-
 	'OAuthClient:baseinfo' => '基本信息',
 	'OAuthClient:scope' => '范围',
 ]);
@@ -63,6 +58,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 This url must be copied in the OAuth2 configuration of the provider
 Erase the field to recalculate default value
 EOF
+
 ,
 	'Class:OAuthClient/Attribute:mailbox_list' => '邮箱列表',
 	'Class:OAuthClient/Attribute:mailbox_list+' => '~~',
@@ -72,7 +68,7 @@ EOF
 // Class: OAuthClientAzure
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => '范围',
@@ -95,13 +91,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => '否',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant~~',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".~~',
-]);
+));
 
 //
 // Class: OAuthClientGoogle
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => '范围',
@@ -122,4 +118,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => '如果您需要系统使用其发送邮件, 则至少需要有一个OAuth客户端标记为 "是"',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => '是',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => '否',
-]);
+));

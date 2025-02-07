@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', [
+Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Ajouter une entrée dans la liste',
-]);
+));

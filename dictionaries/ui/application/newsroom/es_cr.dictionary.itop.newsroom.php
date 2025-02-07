@@ -7,9 +7,9 @@
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
  * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
-	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Sus noticias de ' . ITOP_APPLICATION_SHORT.'',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Sus noticias de '.ITOP_APPLICATION_SHORT.'',
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Gestione sus noticias, márquelas como leídas o no leídas, elimínadas, etc.',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Read:Label' => 'Leído',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Unread:Label' => 'No leído',
@@ -20,11 +20,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Success:Message' => 'Se han eliminado todas las noticias de %1$s',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Title' => 'Eliminar todas las noticias',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Message' => '¿Está seguro de que eliminar todas las noticias?',
-
 	'UI:Newsroom:iTopNotification:ViewAllPage:Empty:Title' => '¡Sin novedades, está al día!',
 
 	// Actions
-	// - Unitary buttons
+ // - Unitary buttons
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label' => 'Eliminar esta noticia',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label' => 'Ir a la URL de noticias',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label' => 'Marcar como leída',
@@ -50,4 +49,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message' => 'No hay noticias para eliminar',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'La noticia ha sido eliminada.',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '%1$s noticias han sido eliminadas',
-]);
+));

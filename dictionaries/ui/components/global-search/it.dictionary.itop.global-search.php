@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'La cronologia è disabilitata',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Cerca...',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Apri la ricerca globale',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Non hai ancora eseguito alcuna ricerca',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Recenti',
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Component:GlobalSearch:Tooltip' => 'Cerca in tutta l\'applicazione',
-]);
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Cerca...',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Recenti',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Non hai ancora eseguito alcuna ricerca',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'La cronologia è disabilitata',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Apri la ricerca globale',
+));

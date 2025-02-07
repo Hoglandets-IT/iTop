@@ -23,3 +23,12 @@
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	// Dictionary entries go here
 ));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+));

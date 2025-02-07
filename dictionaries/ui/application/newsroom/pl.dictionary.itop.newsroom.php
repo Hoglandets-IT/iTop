@@ -16,10 +16,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
-	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Twoje wiadomości ' . ITOP_APPLICATION_SHORT,
+	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Twoje wiadomości '.ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Zarządzaj swoimi wiadomościami, oznaczaj je jako przeczytane lub nieprzeczytane, usuwaj je itp.',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Read:Label' => 'Przeczytane',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Unread:Label' => 'Nieprzeczytane',
@@ -30,11 +29,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Success:Message' => 'Wszystkie wiadomości %1$s zostały usunięte',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Title' => 'Usuń wszystkie wiadomości',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Message' => 'Czy na pewno chcesz usunąć wszystkie wiadomości?',
-	
 	'UI:Newsroom:iTopNotification:ViewAllPage:Empty:Title' => 'Brak nowości, jesteś na bieżąco!',
 
 	// Actions
-	// - Unitary buttons
+ // - Unitary buttons
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label' => 'Usuń tę wiadomość',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label' => 'Przejdź do adresu URL wiadomości',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label' => 'Oznacz jako przeczytane',

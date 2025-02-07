@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Modal:Confirmation:DefaultTitle' => 'Confirmation~~',
 	'UI:Modal:Informative:Title' => 'Informative Modal~~',
 	'UI:Modal:InformativeError:Title' => 'Error~~',
+	'UI:Modal:InformativeWarning:Title' => 'Warning~~',
 	'UI:Modal:InformativeInformation:Title' => 'Information~~',
 	'UI:Modal:InformativeSuccess:Title' => 'Success~~',
-	'UI:Modal:InformativeWarning:Title' => 'Warning~~',
-]);
+));

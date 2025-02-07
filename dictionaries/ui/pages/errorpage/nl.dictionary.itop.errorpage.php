@@ -9,9 +9,9 @@
 /**
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'UI:ErrorPage:UnstableVersion' => 'Je gebruikt een instabiele versie die mogelijks fouten bevat. Als je denkt dat deze fout hierdoor komt, gelieve ons hierover te contacteren!',
 	'UI:ErrorPage:KittyDisclaimer' => 'Er werden geen katjes misbruikt tijdens het maken van deze GIF en software.
 
 - Het R&amp;D team',
-	'UI:ErrorPage:UnstableVersion' => 'Je gebruikt een instabiele versie die mogelijks fouten bevat. Als je denkt dat deze fout hierdoor komt, gelieve ons hierover te contacteren!',
-]);
+));

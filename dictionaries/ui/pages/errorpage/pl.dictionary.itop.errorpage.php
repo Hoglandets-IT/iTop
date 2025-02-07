@@ -9,9 +9,9 @@
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', [
+Dict::Add('PL PL', 'Polish', 'Polski', array(
+	'UI:ErrorPage:UnstableVersion' => 'Używasz niestabilnej wersji, która może zawierać błędy. Jeśli uważasz, że ten błąd wystąpił z tego powodu, prześlij nam swoją opinię!',
 	'UI:ErrorPage:KittyDisclaimer' => 'Żaden kotek nie został ranny podczas tworzenia tego GIF-a i wydania.
 
 - Zespół R&amp;D',
-	'UI:ErrorPage:UnstableVersion' => 'Używasz niestabilnej wersji, która może zawierać błędy. Jeśli uważasz, że ten błąd wystąpił z tego powodu, prześlij nam swoją opinię!',
-]);
+));

@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', [
+Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'CAS:Error:UserNotAllowed' => 'User not allowed~~',
 	'CAS:Login:SignIn' => 'Sign in with CAS~~',
 	'CAS:Login:SignInTooltip' => 'Click here to authenticate yourself with the CAS server~~',
-]);
+));

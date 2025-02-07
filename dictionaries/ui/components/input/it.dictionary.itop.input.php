@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
 	'UI:Component:Input:Password:DoesNotMatch' => 'Le password non corrispondono',
 	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
-]);
+));

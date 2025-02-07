@@ -10,15 +10,19 @@
  *
  */
 Dict::Add('FR FR', 'French', 'Français', [
+	'UI:WelcomePopup:Button:RemindLater' => 'Me le rappeler plus tard',
 	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Suivant',
 	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Fermer',
-	'UI:WelcomePopup:Button:RemindLater' => 'Me le rappeler plus tard',
-	'UI:WelcomePopup:Message:320_01_Welcome:Title' => 'Bienvenue sur ' . ITOP_APPLICATION_SHORT . ' 3.2',
+]);
+
+// Message
+Dict::Add('FR FR', 'French', 'Français', [
+	'UI:WelcomePopup:Message:320_01_Welcome:Title' => 'Bienvenue sur '.ITOP_APPLICATION_SHORT.' 3.2',
 	'UI:WelcomePopup:Message:320_01_Welcome:Description' => '<div>Félicitations, vous avez atterri sur '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' !</div>
 <br>
 <div>Nous sommes ravis de vous présenter cette nouvelle version.</div>
 <br>
-<div>En plus d\'introduire de nouvelles fonctionnalités telles que la Newsroom, ' . ITOP_APPLICATION_SHORT . ' 3.2 inclut des correctifs de sécurité critiques, une meilleure accessibilité et d\'autres améliorations significatives visant à vous apporter stabilité et sécurité.</div>
+<div>En plus d\'introduire de nouvelles fonctionnalités telles que la Newsroom, '.ITOP_APPLICATION_SHORT.' 3.2 inclut des correctifs de sécurité critiques, une meilleure accessibilité et d\'autres améliorations significatives visant à vous apporter stabilité et sécurité.</div>
 <br>
 <div>Découvrez toutes les nouvelles fonctionnalités d\'iTop et restez informé des notifications importantes grâce à notre nouvelle pop-up de bienvenue !
 Nous espérons que vous apprécierez cette version autant que nous avons pris plaisir à l\'imaginer et à la créer.</div>
@@ -29,14 +33,14 @@ Nous espérons que vous apprécierez cette version autant que nous avons pris pl
 <br>
 <div>La Newsroom vous permet de gérer facilement les notifications au sein de la plateforme, afin que vous puissiez rester au courant des mises à jour importantes sans avoir à vérifier constamment vos méls. Avec la possibilité de marquer les messages comme lus ou non lus, et de supprimer automatiquement les anciennes notifications, vous avez un contrôle total sur vos notifications</div>
 <br>
-<div>Essayez-le dès aujourd\'hui et optimisez la communication de votre ' . ITOP_APPLICATION_SHORT . ' !</div>',
+<div>Essayez-le dès aujourd\'hui et optimisez la communication de votre '.ITOP_APPLICATION_SHORT.' !</div>',
 	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Title' => 'Centre de notifications',
 	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Description' => '<div>Comme nous savons que vous êtes déjà saturé d\'informations, vous pouvez désormais choisir facilement la manière dont vous recevez vos notifications - par mél, par chat ou même par la fonction Newsroom.</div>
 <div>Vous ne voulez pas recevoir un certain type d\'alerte ? Rien de plus facile avec ces fonctionnalités de personnalisation avancées qui permettent d\'adapter votre expérience utilisateur à vos besoins.</div>
 <br>
 <div>Accédez à votre <a href="%1$s" target="_blank">centre de notifications</a> via la newsroom ou vos préférences et évitez la surcharge d\'information sur vos canaux de communication !</div>',
-	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Accessibilité de l\'interface utilisateur d\'' . ITOP_APPLICATION_SHORT,
-	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>Afin d\'assurer l\'accessibilité d\'' . ITOP_APPLICATION_SHORT . ', notre équipe a travaillé sur de <a href="%1$s" target="_blank">nouveaux thèmes pour la console</a>. Conformes aux normes WCAG, ces interfaces utilisateur visent à faciliter l\'utilisation de la solution par les utilisateurs souffrant de déficiences visuelles :
+	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Accessibilité de l\'interface utilisateur d\''.ITOP_APPLICATION_SHORT,
+	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>Afin d\'assurer l\'accessibilité d\''.ITOP_APPLICATION_SHORT.', notre équipe a travaillé sur de <a href="%1$s" target="_blank">nouveaux thèmes pour la console</a>. Conformes aux normes WCAG, ces interfaces utilisateur visent à faciliter l\'utilisation de la solution par les utilisateurs souffrant de déficiences visuelles :
 <ul>
 	<li><b>Thème daltonien :</b> Conçu pour aider les utilisateurs daltoniens, ce thème se décompose en deux sous-thèmes pour s\'adapter à des cas spécifiques : </li>
 		<ul>

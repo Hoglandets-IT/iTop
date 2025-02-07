@@ -1634,4 +1634,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Software' => 'Software catalog',
 	'Menu:Software+' => 'Software catalog',
 ));
-?>
+
+//
+// Class: PhysicalInterface
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:PhysicalInterface/Attribute:org_id' => 'Org id',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location id',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
+));

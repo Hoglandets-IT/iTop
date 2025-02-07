@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', [
+Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'theme:light-grey' => 'Light Grey (deprecated)~~',
-]);
+));
