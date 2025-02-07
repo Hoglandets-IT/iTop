@@ -209,7 +209,7 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 			null,
 			$bIsRackReconKey,
 			$aCsvData,
-			['description'=>3],
+			[],
 			$aExtKeys,
 			$sSearchLinkUrl
 		);
