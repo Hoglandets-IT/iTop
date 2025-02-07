@@ -6747,15 +6747,19 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreException
 	 * @since 3.1.0 N°5609
 	 */
-	final public static function IsClassCurrentlyInCrud(string $sClass): bool
+	final public static function IsClassCurrentlyInCrud(string $sClass, string $sId = null): bool
 	{
 		$sRootClass = MetaModel::GetRootClass($sClass);
 		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
-			if ($sRootClass === $aCrudStackEntry['class']) {
+			if ($sRootClass === $aCrudStackEntry['class'] && (is_null($sId) || $aCrudStackEntry['id'] === $sId)) {
+				$sId = $sId ?? '';
+				IssueLog::Trace("CRUD ".__METHOD__." $sClass:$sId IS in CRUD Stack", LogChannels::DM_CRUD);
 				return true;
 			}
 		}
 
+		$sId = $sId ?? '';
+		IssueLog::Trace('CRUD '.__METHOD__." $sClass:$sId NOT in CRUD Stack", LogChannels::DM_CRUD);
 		return false;
 	}
 
@@ -6769,13 +6773,15 @@ abstract class DBObject implements iDisplay
 	 */
 	private function AddCurrentObjectInCrudStack(string $sCrudType): void
 	{
-		$this->LogCRUDDebug(__METHOD__);
 		$sRootClass = MetaModel::GetRootClass(get_class($this));
+		$sKey = (string)$this->GetKey();
 		self::$m_aCrudStack[] = [
 			'type'  => $sCrudType,
 			'class' => $sRootClass,
-			'id'    => (string)$this->GetKey(), // GetKey() doesn't have type hinting, so forcing type to avoid getting an int
+			'id'    => $sKey, // GetKey() doesn't have type hinting, so forcing type to avoid getting an int
 		];
+		$iCount = count(self::$m_aCrudStack);
+		$this->LogCRUDDebug(__METHOD__, "$sCrudType $sRootClass:$sKey count $iCount");
 	}
 
 	/**
@@ -6787,10 +6793,15 @@ abstract class DBObject implements iDisplay
 	 */
 	private function UpdateCurrentObjectInCrudStack(): void
 	{
-		$this->LogCRUDDebug(__METHOD__);
 		$aCurrentCrudStack = array_pop(self::$m_aCrudStack);
-		$aCurrentCrudStack['id'] = (string)$this->GetKey();
+		$sOldId = $aCurrentCrudStack['id'];
+		$sNewId = (string)$this->GetKey();
+		$aCurrentCrudStack['id'] = $sNewId;
 		self::$m_aCrudStack[] = $aCurrentCrudStack;
+		$sClass = $aCurrentCrudStack['class'];
+		$sType = $aCurrentCrudStack['type'];
+		$iCount = count(self::$m_aCrudStack);
+		$this->LogCRUDDebug(__METHOD__, "$sType $sClass:$sOldId => $sClass:$sNewId count $iCount");
 	}
 
 	/**
@@ -6802,7 +6813,11 @@ abstract class DBObject implements iDisplay
 	private function RemoveCurrentObjectInCrudStack(): void
 	{
 		$aRemoved = array_pop(self::$m_aCrudStack);
-		$this->LogCRUDDebug(__METHOD__, $aRemoved['class'].':'.$aRemoved['id']);
+		$sType = $aRemoved['type'];
+		$sClass = $aRemoved['class'];
+		$sId = $aRemoved['id'];
+		$iCount = count(self::$m_aCrudStack);
+		$this->LogCRUDDebug(__METHOD__, "$sType $sClass:$sId count $iCount");
 	}
 
 	/**
@@ -6819,37 +6834,53 @@ abstract class DBObject implements iDisplay
 	protected function LogCRUDEnter($sFunction, $sComment = '')
 	{
 		$sClass = get_class($this);
+		if (utils::StartsWith($sClass, 'CMDBChange')) {
+			return;
+		}
 		$sKey = $this->GetKey();
+		$sUUID = $this->m_sObjectUniqId;
 		$sPadding = str_pad('', count(self::$m_aCrudStack), '-');
-		IssueLog::Debug("CRUD +$sPadding> $sFunction $sClass:$sKey $sComment", LogChannels::DM_CRUD);
+		IssueLog::Debug("CRUD +$sPadding> $sFunction $sClass:$sKey ($sUUID) $sComment", LogChannels::DM_CRUD);
 	}
 
 	protected function LogCRUDExit($sFunction, $sComment = '')
 	{
 		$sClass = get_class($this);
+		if (utils::StartsWith($sClass, 'CMDBChange')) {
+			return;
+		}
 		$sKey = $this->GetKey();
+		$sUUID = $this->m_sObjectUniqId;
 		$sPadding = str_pad('', count(self::$m_aCrudStack), '-');
 		if (strlen($sComment) === 0) {
 			IssueLog::Trace("CRUD <$sPadding+ $sFunction $sClass:$sKey", LogChannels::DM_CRUD);
 		} else {
-			IssueLog::Debug("CRUD <$sPadding+ $sFunction $sClass:$sKey $sComment", LogChannels::DM_CRUD);
+			IssueLog::Debug("CRUD <$sPadding+ $sFunction $sClass:$sKey ($sUUID) $sComment", LogChannels::DM_CRUD);
 		}
 	}
 
 	protected function LogCRUDDebug($sFunction, $sComment = '')
 	{
 		$sClass = get_class($this);
+		if (utils::StartsWith($sClass, 'CMDBChange')) {
+			return;
+		}
 		$sKey = $this->GetKey();
+		$sUUID = $this->m_sObjectUniqId;
 		$sPadding = str_pad('', count(self::$m_aCrudStack), '-');
-		IssueLog::Debug("CRUD --$sPadding $sFunction $sClass:$sKey $sComment", LogChannels::DM_CRUD);
+		IssueLog::Debug("CRUD --$sPadding $sFunction $sClass:$sKey ($sUUID) $sComment", LogChannels::DM_CRUD);
 	}
 
 	protected function LogCRUDError($sFunction, $sComment = '')
 	{
 		$sClass = get_class($this);
+		if (utils::StartsWith($sClass, 'CMDBChange')) {
+			return;
+		}
 		$sKey = $this->GetKey();
+		$sUUID = $this->m_sObjectUniqId;
 		$sPadding = str_pad('', count(self::$m_aCrudStack), '!');
-		IssueLog::Error("CRUD !!$sPadding Error $sFunction $sClass:$sKey $sComment", LogChannels::DM_CRUD);
+		IssueLog::Error("CRUD !!$sPadding Error $sFunction $sClass:$sKey ($sUUID) $sComment", LogChannels::DM_CRUD);
 	}
 
 	/**
