@@ -3862,7 +3862,9 @@ abstract class DBObject implements iDisplay
 	 */
 	protected function PostUpdateActions(array $aChanges): void
 	{
-		$this->FireEventAfterWrite($aChanges, false, $this->sStimulusBeingApplied);
+		$sStimulusBeingApplied = $this->sStimulusBeingApplied;
+		$this->sStimulusBeingApplied = null;
+		$this->FireEventAfterWrite($aChanges, false, $sStimulusBeingApplied);
 		$oKPI = new ExecutionKPI();
 		$this->AfterUpdate();
 		$oKPI->ComputeStatsForExtension($this, 'AfterUpdate');
@@ -3874,9 +3876,8 @@ abstract class DBObject implements iDisplay
 		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
 
 		$sClass = get_class($this);
-		if (utils::IsNotNullOrEmptyString($this->sStimulusBeingApplied))
+		if (utils::IsNotNullOrEmptyString($sStimulusBeingApplied))
 		{
-			$this->sStimulusBeingApplied = null;
 			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			$sPreviousState = $this->m_aPreviousValuesForUpdatedAttributes[$sStateAttCode];
 			// Change state triggers...
