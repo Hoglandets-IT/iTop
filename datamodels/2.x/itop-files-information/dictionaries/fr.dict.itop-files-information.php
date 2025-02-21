@@ -9,9 +9,11 @@
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', [
-	'FilesInformation:Error:CantWriteToFile' => 'Impossible de modifier le fichier %1$s',
+Dict::Add('FR FR', 'French', 'Français', array(
+	'FilesInformation:Error:MissingFile' => 'Ficher manquant : %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Le fichier %1$s est corrompu',
 	'FilesInformation:Error:ListCorruptedFile' => 'Fichier(s) corrompu(s): %1$s',
-	'FilesInformation:Error:MissingFile' => 'Ficher manquant : %1$s',
-]);
+	'FilesInformation:Error:CantWriteToFile' => 'Impossible de modifier le fichier %1$s',
+));
+
+

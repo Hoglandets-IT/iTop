@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'CAS:Error:UserNotAllowed' => 'Usuário não permitido',
 	'CAS:Login:SignIn' => 'Autenticar com CAS',
 	'CAS:Login:SignInTooltip' => 'Clique aqui para se autenticar no servidor CAS',
-]);
+));

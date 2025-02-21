@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', [
+Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'theme:light-grey' => 'Jasnoszary (przestarzałe)',
-]);
+));

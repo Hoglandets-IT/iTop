@@ -10,8 +10,17 @@
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:UserLDAP' => 'LDAP kullanıcısı',
 	'Class:UserLDAP+' => 'Yetki kontrolü LDAP tarafından yapılan',
 	'UserLDAP:server' => 'LDAP specifics~~',
-]);
+));
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+));

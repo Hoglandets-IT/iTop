@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 // UI elements
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:WelcomePopup:Button:RemindLater' => 'Připomenout později',
@@ -13,11 +12,11 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 
 // Message
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'UI:WelcomePopup:Message:320_01_Welcome:Title' => 'Vítejte v ' . ITOP_APPLICATION_SHORT . ' 3.2',
+	'UI:WelcomePopup:Message:320_01_Welcome:Title' => 'Vítejte v '.ITOP_APPLICATION_SHORT.' 3.2',
 	'UI:WelcomePopup:Message:320_01_Welcome:Description' => '<div>Gratulujeme, přistáli jste do '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 <br>
 <div>Jsme rádi, že vám můžeme představit tuto novou verzi. </div>
-<div>Kromě nových funkcionalit, jako je např. Newsroom, ' . ITOP_APPLICATION_SHORT . ' obsahuje verze 3.2 bezpečnostní opravy, lepší přístupnost a další významná vylepšení zaměřená na zajištění stability a bezpečnosti.</div>
+<div>Kromě nových funkcionalit, jako je např. Newsroom, '.ITOP_APPLICATION_SHORT.' obsahuje verze 3.2 bezpečnostní opravy, lepší přístupnost a další významná vylepšení zaměřená na zajištění stability a bezpečnosti.</div>
 <br>
 <div>Objevte všechny '.ITOP_APPLICATION_SHORT.' vzrušující nové funkce a zůstaňte informováni o důležitých oznámeních a aktualizacích prostřednictvím nového vyskakovacího okna na uvítanou!</div>
 <div>Doufáme, že se vám tato verze bude líbit stejně, jako se nám líbila její tvorba.</div>
@@ -27,14 +26,14 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Say goodbye to cluttered inboxes and hello to personalized alerts with <a href="%1$s" target="_blank">'.ITOP_APPLICATION_SHORT.'\'s Newsroom</a>!</div>
 <div>Newsroom allows you to easily manage notifications within the platform, so you can stay on top of important updates without constantly checking your email. With the ability to mark messages as read or unread, and automatically delete old notifications, you have complete control over your notifications. </div>
 <br>
-<div>Try it out today and streamline your ' . ITOP_APPLICATION_SHORT . '\'s communication experience!</div>~~',
+<div>Try it out today and streamline your '.ITOP_APPLICATION_SHORT.'\'s communication experience!</div>~~',
 	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Title' => 'Centrum notifikací',
 	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Description' => '<div>As we know your information intake is already at its max, you can now easily choose how you receive your notifications - via email, chat, or even the Newsroom feature</div>
 <div>You don\'t want to receive a certain type of alerts? Nothing easier with these advanced customization capabilities giving you the flexibility to tailor your experience to your needs. </div>
 <br>
 <div>Access your <a href="%1$s" target="_blank">notifications center</a> through the newsroom or through your preferences and avoid information overload on all your communication channels!</div>~~',
-	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Accessibility for ' . ITOP_APPLICATION_SHORT . '\'s UI~~',
-	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>To ensure ' . ITOP_APPLICATION_SHORT . '\'s accessibility, our team has been working on <a href="%1$s" target="_blank">new back-office themes</a>. WCAG compliants, those UI focus on making it easier for users with visual impairments to use the solution:
+	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Accessibility for '.ITOP_APPLICATION_SHORT.'\'s UI~~',
+	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>To ensure '.ITOP_APPLICATION_SHORT.'\'s accessibility, our team has been working on <a href="%1$s" target="_blank">new back-office themes</a>. WCAG compliants, those UI focus on making it easier for users with visual impairments to use the solution:
 <ul>
 	<li><b>Color-blind theme:</b> Designed to help users with colorblindness, this theme actually breaks down in two sub-themes to adapt to specific cases: </li>
 		<ul>

@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'Az előzmények le lettek tiltva',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Keresés...',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Globális keresés megnyitása',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Még nem futtatott semmilyen keresést',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Legutóbbiak',
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Component:GlobalSearch:Tooltip' => 'Keresés a teljes alkalmazásban',
-]);
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Keresés...',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Legutóbbiak',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Még nem futtatott semmilyen keresést',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'Az előzmények le lettek tiltva',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Globális keresés megnyitása',
+));

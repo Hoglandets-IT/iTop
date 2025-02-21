@@ -9,8 +9,17 @@
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserLDAP' => 'LDAP felhasználó',
 	'Class:UserLDAP+' => 'LDAP vagy AD felhasználó',
 	'UserLDAP:server' => 'LDAP specifics~~',
-]);
+));
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+));

@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
-]);
+));

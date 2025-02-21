@@ -16,11 +16,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
-	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Vaše ' . ITOP_APPLICATION_SHORT.' novinky',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Vaše '.ITOP_APPLICATION_SHORT.' novinky',
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Spravujte oznámení, označujte je jako přečtené, smažte je, atd.',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Read:Label' => 'Přečtené',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Unread:Label' => 'Nepřečtené',
@@ -31,11 +29,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Success:Message' => 'Všech %1$s novinek bylo smazáno',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Title' => 'Smazat všechny novinky',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Message' => 'Opravdu chete smazat všechny novinky?',
-	
 	'UI:Newsroom:iTopNotification:ViewAllPage:Empty:Title' => 'Žádné nové zprávy',
 
 	// Actions
-	// - Unitary buttons
+ // - Unitary buttons
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label' => 'Smaž zprávu',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label' => 'Přejít na URL novinek',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsRead:Label' => 'Označ jako přečtenou',

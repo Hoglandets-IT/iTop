@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages~~',
-]);
+));

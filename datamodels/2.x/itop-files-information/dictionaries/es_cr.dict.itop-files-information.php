@@ -7,9 +7,11 @@
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
  * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
-	'FilesInformation:Error:CantWriteToFile' => 'No se puede escribir al archivo %1$s',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'FilesInformation:Error:MissingFile' => 'Archivo faltante: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'El archivo %1$s está corrupto',
 	'FilesInformation:Error:ListCorruptedFile' => 'Archivo(s) corrupto(s): %1$s',
-	'FilesInformation:Error:MissingFile' => 'Archivo faltante: %1$s',
-]);
+	'FilesInformation:Error:CantWriteToFile' => 'No se puede escribir al archivo %1$s',
+));
+
+

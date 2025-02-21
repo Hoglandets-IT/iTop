@@ -9,7 +9,7 @@
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserExternal' => 'Esterno utente',
 	'Class:UserExternal+' => 'Utente autenticato al di fuori di '.ITOP_APPLICATION_SHORT,
-]);
+));

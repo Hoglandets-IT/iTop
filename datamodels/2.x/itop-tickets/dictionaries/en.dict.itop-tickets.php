@@ -250,3 +250,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+'             => 'Goal based on a SLT of type TTR',
 ));
 
+
+//
+// Class: Ticket
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Ticket/Attribute:team_email' => 'Team email',
+	'Class:Ticket/Attribute:team_email+' => '',
+));

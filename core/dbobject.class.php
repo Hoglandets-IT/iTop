@@ -3862,7 +3862,9 @@ abstract class DBObject implements iDisplay
 	 */
 	protected function PostUpdateActions(array $aChanges): void
 	{
-		$this->FireEventAfterWrite($aChanges, false, $this->sStimulusBeingApplied);
+		$sStimulusBeingApplied = $this->sStimulusBeingApplied;
+		$this->sStimulusBeingApplied = null;
+		$this->FireEventAfterWrite($aChanges, false, $sStimulusBeingApplied);
 		$oKPI = new ExecutionKPI();
 		$this->AfterUpdate();
 		$oKPI->ComputeStatsForExtension($this, 'AfterUpdate');
@@ -3874,9 +3876,8 @@ abstract class DBObject implements iDisplay
 		$this->ActivateOnObjectUpdateTriggersForTargetObjects();
 
 		$sClass = get_class($this);
-		if (utils::IsNotNullOrEmptyString($this->sStimulusBeingApplied))
+		if (utils::IsNotNullOrEmptyString($sStimulusBeingApplied))
 		{
-			$this->sStimulusBeingApplied = null;
 			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			$sPreviousState = $this->m_aPreviousValuesForUpdatedAttributes[$sStateAttCode];
 			// Change state triggers...
@@ -4556,7 +4557,7 @@ abstract class DBObject implements iDisplay
 		$bSuccess = true;
 		// Prevent current object from being updated by the actions
 		$this->AddCurrentObjectInCrudStack('APPLY_STIMULUS');
-		MetaModel::StartReentranceProtection($this);
+		$bIsNewlyProtected = MetaModel::StartReentranceProtection($this);
 		try {
 			foreach ($aTransitionDef['actions'] as $actionHandler) {
 				if (is_string($actionHandler)) {
@@ -4610,7 +4611,10 @@ abstract class DBObject implements iDisplay
 				}
 			}
 		} finally {
-			MetaModel::StopReentranceProtection($this);
+			if ($bIsNewlyProtected) {
+				// Stops protection only if the object was not already protected
+				MetaModel::StopReentranceProtection($this);
+			}
 			$this->RemoveCurrentObjectInCrudStack();
 		}
 		if ($bSuccess)
@@ -6729,12 +6733,13 @@ abstract class DBObject implements iDisplay
 		$oRootClass = MetaModel::GetRootClass($sClass);
 
 		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
-			if (($oRootClass === $aCrudStackEntry['class'])
-				&& ($sConvertedId === $aCrudStackEntry['id'])) {
+			if (($oRootClass === $aCrudStackEntry['class']) && ($sConvertedId === $aCrudStackEntry['id'])) {
+				IssueLog::Trace('CRUD '.__METHOD__." $sClass:$sId IS in CRUD Stack", LogChannels::DM_CRUD);
 				return true;
 			}
 		}
 
+		IssueLog::Trace('CRUD '.__METHOD__." $sClass:$sId NOT in CRUD Stack", LogChannels::DM_CRUD);
 		return false;
 	}
 
@@ -6747,19 +6752,17 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreException
 	 * @since 3.1.0 N°5609
 	 */
-	final public static function IsClassCurrentlyInCrud(string $sClass, string $sId = null): bool
+	final public static function IsClassCurrentlyInCrud(string $sClass): bool
 	{
 		$sRootClass = MetaModel::GetRootClass($sClass);
 		foreach (self::$m_aCrudStack as $aCrudStackEntry) {
-			if ($sRootClass === $aCrudStackEntry['class'] && (is_null($sId) || $aCrudStackEntry['id'] === $sId)) {
-				$sId = $sId ?? '';
-				IssueLog::Trace("CRUD ".__METHOD__." $sClass:$sId IS in CRUD Stack", LogChannels::DM_CRUD);
+			if ($sRootClass === $aCrudStackEntry['class']) {
+				IssueLog::Trace("CRUD ".__METHOD__." $sClass IS in CRUD Stack", LogChannels::DM_CRUD);
 				return true;
 			}
 		}
 
-		$sId = $sId ?? '';
-		IssueLog::Trace('CRUD '.__METHOD__." $sClass:$sId NOT in CRUD Stack", LogChannels::DM_CRUD);
+		IssueLog::Trace('CRUD '.__METHOD__." $sClass NOT in CRUD Stack", LogChannels::DM_CRUD);
 		return false;
 	}
 
@@ -6769,6 +6772,7 @@ abstract class DBObject implements iDisplay
 	 * @param string $sCrudType
 	 *
 	 * @return void
+	 * @throws \CoreException
 	 * @since 3.1.0 N°5609
 	 */
 	private function AddCurrentObjectInCrudStack(string $sCrudType): void

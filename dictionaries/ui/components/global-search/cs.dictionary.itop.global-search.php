@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'Historie ja zakázána',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Vyhledávání...',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Otevřít globální vyhledávání',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Ještě jste nespustili žádné vyhledávání',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Nedávné',
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Component:GlobalSearch:Tooltip' => 'Vyhledávání v celé aplikaci',
-]);
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Vyhledávání...',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Nedávné',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Ještě jste nespustili žádné vyhledávání',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'Historie ja zakázána',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Otevřít globální vyhledávání',
+));

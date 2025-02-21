@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', [
+Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Valeurs inconnues',
-]);
+));

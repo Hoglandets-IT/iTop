@@ -9,12 +9,12 @@
 /**
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'UI:Component:QuickCreate:HistoryDisabled' => 'Geschiedenis staat uit',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Selecteer een objectsoort…',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open snel object aanmaken',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Je hebt nog geen objecten gemaakt',
-	'UI:Component:QuickCreate:MostPopular:Title' => 'Meest populair',
-	'UI:Component:QuickCreate:Recents:Title' => 'Recente',
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Component:QuickCreate:Tooltip' => 'Snel een object aanmaken',
-]);
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Selecteer een objectsoort…',
+	'UI:Component:QuickCreate:Recents:Title' => 'Recente',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Je hebt nog geen objecten gemaakt',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'Geschiedenis staat uit',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open snel object aanmaken',
+	'UI:Component:QuickCreate:MostPopular:Title' => 'Meest populair',
+));

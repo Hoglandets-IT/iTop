@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'theme:light-grey' => 'Gris claro (obsoleto)',
-]);
+));

@@ -10,5 +10,6 @@
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', [
-]);
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	// Dictionary entries go here
+));

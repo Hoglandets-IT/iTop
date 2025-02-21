@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Neznámé hodnoty',
-]);
+));

@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
-]);
+));

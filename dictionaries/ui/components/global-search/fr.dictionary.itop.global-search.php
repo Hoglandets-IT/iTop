@@ -9,11 +9,11 @@
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', [
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'L\'historique est désactivé',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Rechercher...',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Ouvrir la recherche globale',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Vous n\'avez pas encore effectué de recherche',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Dernières recherches',
+Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Component:GlobalSearch:Tooltip' => 'Rechercher dans toute l\'application',
-]);
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Rechercher...',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Dernières recherches',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Vous n\'avez pas encore effectué de recherche',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'L\'historique est désactivé',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Ouvrir la recherche globale',
+));

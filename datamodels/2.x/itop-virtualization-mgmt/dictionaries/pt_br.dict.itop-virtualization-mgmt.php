@@ -23,3 +23,12 @@
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	// Dictionary entries go here
 ));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+));

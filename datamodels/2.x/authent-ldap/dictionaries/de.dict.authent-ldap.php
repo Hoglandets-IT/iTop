@@ -10,10 +10,17 @@
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', [
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLDAP' => 'LDAP-Benutzer',
 	'Class:UserLDAP+' => 'Benutzer, der via LDAP authentifiziert wird',
+	'UserLDAP:server' => 'LDAP-Einstellungen',
+));
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLDAP/Attribute:ldap_server' => 'LDAP-Server',
 	'Class:UserLDAP/Attribute:ldap_server+' => 'Optional: LDAP-Server, der zur Authentifizierung verwendet werden soll, falls mehrere LDAP-Server konfiguriert sind.',
-	'UserLDAP:server' => 'LDAP-Einstellungen',
-]);
+));

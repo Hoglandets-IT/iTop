@@ -10,7 +10,7 @@
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserExternal' => 'Externe gebruiker',
 	'Class:UserExternal+' => 'Gebruiker aangemeld via externe authenticatie',
-]);
+));

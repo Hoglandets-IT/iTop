@@ -9,9 +9,11 @@
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'FilesInformation:Error:MissingFile' => 'Missing file: %1$s~~',
 	'FilesInformation:Error:CorruptedFile' => 'File %1$s is corrupted~~',
 	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s ~~',
-	'FilesInformation:Error:MissingFile' => 'Missing file: %1$s~~',
-]);
+	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
+));
+
+

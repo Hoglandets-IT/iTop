@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', [
+Dict::Add('FR FR', 'French', 'Français', array(
 	'core/Operation:Landing/Title' => 'Création d\'un jeton OAuth',
-]);
+));

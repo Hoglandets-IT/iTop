@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Agregar una entrada en la lista',
-]);
+));

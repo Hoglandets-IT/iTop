@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', [
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'theme:light-grey' => 'Light Grey (veraltet)',
-]);
+));

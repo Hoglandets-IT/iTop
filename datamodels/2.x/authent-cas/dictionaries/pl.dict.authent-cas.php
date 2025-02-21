@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', [
+Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'CAS:Error:UserNotAllowed' => 'Użytkownik niedozwolony',
 	'CAS:Login:SignIn' => 'Zaloguj się za pomocą CAS',
 	'CAS:Login:SignInTooltip' => 'Kliknij tutaj, aby uwierzytelnić się na serwerze CAS',
-]);
+));

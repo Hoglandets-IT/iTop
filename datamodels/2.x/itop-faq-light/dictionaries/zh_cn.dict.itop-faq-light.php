@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -30,12 +29,10 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -45,12 +42,10 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: FAQ
 //
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => '常见问题',
 	'Class:FAQ/Attribute:title' => '标题',
@@ -68,21 +63,21 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:FAQ/Attribute:key_words' => '关键字',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => '范围',
-]);
+));
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FAQCategory' => 'FAQ 类别',
 	'Class:FAQCategory+' => 'FAQ 类别',
 	'Class:FAQCategory/Attribute:name' => '名称',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => '此类别 FAQ 相关的所有常见问题',
-]);
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+));
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',
 	'Menu:Problem:Shortcuts' => '快捷方式',
@@ -93,4 +88,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => '常见问题',
 	'Brick:Portal:FAQ:Title+' => '<p>需要帮助?</p><p>查阅列表中的常见问题, 或许可以立即找到令您满意的答案.</p>',
-]);
+));

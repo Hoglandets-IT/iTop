@@ -10,11 +10,16 @@
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:FunctionalCI/Attribute:tickets_list' => 'Hibajegyek',
-	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkFunctionalCIToTicket' => 'Funkcionális CI / Hibajegy',
 	'Class:lnkFunctionalCIToTicket+' => '~~',
+	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Hibajegy',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Referenciaszám',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Hibajegy tárgya',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CI',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'CI név',
@@ -22,14 +27,15 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Hatása (szöveg)',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Hatás kód',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Számított',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Kézzel hozzáadva',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Számított',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Nincs hatása',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Hibajegy',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Referenciaszám',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Hibajegy tárgya',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
-	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
-]);
+));
+
+//
+// Class: FunctionalCI
+//
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:FunctionalCI/Attribute:tickets_list' => 'Hibajegyek',
+	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
+));

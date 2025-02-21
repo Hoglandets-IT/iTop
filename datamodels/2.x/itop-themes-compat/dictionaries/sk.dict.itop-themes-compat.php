@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'theme:light-grey' => 'Light Grey (deprecated)~~',
-]);
+));

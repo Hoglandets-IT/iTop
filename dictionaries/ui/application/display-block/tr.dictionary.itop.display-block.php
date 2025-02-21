@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
-]);
+));

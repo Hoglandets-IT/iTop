@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', [
+Dict::Add('FR FR', 'French', 'Français', array(
 	'theme:fullmoon-high-contrast' => 'Fullmoon (Contraste élevé)',
-]);
+));

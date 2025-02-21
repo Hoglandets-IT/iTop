@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:NotificationsCenter:Page:Title' => 'Centrum powiadomień',
 	'UI:NotificationsCenter:Panel:Title' => 'Centrum powiadomień',

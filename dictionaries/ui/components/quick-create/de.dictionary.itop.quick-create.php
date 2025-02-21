@@ -9,12 +9,12 @@
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', [
-	'UI:Component:QuickCreate:HistoryDisabled' => 'Quick-Create-Historie ist deaktiviert',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Wählen Sie einen Objekttyp aus...',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Quick-Create-Menu öffnen',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Sie haben noch keine Objekte erstellt',
-	'UI:Component:QuickCreate:MostPopular:Title' => 'Am beliebtesten',
-	'UI:Component:QuickCreate:Recents:Title' => 'Letzte',
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Component:QuickCreate:Tooltip' => 'Erstellen Sie schnell jeden Typ von Objekt',
-]);
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Wählen Sie einen Objekttyp aus...',
+	'UI:Component:QuickCreate:Recents:Title' => 'Letzte',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Sie haben noch keine Objekte erstellt',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'Quick-Create-Historie ist deaktiviert',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Quick-Create-Menu öffnen',
+	'UI:Component:QuickCreate:MostPopular:Title' => 'Am beliebtesten',
+));

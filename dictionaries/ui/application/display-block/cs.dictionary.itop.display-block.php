@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
-]);
+));

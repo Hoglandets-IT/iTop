@@ -7,5 +7,15 @@
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
  * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
-]);
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	// Dictionary entries go here
+));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+));

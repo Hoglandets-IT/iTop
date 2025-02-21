@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'theme:darkmoon' => 'Dark moon',
-]);
+));

@@ -9,6 +9,6 @@
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', [
-	'theme:fullmoon-protanopia-deuteranopia' => 'Fullmoon (Protanopie et Deuteranopie)',
-]);
+Dict::Add('FR FR', 'French', 'Français', array(
+	'theme:fullmoon-protanopia-deuteranopia' => 'Fullmoon (Protanopie et Deuteranopie)'
+));

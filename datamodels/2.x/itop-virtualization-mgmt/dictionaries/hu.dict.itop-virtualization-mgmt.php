@@ -23,3 +23,12 @@
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	// Dictionary entries go here
 ));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+));

@@ -554,3 +554,34 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Role name',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
 ));
+
+//
+// Class: lnkContactToContract
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id',
+	'Class:lnkContactToContract/Attribute:customer_id+' => '',
+	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id',
+	'Class:lnkContactToContract/Attribute:provider_id+' => '',
+));
+
+//
+// Class: lnkContractToDocument
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id',
+	'Class:lnkContractToDocument/Attribute:customer_id+' => '',
+	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id',
+	'Class:lnkContractToDocument/Attribute:provider_id+' => '',
+));
+
+//
+// Class: lnkCustomerContractToService
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
+));

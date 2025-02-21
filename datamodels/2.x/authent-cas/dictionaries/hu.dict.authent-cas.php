@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'CAS:Error:UserNotAllowed' => 'Nem engedélyezett felhasználó',
 	'CAS:Login:SignIn' => 'Bejelentkezés CAS szerverrel',
 	'CAS:Login:SignInTooltip' => 'Kattintson ide az azonosításhoz a CAS szerveren',
-]);
+));

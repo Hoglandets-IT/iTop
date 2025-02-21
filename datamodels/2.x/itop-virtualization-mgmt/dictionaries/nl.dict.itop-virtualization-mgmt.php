@@ -12,5 +12,15 @@
  * @author Denis Flaven <denis.flaven@combodo.com>
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-]);
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	// Dictionary entries go here
+));
+
+//
+// Class: LogicalInterface
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+));

@@ -9,7 +9,7 @@
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', [
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserExternal' => 'Utilisateur externe à '.ITOP_APPLICATION_SHORT,
 	'Class:UserExternal+' => 'Utilisateur authentifié à l\'extérieur de '.ITOP_APPLICATION_SHORT,
-]);
+));

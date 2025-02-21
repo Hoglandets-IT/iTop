@@ -9,8 +9,8 @@
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Component:Input:ChangeNotAllowed' => 'This change is not allowed~~',
 	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
 	'UI:Component:Input:Set:MinimumItems' => 'Minimum %1$s item(s) required~~',
-]);
+));
