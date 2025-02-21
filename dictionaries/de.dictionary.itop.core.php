@@ -327,8 +327,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:EventNotificationEmail' => 'Gesendete E-Mail-Benachrichtigung',
-	'Class:EventNotificationEmail+' => 'Protokollierung einer E-Mail, die gesendet wurde',
+	'Class:EventNotificationEmail' => 'E-Mail Emission Event',
+	'Class:EventNotificationEmail+' => 'Verfolgung einer E-Mail, die gesendet wurde',
 	'Class:EventNotificationEmail/Attribute:to' => 'An',
 	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Kopie an',

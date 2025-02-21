@@ -319,7 +319,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:EventNotification/Attribute:action_id' => 'Akcia',
 	'Class:EventNotification/Attribute:action_id+' => '~~',
 	'Class:EventNotification/Attribute:object_id' => 'ID objektu',
-	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)~~',
+	'Class:EventNotification/Attribute:object_id+' => '',
 ));
 
 //
