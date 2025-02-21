@@ -1230,55 +1230,56 @@ class ObjectFormManager extends FormManager
         $this->aFieldsAtts = array();
         $this->aExtraData = array();
         $aFieldsDMOnlyAttCodes = array();
-        switch ($this->aFormProperties['type']) {
-            case 'custom_list':
-            case 'static':
-                foreach ($this->aFormProperties['fields'] as $sAttCode => $aOptions) {
-                    // When in a transition and no flags are specified for the field, we will retrieve its flags from DM later
-                    if ($this->IsTransitionForm() && empty($aOptions)) {
-                        $aFieldsDMOnlyAttCodes[] = $sAttCode;
-                        continue;
-                    }
+        if (array_key_exists('type', $this->aFormProperties)) {
+            switch ($this->aFormProperties['type']) {
+                case 'custom_list':
+                case 'static':
+                    foreach ($this->aFormProperties['fields'] as $sAttCode => $aOptions) {
+                        // When in a transition and no flags are specified for the field, we will retrieve its flags from DM later
+                        if ($this->IsTransitionForm() && empty($aOptions)) {
+                            $aFieldsDMOnlyAttCodes[] = $sAttCode;
+                            continue;
+                        }
 
-                    // Otherwise we proceed as usual
-                    $iFieldFlags = OPT_ATT_NORMAL;
-                    // Checking if field should be slave
-                    if (isset($aOptions['slave']) && ($aOptions['slave'] === true)) {
-                        $iFieldFlags = $iFieldFlags | OPT_ATT_SLAVE;
+                        // Otherwise we proceed as usual
+                        $iFieldFlags = OPT_ATT_NORMAL;
+                        // Checking if field should be slave
+                        if (isset($aOptions['slave']) && ($aOptions['slave'] === true)) {
+                            $iFieldFlags = $iFieldFlags | OPT_ATT_SLAVE;
+                        }
+                        // Checking if field should be must_change
+                        if (isset($aOptions['must_change']) && ($aOptions['must_change'] === true)) {
+                            $iFieldFlags = $iFieldFlags | OPT_ATT_MUSTCHANGE;
+                        }
+                        // Checking if field should be must prompt
+                        if (isset($aOptions['must_prompt']) && ($aOptions['must_prompt'] === true)) {
+                            $iFieldFlags = $iFieldFlags | OPT_ATT_MUSTPROMPT;
+                        }
+                        // Checking if field should be hidden
+                        if (isset($aOptions['hidden']) && ($aOptions['hidden'] === true)) {
+                            $iFieldFlags = $iFieldFlags | OPT_ATT_HIDDEN;
+                        }
+                        // Checking if field should be readonly
+                        if (isset($aOptions['read_only']) && ($aOptions['read_only'] === true)) {
+                            $iFieldFlags = $iFieldFlags | OPT_ATT_READONLY;
+                        }
+                        // Checking if field should be mandatory
+                        if (isset($aOptions['mandatory']) && ($aOptions['mandatory'] === true)) {
+                            $iFieldFlags = $iFieldFlags | OPT_ATT_MANDATORY;
+                        }
+                        // Finally, adding the attribute and its flags
+                        $this->aFieldsAtts[$sAttCode] = $iFieldFlags;
                     }
-                    // Checking if field should be must_change
-                    if (isset($aOptions['must_change']) && ($aOptions['must_change'] === true)) {
-                        $iFieldFlags = $iFieldFlags | OPT_ATT_MUSTCHANGE;
-                    }
-                    // Checking if field should be must prompt
-                    if (isset($aOptions['must_prompt']) && ($aOptions['must_prompt'] === true)) {
-                        $iFieldFlags = $iFieldFlags | OPT_ATT_MUSTPROMPT;
-                    }
-                    // Checking if field should be hidden
-                    if (isset($aOptions['hidden']) && ($aOptions['hidden'] === true)) {
-                        $iFieldFlags = $iFieldFlags | OPT_ATT_HIDDEN;
-                    }
-                    // Checking if field should be readonly
-                    if (isset($aOptions['read_only']) && ($aOptions['read_only'] === true)) {
-                        $iFieldFlags = $iFieldFlags | OPT_ATT_READONLY;
-                    }
-                    // Checking if field should be mandatory
-                    if (isset($aOptions['mandatory']) && ($aOptions['mandatory'] === true)) {
-                        $iFieldFlags = $iFieldFlags | OPT_ATT_MANDATORY;
-                    }
-                    // Finally, adding the attribute and its flags
-                    $this->aFieldsAtts[$sAttCode] = $iFieldFlags;
-                }
-                break;
+                    break;
 
-            case 'zlist':
-                foreach (MetaModel::FlattenZList(MetaModel::GetZListItems($sObjectClass, $this->aFormProperties['fields'])) as $sAttCode) {
-                    $this->aFieldsAtts[$sAttCode] = OPT_ATT_NORMAL;
-                }
-                break;
+                case 'zlist':
+                    foreach (MetaModel::FlattenZList(MetaModel::GetZListItems($sObjectClass, $this->aFormProperties['fields'])) as $sAttCode) {
+                        $this->aFieldsAtts[$sAttCode] = OPT_ATT_NORMAL;
+                    }
+                    break;
+            }
         }
-
-        if ($this->aFormProperties['layout'] !== null) {
+        if (isset($this->aFormProperties['layout'])) {
             $oXPath = new DOMXPath($this->oHtmlDocument);
             /** @var \DOMElement $oFieldNode */
             foreach ($oXPath->query('//div[contains(@class, "form_field")][@data-field-id]') as $oFieldNode) {
@@ -1337,7 +1338,7 @@ class ObjectFormManager extends FormManager
         // Also, retrieving mandatory attributes from metamodel to be able to complete the form with them if necessary
         //
         // Note: When in a transition, we don't do this for fields that should be set from DM
-        if ($this->aFormProperties['type'] !== 'static') {
+        if (array_key_exists('type', $this->aFormProperties) && $this->aFormProperties['type'] !== 'static') {
             if ($this->IsTransitionForm()) {
                 $aDatamodelAttCodes = $this->oObject->GetTransitionAttributes($this->aFormProperties['stimulus_code']);
             }
@@ -1448,7 +1449,7 @@ class ObjectFormManager extends FormManager
 
         // - The layout
         $this->oHtmlDocument = new DOMDocument();
-        if ($this->aFormProperties['layout'] !== null) {
+        if (isset($this->aFormProperties['layout'])) {
             // Checking if we need to render the template from twig to html in order to parse the fields
             if ($this->aFormProperties['layout']['type'] === 'twig') {
                 if ($this->oContainer !== null) {
