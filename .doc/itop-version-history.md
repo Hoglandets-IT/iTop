@@ -93,6 +93,12 @@ gitGraph
     checkout support/3.2
     commit id: "2024-06-25" tag: "3.2.0-beta1" type: REVERSE
     commit id: "2024-08-07" tag: "3.2.0"
+    checkout support/2.7
+    commit id: "2025-02-25" tag: "2.7.12"
+    checkout support/3.1
+    commit id: "2025-02-25 " tag: "3.1.3"
+    checkout support/3.2
+    commit id: "2025-02-25  " tag: "3.2.1"
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).
