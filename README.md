@@ -107,6 +107,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Raenker, Martin
 - Roháč, Richard (a.k.a [@RohacRichard](https://github.com/RohacRichard))
 - Rosenke, Stephan
+- Rossi, Tommaso (a.k.a [@tomrss](https://www.github.com/tomrss))
 - Rudner, Björn (a.k.a [@rudnerbjoern](https://github.com/rudnerbjoern))
 - Šafránek, Jaroslav (a.k.a [jkcinik](https://sourceforge.net/u/jkcinik/profile/) on SourceForge)
 - Seki, Shoji
@@ -116,6 +117,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Tarjányi, Csaba (a.k.a [@tacsaby](https://github.com/tacsaby))
 - Tulio, Marco
 - Turrubiates, Miguel
+- Vlk, Karel (a.k.a [@vlk-charles](https://www.github.com/vlk-charles))
 
 ### Aliases
 
