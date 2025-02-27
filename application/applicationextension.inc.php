@@ -1316,6 +1316,11 @@ interface iRestServiceProvider
 	public function ExecOperation($sVersion, $sVerb, $aParams);
 }
 
+interface iRestInputSanitizer
+{
+	public function SanitizeJsonInput(string $sJsonInput): string;
+}
+
 /**
  * Minimal REST response structure. Derive this structure to add response data and error codes.
  *
@@ -1405,6 +1410,14 @@ class RestResult
 	 * @api
 	 */
 	public $message;
+	
+	/**
+	 * Sanitize the content of this result to hide sensitive information
+	 */
+	public function SanitizeContent()
+	{
+		// The default implementation does nothing
+	}
 }
 
 /**
