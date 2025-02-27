@@ -122,6 +122,25 @@ class ObjectResult
 	{
 		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode, $bExtendedOutput);
 	}
+	
+public function SanitizeContent()
+	{
+		foreach($this->fields as $sAttCode => $value)
+		{
+            try{
+			$oAttDef = MetaModel::GetAttributeDef($this->class, $sAttCode);
+            } catch (Exception $e) { // for special cases like ID
+                continue;
+            }
+			if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
+            {
+                $this->fields[$sAttCode] = '******';
+            }
+			{
+				$this->fields[$sAttCode] = '******';
+			}
+		}
+	}
 }
 
 
@@ -180,6 +199,16 @@ class RestResultWithObjects extends RestResult
 
 		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
 		$this->objects[$sObjKey] = $oObjRes;
+	}
+	
+public function SanitizeContent()
+	{
+		parent::SanitizeContent();
+		
+		foreach($this->objects as $sObjKey => $oObjRes)
+		{
+			$oObjRes->SanitizeContent();
+		}
 	}
 }
 
@@ -247,7 +276,7 @@ class RestDelete
  *
  * @package     Core
  */
-class CoreServices implements iRestServiceProvider
+class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 {
 	/**
 	 * Enumerate services delivered by this class
@@ -662,6 +691,34 @@ class CoreServices implements iRestServiceProvider
 			// unknown operation: handled at a higher level
 		}
 		return $oResult;
+	}
+	
+	public function SanitizeJsonInput(string $sJsonInput): string
+	{
+        $sSanitizedJsonInput = $sJsonInput;
+        $aJsonData = json_decode($sSanitizedJsonInput, true);
+        $sOperation = $aJsonData['operation'];
+
+        switch ($sOperation) {
+            case 'core/check_credentials':
+                if (isset($aJsonData['password'])) {
+                    $aJsonData['password'] = '*****';
+                }
+                break;
+            case 'core/update':
+            case 'core/create':
+            default :
+            $sClass = $aJsonData['class'];
+            foreach ($aJsonData['fields'] as $sAttCode => $value) {
+                $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+                if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
+                {
+                    $aJsonData['fields'][$sAttCode] = '*****';
+                }
+            }
+            break;
+        }
+		return json_encode($aJsonData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 	}
 
 	/**
