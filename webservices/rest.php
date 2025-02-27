@@ -241,6 +241,7 @@ catch(Exception $e)
 //
 $sResponse = json_encode($oResult);
 
+
 if ($sResponse === false)
 {
 	$oJsonIssue = new RestResult();

@@ -21,11 +21,14 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use CoreException;
 use CoreServices;
-use UserRights;
+use CoreUnexpectedValue;
+use RestResultListOperations;
+use SimpleGraphException;
 
 
-class RestServicesTest extends ItopTestCase
+class RestServicesTest extends ItopDataTestCase
 {
     public function setUp(): void
     {
@@ -88,9 +91,23 @@ JSON;
         $this->assertEquals($sExpectedJsonDataSanitized, $aJson['input_data'], $sOutputJson);
     }
 
-    public function testOutputSanitization()
+    /**
+     * @param $sOperation
+     * @param $aJsonData
+     * @param $sExpectedJsonDataSanitized
+     * @return void
+     * @throws CoreException
+     * @throws CoreUnexpectedValue
+     * @throws SimpleGraphException
+     * @dataProvider providerTestSanitizeJsonOutput
+     */
+    public function testSanitizeJsonOutput($sOperation, $aJsonData, $sExpectedJsonDataSanitized)
     {
-        $oResult = new RestResultListOperations();
+        $oRS = new CoreServices();
+        $oResult = $oRS->ExecOperation('1.3', $sOperation, $aJsonData);
+
+        $oResult->SanitizeContent();
+        $this->assertEquals($sExpectedJsonDataSanitized, json_encode($oResult));
     }
 
     public function providerTestSanitizeJsonInput()
@@ -111,5 +128,29 @@ JSON;
         ];
     }
 
-
+    public function providerTestSanitizeJsonOutput()
+    {
+        return [
+            'core/check_credentials' => [
+                'core/check_credentials',
+                ['user' => 'admin', 'password' => 'admin'],
+                '{"operation":"core/check_credentials","user":"admin","password":"*****"}'
+            ],
+            'core/update' => [
+                'core/update',
+                ['comment' => 'Update user', 'class' => 'UserLocal', 'key' => ['description' => 'My description'], 'output_fields' => 'first_name, password', 'fields' => ['id' => '1', 'password' => '123456']],
+                '{"operation":"core/update","comment":"Update user","class":"UserLocal","key":{"description":"My description"},"output_fields":"first_name, password","fields":{"id":"1","password":"*****"}}'
+            ],
+            'core/create' => [
+                'core/create',
+                ['comment' => 'Create user', 'class' => 'UserLocal', 'fields' => ['first_name' => 'John', 'last_name' => 'Doe', 'email' => 'jd@example/com', 'password' => '123456']],
+                '{"operation":"core/create","comment":"Create user","class":"UserLocal","fields":{"first_name":"John","last_name":"Doe","email":"jd@example/com","password":"*****"}}'
+            ],
+            'core/get' => [
+                'core/get',
+                ['comment' => 'Get user', 'class' => 'UserLocal', 'key' => ['id' => '1'], 'output_fields' => 'first_name, password'],
+                '{"operation":"core/get","comment":"Get user","class":"UserLocal","key":{"id":"1"},"output_fields":"first_name, password"}'
+            ],
+        ];
+    }
 }
