@@ -127,8 +127,12 @@ class ObjectResult
 	{
 		foreach($this->fields as $sAttCode => $value)
 		{
+            try{
 			$oAttDef = MetaModel::GetAttributeDef($this->class, $sAttCode);
-			if ($oAttDef instanceof AttributeEncryptedString || $oAttDef instanceof AttributePassword)
+            } catch (Exception $e) { // for special cases like ID
+                continue;
+            }
+			if ($oAttDef instanceof AttributeEncryptedString || $oAttDef instanceof AttributePassword || $oAttDef instanceof AttributeOneWayPassword)
 			{
 				$this->fields[$sAttCode] = '******';
 			}
@@ -704,14 +708,15 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
             $sClass = $aJsonData['class'];
             foreach ($aJsonData['fields'] as $sAttCode => $value) {
                     $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-                    if ($oAttDef instanceof AttributePassword || $oAttDef instanceof AttributeEncryptedPassword) {
+                if ($oAttDef instanceof AttributeEncryptedString || $oAttDef instanceof AttributePassword || $oAttDef instanceof AttributeOneWayPassword) {
                         $aJsonData['fields'][$sAttCode] = '*****';
                     }
                 }
                 // TODO : fields type relations avec champs sensible dedans
+                // TODO refacto
                 break;
         }
-		return json_encode($aJsonData);
+		return json_encode($aJsonData, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 	}
 
 	/**

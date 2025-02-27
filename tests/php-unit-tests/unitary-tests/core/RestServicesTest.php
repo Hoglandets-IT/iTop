@@ -20,12 +20,11 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use CoreException;
 use CoreServices;
 use CoreUnexpectedValue;
-use RestResultListOperations;
 use SimpleGraphException;
+use UserLocal;
 
 
 class RestServicesTest extends ItopDataTestCase
@@ -104,10 +103,12 @@ JSON;
     public function testSanitizeJsonOutput($sOperation, $aJsonData, $sExpectedJsonDataSanitized)
     {
         $oRS = new CoreServices();
-        $oResult = $oRS->ExecOperation('1.3', $sOperation, $aJsonData);
-
-        $oResult->SanitizeContent();
-        $this->assertEquals($sExpectedJsonDataSanitized, json_encode($oResult));
+        $oUser = new UserLocal();
+        $oUser->Set('password', "123456");
+        $oRestResultWithObject = new \RestResultWithObjects();
+        $oRestResultWithObject->AddObject(0, "ok", $oUser, ['UserLocal' => ['login', 'password']]);
+        $oRestResultWithObject->SanitizeContent();
+        $this->assertEquals($sExpectedJsonDataSanitized, json_encode($oRestResultWithObject));
     }
 
     public function providerTestSanitizeJsonInput()
@@ -115,11 +116,15 @@ JSON;
         return [
                 'core/check_credentials' => [
                     '{"operation": "core/check_credentials", "user": "admin", "password": "admin"}',
-                    '{"operation": "core/check_credentials", "user": "admin", "password": "*****"}'
+                    '{
+    "operation": "core/check_credentials",
+    "user": "admin",
+    "password": "*****"
+}'
                 ],
                 'core/update' => [
-                    '{"operation": "core/update", "comment": "Update user", "class": "UserLocal", "key": {"description": "My description"}, "output_fields": "first_name, password", "fields": {"id": "1", "password" : "123456"}}',
-                    '{"operation": "core/update", "comment": "Update user", "class": "UserLocal", "key": {"description": "My description"}, "output_fields": "first_name, password", "fields": {"id": "1", "password" : "*****"}}'
+                    '{"operation": "core/update", "comment": "Update user", "class": "UserLocal", "key": {"id":1}, "output_fields": "first_name, password", "fields": {"password" : "123456"}}',
+                    '{"operation": "core/update", "comment": "Update user", "class": "UserLocal", "key": {"id":1}, "output_fields": "first_name, password", "fields": {"password" : "*****"}}'
                 ],
             'core/create' => [
                 '{"operation": "core/create", "comment": "Create user", "class": "UserLocal", "fields": {"first_name": "John", "last_name": "Doe", "email": "jd@example/com", "password" : "123456"}}',
