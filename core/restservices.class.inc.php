@@ -122,6 +122,18 @@ class ObjectResult
 	{
 		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode, $bExtendedOutput);
 	}
+	
+	public function SanitizeContent()
+	{
+		foreach($this->fields as $sAttCode => $value)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($this->class, $sAttCode);
+			if ($oAttDef instanceof AttributeEncryptedString)
+			{
+				$this->fields[$sAttCode] = '******';
+			}
+		}
+	}
 }
 
 
@@ -180,6 +192,16 @@ class RestResultWithObjects extends RestResult
 
 		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
 		$this->objects[$sObjKey] = $oObjRes;
+	}
+	
+	public function SanitizeContent()
+	{
+		parent::SanitizeContent();
+		
+		foreach($this->objects as $sObjKey => $oObjRes)
+		{
+			$oObjRes->SanitizeContent();
+		}
 	}
 }
 
@@ -247,7 +269,7 @@ class RestDelete
  *
  * @package     Core
  */
-class CoreServices implements iRestServiceProvider
+class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 {
 	/**
 	 * Enumerate services delivered by this class
@@ -662,6 +684,12 @@ class CoreServices implements iRestServiceProvider
 			// unknown operation: handled at a higher level
 		}
 		return $oResult;
+	}
+	
+	public function SanitizeJsonInput(string $sJsonInput): string
+	{
+		//TODO
+		return 'TODO: sanitized input';
 	}
 
 	/**
