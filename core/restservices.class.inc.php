@@ -132,7 +132,7 @@ public function SanitizeContent()
             } catch (Exception $e) { // for special cases like ID
                 continue;
             }
-			if ($oAttDef instanceof iAttributeSensitive)
+			if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
             {
                 $this->fields[$sAttCode] = '******';
             }
@@ -201,7 +201,7 @@ class RestResultWithObjects extends RestResult
 		$this->objects[$sObjKey] = $oObjRes;
 	}
 	
-/*	public function SanitizeContent()
+public function SanitizeContent()
 	{
 		parent::SanitizeContent();
 		
@@ -209,7 +209,7 @@ class RestResultWithObjects extends RestResult
 		{
 			$oObjRes->SanitizeContent();
 		}
-	}*/
+	}
 }
 
 class RestResultWithRelations extends RestResultWithObjects
@@ -710,15 +710,14 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
             default :
             $sClass = $aJsonData['class'];
             foreach ($aJsonData['fields'] as $sAttCode => $value) {
-                    $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-                    var_dump($oAttDef);
-                if ($oAttDef instanceof iAttributeSensitive) {
-                        $aJsonData['fields'][$sAttCode] = '*****';
-                    }
+                $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+                var_dump($oAttDef);
+                if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
+                {
+                    $aJsonData['fields'][$sAttCode] = '*****';
                 }
-                // TODO : fields type relations avec champs sensible dedans
-                // TODO refacto
-                break;
+            }
+            break;
         }
 		return json_encode($aJsonData, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
 	}

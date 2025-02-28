@@ -112,11 +112,6 @@ interface iAttributeNoGroupBy
 	//no method, just a contract on implement
 }
 
-interface iAttributeSensitive
-{
-    //no method, just a contract on implement
-}
-
 /**
  * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.)
  *
@@ -3778,7 +3773,7 @@ class AttributeFinalClass extends AttributeString
  *
  * @package     iTopORM
  */
-class AttributePassword extends AttributeString implements iAttributeNoGroupBy, iAttributeSensitive
+class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 {
     const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
@@ -3854,7 +3849,7 @@ class AttributePassword extends AttributeString implements iAttributeNoGroupBy, 
  *
  * @package     iTopORM
  */
-class AttributeEncryptedString extends AttributeString implements iAttributeNoGroupBy, iAttributeSensitive
+class AttributeEncryptedString extends AttributeString implements iAttributeNoGroupBy
 {
     const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
@@ -9246,7 +9241,7 @@ class AttributeSubItem extends AttributeDefinition
 /**
  * One way encrypted (hashed) password
  */
-class AttributeOneWayPassword extends AttributeDefinition implements iAttributeNoGroupBy, iAttributeSensitive
+class AttributeOneWayPassword extends AttributeDefinition implements iAttributeNoGroupBy
 {
     const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 

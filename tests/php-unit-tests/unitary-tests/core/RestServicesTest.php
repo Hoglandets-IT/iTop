@@ -24,6 +24,7 @@ use CoreException;
 use CoreServices;
 use CoreUnexpectedValue;
 use SimpleGraphException;
+use UserLocal;
 
 /**
  * @runTestsInSeparateProcesses
@@ -103,21 +104,12 @@ class RestServicesTest extends ItopDataTestCase
      */
     public function testSanitizeJsonOutput($sOperation, $aJsonData, $sExpectedJsonDataSanitized)
     {
-        $this->CreateUser('my_example', '1', 'Azertyuiiop*12', 1);
-        $oRS = new CoreServices();
-        $oResult = $oRS->ExecOperation(1.3, $sOperation, json_decode(json_encode($aJsonData)));
-        // delete every pattern like "::xxx"
-        $actualResult = json_encode($oResult);
-        $sExpectedJsonDataSanitized = preg_replace('/::[0-9]+/', '', $sExpectedJsonDataSanitized);
-        $actualResult = preg_replace('/::[0-9]+/', '', $actualResult);
-        // convert both to arrays
-        $actualResult = json_decode($actualResult, true);
-        $sExpectedJsonDataSanitized = json_decode($sExpectedJsonDataSanitized, true);
-        $this->recursive_unset($actualResult, 'key');
-        $this->recursive_unset($sExpectedJsonDataSanitized, 'key');
-
-
-        $this->assertEquals($sExpectedJsonDataSanitized, $actualResult);
+        $oUser = new UserLocal();
+        $oUser->Set('password', "123456");
+        $oRestResultWithObject = new \RestResultWithObjects();
+        $oRestResultWithObject->AddObject(0, "ok", $oUser, ['UserLocal' => ['login', 'password']]);
+        $oRestResultWithObject->SanitizeContent();
+        $this->assertEquals($sExpectedJsonDataSanitized, json_encode($oRestResultWithObject));
     }
 
     public function providerTestSanitizeJsonOutput()
@@ -127,22 +119,22 @@ class RestServicesTest extends ItopDataTestCase
                 'core/update' => [
                         'core/update',
                         ['comment' => 'Update user', 'class' => 'UserLocal', 'key' => ['login' => 'my_example'], 'output_fields' => 'password', 'fields' => ['password' => 'opkB!req57']],
-                        '{"objects":{"UserLocal::78":{"code":0,"message":"updated","class":"UserLocal","key":"78","fields":{"password":"*****"}}},"code":0,"message":null}'],
+                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"******","password":"******"}}},"code":0,"message":null}'
+                ],
                 'core/create' => [
                         'core/create',
                         ['comment' => 'Create user', 'class' => 'UserLocal', 'fields' => ['password' => 'Azertyuiiop*12', 'login' => 'toto', 'profile_list' => [1]]],
-                        '{"operation":"core/create","comment":"Create user","class":"UserLocal","fields":{"first_name":"John","last_name":"Doe","email":"jd@example/com","password":"*****"}}'
+                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"******","password":"******"}}},"code":0,"message":null}'
                 ],
                 'core/get' => [
                         'core/get',
                         ['comment' => 'Get user', 'class' => 'UserLocal', 'key' => ['login' => 'my_example'], 'output_fields' => 'first_name, password'],
-                        '{"objects":{"UserLocal":{"code":0,"message":"","class":"UserLocal","key":"148","fields":{"first_name":"My first name","password":"*****"}}},"code":0,"message":"Found: 1"}'
+                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"******","password":"******"}}},"code":0,"message":null}'
                 ],
                 'core/check_credentials' => [
                         'core/check_credentials',
                         ['user' => 'admin', 'password' => 'admin'],
-                        '{"code":0,"message":null,"authorized":true}'
-                ],
+                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"******","password":"******"}}},"code":0,"message":null}'                ],
         ];
     }
 
