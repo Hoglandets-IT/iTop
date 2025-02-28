@@ -711,7 +711,6 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
             $sClass = $aJsonData['class'];
             foreach ($aJsonData['fields'] as $sAttCode => $value) {
                 $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-                var_dump($oAttDef);
                 if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
                 {
                     $aJsonData['fields'][$sAttCode] = '*****';
