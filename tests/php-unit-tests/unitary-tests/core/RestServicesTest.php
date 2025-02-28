@@ -137,13 +137,4 @@ class RestServicesTest extends ItopDataTestCase
                         '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"******","password":"******"}}},"code":0,"message":null}'                ],
         ];
     }
-
-    function recursive_unset(&$array, $unwanted_key) {
-        unset($array[$unwanted_key]);
-        foreach ($array as &$value) {
-            if (is_array($value)) {
-                $this->recursive_unset($value, $unwanted_key);
-            }
-        }
-    }
 }
