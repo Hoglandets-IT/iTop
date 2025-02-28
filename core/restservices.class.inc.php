@@ -123,7 +123,7 @@ class ObjectResult
 		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode, $bExtendedOutput);
 	}
 	
-	public function SanitizeContent()
+/*	public function SanitizeContent()
 	{
 		foreach($this->fields as $sAttCode => $value)
 		{
@@ -132,12 +132,12 @@ class ObjectResult
             } catch (Exception $e) { // for special cases like ID
                 continue;
             }
-			if ($oAttDef instanceof AttributeEncryptedString || $oAttDef instanceof AttributePassword || $oAttDef instanceof AttributeOneWayPassword)
+			if ($oAttDef->IsSensitive())
 			{
 				$this->fields[$sAttCode] = '******';
 			}
 		}
-	}
+	}*/
 }
 
 
@@ -198,7 +198,7 @@ class RestResultWithObjects extends RestResult
 		$this->objects[$sObjKey] = $oObjRes;
 	}
 	
-	public function SanitizeContent()
+/*	public function SanitizeContent()
 	{
 		parent::SanitizeContent();
 		
@@ -206,7 +206,7 @@ class RestResultWithObjects extends RestResult
 		{
 			$oObjRes->SanitizeContent();
 		}
-	}
+	}*/
 }
 
 class RestResultWithRelations extends RestResultWithObjects
@@ -708,7 +708,8 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
             $sClass = $aJsonData['class'];
             foreach ($aJsonData['fields'] as $sAttCode => $value) {
                     $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-                if ($oAttDef instanceof AttributeEncryptedString || $oAttDef instanceof AttributePassword || $oAttDef instanceof AttributeOneWayPassword) {
+                    var_dump($oAttDef);
+                if ($oAttDef->IsSensitive()) {
                         $aJsonData['fields'][$sAttCode] = '*****';
                     }
                 }
