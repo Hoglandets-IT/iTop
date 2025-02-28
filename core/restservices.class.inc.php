@@ -123,7 +123,7 @@ class ObjectResult
 		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode, $bExtendedOutput);
 	}
 	
-/*	public function SanitizeContent()
+public function SanitizeContent()
 	{
 		foreach($this->fields as $sAttCode => $value)
 		{
@@ -132,12 +132,15 @@ class ObjectResult
             } catch (Exception $e) { // for special cases like ID
                 continue;
             }
-			if ($oAttDef->IsSensitive())
+			if ($oAttDef instanceof iAttributeSensitive)
+            {
+                $this->fields[$sAttCode] = '******';
+            }
 			{
 				$this->fields[$sAttCode] = '******';
 			}
 		}
-	}*/
+	}
 }
 
 
@@ -709,7 +712,7 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
             foreach ($aJsonData['fields'] as $sAttCode => $value) {
                     $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
                     var_dump($oAttDef);
-                if ($oAttDef->IsSensitive()) {
+                if ($oAttDef instanceof iAttributeSensitive) {
                         $aJsonData['fields'][$sAttCode] = '*****';
                     }
                 }

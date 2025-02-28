@@ -112,6 +112,11 @@ interface iAttributeNoGroupBy
 	//no method, just a contract on implement
 }
 
+interface iAttributeSensitive
+{
+    //no method, just a contract on implement
+}
+
 /**
  * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.)
  *
@@ -137,13 +142,6 @@ abstract class AttributeDefinition
 	const INDEX_LENGTH = 95;
 
 	protected $aCSSClasses;
-
-    private $bIsSensitive = false;
-
-    public function IsSensitive()
-    {
-        return $this->bIsSensitive;
-    }
 
     public function GetType()
 	{
@@ -3780,13 +3778,8 @@ class AttributeFinalClass extends AttributeString
  *
  * @package     iTopORM
  */
-class AttributePassword extends AttributeString implements iAttributeNoGroupBy
+class AttributePassword extends AttributeString implements iAttributeNoGroupBy, iAttributeSensitive
 {
-    private $bIsSensitive = true;
-    public function IsSensitive()
-    {
-        return $this->bIsSensitive;
-    }
     const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
@@ -3861,13 +3854,8 @@ class AttributePassword extends AttributeString implements iAttributeNoGroupBy
  *
  * @package     iTopORM
  */
-class AttributeEncryptedString extends AttributeString implements iAttributeNoGroupBy
+class AttributeEncryptedString extends AttributeString implements iAttributeNoGroupBy, iAttributeSensitive
 {
-    private $bIsSensitive = true;
-    public function IsSensitive()
-    {
-        return $this->bIsSensitive;
-    }
     const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	static $sKey = null; // Encryption key used for all encrypted fields
@@ -9258,13 +9246,8 @@ class AttributeSubItem extends AttributeDefinition
 /**
  * One way encrypted (hashed) password
  */
-class AttributeOneWayPassword extends AttributeDefinition implements iAttributeNoGroupBy
+class AttributeOneWayPassword extends AttributeDefinition implements iAttributeNoGroupBy, iAttributeSensitive
 {
-    private $bIsSensitive = true;
-    public function IsSensitive()
-    {
-        return $this->bIsSensitive;
-    }
     const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
