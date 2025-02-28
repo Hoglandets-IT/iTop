@@ -286,7 +286,7 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('message', $sMessage);
 	$oLog->Set('code', $oResult->code);
 	$oResult->SanitizeContent();
-	$oLog->SetTrim('json_output', json_encode($oResult));
+	$oLog->SetTrim('json_output', json_encode($oResult, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
 	$oLog->DBInsertNoReload();
 	$oKPI->ComputeAndReport('Log inserted');
