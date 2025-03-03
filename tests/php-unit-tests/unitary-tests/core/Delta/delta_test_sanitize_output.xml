@@ -6,6 +6,15 @@
                 <field id="encrypted_string" xsi:type="AttributeEncryptedString" _delta="define">
                     <sql>encrypted_string</sql>
                 </field>
+
+                <class id="lnkGroupToCI" _created_in="itop-config-mgmt">
+                    <fields>
+                        <field id="password" xsi:type="AttributeExternalField" _delta="define">
+                            <extkey_attcode>group_id</extkey_attcode>
+                            <target_attcode>password</target_attcode>
+                        </field>
+                    </fields>
+                </class>
             </fields>
         </class>
     </classes>
