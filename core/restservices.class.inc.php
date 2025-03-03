@@ -706,11 +706,13 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
             case 'core/create':
             default :
             $sClass = $aJsonData['class'];
-            foreach ($aJsonData['fields'] as $sAttCode => $value) {
+            if (isset($aJsonData['fields'])) {
+                foreach ($aJsonData['fields'] as $sAttCode => $value) {
                 $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
                 if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
                 {
-                    $aJsonData['fields'][$sAttCode] = '*****';
+                        $aJsonData['fields'][$sAttCode] = '*****';
+                    }
                 }
             }
             break;
