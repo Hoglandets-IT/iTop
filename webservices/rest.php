@@ -227,6 +227,13 @@ try
 		/** @var iRestServiceProvider $oRS */
 		$oRS = $aOpToRestService[$sOperation]['service_provider'];
 		$sProvider = get_class($oRS);
+		
+		if ($oRS instanceof iRestInputSanitizer) {
+			$sSanitizedJsonInput = $oRS->SanitizeJsonInput($sJsonString);
+		}
+		else {
+			$sSanitizedJsonInput = $sJsonString;
+		}
 	
 		CMDBObject::SetTrackOrigin('webservice-rest');
 		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
@@ -251,6 +258,7 @@ catch(Exception $e)
 // Output the results
 //
 $sResponse = json_encode($oResult);
+
 
 if ($sResponse === false)
 {
@@ -283,7 +291,7 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('userinfo', UserRights::GetUser());
 	$oLog->Set('version', $sVersion);
 	$oLog->Set('operation', $sOperation);
-	$oLog->SetTrim('json_input', $sJsonString);
+	$oLog->SetTrim('json_input', $sSanitizedJsonInput);
 
 	$oLog->Set('provider', $sProvider);
 	$sMessage = $oResult->message;
@@ -293,7 +301,8 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	}
 	$oLog->SetTrim('message', $sMessage);
 	$oLog->Set('code', $oResult->code);
-	$oLog->SetTrim('json_output', $sResponse);
+	$oResult->SanitizeContent();
+	$oLog->SetTrim('json_output', json_encode($oResult, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
 	$oLog->DBInsertNoReload();
 }
