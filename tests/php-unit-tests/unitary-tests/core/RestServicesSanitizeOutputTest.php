@@ -42,7 +42,7 @@ class RestServicesSanitizeOutputTest extends iTopCustomDatamodelTestCase
         $oRestResultWithObject = new \RestResultWithObjects();
         $oRestResultWithObject->AddObject(0, "ok", $oGroup, ['Group' => ['encrypted_string']]);
         $oRestResultWithObject->SanitizeContent();
-        $this->assertEquals('{"objects":{"Group::-1":{"code":0,"message":"ok","class":"Group","key":-1,"fields":{"encrypted_string":"******"}}},"code":0,"message":null}', json_encode($oRestResultWithObject));
+        $this->assertEquals('{"code":0,"message":null,"objects":{"Group::-1":{"code":0,"message":"ok","class":"Group","key":-1,"fields":{"encrypted_string":"******"}}}}', json_encode($oRestResultWithObject));
     }
 
 
