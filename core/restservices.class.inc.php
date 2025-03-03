@@ -136,9 +136,6 @@ public function SanitizeContent()
             {
                 $this->fields[$sAttCode] = '******';
             }
-			{
-				$this->fields[$sAttCode] = '******';
-			}
 		}
 	}
 }
