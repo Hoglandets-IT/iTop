@@ -119,22 +119,22 @@ class RestServicesTest extends ItopDataTestCase
                 'core/update' => [
                         'core/update',
                         ['comment' => 'Update user', 'class' => 'UserLocal', 'key' => ['login' => 'my_example'], 'output_fields' => 'password', 'fields' => ['password' => 'opkB!req57']],
-                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"******"}}},"code":0,"message":null}'
+                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"*****"}}},"code":0,"message":null}'
                 ],
                 'core/create' => [
                         'core/create',
                         ['comment' => 'Create user', 'class' => 'UserLocal', 'fields' => ['password' => 'Azertyuiiop*12', 'login' => 'toto', 'profile_list' => [1]]],
-                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"******"}}},"code":0,"message":null}'
+                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"*****"}}},"code":0,"message":null}'
                 ],
                 'core/get' => [
                         'core/get',
                         ['comment' => 'Get user', 'class' => 'UserLocal', 'key' => ['login' => 'my_example'], 'output_fields' => 'first_name, password'],
-                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"******"}}},"code":0,"message":null}'
+                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"*****"}}},"code":0,"message":null}'
                 ],
                 'core/check_credentials' => [
                         'core/check_credentials',
                         ['user' => 'admin', 'password' => 'admin'],
-                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"******"}}},"code":0,"message":null}'                ],
+                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"*****"}}},"code":0,"message":null}'                ],
         ];
     }
 }

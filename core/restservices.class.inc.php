@@ -34,7 +34,9 @@
  */
 class ObjectResult
 {
-	public $code;
+    use SanitizeTrait;
+
+    public $code;
 	public $message;
 	public $class;
 	public $key;
@@ -125,16 +127,16 @@ class ObjectResult
 	
 public function SanitizeContent()
 	{
-		foreach($this->fields as $sAttCode => $value)
+		foreach($this->fields as $sFieldAttCode => $fieldValue)
 		{
             try{
-			$oAttDef = MetaModel::GetAttributeDef($this->class, $sAttCode);
+			$oAttDef = MetaModel::GetAttributeDef($this->class, $sFieldAttCode);
             } catch (Exception $e) { // for special cases like ID
                 continue;
             }
 			if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
             {
-                $this->fields[$sAttCode] = '******';
+                $this->SanitizeFieldIfSensitive($this->fields, $sFieldAttCode, $fieldValue, $oAttDef);
             }
 		}
 	}
@@ -275,7 +277,8 @@ class RestDelete
  */
 class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 {
-	/**
+    use SanitizeTrait;
+    /**
 	 * Enumerate services delivered by this class
 	 * 	 
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
@@ -707,12 +710,9 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
             default :
             $sClass = $aJsonData['class'];
             if (isset($aJsonData['fields'])) {
-                foreach ($aJsonData['fields'] as $sAttCode => $value) {
-                $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-                if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
-                {
-                        $aJsonData['fields'][$sAttCode] = '*****';
-                    }
+                foreach ($aJsonData['fields'] as $sFieldAttCode => $fieldValue) {
+                    $oAttDef = MetaModel::GetAttributeDef($sClass, $sFieldAttCode);
+                    $this->SanitizeFieldIfSensitive($aJsonData['fields'], $sFieldAttCode, $fieldValue, $oAttDef);
                 }
             }
             break;
@@ -857,4 +857,52 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 	{
 		return $iLimit * max(0, $iPage - 1);
 	}
+}
+
+trait SanitizeTrait
+{
+    /**
+     * Sanitize a field if it is sensitive.
+     *
+     * @param array $fields The fields array
+     * @param string $sFieldAttCode The attribute code
+     * @param mixed $oAttDef The attribute definition
+     */
+    private function SanitizeFieldIfSensitive(array &$fields, string $sFieldAttCode, $fieldValue, $oAttDef): void
+    {
+        if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
+        {
+            $fields[$sFieldAttCode] = '*****';
+        }
+        if ($oAttDef instanceof AttributeLinkedSet) { // for 1-n relations
+            foreach ($fieldValue as $i => $aLnkValues) {
+                foreach ($aLnkValues as $sLnkAttCode => $sLnkValue) {
+                    $oLnkAttDef = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sLnkAttCode);
+                    if ($oLnkAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
+                    {
+                        $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
+                    }
+                }
+            }
+        }
+        if ($oAttDef instanceof AttributeLinkedSetIndirect) { // for n-n relations
+            foreach ($fieldValue as $i => $aLnkValues) {
+                foreach ($aLnkValues as $sLnkAttCode => $sLnkValue) {
+                    $oLnkAttDef = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sLnkAttCode);
+                    if ($oLnkAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
+                    {
+                        $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
+                    }
+                }
+            }
+        }
+        // for external key
+        if ($oAttDef instanceof AttributeExternalKey) {
+            $oExtKeyAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetCode());
+            if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
+            {
+                $fields[$sFieldAttCode] = '*****';
+            }
+        }
+    }
 }
