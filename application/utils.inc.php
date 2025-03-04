@@ -419,11 +419,26 @@ class utils
 	 * @since 2.7.7, 3.0.2, 3.1.0 N°4899 - new 'url' filter
 	 * @since 2.7.10 N°6606 use the utils::ENUM_SANITIZATION_* const
 	 * @since 2.7.10 N°6606 new case for ENUM_SANITIZATION_FILTER_PHP_CLASS
+	 * @since 3.2.1-1 N°8242 Allow value to be an array for every filter
 	 *
 	 * @link https://www.php.net/manual/en/filter.filters.sanitize.php PHP sanitization filters
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
+		if (is_array($value))
+		{
+			$retValue = array();
+			foreach ($value as $key => $val)
+			{
+				$retValue[$key] = self::Sanitize_Internal($val, $sSanitizationFilter); // recursively check arrays
+				if ($retValue[$key] === false)
+				{
+					return false;
+				}
+			}
+			return $retValue;
+		}
+
 		switch ($sSanitizationFilter)
 		{
 			case static::ENUM_SANITIZATION_FILTER_INTEGER:
@@ -454,52 +469,36 @@ class utils
 			case static::ENUM_SANITIZATION_FILTER_PARAMETER:
 			case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
 			case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
-				if (is_array($value))
+				switch ($sSanitizationFilter)
 				{
-					$retValue = array();
-					foreach ($value as $key => $val)
-					{
-						$retValue[$key] = self::Sanitize_Internal($val, $sSanitizationFilter); // recursively check arrays
-						if ($retValue[$key] === false)
-						{
-							$retValue = false;
-							break;
-						}
-					}
-				}
-				else
-				{
-					switch ($sSanitizationFilter)
-					{
-						case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
-							// Same as parameter type but keep the dot character
-							// transaction_id, the dot is mostly for Windows servers when using file storage as the tokens are named *.tmp
-							// - See N°1835
-							// - Note: It must be included at the regexp beginning otherwise you'll get an invalid character error
-							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
-							break;
+					case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
+						// Same as parameter type but keep the dot character
+						// transaction_id, the dot is mostly for Windows servers when using file storage as the tokens are named *.tmp
+						// - See N°1835
+						// - Note: It must be included at the regexp beginning otherwise you'll get an invalid character error
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
+						break;
 
-						case static::ENUM_SANITIZATION_FILTER_ROUTE:
-						case static::ENUM_SANITIZATION_FILTER_OPERATION:
-							// - Routes should be of the "controller_namespace_code.controller_method_name" form
-							// - Operations should be allowed to be namespaced as well even though then don't have dedicated controller yet
-							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[\.A-Za-z0-9_-]*$/')));
-							break;
+					case static::ENUM_SANITIZATION_FILTER_ROUTE:
+					case static::ENUM_SANITIZATION_FILTER_OPERATION:
+						// - Routes should be of the "controller_namespace_code.controller_method_name" form
+						// - Operations should be allowed to be namespaced as well even though then don't have dedicated controller yet
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[\.A-Za-z0-9_-]*$/')));
+						break;
 
-						case static::ENUM_SANITIZATION_FILTER_PARAMETER:
-							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
-							// Characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
-							break;
+					case static::ENUM_SANITIZATION_FILTER_PARAMETER:
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
+						// Characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
+						break;
 
-						case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
-							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
-							break;
+					case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
+						break;
 
-						case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
-							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[ A-Za-z0-9_=%:+-]*$/')));
-							break;
+					case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[ A-Za-z0-9_=%:+-]*$/')));
+						break;
 
-					}
 				}
 				break;
 
