@@ -47,6 +47,12 @@
                 <field id="password" xsi:type="AttributeEncryptedString">
                     <sql>password</sql>
                 </field>
+                <field id="server_test_list" xsi:type="AttributeLinkedSetIndirect">
+                    <linked_class>lnkContactTestToServer</linked_class>
+                    <ext_key_to_me>contact_test_id</ext_key_to_me>
+                    <ext_key_to_remote>testserver_id</ext_key_to_remote>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
             </fields>
         </class>
 

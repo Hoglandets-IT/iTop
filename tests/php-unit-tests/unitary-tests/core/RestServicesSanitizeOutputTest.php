@@ -71,6 +71,33 @@ class RestServicesSanitizeOutputTest extends iTopCustomDatamodelTestCase
                 json_encode($oRestResultWithObject));
     }
 
+    public function testSanitizeJsonOutputAttributeOnNNRelation()
+    {
+        $oContactTest = $this->CreateObject('ContactTest', array(
+                'password' => '123456'));
+
+        $oTestServer = $this->CreateObject('TestServer', [
+                'name' => 'testserver',
+        ]);
+
+
+        // create lnkContactTestToServer
+        $this->CreateObject('lnkContactTestToServer', array(
+                'contact_test_id' => $oContactTest->GetKey(),
+                'testserver_id' => $oTestServer->GetKey()
+        ));
+
+        $oRestResultWithObject = new \RestResultWithObjects();
+        $oRestResultWithObject->AddObject(0, "ok", $oTestServer,
+                ['TestServer' => ['contact_list']]);
+
+        $oRestResultWithObject->SanitizeContent();
+        $this->assertEquals(
+                '{"objects":{"}',
+                json_encode($oRestResultWithObject));
+    }
+
+
     public function testSanitizeJsonOutputOn1NRelation()
     {
         // Impossible to query the class
@@ -82,6 +109,9 @@ class RestServicesSanitizeOutputTest extends iTopCustomDatamodelTestCase
         $oPassword->Set('password', "123456");
         $oPassword->Set('server_test_id', $oTestServer->GetKey());
 
+        $oContactList = $oTestServer->Get('contact_list');
+        $oContactList->AddItem($oPassword);
+        $oTestServer->Set('contact_list', $oContactList);
 
         $oRestResultWithObject = new \RestResultWithObjects();
         $oRestResultWithObject->AddObject(0, "ok", $oTestServer, ['TestServer' => ['id', 'password_list']]);
