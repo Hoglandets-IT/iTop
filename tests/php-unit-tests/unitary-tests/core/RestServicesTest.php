@@ -1,21 +1,5 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
+declare(strict_types=1);
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
@@ -23,7 +7,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
 use CoreServices;
 use CoreUnexpectedValue;
-use SimpleGraphException;
+use RestResultWithObjects;
 use UserLocal;
 
 /**
@@ -33,11 +17,6 @@ use UserLocal;
  */
 class RestServicesTest extends ItopDataTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     /**
      * @return void
      * @dataProvider providerTestSanitizeJsonInput
@@ -46,10 +25,13 @@ class RestServicesTest extends ItopDataTestCase
     {
         $oRS = new CoreServices();
         $sOutputJson = $oRS->SanitizeJsonInput($sJsonData);
-        $this->assertEquals($sExpectedJsonDataSanitized, $sOutputJson);
+        static::assertEquals($sExpectedJsonDataSanitized, $sOutputJson);
     }
 
-    public function providerTestSanitizeJsonInput()
+    /**
+     * @return array[]
+     */
+    public function providerTestSanitizeJsonInput(): array
     {
         return [
                 'core/check_credentials' => [
@@ -99,20 +81,22 @@ class RestServicesTest extends ItopDataTestCase
      * @return void
      * @throws CoreException
      * @throws CoreUnexpectedValue
-     * @throws SimpleGraphException
      * @dataProvider providerTestSanitizeJsonOutput
      */
     public function testSanitizeJsonOutput($sOperation, $aJsonData, $sExpectedJsonDataSanitized)
     {
         $oUser = new UserLocal();
-        $oUser->Set('password', "123456");
-        $oRestResultWithObject = new \RestResultWithObjects();
-        $oRestResultWithObject->AddObject(0, "ok", $oUser, ['UserLocal' => ['login', 'password']]);
+        $oUser->Set('password', '123456');
+        $oRestResultWithObject = new RestResultWithObjects();
+        $oRestResultWithObject->AddObject(0, 'ok', $oUser, ['UserLocal' => ['login', 'password']]);
         $oRestResultWithObject->SanitizeContent();
-        $this->assertEquals($sExpectedJsonDataSanitized, json_encode($oRestResultWithObject));
+        static::assertEquals($sExpectedJsonDataSanitized, json_encode($oRestResultWithObject));
     }
 
-    public function providerTestSanitizeJsonOutput()
+    /**
+     * @return array[]
+     */
+    public function providerTestSanitizeJsonOutput(): array
     {
         return [
 
@@ -134,7 +118,8 @@ class RestServicesTest extends ItopDataTestCase
                 'core/check_credentials' => [
                         'core/check_credentials',
                         ['user' => 'admin', 'password' => 'admin'],
-                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"*****"}}},"code":0,"message":null}'                ],
+                        '{"objects":{"UserLocal::-1":{"code":0,"message":"ok","class":"UserLocal","key":-1,"fields":{"login":"","password":"*****"}}},"code":0,"message":null}'
+                ],
         ];
     }
 }

@@ -1,22 +1,5 @@
 <?php
 declare(strict_types=1);
-// Copyright (c) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
@@ -46,7 +29,8 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
     public function testSanitizeJsonOutputOnSimpleAttribute()
     {
         $oContactTest = MetaModel::NewObject('ContactTest', [
-                'password' => self::SIMPLE_PASSWORD]);
+                'password' => self::SIMPLE_PASSWORD]
+        );
         $oRestResultWithObject = new RestResultWithObjects();
         $oRestResultWithObject->AddObject(0, 'ok', $oContactTest, ['ContactTest' => ['password']]);
         $oRestResultWithObject->SanitizeContent();
@@ -62,7 +46,8 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
     public function testSanitizeJsonOutputAttributeExternalKeyOnNNRelation()
     {
         $oContactTest = $this->createObject('ContactTest', [
-                'password' => self::SIMPLE_PASSWORD]);
+                'password' => self::SIMPLE_PASSWORD]
+        );
 
         $oTestServer = $this->createObject('TestServer', [
                 'name' => 'test_server',
@@ -84,10 +69,10 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
         static::assertContains(
                 '*****',
                 json_encode($oRestResultWithObject));
+
         static::assertNotContains(
                 self::SIMPLE_PASSWORD,
                 json_encode($oRestResultWithObject));
-
     }
 
     /**
@@ -101,7 +86,6 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
         $oTestServer = $this->createObject('TestServer', [
                 'name' => 'test_server',
         ]);
-
 
         // create lnkContactTestToServer
         $this->createObject('lnkContactTestToServer', [
@@ -117,6 +101,7 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
         static::assertContains(
                 '*****',
                 json_encode($oRestResultWithObject));
+
         static::assertNotContains(
                 self::SIMPLE_PASSWORD,
                 json_encode($oRestResultWithObject));
@@ -147,9 +132,11 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
         $oRestResultWithObject = new RestResultWithObjects();
         $oRestResultWithObject->AddObject(0, 'ok', $oTestServer, ['TestServer' => ['id', 'password_list']]);
         $oRestResultWithObject->SanitizeContent();
+
         static::assertContains(
                 '*****',
                 json_encode($oRestResultWithObject));
+
         static::assertNotContains(
                 self::SIMPLE_PASSWORD,
                 json_encode($oRestResultWithObject));

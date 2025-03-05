@@ -9,8 +9,9 @@
                 <key_type>autoincrement</key_type>
                 <db_table>test_server</db_table>
                 <db_key_field>id</db_key_field>
-            </properties>            <presentation></presentation>
-            <methods></methods>
+            </properties>
+            <presentation/>
+            <methods/>
             <fields>
                 <field id="contact_list" xsi:type="AttributeLinkedSetIndirect">
                     <linked_class>lnkContactTestToServer</linked_class>
@@ -41,8 +42,8 @@
                 <db_table>contact_test</db_table>
                 <db_key_field>id</db_key_field>
             </properties>
-            <presentation></presentation>
-            <methods></methods>
+            <presentation/>
+            <methods/>
             <fields>
                 <field id="password" xsi:type="AttributeEncryptedString">
                     <sql>password</sql>
@@ -65,8 +66,9 @@
                 <key_type>autoincrement</key_type>
                 <db_table>lnk_contact_server_test</db_table>
                 <db_key_field>id</db_key_field>
-            </properties>            <presentation></presentation>
-            <methods></methods>
+            </properties>
+            <presentation/>
+            <methods/>
             <fields>
                 <field id="contact_test_password" xsi:type="AttributeExternalField" _delta="define">
                     <extkey_attcode>contact_test_id</extkey_attcode>
@@ -96,8 +98,9 @@
                 <key_type>autoincrement</key_type>
                 <db_table>password_test</db_table>
                 <db_key_field>id</db_key_field>
-            </properties>            <presentation></presentation>
-            <methods></methods>
+            </properties>
+            <presentation/>
+            <methods/>
             <fields>
                 <field id="server_test_id" xsi:type="AttributeExternalKey" _delta="define">
                     <target_class>TestServer</target_class>

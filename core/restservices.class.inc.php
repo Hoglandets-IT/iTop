@@ -129,7 +129,7 @@ public function SanitizeContent()
 	{
 		foreach($this->fields as $sFieldAttCode => $fieldValue)
 		{
-            try{
+            try {
 			$oAttDef = MetaModel::GetAttributeDef($this->class, $sFieldAttCode);
             } catch (Exception $e) { // for special cases like ID
                 continue;
@@ -872,6 +872,7 @@ trait SanitizeTrait
         if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
         {
             $fields[$sFieldAttCode] = '*****';
+            return;
         }
         // for 1-n / n-n relation
         if ($oAttDef instanceof AttributeLinkedSet) {
@@ -881,7 +882,7 @@ trait SanitizeTrait
                     if ($oLnkAttDef instanceof iAttributeNoGroupBy) { // 1-n relation
                         $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
                     }
-                    if ($oAttDef instanceof AttributeLinkedSetIndirect && $oLnkAttDef instanceof AttributeExternalField) { // for n-n relation
+                    elseif ($oAttDef instanceof AttributeLinkedSetIndirect && $oLnkAttDef instanceof AttributeExternalField) { // for n-n relation
                         $oExtKeyAttDef = MetaModel::GetAttributeDef($oLnkAttDef->GetTargetClass(), $oLnkAttDef->GetExtAttCode());
                         if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
                             $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
@@ -889,6 +890,7 @@ trait SanitizeTrait
                     }
                 }
             }
+            return;
         }
 
         // for external attribute
