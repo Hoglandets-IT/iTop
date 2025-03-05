@@ -1,0 +1,406 @@
+@import "../../../../../../../node_modules/bulma-scss/utilities/mixins";
+
+$ipb-browse-brick--mosaic-item--highlight-color:  $common-color-blue-800, $common-color-orange-800, $common-color-green-800, $common-color-pink-800, $common-color-cyan-800, $common-color-yellow-800, $common-color-purple-800;
+
+$ipb-browse-brick-panel--row--margin: $common-size-0 !default;
+
+$ipb-content-mosaic--padding: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-breadcrumb--padding: $common-spacing-200 !default;
+$ipb-browse-brick--mosaic-breadcrumb--active--color: $common-color-grey-800 !default;
+$ipb-browse-brick--mosaic-breadcrumb--a--color: $common-color-primary-800 !default;
+
+$ipb-browse-brick--mosaic--small--grid-template-columns: 100% !default;
+$ipb-browse-brick--mosaic--medium--grid-template-columns: 50% 50% !default;
+$ipb-browse-brick--mosaic--large--grid-template-columns: 33.3% 33.3% 33.3% !default;
+
+
+$ipb-browse-brick--mosaic-group-item--min-height: $common-size-550 !default;
+$ipb-browse-brick--mosaic-group-item--height: auto !default;
+$ipb-browse-brick--mosaic-group-item--width: 100% !default;
+$ipb-browse-brick--mosaic-group-item--margin: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-group-item--color: $common-base-variable--text-color !default;
+$ipb-browse-brick--mosaic-group-item--border: 1px solid $common-color-grey-300 !default;
+$ipb-browse-brick--mosaic-group-item--animation--transform-x: -20px !default;
+
+$ipb-browse-brick--mosaic-group-item--actions--top: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-group-item--actions--right: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-item--height: 100% !default;
+$ipb-browse-brick--mosaic-item--padding: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-item--margin: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-item--background-color: $common-color-white-100 !default;
+$ipb-browse-brick--mosaic-item--color: $common-base-variable--text-color !default;
+$ipb-browse-brick--mosaic-item--hover--background-color: $common-color-grey-200 !default;
+$ipb-browse-brick--mosaic-item--hover--color: $common-color-grey-800 !default;
+
+$ipb-browse-brick--mosaic-item-description--color: $common-color-grey-800 !default;
+
+$ipb-browse-brick--mosaic-item-image--height: 44px !default;
+$ipb-browse-brick--mosaic-item-image--width: 44px !default;
+$ipb-browse-brick--mosaic-item-image--border-radius: $common-border-radius-700 !default;
+$ipb-browse-brick--mosaic-item-image--padding: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-item-image--margin-bottom: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-item-image--background-color: common-adjust-alpha($common-color-blue-700, .1) !default;
+$ipb-browse-brick--mosaic-item-image--color: $common-color-blue-700 !default;
+
+$ipb-browse-brick--mosaic-item-image--img--height: $common-size-300 !default;
+
+$ipb-browse-brick--mosaic-item-description--margin-top: $common-spacing-300 !default;
+
+$ipb-browse-brick-panel--dataTables_wrapper--padding-x: $common-spacing-0 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--padding-y: $common-size-200 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x: $common-size-200 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y: $common-size-0 !default;
+
+
+$ipb-browse-brick--tree-item--color: $common-color-grey-900 !default;
+$ipb-browse-brick--tree-item--hyperlink--color: $common-hyperlink-color !default;
+
+
+$ipb-browse-brick--tree-item-filter-data--color: $common-color-grey-500 !default;
+$ipb-browse-brick--tree-item-filter-data--padding-top: $common-spacing-300 !default;
+
+$ipb-browse-brick--tree-item--description--margin-top: $common-spacing-200 !default;
+$ipb-browse-brick--tree-item--description--color: $common-color-grey-800 !default;
+
+$ipb-browse-brick--tree-item--wrapper--padding-top: $common-spacing-500 !default;
+$ipb-browse-brick--tree-item--wrapper--color: inherit !default;
+
+$ipb-browse-brick--tree-item-image--height: $common-size-350 !default;
+$ipb-browse-brick--tree-item-image--width: $common-size-350 !default;
+$ipb-browse-brick--tree-item-image--padding: $common-spacing-0 !default;
+$ipb-browse-brick--tree-item-image--margin-bottom: $common-spacing-0 !default;
+$ipb-browse-brick--tree-item-image--margin-right: $common-spacing-400 !default;
+$ipb-browse-brick--tree-item-image--border-radius: $common-border-radius-500 !default;
+
+$ipb-browse-brick--tree-item-image--image--height: $common-size-300 !default;
+
+$ipb-browse-brick--tree-item-image--has-glyphicon--margin-right: $common-spacing-300 !default;
+
+$ipb-browse-brick--tree-item--has-glyphicon--description--margin-left: 19px !default;
+
+
+$ipb-browse-brick--list-group-item--padding-y: $common-spacing-400 !default;
+$ipb-browse-brick--list-group-item--padding-x: $common-spacing-500 !default;
+$ipb-browse-brick--list-group-item--margin-bottom: -1px !default;
+$ipb-browse-brick--list-group-item--background-color: $common-color-white-100 !default;
+$ipb-browse-brick--list-group-item--border: 1px solid $common-color-grey-400 !default;
+
+$ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
+
+
+// Common
+.ipb-browse-brick-panel {
+  .row {
+    margin: $ipb-browse-brick-panel--row--margin;
+  }
+  
+  #brick_content_toolbar {
+   display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $ipb-browse-brick-panel--row--margin;
+  }
+}
+
+// List view
+
+#brick-content-table {
+  width: 100% !important;
+}
+
+// Mosaic view 
+
+#brick_content_mosaic{
+  padding: $ipb-content-mosaic--padding;
+}
+#mosaic-breadcrumb {
+  padding: $ipb-browse-brick--mosaic-breadcrumb--padding;
+  a {
+    color: $ipb-browse-brick--mosaic-breadcrumb--a--color;
+  }
+  .active {
+    color: $ipb-browse-brick--mosaic-breadcrumb--active--color;
+  }
+}
+
+.mosaic-group {
+  display: grid;
+  animation: opacity 0.3s ease-out;
+  animation-delay: 0.2s;
+  
+  @include touch {
+    grid-template-columns: $ipb-browse-brick--mosaic--small--grid-template-columns;
+  }
+  @include desktop {
+    grid-template-columns: $ipb-browse-brick--mosaic--medium--grid-template-columns;
+  }
+  @include fullhd {
+    grid-template-columns: $ipb-browse-brick--mosaic--large--grid-template-columns;
+  }
+  &:not(.ipb-is-visible) {
+    opacity: 0;
+    display: none !important;
+  }
+  &.ipb-is-visible {
+    opacity: 1;
+    display: grid !important;
+  }
+}
+
+.mosaic-group-item {
+  position: relative;
+  min-height: $ipb-browse-brick--mosaic-group-item--min-height;
+  height: $ipb-browse-brick--mosaic-group-item--height;
+  width: $ipb-browse-brick--mosaic-group-item--width;
+  margin: $ipb-browse-brick--mosaic-group-item--margin;
+  color: $ipb-browse-brick--mosaic-group-item--color;
+  opacity: 0;
+  transform: translateX($ipb-browse-brick--mosaic-group-item--animation--transform-x); /* Move from left */
+  animation: mosaicGroupItemFadeInLeft 0.3s ease-out forwards;
+  animation-delay: calc(var(--delay) * var(--index));
+
+  @for $i from 1 through length($ipb-browse-brick--mosaic-item--highlight-color) {
+    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i}) .mosaic-item-image {
+      background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), .1);
+      color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
+    }
+  }
+
+  @include touch {
+    border-bottom: $ipb-browse-brick--mosaic-group-item--border;
+    border-right: $ipb-browse-brick--mosaic-group-item--border;
+    
+      border-right: none;
+      &:last-child {
+        border-bottom: none; // Remove bottom border from last element
+      }
+    }
+  
+    // TODO: could be cleaned up, but desktop to widescreen needs to not affect fullhd
+  
+    @include desktop-only {
+      border-bottom: $ipb-browse-brick--mosaic-group-item--border;
+      border-right: $ipb-browse-brick--mosaic-group-item--border;
+      
+      // Remove bottom border only from elements in the last row
+      &:last-child, // Last element
+      &:nth-last-child(2):nth-child(2n - 1) { // Second-last element if it's in the same row as last element
+        border-bottom: none;
+      }
+    }
+
+  @include widescreen-only {
+    border-bottom: $ipb-browse-brick--mosaic-group-item--border;
+    border-right: $ipb-browse-brick--mosaic-group-item--border;
+
+    // Remove bottom border only from elements in the last row
+    &:last-child,  // Last element
+    &:nth-last-child(2):nth-child(2n - 1) { // Second-last element if it's in the same row as last element
+      border-bottom: none;
+    }
+  }
+    @include fullhd {
+      border-bottom: $ipb-browse-brick--mosaic-group-item--border;
+      border-right: $ipb-browse-brick--mosaic-group-item--border;
+
+      &:nth-child(3n) {
+        border-right: none;
+      }
+
+      // Remove bottom border from elements in the last row only
+      &:last-child,  // Last element
+      &:nth-last-child(2):nth-child(3n - 1),  // Second-last element if in same row as last
+      &:nth-last-child(2):nth-child(3n - 2),  // Second-last element if in same row as last
+      &:nth-last-child(3):nth-child(3n - 2) { // Third-last element if in same row as last
+        border-bottom: none;
+      }
+    }
+  
+  > .mosaic-group-item-actions {
+    position: absolute;
+    top: $ipb-browse-brick--mosaic-group-item--actions--top;
+    right: $ipb-browse-brick--mosaic-group-item--actions--right;
+  }
+}
+
+@keyframes mosaicGroupItemFadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX($ipb-browse-brick--mosaic-group-item--animation--transform-x);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mosaic-item {
+  display: flex;
+  flex-direction: column;
+  height: $ipb-browse-brick--mosaic-item--height;
+  padding: $ipb-browse-brick--mosaic-item--padding;
+  margin: $ipb-browse-brick--mosaic-item--margin;
+
+  background-color: $ipb-browse-brick--mosaic-item--background-color;
+  color: $ipb-browse-brick--mosaic-item--color;
+  transition: background-color 0.3s linear;
+
+
+  &:hover {
+    background-color: $ipb-browse-brick--mosaic-item--hover--background-color;
+    color: $ipb-browse-brick--mosaic-item--hover--color;
+  }
+}
+
+
+.mosaic-item-text {
+  max-width: unset;
+  overflow: unset;
+  text-align: left;
+
+  .mosaic-item-name {
+    @extend %common-font-ral-bol-200;
+  }
+
+  .mosaic-item-description {
+    @extend %common-font-ral-nor-150;
+    color: $ipb-browse-brick--mosaic-item-description--color;
+  }
+}
+
+.mosaic-item-image {
+  display: flex;
+  height: $ipb-browse-brick--mosaic-item-image--height;
+  width: $ipb-browse-brick--mosaic-item-image--width;
+  padding: $ipb-browse-brick--mosaic-item-image--padding;
+  margin-bottom: $ipb-browse-brick--mosaic-item-image--margin-bottom;
+  border-radius: $ipb-browse-brick--mosaic-item-image--border-radius;
+  background-color: $ipb-browse-brick--mosaic-item-image--background-color;
+  color: $ipb-browse-brick--mosaic-item-image--color;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+  
+  @extend %common-font-ral-bol-300;
+  img {
+    height: $ipb-browse-brick--mosaic-item-image--img--height;
+  }
+}
+
+.mosaic-item-name ~ .mosaic-item-description {
+  margin-top: $ipb-browse-brick--mosaic-item-description--margin-top;
+}
+
+// List view
+
+.ipb-browse-brick-panel .dataTables_wrapper {
+  padding: $ipb-browse-brick-panel--dataTables_wrapper--padding-y $ipb-browse-brick-panel--dataTables_wrapper--padding-x;
+  .row {
+    > div {
+      padding: $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x;
+    }
+  }
+}
+
+// Tree view
+
+.list-group-item .list-group-item-text, .tree-item {
+  color: $ipb-browse-brick--tree-item--color;
+  
+  @extend %common-font-ral-bol-150;
+  & a {
+    @extend %common-font-size-150;
+    color: $ipb-browse-brick--tree-item--hyperlink--color;
+  }
+}
+
+.list-group.tree .list-group-item .list-group-item-description {
+  display: block;
+  margin-top: $ipb-browse-brick--tree-item--description--margin-top;
+  color: $ipb-browse-brick--tree-item--description--color;
+
+  @extend %common-font-ral-nor-100;
+}
+
+.list-group-item .tree-item-wrapper .tree-item-filter-data {
+  padding-top: $ipb-browse-brick--tree-item-filter-data--padding-top;
+  color: $ipb-browse-brick--tree-item-filter-data--color;
+}
+
+#brick_content_tree .list-group-item>.tree-item-wrapper {
+  display: flex;
+  padding-top: $ipb-browse-brick--tree-item--wrapper--padding-top;
+  color: $ipb-browse-brick--tree-item--wrapper--color;
+  text-decoration: inherit;
+  cursor: pointer
+}
+
+.list-group-item {
+  display: block;
+  position: relative;
+  padding: $ipb-browse-brick--list-group-item--padding-y $ipb-browse-brick--list-group-item--padding-x;
+  margin-bottom: $ipb-browse-brick--list-group-item--margin-bottom;
+  background-color: $ipb-browse-brick--list-group-item--background-color;
+  border: $ipb-browse-brick--list-group-item--border;
+  border-bottom: none;
+
+
+  @for $i from 1 through length($ipb-browse-brick--mosaic-item--highlight-color) {
+    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i - 1}) > .tree-item-wrapper .tree-item-image {
+      background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), .1);
+      color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
+    }
+  }
+}
+
+
+.tree-item-wrapper {
+  display: flex;
+  
+  .tree-item-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+
+    height: $ipb-browse-brick--tree-item-image--height;
+    width: $ipb-browse-brick--tree-item-image--width;
+    min-width: $ipb-browse-brick--tree-item-image--width;
+    padding: $ipb-browse-brick--tree-item-image--padding;
+    margin-right: $ipb-browse-brick--tree-item-image--margin-right;
+    margin-bottom: $ipb-browse-brick--tree-item-image--margin-bottom;
+    border-radius: $ipb-browse-brick--tree-item-image--border-radius;
+    text-transform: capitalize;
+    @extend %common-font-ral-bol-250;
+
+    img {
+      height: $ipb-browse-brick--tree-item-image--image--height;
+    }
+  }
+}
+
+.tree-item-image:has(~ .tree-item > .glyphicon) {
+  margin-right: $ipb-browse-brick--tree-item-image--has-glyphicon--margin-right;
+}
+
+.tree-item:has(.glyphicon) .list-group-item-description {
+  margin-left: $ipb-browse-brick--tree-item--has-glyphicon--description--margin-left;
+}
+
+.list-group .list-group-item:hover {
+  background-color: transparent;
+}
+
+.list-group{
+  margin-bottom: $ipb-browse-brick--list-group-margin-bottom;
+}
+#brick_content_tree .list-group-item > .tree-item-wrapper {
+  padding-bottom: 16px;
+}
+
+.list-group-item {
+  padding: 0 16px;
+}
+.list-group.tree {
+  margin: 0;
+}

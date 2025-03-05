@@ -1,0 +1,62 @@
+$ibo-vendors-datatables--column-sorting-icon--opacity: 0.3 !default;
+$ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted: 1 !default;
+$ibo-vendors-datatables--column-sorting-icon--content: "\f0dc" !default;
+$ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc: "\f0d8" !default;
+$ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !default;
+
+table.dataTable thead {
+
+  .sorting {
+    white-space: nowrap;
+  }
+
+  .sorting::after {
+      position: relative;
+      bottom: unset;
+      right: -10px;
+      content: $ibo-vendors-datatables--column-sorting-icon--content;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity;
+      @extend %fa-solid-base;
+    }
+
+  .sorting_asc:after {
+      content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
+    }
+
+  .sorting_desc:after {
+      content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
+    }
+
+}
+
+table.table > thead > tr > th,
+table.table > tbody > tr > th,
+table.table > tfoot > tr > th,
+table.table > thead > tr > td,
+table.table > tbody > tr > td,
+table.table > tfoot > tr > td {
+  vertical-align: middle;
+}
+
+table.table > thead > tr > th {
+  border-bottom-width: 0px;
+}
+
+table.table-striped > tbody > tr:hover {
+  background-color: $common-color-blue-grey-50;
+}
+
+table .ipb-table--actions--wrapper {
+  display: flex;
+  align-items: center;
+
+  > a {
+    flex-grow: 1;
+  }
+
+  .group-actions {
+
+  }
+}

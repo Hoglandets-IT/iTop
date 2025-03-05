@@ -75,13 +75,17 @@ class Basic extends AbstractConfiguration
 		$aPortalConf = array(
 			'properties' => array(
 				'id'              => $_ENV['PORTAL_ID'],
-				'ui_version'        => '2017',
+				'ui_version' => '2025',
+				'ui_settings' => [
+					'navigation_menu' => 'horizontal',
+				],
 				'name'            => 'Page:DefaultTitle',
 				'logo'            => Branding::GetPortalLogoAbsoluteUrl(),
 				'favicon'         => Branding::GetPortalFavIconAbsoluteUrl(),
 				'themes'          => array(
 					'bootstrap' => 'itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss',
 					'portal' => 'itop-portal-base/portal/public/css/portal.scss',
+					'main' => 'itop-portal-base/portal/public/css/main.scss',
 					'others' => array(),
 				),
 				'templates' => array(
@@ -127,6 +131,11 @@ class Basic extends AbstractConfiguration
 					$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText(
 						$aPortalConf['properties'][$oPropertyNode->nodeName]
 					);
+				break;
+				case 'ui_settings':
+					foreach ($oPropertyNode->GetNodes('*') as $oSubNode) {
+						$aPortalConf['properties'][$oPropertyNode->nodeName][$oSubNode->nodeName] = $oSubNode->GetText();
+					}
 					break;
 				case 'themes':
 				case 'templates':
