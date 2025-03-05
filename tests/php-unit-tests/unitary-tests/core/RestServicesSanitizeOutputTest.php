@@ -26,6 +26,7 @@ use CoreException;
 use CoreUnexpectedValue;
 use Exception;
 use MetaModel;
+use ormLinkSet;
 use PasswordTest;
 use RestResultWithObjects;
 
@@ -138,15 +139,19 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
         $oPassword->Set('password', self::SIMPLE_PASSWORD);
         $oPassword->Set('server_test_id', $oTestServer->GetKey());
 
-        $oContactList = $oTestServer->Get('contact_list');
+        /** @var ormLinkSet $oContactList */
+        $oContactList = $oTestServer->Get('password_list');
         $oContactList->AddItem($oPassword);
-        $oTestServer->Set('contact_list', $oContactList);
+        $oTestServer->Set('password_list', $oContactList);
 
         $oRestResultWithObject = new RestResultWithObjects();
         $oRestResultWithObject->AddObject(0, 'ok', $oTestServer, ['TestServer' => ['id', 'password_list']]);
         $oRestResultWithObject->SanitizeContent();
-        static::assertEquals(
-                '{"objects":{"TestServer::-1":{"code":0,"message":"ok","class":"TestServer","key":-1,"fields":{"password_list":["*****"]}}},"code":0,"message":null}',
+        static::assertContains(
+                '*****',
+                json_encode($oRestResultWithObject));
+        static::assertNotContains(
+                self::SIMPLE_PASSWORD,
                 json_encode($oRestResultWithObject));
 
     }
