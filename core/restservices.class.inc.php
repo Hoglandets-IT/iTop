@@ -864,6 +864,7 @@ trait SanitizeTrait
      * @param array $fields The fields array
      * @param string $sFieldAttCode The attribute code
      * @param mixed $oAttDef The attribute definition
+     * @throws Exception
      */
     private function SanitizeFieldIfSensitive(array &$fields, string $sFieldAttCode, $fieldValue, $oAttDef): void
     {
@@ -872,46 +873,28 @@ trait SanitizeTrait
         {
             $fields[$sFieldAttCode] = '*****';
         }
-        // for 1-n relations
+        // for 1-n / n-n relation
         if ($oAttDef instanceof AttributeLinkedSet) {
             foreach ($fieldValue as $i => $aLnkValues) {
                 foreach ($aLnkValues as $sLnkAttCode => $sLnkValue) {
                     $oLnkAttDef = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sLnkAttCode);
-                    if ($oLnkAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
-                    {
+                    if ($oLnkAttDef instanceof iAttributeNoGroupBy) { // 1-n relation
                         $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
                     }
-                }
-            }
-        }
-        // for n-n relations
-        if ($oAttDef instanceof AttributeLinkedSetIndirect) {
-            $extKeyToRemote = $oAttDef->GetExtKeyToRemote();
-            foreach ($fieldValue as $i => $aLnkValues) {
-                foreach ($aLnkValues as $sLnkAttCode => $sLnkValue) {
-                    if ($sLnkAttCode == $extKeyToRemote) {
-                        $oExtKeyAttDef = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $oAttDef->GetExtKeyToRemote());
-                        if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
-                        {
+                    if ($oAttDef instanceof AttributeLinkedSetIndirect && $oLnkAttDef instanceof AttributeExternalField) { // for n-n relation
+                        $oExtKeyAttDef = MetaModel::GetAttributeDef($oLnkAttDef->GetTargetClass(), $oLnkAttDef->GetExtAttCode());
+                        if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
                             $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
                         }
                     }
                 }
             }
         }
-        // for external key
-        if ($oAttDef instanceof AttributeExternalKey) {
-            $oExtKeyAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetKeyAttCode());
-            if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
-            {
-                $fields[$sFieldAttCode] = '*****';
-            }
-        }
-        // for external field
+
+        // for external attribute
         if ($oAttDef instanceof AttributeExternalField) {
             $oExtKeyAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-            if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
-            {
+            if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
                 $fields[$sFieldAttCode] = '*****';
             }
         }
