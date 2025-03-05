@@ -20,7 +20,8 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
-use Group;
+use MetaModel;
+use PasswordTest;
 
 /**
  * @runTestsInSeparateProcesses
@@ -29,23 +30,67 @@ use Group;
  */
 class RestServicesSanitizeOutputTest extends iTopCustomDatamodelTestCase
 {
-    public function setUp(): void
+    public function testSanitizeJsonOutputOnSimpleAttribute()
     {
-        parent::setUp();
-    }
-
-
-    public function testSanitizeJsonOutput()
-    {
-        $oGroup = new Group();
-        $oGroup->Set('encrypted_string', "123456");
+        // inserer en base ?
+        // insererer contact list ?
+        // requeter des champs qui ne s'affichent pas
+        $oContactTest = MetaModel::NewObject('ContactTest', array(
+                'password' => '123456'));
         $oRestResultWithObject = new \RestResultWithObjects();
-        $oRestResultWithObject->AddObject(0, "ok", $oGroup, ['Group' => ['encrypted_string']]);
+        $oRestResultWithObject->AddObject(0, "ok", $oContactTest, ['ContactTest' => ['password']]);
         $oRestResultWithObject->SanitizeContent();
-        $this->assertEquals('{"objects":{"Group::-1":{"code":0,"message":"ok","class":"Group","key":-1,"fields":{"encrypted_string":"*****"}}},"code":0,"message":null}', json_encode($oRestResultWithObject));
+        $this->assertEquals(
+                '{"objects":{"ContactTest::-1":{"code":0,"message":"ok","class":"ContactTest","key":-1,"fields":{"password":"*****"}}},"code":0,"message":null}',
+                json_encode($oRestResultWithObject));
     }
 
+    public function testSanitizeJsonOutputAttributeExternalKeyOnNNRelation()
+    {
+        $oContactTest = $this->CreateObject('ContactTest', array(
+                'password' => '123456'));
 
+        $oTestServer = $this->CreateObject('TestServer', [
+                'name' => 'testserver',
+        ]);
+
+
+        // create lnkContactTestToServer
+        $oLnkContactTestToServer = $this->CreateObject('lnkContactTestToServer', array(
+                'contact_test_id' => $oContactTest->GetKey(),
+                'testserver_id' => $oTestServer->GetKey()
+        ));
+
+        $oRestResultWithObject = new \RestResultWithObjects();
+        $oRestResultWithObject->AddObject(0, "ok", $oLnkContactTestToServer,
+                ['lnkContactTestToServer' => ['contact_test_password']]);
+
+        $oRestResultWithObject->SanitizeContent();
+        $this->assertEquals(
+                '{"objects":{"}',
+                json_encode($oRestResultWithObject));
+    }
+
+    public function testSanitizeJsonOutputOn1NRelation()
+    {
+        // Impossible to query the class
+        $oTestServer = $this->CreateObject('TestServer', [
+                'name' => 'my_server',
+        ]);
+
+        $oPassword = new PasswordTest();
+        $oPassword->Set('password', "123456");
+        $oPassword->Set('server_test_id', $oTestServer->GetKey());
+
+
+        $oRestResultWithObject = new \RestResultWithObjects();
+        $oRestResultWithObject->AddObject(0, "ok", $oTestServer, ['TestServer' => ['id', 'password_list']]);
+        $oRestResultWithObject->SanitizeContent();
+        $this->assertEquals(
+                '{"objects":{"TestServer::-1":{"code":0,"message":"ok","class":"TestServer","key":-1,"fields":{"password_list":["*****"]}}},"code":0,"message":null}',
+                json_encode($oRestResultWithObject));
+
+    }
 
     public function GetDatamodelDeltaAbsPath(): string
     {
