@@ -46,7 +46,6 @@ class ObjectResult
 	 */
     use SanitizeTrait;
 
-    public $code;
 	public $message;
 	/**
 	 * @var mixed|null
