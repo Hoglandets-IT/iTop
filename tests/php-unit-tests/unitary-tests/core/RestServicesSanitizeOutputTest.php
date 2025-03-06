@@ -23,6 +23,16 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
     private const SIMPLE_PASSWORD = '123456';
 
     /**
+     * @throws Exception
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Workaround to cope with inconsistent settings in itop-config files from the CI
+        AttributeEncryptedString::$sKey = '6eb9d9afa3ee0fbcebe622a33bf57aaeafb7c37998fd24c403c2522c2d60117f';
+    }
+
+    /**
      * @return void
      * @throws CoreException
      */
