@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use ArchivedObjectException;
+use AttributeEncryptedString;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use CoreException;
 use CoreUnexpectedValue;
@@ -36,10 +37,10 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
      * @return void
      * @throws CoreException
      */
-    public function testSanitizeJsonOutputOnSimpleAttribute()
+    public function testSanitizeAttributeOnRequestedObject()
     {
         $oContactTest = MetaModel::NewObject('ContactTest', [
-                'password' => self::SIMPLE_PASSWORD]
+                        'password' => self::SIMPLE_PASSWORD]
         );
         $oRestResultWithObject = new RestResultWithObjects();
         $oRestResultWithObject->AddObject(0, 'ok', $oContactTest, ['ContactTest' => ['password']]);
@@ -53,10 +54,10 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
      * @return void
      * @throws Exception
      */
-    public function testSanitizeJsonOutputAttributeExternalKeyOnNNRelation()
+    public function testSanitizeAttributeExternalFieldOnLink()
     {
         $oContactTest = $this->createObject('ContactTest', [
-                'password' => self::SIMPLE_PASSWORD]
+                        'password' => self::SIMPLE_PASSWORD]
         );
 
         $oTestServer = $this->createObject('TestServer', [
@@ -88,7 +89,7 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
     /**
      * @throws Exception
      */
-    public function testSanitizeJsonOutputAttributeOnNNRelation()
+    public function testSanitizeAttributeOnObjectRelatedThroughNNRelation()
     {
         $oContactTest = $this->createObject('ContactTest', [
                 'password' => self::SIMPLE_PASSWORD]);
@@ -124,7 +125,7 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
      * @throws ArchivedObjectException
      * @throws Exception
      */
-    public function testSanitizeJsonOutputOn1NRelation()
+    public function testSanitizeOnObjectRelatedThrough1NRelation()
     {
         $oTestServer = $this->createObject('TestServer', [
                 'name' => 'my_server',
