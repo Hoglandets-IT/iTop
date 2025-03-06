@@ -25,7 +25,7 @@ class RestServicesTest extends ItopDataTestCase
 	{
 		$oRS = new CoreServices();
 		$sOutputJson = $oRS->SanitizeJsonInput($sJsonData);
-		static::assertEquals($sExpectedJsonDataSanitized, $sOutputJson);
+		static::assertJsonStringEqualsJsonString($sExpectedJsonDataSanitized, $sOutputJson);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class RestServicesTest extends ItopDataTestCase
 		$oRestResultWithObject = new RestResultWithObjects();
 		$oRestResultWithObject->AddObject(0, 'ok', $oUser, ['UserLocal' => ['login', 'password']]);
 		$oRestResultWithObject->SanitizeContent();
-		static::assertEquals($sExpectedJsonDataSanitized, json_encode($oRestResultWithObject));
+		static::assertJsonStringEqualsJsonString($sExpectedJsonDataSanitized, json_encode($oRestResultWithObject));
 	}
 
 	/**

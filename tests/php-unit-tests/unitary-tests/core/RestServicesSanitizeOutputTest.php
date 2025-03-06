@@ -46,7 +46,7 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 		$oRestResultWithObject = new RestResultWithObjects();
 		$oRestResultWithObject->AddObject(0, 'ok', $oContactTest, ['ContactTest' => ['password']]);
 		$oRestResultWithObject->SanitizeContent();
-		static::assertEquals(
+		static::assertJsonStringEqualsJsonString(
 			'{"objects":{"ContactTest::-1":{"code":0,"message":"ok","class":"ContactTest","key":-1,"fields":{"password":"*****"}}},"code":0,"message":null}',
 			json_encode($oRestResultWithObject));
 	}
