@@ -21,144 +21,149 @@ use RestResultWithObjects;
  */
 class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 {
-    private const SIMPLE_PASSWORD = '123456';
+	private const SIMPLE_PASSWORD = '123456';
 
-    /**
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        // Workaround to cope with inconsistent settings in itop-config files from the CI
-        AttributeEncryptedString::$sKey = '6eb9d9afa3ee0fbcebe622a33bf57aaeafb7c37998fd24c403c2522c2d60117f';
-    }
+	/**
+	 * @throws Exception
+	 */
+	protected function setUp(): void
+	{
+		parent::setUp();
+		// Workaround to cope with inconsistent settings in itop-config files from the CI
+		AttributeEncryptedString::$sKey = '6eb9d9afa3ee0fbcebe622a33bf57aaeafb7c37998fd24c403c2522c2d60117f';
+	}
 
-    /**
-     * @return void
-     * @throws CoreException
-     */
-    public function testSanitizeAttributeOnRequestedObject()
-    {
-        $oContactTest = MetaModel::NewObject('ContactTest', [
-                        'password' => self::SIMPLE_PASSWORD]
-        );
-        $oRestResultWithObject = new RestResultWithObjects();
-        $oRestResultWithObject->AddObject(0, 'ok', $oContactTest, ['ContactTest' => ['password']]);
-        $oRestResultWithObject->SanitizeContent();
-        static::assertEquals(
-                '{"objects":{"ContactTest::-1":{"code":0,"message":"ok","class":"ContactTest","key":-1,"fields":{"password":"*****"}}},"code":0,"message":null}',
-                json_encode($oRestResultWithObject));
-    }
+	/**
+	 * @return void
+	 * @throws CoreException
+	 */
+	public function testSanitizeAttributeOnRequestedObject()
+	{
+		$oContactTest = MetaModel::NewObject('ContactTest', [
+				'password' => self::SIMPLE_PASSWORD
+			]
+		);
+		$oRestResultWithObject = new RestResultWithObjects();
+		$oRestResultWithObject->AddObject(0, 'ok', $oContactTest, ['ContactTest' => ['password']]);
+		$oRestResultWithObject->SanitizeContent();
+		static::assertEquals(
+			'{"objects":{"ContactTest::-1":{"code":0,"message":"ok","class":"ContactTest","key":-1,"fields":{"password":"*****"}}},"code":0,"message":null}',
+			json_encode($oRestResultWithObject));
+	}
 
-    /**
-     * @return void
-     * @throws Exception
-     */
-    public function testSanitizeAttributeExternalFieldOnLink()
-    {
-        $oContactTest = $this->createObject('ContactTest', [
-                        'password' => self::SIMPLE_PASSWORD]
-        );
+	/**
+	 * @return void
+	 * @throws Exception
+	 */
+	public function testSanitizeAttributeExternalFieldOnLink()
+	{
+		$oContactTest = $this->createObject('ContactTest', [
+				'password' => self::SIMPLE_PASSWORD
+			]
+		);
 
-        $oTestServer = $this->createObject('TestServer', [
-                'name' => 'test_server',
-        ]);
-
-
-        // create lnkContactTestToServer
-        $oLnkContactTestToServer = $this->createObject('lnkContactTestToServer', [
-                'contact_test_id' => $oContactTest->GetKey(),
-                'test_server_id' => $oTestServer->GetKey()
-        ]);
-
-        $oRestResultWithObject = new RestResultWithObjects();
-        $oRestResultWithObject->AddObject(0, 'ok', $oLnkContactTestToServer,
-                ['lnkContactTestToServer' => ['contact_test_password']]);
-
-        $oRestResultWithObject->SanitizeContent();
-
-        static::assertContains(
-                '*****',
-                json_encode($oRestResultWithObject));
-
-        static::assertNotContains(
-                self::SIMPLE_PASSWORD,
-                json_encode($oRestResultWithObject));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testSanitizeAttributeOnObjectRelatedThroughNNRelation()
-    {
-        $oContactTest = $this->createObject('ContactTest', [
-                'password' => self::SIMPLE_PASSWORD]);
-
-        $oTestServer = $this->createObject('TestServer', [
-                'name' => 'test_server',
-        ]);
-
-        // create lnkContactTestToServer
-        $this->createObject('lnkContactTestToServer', [
-                'contact_test_id' => $oContactTest->GetKey(),
-                'test_server_id' => $oTestServer->GetKey()
-        ]);
-
-        $oRestResultWithObject = new RestResultWithObjects();
-        $oRestResultWithObject->AddObject(0, 'ok', $oTestServer,
-                ['TestServer' => ['contact_list']]);
-
-        $oRestResultWithObject->SanitizeContent();
-        static::assertContains(
-                '*****',
-                json_encode($oRestResultWithObject));
-
-        static::assertNotContains(
-                self::SIMPLE_PASSWORD,
-                json_encode($oRestResultWithObject));
-    }
+		$oTestServer = $this->createObject('TestServer', [
+			'name' => 'test_server',
+		]);
 
 
-    /**
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     * @throws ArchivedObjectException
-     * @throws Exception
-     */
-    public function testSanitizeOnObjectRelatedThrough1NRelation()
-    {
-        $oTestServer = $this->createObject('TestServer', [
-                'name' => 'my_server',
-        ]);
+		// create lnkContactTestToServer
+		$oLnkContactTestToServer = $this->createObject('lnkContactTestToServer', [
+			'contact_test_id' => $oContactTest->GetKey(),
+			'test_server_id'  => $oTestServer->GetKey()
+		]);
 
-        $oPassword = new PasswordTest();
-        $oPassword->Set('password', self::SIMPLE_PASSWORD);
-        $oPassword->Set('server_test_id', $oTestServer->GetKey());
+		$oRestResultWithObject = new RestResultWithObjects();
+		$oRestResultWithObject->AddObject(0, 'ok', $oLnkContactTestToServer,
+			['lnkContactTestToServer' => ['contact_test_password']]);
 
-        /** @var ormLinkSet $oContactList */
-        $oContactList = $oTestServer->Get('password_list');
-        $oContactList->AddItem($oPassword);
-        $oTestServer->Set('password_list', $oContactList);
+		$oRestResultWithObject->SanitizeContent();
 
-        $oRestResultWithObject = new RestResultWithObjects();
-        $oRestResultWithObject->AddObject(0, 'ok', $oTestServer, ['TestServer' => ['id', 'password_list']]);
-        $oRestResultWithObject->SanitizeContent();
+		static::assertStringContainsString(
+			'*****',
+			json_encode($oRestResultWithObject));
 
-        static::assertContains(
-                '*****',
-                json_encode($oRestResultWithObject));
+		static::assertStringNotContainsString(
+			self::SIMPLE_PASSWORD,
+			json_encode($oRestResultWithObject));
+	}
 
-        static::assertNotContains(
-                self::SIMPLE_PASSWORD,
-                json_encode($oRestResultWithObject));
+	/**
+	 * @throws Exception
+	 */
+	public function testSanitizeAttributeOnObjectRelatedThroughNNRelation()
+	{
+		$oContactTest = $this->createObject('ContactTest', [
+			'password' => self::SIMPLE_PASSWORD
+		]);
 
-    }
+		$oTestServer = $this->createObject('TestServer', [
+			'name' => 'test_server',
+		]);
 
-    /**
-     * @return string Abs path to the XML delta to use for the tests of that class
-     */
-    public function GetDatamodelDeltaAbsPath(): string
-    {
-        return __DIR__ . '/Delta/delta_test_sanitize_output.xml';
-    }
+		// create lnkContactTestToServer
+		$this->createObject('lnkContactTestToServer', [
+			'contact_test_id' => $oContactTest->GetKey(),
+			'test_server_id'  => $oTestServer->GetKey()
+		]);
+
+		$oTestServer->Reload();
+
+		$oRestResultWithObject = new RestResultWithObjects();
+		$oRestResultWithObject->AddObject(0, 'ok', $oTestServer,
+			['TestServer' => ['contact_list']]);
+
+		$oRestResultWithObject->SanitizeContent();
+		static::assertStringContainsString(
+			'*****',
+			json_encode($oRestResultWithObject));
+
+		static::assertStringNotContainsString(
+			self::SIMPLE_PASSWORD,
+			json_encode($oRestResultWithObject));
+	}
+
+
+	/**
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws ArchivedObjectException
+	 * @throws Exception
+	 */
+	public function testSanitizeOnObjectRelatedThrough1NRelation()
+	{
+		$oTestServer = $this->createObject('TestServer', [
+			'name' => 'my_server',
+		]);
+
+		$oPassword = new PasswordTest();
+		$oPassword->Set('password', self::SIMPLE_PASSWORD);
+		$oPassword->Set('server_test_id', $oTestServer->GetKey());
+
+		/** @var ormLinkSet $oContactList */
+		$oContactList = $oTestServer->Get('password_list');
+		$oContactList->AddItem($oPassword);
+		$oTestServer->Set('password_list', $oContactList);
+
+		$oRestResultWithObject = new RestResultWithObjects();
+		$oRestResultWithObject->AddObject(0, 'ok', $oTestServer, ['TestServer' => ['id', 'password_list']]);
+		$oRestResultWithObject->SanitizeContent();
+
+		static::assertStringContainsString(
+			'*****',
+			json_encode($oRestResultWithObject));
+
+		static::assertStringNotContainsString(
+			self::SIMPLE_PASSWORD,
+			json_encode($oRestResultWithObject));
+
+	}
+
+	/**
+	 * @return string Abs path to the XML delta to use for the tests of that class
+	 */
+	public function GetDatamodelDeltaAbsPath(): string
+	{
+		return __DIR__.'/Delta/delta_test_sanitize_output.xml';
+	}
 }
