@@ -231,9 +231,6 @@ try
 		if ($oRS instanceof iRestInputSanitizer) {
 			$sSanitizedJsonInput = $oRS->SanitizeJsonInput($sJsonString);
 		}
-		else {
-			$sSanitizedJsonInput = $sJsonString;
-		}
 
 		CMDBObject::SetTrackOrigin('webservice-rest');
 		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
@@ -291,7 +288,7 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('userinfo', UserRights::GetUser());
 	$oLog->Set('version', $sVersion);
 	$oLog->Set('operation', $sOperation);
-	$oLog->SetTrim('json_input', $sSanitizedJsonInput);
+    $oLog->SetTrim('json_input', $sSanitizedJsonInput ?? $sJsonString);
 
 	$oLog->Set('provider', $sProvider);
 	$sMessage = $oResult->message;
