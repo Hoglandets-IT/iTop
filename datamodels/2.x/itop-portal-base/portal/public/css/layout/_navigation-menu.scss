@@ -240,6 +240,7 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 
     // username
     .ipb-navigation-menu--user-card--name {
+      flex-grow: 1;
       overflow-x: hidden;
 
       > div {
