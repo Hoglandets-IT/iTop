@@ -714,7 +714,7 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
             }
             break;
         }
-		return json_encode($aJsonData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+		return json_encode($aJsonData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 	}
 
 	/**
