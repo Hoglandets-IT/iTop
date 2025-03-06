@@ -17,16 +17,16 @@ use UserLocal;
  */
 class RestServicesTest extends ItopDataTestCase
 {
-    /**
-     * @return void
-     * @dataProvider providerTestSanitizeJsonInput
-     */
-    public function testSanitizeJsonInput($sJsonData, $sExpectedJsonDataSanitized)
-    {
-        $oRS = new CoreServices();
-        $sOutputJson = $oRS->SanitizeJsonInput($sJsonData);
-        static::assertEquals($sExpectedJsonDataSanitized, $sOutputJson);
-    }
+	/**
+	 * @return void
+	 * @dataProvider providerTestSanitizeJsonInput
+	 */
+	public function testSanitizeJsonInput($sJsonData, $sExpectedJsonDataSanitized)
+	{
+		$oRS = new CoreServices();
+		$sOutputJson = $oRS->SanitizeJsonInput($sJsonData);
+		static::assertJsonStringEqualsJsonString($sExpectedJsonDataSanitized, $sOutputJson);
+	}
 
     /**
      * @return array[]
@@ -74,24 +74,24 @@ class RestServicesTest extends ItopDataTestCase
         ];
     }
 
-    /**
-     * @param $sOperation
-     * @param $aJsonData
-     * @param $sExpectedJsonDataSanitized
-     * @return void
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     * @dataProvider providerTestSanitizeJsonOutput
-     */
-    public function testSanitizeJsonOutput($sOperation, $aJsonData, $sExpectedJsonDataSanitized)
-    {
-        $oUser = new UserLocal();
-        $oUser->Set('password', '123456');
-        $oRestResultWithObject = new RestResultWithObjects();
-        $oRestResultWithObject->AddObject(0, 'ok', $oUser, ['UserLocal' => ['login', 'password']]);
-        $oRestResultWithObject->SanitizeContent();
-        static::assertEquals($sExpectedJsonDataSanitized, json_encode($oRestResultWithObject));
-    }
+	/**
+	 * @param $sOperation
+	 * @param $aJsonData
+	 * @param $sExpectedJsonDataSanitized
+	 * @return void
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @dataProvider providerTestSanitizeJsonOutput
+	 */
+	public function testSanitizeJsonOutput($sOperation, $aJsonData, $sExpectedJsonDataSanitized)
+	{
+		$oUser = new UserLocal();
+		$oUser->Set('password', '123456');
+		$oRestResultWithObject = new RestResultWithObjects();
+		$oRestResultWithObject->AddObject(0, 'ok', $oUser, ['UserLocal' => ['login', 'password']]);
+		$oRestResultWithObject->SanitizeContent();
+		static::assertJsonStringEqualsJsonString($sExpectedJsonDataSanitized, json_encode($oRestResultWithObject));
+	}
 
     /**
      * @return array[]
