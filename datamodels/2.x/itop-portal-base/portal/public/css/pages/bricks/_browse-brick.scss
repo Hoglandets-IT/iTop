@@ -2,7 +2,8 @@
 
 $ipb-browse-brick--mosaic-item--highlight-color:  $common-color-blue-800, $common-color-orange-800, $common-color-green-800, $common-color-pink-800, $common-color-cyan-800, $common-color-yellow-800, $common-color-purple-800;
 
-$ipb-browse-brick-panel--row--margin: $common-size-0 !default;
+$ipb-browse-brick-panel--row--margin: $common-spacing-0 !default;
+$ipb-browse-brick-panel--brick-content-toolbar--padding: $common-spacing-400 !default;
 
 $ipb-content-mosaic--padding: $common-spacing-0 !default;
 $ipb-browse-brick--mosaic-breadcrumb--padding: $common-spacing-200 !default;
@@ -98,7 +99,7 @@ $ipb-browse-brick--list-group-margin-bottom: $common-spacing-0 !default;
    display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $ipb-browse-brick-panel--row--margin;
+    padding: $ipb-browse-brick-panel--brick-content-toolbar--padding;
   }
 }
 
