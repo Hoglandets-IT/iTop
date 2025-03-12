@@ -525,6 +525,7 @@ return array(
     'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectsEvents' => $baseDir . '/sources/Service/TemporaryObjects/TemporaryObjectsEvents.php',
     'Combodo\\iTop\\SessionTracker\\SessionGC' => $baseDir . '/sources/SessionTracker/SessionGC.php',
     'Combodo\\iTop\\SessionTracker\\SessionHandler' => $baseDir . '/sources/SessionTracker/SessionHandler.php',
+    'Combodo\\iTop\\SessionTracker\\iSessionHandlerExtension' => $baseDir . '/sources/SessionTracker/iSessionHandlerExtension.php',
     'CompileCSSService' => $baseDir . '/application/compilecssservice.class.inc.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Config' => $baseDir . '/core/config.class.inc.php',
