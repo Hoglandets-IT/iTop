@@ -1560,6 +1560,7 @@ return array(
     'Sabberworm\\CSS\\Value\\URL' => $vendorDir . '/sabberworm/php-css-parser/src/Value/URL.php',
     'Sabberworm\\CSS\\Value\\Value' => $vendorDir . '/sabberworm/php-css-parser/src/Value/Value.php',
     'Sabberworm\\CSS\\Value\\ValueList' => $vendorDir . '/sabberworm/php-css-parser/src/Value/ValueList.php',
+    'SanitizeTrait' => $baseDir . '/core/restservices.class.inc.php',
     'ScalarExpression' => $baseDir . '/core/oql/expression.class.inc.php',
     'ScalarOqlExpression' => $baseDir . '/core/oql/oqlquery.class.inc.php',
     'ScssPhp\\ScssPhp\\Base\\Range' => $vendorDir . '/scssphp/scssphp/src/Base/Range.php',
@@ -3201,6 +3202,7 @@ return array(
     'iPreferencesExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iProcess' => $baseDir . '/core/backgroundprocess.inc.php',
     'iQueryModifier' => $baseDir . '/core/querymodifier.class.inc.php',
+    'iRestInputSanitizer' => $baseDir . '/application/applicationextension.inc.php',
     'iRestServiceProvider' => $baseDir . '/application/applicationextension.inc.php',
     'iScheduledProcess' => $baseDir . '/core/backgroundprocess.inc.php',
     'iSelfRegister' => $baseDir . '/core/userrights.class.inc.php',
@@ -3228,5 +3230,5 @@ return array(
     'privUITransactionFile' => $baseDir . '/application/transaction.class.inc.php',
     'privUITransactionSession' => $baseDir . '/application/transaction.class.inc.php',
     'utils' => $baseDir . '/application/utils.inc.php',
-    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
+    'ï¿½' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );

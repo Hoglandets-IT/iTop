@@ -1950,6 +1950,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Sabberworm\\CSS\\Value\\URL' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/URL.php',
         'Sabberworm\\CSS\\Value\\Value' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/Value.php',
         'Sabberworm\\CSS\\Value\\ValueList' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/ValueList.php',
+        'SanitizeTrait' => __DIR__ . '/../..' . '/core/restservices.class.inc.php',
         'ScalarExpression' => __DIR__ . '/../..' . '/core/oql/expression.class.inc.php',
         'ScalarOqlExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'ScssPhp\\ScssPhp\\Base\\Range' => __DIR__ . '/..' . '/scssphp/scssphp/src/Base/Range.php',
@@ -3591,6 +3592,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'iPreferencesExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iProcess' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
         'iQueryModifier' => __DIR__ . '/../..' . '/core/querymodifier.class.inc.php',
+        'iRestInputSanitizer' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iRestServiceProvider' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iScheduledProcess' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
         'iSelfRegister' => __DIR__ . '/../..' . '/core/userrights.class.inc.php',
@@ -3618,7 +3620,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
