@@ -299,7 +299,12 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('message', $sMessage);
 	$oLog->Set('code', $oResult->code);
 	$oResult->SanitizeContent();
-	$oLog->SetTrim('json_output', json_encode($oResult, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+	$iUnescapeSlashAndUnicode = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+	$sJsonOuputWithPrettyPrinting = json_encode($oResult, $iUnescapeSlashAndUnicode | JSON_PRETTY_PRINT);
+	$sJsonOutputWithoutPrettyPrinting = json_encode($oResult, $iUnescapeSlashAndUnicode);
+	!$oLog->StringFitsInField('json_output', $sJsonOuputWithPrettyPrinting) ?
+		$oLog->SetTrim('json_output', $sJsonOutputWithoutPrettyPrinting) : // too long, we don't make it pretty
+		$oLog->SetTrim('json_output', $sJsonOuputWithPrettyPrinting);
 
 	$oLog->DBInsertNoReload();
 }

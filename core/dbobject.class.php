@@ -760,10 +760,10 @@ abstract class DBObject implements iDisplay
      */
 	public function SetTrim($sAttCode, $sValue)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		$iMaxSize = $oAttDef->GetMaxSize();
-		$sLength = mb_strlen($sValue);
-		if ($iMaxSize && ($sLength > $iMaxSize)) {
+		if (!$this->StringFitsInField($sAttCode, $sValue)) {
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			$iMaxSize = $oAttDef->GetMaxSize();
+			$sLength = mb_strlen($sValue);
 			$sMessage = " -truncated ($sLength chars)";
 			$sValue = mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
 		}
@@ -816,6 +816,24 @@ abstract class DBObject implements iDisplay
 		$oKPI = new ExecutionKPI();
 		$this->AfterDelete();
 		$oKPI->ComputeStatsForExtension($this, 'AfterDelete');
+	}
+
+	/**
+	 * @param string $sAttCode
+	 * @param string $sValue
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 *
+	 * @Since 3.2.2
+	 */
+	public function StringFitsInField(string $sAttCode, string $sValue): bool
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		$iMaxSize = $oAttDef->GetMaxSize();
+		$sLength = mb_strlen($sValue);
+
+		return !($iMaxSize && ($sLength > $iMaxSize));
 	}
 
 	/**
