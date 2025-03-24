@@ -6371,7 +6371,15 @@ class AttributeDateTime extends AttributeDBField
 
 		$oFormField = parent::MakeFormField($oObject, $oFormField);
 
-		return $oFormField;
+        // After call to the parent as it sets the current value
+        $oValue = $oObject->Get($this->GetCode());
+        if ($oValue === $this->GetNullValue()) {
+            $oValue = $this->GetDefaultValue($oObject);
+        }
+        $oFormField->SetCurrentValue($this->GetFormat()->Format($oValue));
+
+
+        return $oFormField;
 	}
 
 	/**
