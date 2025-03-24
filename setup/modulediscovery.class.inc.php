@@ -71,7 +71,7 @@ HTML;
 /**
  * Class that handles a module dependency
  */
-class ModuleDependency {
+class iTopCoreModuleDependency {
 	private array $aPotentialPrerequisites;
 	private array $aParamsPerModuleId;
 	private string $sDepString;
@@ -188,7 +188,7 @@ class ModuleDependency {
 /**
  * Class that handles a modules and all its dependencies
  */
-class Module {
+class iTopCoreModule {
 	private string $sModuleId;
 	private string $sModuleName;
 	private string $sVersion;
@@ -241,7 +241,7 @@ class Module {
 		$this->aOngoingDependencies = [];
 
 		foreach ($aAllDependencies as $sDepString){
-			$this->aOngoingDependencies[$sDepString]= new ModuleDependency($sDepString);
+			$this->aOngoingDependencies[$sDepString]= new iTopCoreModuleDependency($sDepString);
 		}
 	}
 
@@ -258,7 +258,7 @@ class Module {
 		$bDependenciesSolved = true;
 		foreach($this->aOngoingDependencies as $sDepId => $oModuleDependency)
 		{
-			/** @var ModuleDependency $oModuleDependency*/
+			/** @var iTopCoreModuleDependency $oModuleDependency*/
 			if (!$oModuleDependency->IsDependencyResolved($aModuleVersions, $aSelectedModules))
 			{
 				$aNextDependencies[$sDepId]=$oModuleDependency;
@@ -283,7 +283,7 @@ class Module {
 	{
 		$aRes=[];
 		foreach($this->aOngoingDependencies as $sDepId => $oModuleDependency) {
-			/** @var ModuleDependency $oModuleDependency */
+			/** @var iTopCoreModuleDependency $oModuleDependency */
 			$aRes = array_merge($aRes, $oModuleDependency->GetPotentialPrerequisiteModuleNames());
 		}
 
@@ -462,13 +462,13 @@ class ModuleDiscovery
 		$aDependsOnModuleName=[];
 
 		foreach($aUnresolvedDependencyModules as $sModuleId => $oModule) {
-			/** @var Module $oModule */
+			/** @var iTopCoreModule $oModule */
 			$aDependsOnModuleName[$oModule->GetModuleName()]=[];
 		}
 
 		foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 			$iInDegreeCounter = 0;
-			/** @var Module $oModule */
+			/** @var iTopCoreModule $oModule */
 			$aUnresolvedDependencyModuleNames = $oModule->GetUnresolvedDependencyModuleNames();
 			foreach ($aUnresolvedDependencyModuleNames as $sModuleName) {
 				if (array_key_exists($sModuleName, $aDependsOnModuleName)) {
@@ -549,7 +549,7 @@ class ModuleDiscovery
 		$aSelectedModules = [];
 		foreach($aModules as $sModuleId => $aModule)
 		{
-			$oModule = new Module($sModuleId);
+			$oModule = new iTopCoreModule($sModuleId);
 			$sModuleName = $oModule->GetModuleName();
 			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
 			{
@@ -571,7 +571,7 @@ class ModuleDiscovery
 			$iPreviousLoopDepencyCount=$iNextLoopCount;
 			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
 			{
-				/** @var Module $oModule */
+				/** @var iTopCoreModule $oModule */
 				if ($oModule->IsModuleResolved($aModuleVersions, $aSelectedModules)){
 					$aOrderedModules[] = $sModuleId;
 					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
@@ -588,7 +588,7 @@ class ModuleDiscovery
 			self::SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 			$aModulesInfo = [];
 			$aModuleDeps = [];
-			/** @var Module $oModule */
+			/** @var iTopCoreModule $oModule */
 			foreach($aUnresolvedDependencyModules as $sModuleId => $oModule)
 			{
 				$aModule = $aModules[$sModuleId];
