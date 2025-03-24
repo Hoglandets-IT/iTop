@@ -26,6 +26,7 @@ SetupWebPage::AddModule(
 		'category' => 'Portal',
 	// Setup
 	'dependencies' => array(
+		'itop-attachments/3.2.1', //CMDBChangeOpAttachmentRemoved
 	),
 	'mandatory' => true,
 	'visible' => false,

@@ -16,6 +16,7 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => array(
 			'itop-welcome-itil/3.1.0,',
+			'itop-profiles-itil/3.2.1', //SuperUser id 117
 		),
 		'mandatory' => false,
 		'visible' => true,
@@ -28,7 +29,7 @@ SetupWebPage::AddModule(
 			'src/Service/ApplicationUIExtension.php',
 		),
 		'webservice' => array(
-			
+
 		),
 		'data.struct' => array(
 			// add your 'structure' definition XML files here,
@@ -36,11 +37,11 @@ SetupWebPage::AddModule(
 		'data.sample' => array(
 			// add your sample data XML files here,
 		),
-		
+
 		// Documentation
 		//
 		'doc.manual_setup' => '', // hyperlink to manual setup documentation, if any
-		'doc.more_information' => '', // hyperlink to more information, if any 
+		'doc.more_information' => '', // hyperlink to more information, if any
 
 		// Default settings
 		//
