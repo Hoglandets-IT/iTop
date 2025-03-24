@@ -1238,15 +1238,17 @@ class ObjectFormManager extends FormManager
 
 		foreach ($aCurrentValues as $sAttCode => $value)
 		{
-			if (!array_key_exists($sAttCode, $this->aFieldsAtts)) {
-				continue;
-			}
-			$iAttributeFlags = $this->aFieldsAtts[$sAttCode];
-			if ($iAttributeFlags & OPT_ATT_HIDDEN) {
-				continue;
-			}
-			if ($iAttributeFlags & OPT_ATT_READONLY) {
-				continue;
+			if (count($this->aFieldsAtts) !== 0) {
+				if (!array_key_exists($sAttCode, $this->aFieldsAtts)) {
+					continue;
+				}
+				$iAttributeFlags = $this->aFieldsAtts[$sAttCode];
+				if ($iAttributeFlags & OPT_ATT_HIDDEN) {
+					continue;
+				}
+				if ($iAttributeFlags & OPT_ATT_READONLY) {
+					continue;
+				}
 			}
 
 			if (MetaModel::IsValidAttCode($sObjectClass, $sAttCode)) {

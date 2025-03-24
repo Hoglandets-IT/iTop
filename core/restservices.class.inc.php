@@ -44,6 +44,9 @@ class ObjectResult
 	 * @var string
 	 * @api
 	 */
+    use SanitizeTrait;
+
+    public $code;
 	public $message;
 	/**
 	 * @var mixed|null
@@ -156,6 +159,19 @@ class ObjectResult
 	{
 		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode, $bExtendedOutput);
 	}
+
+public function SanitizeContent()
+	{
+		foreach($this->fields as $sFieldAttCode => $fieldValue)
+		{
+            try {
+			$oAttDef = MetaModel::GetAttributeDef($this->class, $sFieldAttCode);
+            } catch (Exception $e) { // for special cases like ID
+                continue;
+            }
+                $this->SanitizeFieldIfSensitive($this->fields, $sFieldAttCode, $fieldValue, $oAttDef);
+		}
+	}
 }
 
 
@@ -220,6 +236,16 @@ class RestResultWithObjects extends RestResult
 
 		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
 		$this->objects[$sObjKey] = $oObjRes;
+	}
+
+public function SanitizeContent()
+	{
+		parent::SanitizeContent();
+
+		foreach($this->objects as $sObjKey => $oObjRes)
+		{
+			$oObjRes->SanitizeContent();
+		}
 	}
 }
 
@@ -308,9 +334,10 @@ class RestDelete
  *
  * @package     Core
  */
-class CoreServices implements iRestServiceProvider
+class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 {
-	/**
+    use SanitizeTrait;
+    /**
 	 * Enumerate services delivered by this class
 	 * 	 
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
@@ -528,18 +555,18 @@ class CoreServices implements iRestServiceProvider
             }
 			else
 			{
-                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*') 
+                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*')
                                 {
                                         $aFields = $aShowFields[$sClass];
                                         //Id is not a valid attribute to optimize
-                                        if (in_array('id', $aFields)) 
+                                        if (in_array('id', $aFields))
                                         {
                                             unset($aFields[array_search('id', $aFields)]);
                                         }
                                         $aAttToLoad = array($oObjectSet->GetClassAlias() => $aFields);
                                         $oObjectSet->OptimizeColumnLoad($aAttToLoad);
                                 }
-                                
+
 				while ($oObject = $oObjectSet->Fetch())
 				{
 					$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
@@ -737,6 +764,33 @@ class CoreServices implements iRestServiceProvider
 		return $oResult;
 	}
 
+	public function SanitizeJsonInput(string $sJsonInput): string
+	{
+        $sSanitizedJsonInput = $sJsonInput;
+        $aJsonData = json_decode($sSanitizedJsonInput, true);
+        $sOperation = $aJsonData['operation'];
+
+        switch ($sOperation) {
+            case 'core/check_credentials':
+                if (isset($aJsonData['password'])) {
+                    $aJsonData['password'] = '*****';
+                }
+                break;
+            case 'core/update':
+            case 'core/create':
+            default :
+            $sClass = $aJsonData['class'];
+            if (isset($aJsonData['fields'])) {
+                foreach ($aJsonData['fields'] as $sFieldAttCode => $fieldValue) {
+                    $oAttDef = MetaModel::GetAttributeDef($sClass, $sFieldAttCode);
+                    $this->SanitizeFieldIfSensitive($aJsonData['fields'], $sFieldAttCode, $fieldValue, $oAttDef);
+                }
+            }
+            break;
+        }
+		return json_encode($aJsonData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+	}
+
 	/**
 	 * Helper for object deletion	
 	 */
@@ -874,4 +928,51 @@ class CoreServices implements iRestServiceProvider
 	{
 		return $iLimit * max(0, $iPage - 1);
 	}
+}
+
+trait SanitizeTrait
+{
+    /**
+     * Sanitize a field if it is sensitive.
+     *
+     * @param array $fields The fields array
+     * @param string $sFieldAttCode The attribute code
+     * @param mixed $oAttDef The attribute definition
+     * @throws Exception
+     */
+    private function SanitizeFieldIfSensitive(array &$fields, string $sFieldAttCode, $fieldValue, $oAttDef): void
+    {
+        // for simple attribute
+        if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
+        {
+            $fields[$sFieldAttCode] = '*****';
+            return;
+        }
+        // for 1-n / n-n relation
+        if ($oAttDef instanceof AttributeLinkedSet) {
+            foreach ($fieldValue as $i => $aLnkValues) {
+                foreach ($aLnkValues as $sLnkAttCode => $sLnkValue) {
+                    $oLnkAttDef = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sLnkAttCode);
+                    if ($oLnkAttDef instanceof iAttributeNoGroupBy) { // 1-n relation
+                        $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
+                    }
+                    elseif ($oAttDef instanceof AttributeLinkedSetIndirect && $oLnkAttDef instanceof AttributeExternalField) { // for n-n relation
+                        $oExtKeyAttDef = MetaModel::GetAttributeDef($oLnkAttDef->GetTargetClass(), $oLnkAttDef->GetExtAttCode());
+                        if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
+                            $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
+                        }
+                    }
+                }
+            }
+            return;
+        }
+
+        // for external attribute
+        if ($oAttDef instanceof AttributeExternalField) {
+            $oExtKeyAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+            if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
+                $fields[$sFieldAttCode] = '*****';
+            }
+        }
+    }
 }
