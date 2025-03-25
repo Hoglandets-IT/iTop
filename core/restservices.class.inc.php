@@ -159,16 +159,15 @@ class ObjectResult
 		$this->fields[$sAttCode] = $this->MakeResultValue($oObject, $sAttCode, $bExtendedOutput);
 	}
 
-public function SanitizeContent()
+	public function SanitizeContent()
 	{
-		foreach($this->fields as $sFieldAttCode => $fieldValue)
-		{
+		foreach($this->fields as $sFieldAttCode => $fieldValue) {
             try {
 			$oAttDef = MetaModel::GetAttributeDef($this->class, $sFieldAttCode);
             } catch (Exception $e) { // for special cases like ID
                 continue;
             }
-                $this->SanitizeFieldIfSensitive($this->fields, $sFieldAttCode, $fieldValue, $oAttDef);
+			$this->SanitizeFieldIfSensitive($this->fields, $sFieldAttCode, $fieldValue, $oAttDef);
 		}
 	}
 }
@@ -929,6 +928,10 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 	}
 }
 
+/**
+ * Sanitizes sensitive fields on a "json ready" representation of a DBObject
+ * Useful for logging purposes
+ */
 trait SanitizeTrait
 {
     /**
@@ -942,8 +945,7 @@ trait SanitizeTrait
     private function SanitizeFieldIfSensitive(array &$fields, string $sFieldAttCode, $fieldValue, $oAttDef): void
     {
         // for simple attribute
-        if ($oAttDef instanceof iAttributeNoGroupBy) // iAttributeNoGroupBy is equivalent to sensitive attribute
-        {
+        if ($oAttDef instanceof iAttributeNoGroupBy) { // iAttributeNoGroupBy is equivalent to sensitive attribute
             $fields[$sFieldAttCode] = '*****';
             return;
         }

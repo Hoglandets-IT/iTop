@@ -24,11 +24,11 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 	private const SIMPLE_PASSWORD = '123456';
 
 	/**
-	 * @throws Exception
+	 * @return string Abs path to the XML delta to use for the tests of that class
 	 */
-	protected function setUp(): void
+	public function GetDatamodelDeltaAbsPath(): string
 	{
-		parent::setUp();
+		return __DIR__.'/Delta/delta_test_sanitize_output.xml';
 	}
 
 	/**
@@ -155,13 +155,5 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 			self::SIMPLE_PASSWORD,
 			json_encode($oRestResultWithObject));
 
-	}
-
-	/**
-	 * @return string Abs path to the XML delta to use for the tests of that class
-	 */
-	public function GetDatamodelDeltaAbsPath(): string
-	{
-		return __DIR__.'/Delta/delta_test_sanitize_output.xml';
 	}
 }
