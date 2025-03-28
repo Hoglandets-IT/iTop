@@ -28,13 +28,13 @@ class CronLog extends LogAPI
 
 	protected static $m_oFileLog = null;
 
-	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
+	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = []): void
 	{
 		$sMessage = 'cron'.str_pad(static::$iProcessNumber, 3).$sMessage;
 		parent::Log($sLevel, $sMessage, $sChannel, $aContext);
 	}
 
-	public static function Debug($sMessage, $sChannel = null, $aContext = array())
+	public static function Debug($sMessage, $sChannel = null, $aContext = []): void
 	{
 		if (self::$bDebug && self::$oP) {
 			self::$oP->p('cron'.str_pad(static::$iProcessNumber, 3).$sMessage);
@@ -42,7 +42,7 @@ class CronLog extends LogAPI
 		parent::Debug($sMessage, $sChannel, $aContext);
 	}
 
-	public static function SetDebug(Page $oP, $bDebug)
+	public static function SetDebug(Page $oP, $bDebug): void
 	{
 		self::$oP = $oP;
 		self::$bDebug = $bDebug;

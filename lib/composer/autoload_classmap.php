@@ -494,6 +494,7 @@ return array(
     'Combodo\\iTop\\Service\\Base\\ObjectRepository' => $baseDir . '/sources/Service/Base/ObjectRepository.php',
     'Combodo\\iTop\\Service\\Base\\iDataPostProcessor' => $baseDir . '/sources/Service/Base/iDataPostProcessor.php',
     'Combodo\\iTop\\Service\\Cache\\DataModelDependantCache' => $baseDir . '/sources/Service/Cache/DataModelDependantCache.php',
+    'Combodo\\iTop\\Service\\Cron\\CronLog' => $baseDir . '/sources/Service/Cron/CronLog.php',
     'Combodo\\iTop\\Service\\Events\\Description\\EventDataDescription' => $baseDir . '/sources/Service/Events/Description/EventDataDescription.php',
     'Combodo\\iTop\\Service\\Events\\Description\\EventDescription' => $baseDir . '/sources/Service/Events/Description/EventDescription.php',
     'Combodo\\iTop\\Service\\Events\\EventData' => $baseDir . '/sources/Service/Events/EventData.php',
@@ -3230,5 +3231,5 @@ return array(
     'privUITransactionFile' => $baseDir . '/application/transaction.class.inc.php',
     'privUITransactionSession' => $baseDir . '/application/transaction.class.inc.php',
     'utils' => $baseDir . '/application/utils.inc.php',
-    'ï¿½' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
+    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );

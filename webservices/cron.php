@@ -22,15 +22,16 @@ use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Cron\CronLog;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+if (!defined('__DIR__')) {
+	define('__DIR__', dirname(__FILE__));
+}
 
 require_once(__DIR__.'/../approot.inc.php');
 
 const EXIT_CODE_ERROR = -1;
 const EXIT_CODE_FATAL = -2;
 // early exit
-if (file_exists(READONLY_MODE_FILE))
-{
+if (file_exists(READONLY_MODE_FILE)) {
 	echo "iTop is read-only. Exiting...\n";
 	exit(EXIT_CODE_ERROR);
 }
@@ -39,8 +40,7 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/core/background.inc.php');
 
 $sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
-if (!file_exists($sConfigFile))
-{
+if (!file_exists($sConfigFile)) {
 	echo "iTop is not yet installed. Exiting...\n";
 	exit(EXIT_CODE_ERROR);
 }
@@ -52,8 +52,7 @@ $oCtx = new ContextTag(ContextTag::TAG_CRON);
 function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
 	$sValue = utils::ReadParam($sParam, null, true, $sSanitizationFilter);
-	if (is_null($sValue))
-	{
+	if (is_null($sValue)) {
 		$oP->p("ERROR: Missing argument '$sParam'\n");
 		UsageAndExit($oP);
 	}
@@ -65,13 +64,10 @@ function UsageAndExit($oP)
 {
 	$bModeCLI = ($oP instanceof CLIPage);
 
-	if ($bModeCLI)
-	{
+	if ($bModeCLI) {
 		$oP->p("USAGE:\n");
 		$oP->p("php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--debug=1] [--status_only=1]\n");
-	}
-	else
-	{
+	} else {
 		$oP->p("Optional parameters: verbose, param_file, status_only\n");
 	}
 	$oP->output();
@@ -103,8 +99,7 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 
 	$sMessage = '';
 	$oExceptionToThrow = null;
-	try
-	{
+	try {
 		// Record (when starting) that this task was started, just in case it crashes during the execution
 		if ($oTask->Get('total_exec_count') == 0) {
 			// First execution
@@ -135,33 +130,28 @@ function RunTask(BackgroundTask $oTask, $iTimeLimit)
 
 		$sMessage = $oProcess->Process($iTimeLimit);
 	}
-	catch (MySQLHasGoneAwayException $e)
-	{
+	catch (MySQLHasGoneAwayException $e) {
 		throw $e;
 	}
-	catch (ProcessFatalException $e)
-	{
+	catch (ProcessFatalException $e) {
 		$oExceptionToThrow = $e;
 	}
 	catch (Exception $e) // we shouldn't get so much exceptions... but we need to handle legacy code, and cron.php has to keep running
 	{
-		if ($oTask->IsDebug())
-		{
-			$sMessage = 'Processing failed with message: '. $e->getMessage() . '. ' . $e->getTraceAsString();
+		if ($oTask->IsDebug()) {
+			$sMessage = 'Processing failed with message: '.$e->getMessage().'. '.$e->getTraceAsString();
+		} else {
+			$sMessage = 'Processing failed with message: '.$e->getMessage();
 		}
-		else
-		{
-			$sMessage = 'Processing failed with message: '. $e->getMessage();
-		}
-	} finally {
+	}
+	finally {
 		$oTask->Set('running', 0);
 		$fDuration = microtime(true) - $fStart;
 		$oTask->ComputeDurations($fDuration); // does increment the counter and compute statistics
 		$oTask->DBUpdate();
 	}
 
-	if ($oExceptionToThrow)
-	{
+	if ($oExceptionToThrow) {
 		throw $oExceptionToThrow;
 	}
 
@@ -208,8 +198,7 @@ function CronExec($bDebug)
 
 	ReSyncProcesses($bDebug);
 
-	while (time() < $iTimeLimit)
-	{
+	while (time() < $iTimeLimit) {
 		CheckMaintenanceMode();
 
 		$oNow = new DateTime();
@@ -222,8 +211,7 @@ function CronExec($bDebug)
 		$aTasks = [];
 		if ($oTasks->CountExceeds(0)) {
 			$aDebugMessages = [];
-			while ($oTask = $oTasks->Fetch())
-			{
+			while ($oTask = $oTasks->Fetch()) {
 				$sTaskName = $oTask->Get('class_name');
 				$oTaskMutex = new iTopMutex("cron_$sTaskName");
 				if ($oTaskMutex->IsLocked()) {
@@ -263,31 +251,28 @@ function CronExec($bDebug)
 				// Run the task and record its next run time
 				$oNow = new DateTime();
 				CronLog::Debug(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Start task:%-'=49s", ' '.$sTaskClass.' '));
-				try
-				{
+				try {
 					// The limit of time for this task corresponds to the time slot allowed for every task
 					// but limited to the cron job time limit
 					$sMessage = RunTask($oTask, min($iTimeLimit, time() + $iTimeSlot));
-				} catch (MySQLHasGoneAwayException $e)
-				{
+				}
+				catch (MySQLHasGoneAwayException $e) {
 					CronLog::Error("ERROR : 'MySQL has gone away' thrown when processing $sTaskClass  (error_code=".$e->getCode().")");
 					exit(EXIT_CODE_FATAL);
-				} catch (ProcessFatalException $e)
-				{
+				}
+				catch (ProcessFatalException $e) {
 					CronLog::Error("ERROR : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().")");
 				}
 				finally {
 					$oTaskMutex->Unlock();
 				}
-				if (!empty($sMessage))
-				{
+				if (!empty($sMessage)) {
 					CronLog::Debug("$sTaskClass: $sMessage");
 				}
 				$oEnd = new DateTime();
 				$sNextRunDate = $oTask->Get('next_run_date');
 				CronLog::Debug("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:    %-'=49s", ' '.$sTaskClass.' ')." Next: $sNextRunDate");
-				if (time() > $iTimeLimit)
-				{
+				if (time() > $iTimeLimit) {
 					break 2;
 				}
 				CheckMaintenanceMode();
@@ -298,16 +283,13 @@ function CronExec($bDebug)
 			}
 
 			// Tasks to run later
-			if (count($aTasks) == 0)
-			{
+			if (count($aTasks) == 0) {
 				$oSearch = new DBObjectSearch('BackgroundTask');
 				$oSearch->AddCondition('next_run_date', $sNow, '>');
 				$oSearch->AddCondition('status', 'active');
 				$oTasks = new DBObjectSet($oSearch, ['next_run_date' => true]);
-				while ($oTask = $oTasks->Fetch())
-				{
-					if (!in_array($oTask->Get('class_name'), $aRunTasks))
-					{
+				while ($oTask = $oTasks->Fetch()) {
+					if (!in_array($oTask->Get('class_name'), $aRunTasks)) {
 						CronLog::Debug(sprintf("-- Skipping task: %-'-40s", $oTask->Get('class_name').' ')." until: ".$oTask->Get('next_run_date'));
 					}
 				}
@@ -321,7 +303,8 @@ function CronExec($bDebug)
 	CronLog::Debug("Reached normal execution time limit (exceeded by ".(time() - $iTimeLimit)."s)");
 }
 
-function CheckMaintenanceMode() {
+function CheckMaintenanceMode()
+{
 // Verify files instead of reloading the full config each time
 	if (file_exists(MAINTENANCE_MODE_FILE) || file_exists(READONLY_MODE_FILE)) {
 		CronLog::Info("Maintenance detected, exiting");
@@ -346,8 +329,7 @@ function DisplayStatus($oP = null, $aTaskOrderBy = [])
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
 	$oP->p('| Task Class                | Status  | Last Run            | Next Run            | Nb Run | Avg. Dur. |');
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
-	while ($oTask = $oTasks->Fetch())
-	{
+	while ($oTask = $oTasks->Fetch()) {
 		$sTaskName = $oTask->Get('class_name');
 		$sStatus = $oTask->Get('status');
 		$sLastRunDate = $oTask->Get('latest_run_date');
@@ -378,13 +360,13 @@ function ReSyncProcesses($bDebug)
 	//
 	$oSearch = new DBObjectSearch('BackgroundTask');
 	$oTasks = new DBObjectSet($oSearch);
-	$aTasks = array();
+	$aTasks = [];
 	while ($oTask = $oTasks->Fetch()) {
 		$aTasks[$oTask->Get('class_name')] = $oTask;
 	}
 	$oNow = new DateTime();
 
-	$aProcesses = array();
+	$aProcesses = [];
 	foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProcess::class) as $sTaskClass) {
 		$oProcess = new $sTaskClass;
 		$aProcesses[$sTaskClass] = $oProcess;
@@ -441,7 +423,7 @@ function ReSyncProcesses($bDebug)
 		}
 	}
 
-	$aDisplayProcesses = array();
+	$aDisplayProcesses = [];
 	foreach ($aProcesses as $oExecInstance) {
 		$aDisplayProcesses[] = get_class($oExecInstance);
 	}
@@ -457,19 +439,15 @@ function ReSyncProcesses($bDebug)
 set_time_limit(0); // Some background actions may really take long to finish (like backup)
 
 $bIsModeCLI = utils::IsModeCLI();
-if ($bIsModeCLI)
-{
+if ($bIsModeCLI) {
 	$oP = new CLIPage("iTop - cron");
 
 	SetupUtils::CheckPhpAndExtensionsForCli($oP, EXIT_CODE_FATAL);
-}
-else
-{
+} else {
 	$oP = new WebPage("iTop - cron");
 }
 
-try
-{
+try {
 	utils::UseParamFile();
 
 	// Allow verbosity on output (writing debug messages to the cron.log file is configured with log_level_min config parameter)
@@ -479,40 +457,32 @@ try
 	// Used to launch the BackgroundTask in debug mode
 	$bDebug = utils::ReadParam('debug', false, true /* Allow CLI */);
 
-	if ($bIsModeCLI)
-	{
+	if ($bIsModeCLI) {
 		// Next steps:
 		//   specific arguments: 'csv file'
 		//
 		$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 		$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
-		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-		{
+		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 			UserRights::Login($sAuthUser); // Login & set the user's language
-		}
-		else
-		{
+		} else {
 			$oP->p("Access wrong credentials ('$sAuthUser')");
 			$oP->output();
 			exit(EXIT_CODE_ERROR);
 		}
-	}
-	else
-	{
+	} else {
 		require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 		LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	}
 
-	if (!UserRights::IsAdministrator())
-	{
+	if (!UserRights::IsAdministrator()) {
 		$oP->p("Access restricted to administrators");
 		$oP->Output();
 		exit(EXIT_CODE_ERROR);
 	}
 
 
-	if (utils::ReadParam('status_only', false, true /* Allow CLI */))
-	{
+	if (utils::ReadParam('status_only', false, true /* Allow CLI */)) {
 		// Display status and exit
 		DisplayStatus($oP);
 		exit(0);
@@ -520,22 +490,17 @@ try
 
 	require_once(APPROOT.'core/mutex.class.inc.php');
 }
-catch (Exception $e)
-{
+catch (Exception $e) {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
 	exit(EXIT_CODE_FATAL);
 }
 
 CronLog::Enable(APPROOT.'/log/cron.log');
-try
-{
-	if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-	{
+try {
+	if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE)) {
 		CronLog::Info("A maintenance is ongoing");
-	}
-	else
-	{
+	} else {
 		// Limit the number of cron process to run in parallel
 		$iMaxCronProcess = max(MetaModel::GetConfig()->Get('cron.max_processes'), 1);
 		$bCanRun = false;
@@ -558,8 +523,7 @@ try
 		}
 	}
 }
-catch (Exception $e)
-{
+catch (Exception $e) {
 	CronLog::Error("ERROR: '".$e->getMessage()."'");
 	// Might contain verb parameters such a password...
 	CronLog::Debug($e->getTraceAsString());

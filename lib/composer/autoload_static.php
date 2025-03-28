@@ -884,6 +884,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Service\\Base\\ObjectRepository' => __DIR__ . '/../..' . '/sources/Service/Base/ObjectRepository.php',
         'Combodo\\iTop\\Service\\Base\\iDataPostProcessor' => __DIR__ . '/../..' . '/sources/Service/Base/iDataPostProcessor.php',
         'Combodo\\iTop\\Service\\Cache\\DataModelDependantCache' => __DIR__ . '/../..' . '/sources/Service/Cache/DataModelDependantCache.php',
+        'Combodo\\iTop\\Service\\Cron\\CronLog' => __DIR__ . '/../..' . '/sources/Service/Cron/CronLog.php',
         'Combodo\\iTop\\Service\\Events\\Description\\EventDataDescription' => __DIR__ . '/../..' . '/sources/Service/Events/Description/EventDataDescription.php',
         'Combodo\\iTop\\Service\\Events\\Description\\EventDescription' => __DIR__ . '/../..' . '/sources/Service/Events/Description/EventDescription.php',
         'Combodo\\iTop\\Service\\Events\\EventData' => __DIR__ . '/../..' . '/sources/Service/Events/EventData.php',
@@ -3620,7 +3621,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
