@@ -14,9 +14,9 @@ use Page;
  */
 class CronLog extends LogAPI
 {
-	public static $iProcessNumber = 0;
-	private static $bDebug = false;
-	private static $oP = null;
+	public static int $iProcessNumber = 0;
+	private static int $iDebugLevel = 0;
+	private static ?Page $oP = null;
 
 	const CHANNEL_DEFAULT = 'Cron';
 	/**
@@ -36,15 +36,23 @@ class CronLog extends LogAPI
 
 	public static function Debug($sMessage, $sChannel = null, $aContext = []): void
 	{
-		if (self::$bDebug && self::$oP) {
+		if (self::$iDebugLevel > 0 && self::$oP) {
 			self::$oP->p('cron'.str_pad(static::$iProcessNumber, 3).$sMessage);
 		}
 		parent::Debug($sMessage, $sChannel, $aContext);
 	}
 
-	public static function SetDebug(Page $oP, $bDebug): void
+	public static function Trace($sMessage, $sChannel = null, $aContext = []): void
+	{
+		if (self::$iDebugLevel > 2 && self::$oP) {
+			self::$oP->p('cron'.str_pad(static::$iProcessNumber, 3).$sMessage);
+		}
+		parent::Trace($sMessage, $sChannel, $aContext);
+	}
+
+	public static function SetDebug(Page $oP, int $iDebugLevel): void
 	{
 		self::$oP = $oP;
-		self::$bDebug = $bDebug;
+		self::$iDebugLevel = $iDebugLevel;
 	}
 }
