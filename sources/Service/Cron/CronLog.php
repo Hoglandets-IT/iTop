@@ -8,6 +8,7 @@ namespace Combodo\iTop\Service\Cron;
 
 use LogAPI;
 use Page;
+use utils;
 
 /**
  * @since 3.1.0
@@ -44,7 +45,7 @@ class CronLog extends LogAPI
 
 	public static function Trace($sMessage, $sChannel = null, $aContext = []): void
 	{
-		if (self::$iDebugLevel > 2 && self::$oP) {
+		if (self::$iDebugLevel > 1 && self::$oP) {
 			self::$oP->p('cron'.str_pad(static::$iProcessNumber, 3).$sMessage);
 		}
 		parent::Trace($sMessage, $sChannel, $aContext);
@@ -54,5 +55,16 @@ class CronLog extends LogAPI
 	{
 		self::$oP = $oP;
 		self::$iDebugLevel = $iDebugLevel;
+	}
+
+	public static function GetDebugClassName($sTaskClass): string
+	{
+		if (utils::StartsWith($sTaskClass, 'Combodo\\iTop\\Service\\')) {
+			return substr($sTaskClass, strlen('Combodo\\iTop\\Service\\'));
+		}
+		if (utils::StartsWith($sTaskClass, 'Combodo\\iTop\\')) {
+			return substr($sTaskClass, strlen('Combodo\\iTop\\'));
+		}
+		return $sTaskClass;
 	}
 }

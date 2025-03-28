@@ -249,29 +249,30 @@ function CronExec($bDebug)
 				CMDBObject::SetCurrentChangeFromParams("Background task ($sTaskClass)");
 
 				// Run the task and record its next run time
+				$sDebugTaskClass = CronLog::GetDebugClassName($sTaskClass);
 				$oNow = new DateTime();
-				CronLog::Debug(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Start task:%-'=49s", ' '.$sTaskClass.' '));
+				CronLog::Debug(sprintf("> Starting >>> %-'>49s", $sDebugTaskClass.' '));
 				try {
 					// The limit of time for this task corresponds to the time slot allowed for every task
 					// but limited to the cron job time limit
 					$sMessage = RunTask($oTask, min($iTimeLimit, time() + $iTimeSlot));
 				}
 				catch (MySQLHasGoneAwayException $e) {
-					CronLog::Error("ERROR : 'MySQL has gone away' thrown when processing $sTaskClass  (error_code=".$e->getCode().")");
+					CronLog::Error("ERROR : 'MySQL has gone away' thrown when processing $sDebugTaskClass  (error_code=".$e->getCode().")", CronLog::CHANNEL_DEFAULT, ['stack' => $e->getTraceAsString()]);
 					exit(EXIT_CODE_FATAL);
 				}
 				catch (ProcessFatalException $e) {
-					CronLog::Error("ERROR : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().")");
+					CronLog::Error("ERROR : an exception was thrown when processing '$sDebugTaskClass' (".$e->getInfoLog().")", CronLog::CHANNEL_DEFAULT, ['stack' => $e->getTraceAsString()]);
 				}
 				finally {
 					$oTaskMutex->Unlock();
 				}
 				if (!empty($sMessage)) {
-					CronLog::Debug("$sTaskClass: $sMessage");
+					CronLog::Debug("$sDebugTaskClass: $sMessage");
 				}
 				$oEnd = new DateTime();
 				$sNextRunDate = $oTask->Get('next_run_date');
-				CronLog::Debug("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:    %-'=49s", ' '.$sTaskClass.' ')." Next: $sNextRunDate");
+				CronLog::Debug(sprintf("< Ending <<<<< %-'<49s", $sDebugTaskClass.' ')." Next: $sNextRunDate");
 				if (time() > $iTimeLimit) {
 					break 2;
 				}
@@ -290,7 +291,8 @@ function CronExec($bDebug)
 				$oTasks = new DBObjectSet($oSearch, ['next_run_date' => true]);
 				while ($oTask = $oTasks->Fetch()) {
 					if (!in_array($oTask->Get('class_name'), $aRunTasks)) {
-						CronLog::Trace(sprintf("-- Skipping task: %-'-40s", $oTask->Get('class_name').' ')." until: ".$oTask->Get('next_run_date'));
+						$sDebugTaskClass = CronLog::GetDebugClassName($oTask->Get('class_name'));
+						CronLog::Trace(sprintf("-- Skipping task: %-'-40s", $sDebugTaskClass.' ')." until: ".$oTask->Get('next_run_date'));
 					}
 				}
 			}
@@ -389,7 +391,8 @@ function ReSyncProcesses($bDebug)
 				// Background processes do start asap, i.e. "now"
 				$oTask->Set('next_run_date', $oNow->format('Y-m-d H:i:s'));
 			}
-			CronLog::Trace('Creating record for: '.$sTaskClass);
+			$sDebugTaskClass = CronLog::GetDebugClassName($sTaskClass);
+			CronLog::Trace('Creating record for: '.$sDebugTaskClass);
 			CronLog::Trace('First execution planned at: '.$oTask->Get('next_run_date'));
 			$oTask->DBInsert();
 		} else {
@@ -494,10 +497,10 @@ catch (Exception $e) {
 	exit(EXIT_CODE_FATAL);
 }
 
-CronLog::Enable(APPROOT.'/log/cron.log');
+CronLog::Enable(APPROOT.'/log/error.log');
 try {
 	if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE)) {
-		CronLog::Info("A maintenance is ongoing");
+		CronLog::Debug("A maintenance is ongoing");
 	} else {
 		// Limit the number of cron process to run in parallel
 		$iMaxCronProcess = max(MetaModel::GetConfig()->Get('cron.max_processes'), 1);
@@ -513,7 +516,7 @@ try {
 		}
 		if ($bCanRun) {
 			CronLog::$iProcessNumber = $iProcessNumber;
-			CronLog::Info('Starting: '.time().' ('.date('Y-m-d H:i:s').')');
+			CronLog::Debug('Starting: '.time().' ('.date('Y-m-d H:i:s').')');
 			CronExec($iVerbose > 0);
 		} else {
 			CronLog::$iProcessNumber = $iMaxCronProcess + 1;
@@ -522,10 +525,8 @@ try {
 	}
 }
 catch (Exception $e) {
-	CronLog::Error("ERROR: '".$e->getMessage()."'");
-	// Might contain verb parameters such a password...
-	CronLog::Debug($e->getTraceAsString());
+	CronLog::Error("ERROR: '".$e->getMessage()."'", CronLog::CHANNEL_DEFAULT, ['stack' => $e->getTraceAsString()]);
 }
 
-CronLog::Info("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
+CronLog::Debug("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
 $oP->Output();
