@@ -228,25 +228,6 @@ footer{
 	text-align: center;
 }
 
-/*******************/
-/* Clipboard icons */
-/*******************/
-.url-to-clipboard{
-	&.url-to-clipboard-icon {
-		opacity: 0.5;
-		cursor: pointer;
-		transition: opacity 0.2s linear;
-		&:hover {
-			opacity: 1;
-		}
-	}
-}
-// Used for clipboard's tooltip, which is not part of .url-to-clipboard element
-.url-to-clipboard-tooltip-copied {
-	color: green;
-	margin-right: 3px;
-}
-
 /**************************/
 /* MagnificPopup settings */
 /**************************/
@@ -692,22 +673,6 @@ table .group-actions a.glyphicon-menu-hamburger{
 	font-size: 1em;
 }
 
-/* tree list filter data */
-.list-group-item .tree-item-wrapper .tree-item-filter-data{
-  padding-top: 8px;
-  color: $gray;
-  font-size: .9em;
-}
-/* tree list filter data span items */
-.list-group-item .tree-item-wrapper .tree-item-filter-data span:not(:last-child):after{
-  content: '●';
-  margin: 0 5px;
-}
-/* tree list filter data label span items */
-.list-group-item .tree-item-wrapper .tree-item-filter-data .tree-item-filter-data-label{
-  font-weight: bold;
-}
-
 
 /****************************************************************/
 /* - Mosaic mode                                                */
@@ -793,26 +758,7 @@ table .group-actions a.glyphicon-menu-hamburger{
   @extend .ck-content;
 }
 
-.form_field_label > .control-label[data-tooltip-instantiated="true"] {
-	&::after {
-		content: "\1F6C8";
-		padding-left: 3px;
-		vertical-align: top;
 
-		cursor: pointer;
-		color: $gray;
-		font-size: 0.85em;
-    font-weight: 200;
-	}
-}
-.form_field .form_mandatory .control-label:after{
-	content: "\1F6C8";
-	position: relative;
-	left: 3px;
-	color: $brand-primary;
-	font-size: 0.9em;
-  font-weight: 200;
-};
 /* Note: We don't put the .form_field selector as it must work for read-only */
 .form-control-static img{
 	max-width: 100% !important;
