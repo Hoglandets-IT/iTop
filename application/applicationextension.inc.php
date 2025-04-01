@@ -1929,13 +1929,13 @@ class RestUtils
 	 * @return array of class => list of attributes (see RestResultWithObjects::AddObject that uses it)
 	 * @throws Exception
 	 */
-	public static function GetFieldList($sClass, $oData, $sParamName)
+	public static function GetFieldList($sClass, $oData, $sParamName, $bFailIfNotFound = true)
 	{
 		$sFields = self::GetOptionalParam($oData, $sParamName, '*');
 		return match($sFields) {
 			'*' => self::GetFieldListForClass($sClass),
 			'*+' => self::GetFieldListForParentClass($sClass),
-			default => self::GetLimitedFieldListForClass($sClass, $sFields, $sParamName),
+			default => self::GetLimitedFieldListForClass($sClass, $sFields, $sParamName, $bFailIfNotFound),
 		};
 	}
 
@@ -1970,32 +1970,33 @@ class RestUtils
 		return $aFieldList;
 	}
 
-	protected static function GetLimitedFieldListForSingleClass(string $sClass, string $sFields, string $sParamName): array
+	protected static function GetLimitedFieldListForSingleClass(string $sClass, string $sFields, string $sParamName, bool $bFailIfNotFound = true): array
 	{
 		$aFieldList = [$sClass => []];
-		foreach (explode(',', $sFields) as $sAttCode)
-		{
+		foreach (explode(',', $sFields) as $sAttCode) {
 			$sAttCode = trim($sAttCode);
-			if (($sAttCode != 'id') && (!MetaModel::IsValidAttCode($sClass, $sAttCode)))
-			{
-				throw new Exception("$sParamName: invalid attribute code '$sAttCode'");
+			if (($sAttCode == 'id') || (MetaModel::IsValidAttCode($sClass, $sAttCode))) {
+				$aFieldList[$sClass][] = $sAttCode;
+			} else {
+				if ($bFailIfNotFound) {
+					throw new Exception("$sParamName: Unknown attribute '$sAttCode' for class '$sClass'");
+				}
 			}
-			$aFieldList[$sClass][] = $sAttCode;
 		}
 		return $aFieldList;
 	}
 
-	protected static function GetLimitedFieldListForClass(string $sClass, string $sFields, string $sParamName): array
+	protected static function GetLimitedFieldListForClass(string $sClass, string $sFields, string $sParamName, bool $bFailIfNotFound = true): array
 	{
 		if (!str_contains($sFields, ':')) {
-			return self::GetLimitedFieldListForSingleClass($sClass, $sFields, $sParamName);
+			return self::GetLimitedFieldListForSingleClass($sClass, $sFields, $sParamName, $bFailIfNotFound);
 		}
 
 		$aFieldList = [];
 		$aFieldListParts = explode(';', $sFields);
 		foreach ($aFieldListParts as $sClassFields) {
 			list($sSubClass, $sSubClassFields) = explode(':', $sClassFields);
-			$aFieldList = array_merge($aFieldList, self::GetLimitedFieldListForSingleClass(trim($sSubClass), trim($sSubClassFields), $sParamName));
+			$aFieldList = array_merge($aFieldList, self::GetLimitedFieldListForSingleClass(trim($sSubClass), trim($sSubClassFields), $sParamName, $bFailIfNotFound));
 		}
 		return $aFieldList;
 	}
