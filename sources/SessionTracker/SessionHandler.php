@@ -147,8 +147,7 @@ class SessionHandler extends \SessionHandler
 						$iCreationTime = $aJson['creation_time'];
 					}
 			    } else {
-					IssueLog::Warning(__METHOD__ . ': not a json due (session file corruption?)', null, [ 'sPreviousFileVersionContent' => $sPreviousFileVersionContent ]);
-					$aJson=[];
+					IssueLog::Debug(__METHOD__ . ': not a json due (session file corruption?)', null, [ 'sPreviousFileVersionContent' => $sPreviousFileVersionContent ]);
 				}
 			}
 
