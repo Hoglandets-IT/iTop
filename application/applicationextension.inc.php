@@ -1979,7 +1979,7 @@ class RestUtils
 				$aFieldList[$sClass][] = $sAttCode;
 			} else {
 				if ($bFailIfNotFound) {
-					throw new Exception("$sParamName: Unknown attribute '$sAttCode' for class '$sClass'");
+					throw new Exception("$sParamName: invalid attribute code '$sAttCode' for class '$sClass'");
 				}
 			}
 		}
