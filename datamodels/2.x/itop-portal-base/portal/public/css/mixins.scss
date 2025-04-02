@@ -1,7 +1,8 @@
 /* SCSS variables */
 $ipb-following-dot--size: $common-size-150 !default;
 $ipb-following-dot--color: $common-color-orange-600 !default;
-$ipb-following-dot--margin-y: auto !default;
+$ipb-following-dot--margin-top: calc(-1 * #{$ipb-following-dot--size} / 2) !default;
+$ipb-following-dot--margin-bottom: auto !default;
 $ipb-following-dot--margin-x: $common-spacing-300 !default;
 
 @mixin ipb-following-dot($size:$ipb-following-dot--size, $color:$ipb-following-dot--color) {
@@ -12,7 +13,7 @@ $ipb-following-dot--margin-x: $common-spacing-300 !default;
     background-color: $color;
     border-radius: 50%;
     display: inline-block;
-    margin: $ipb-following-dot--margin-y $ipb-following-dot--margin-x;
+    margin: $ipb-following-dot--margin-top $ipb-following-dot--margin-x $ipb-following-dot--margin-bottom $ipb-following-dot--margin-x;
     vertical-align: middle;
   }
 }
