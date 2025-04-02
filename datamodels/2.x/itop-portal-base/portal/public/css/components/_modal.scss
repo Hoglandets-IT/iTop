@@ -29,9 +29,10 @@ $ipb-modal--content--border: 1px solid $common-color-grey-400 !default;
 $ipb-modal--title--color: $ipb-modal--header--color !default;
 $ipb-modal--title--to-clipboard--margin: $common-spacing-200 !default;
 $ipb-modal--title--span--margin-left: 5px !default;
-$ipb-modal--title--span--separator--margin-right: $common-spacing-200 !default;
 $ipb-modal--title--span--separator--width: $common-size-100 !default;
 $ipb-modal--title--span--separator--height: $ipb-modal--title--span--separator--width !default;
+$ipb-modal--title--span--separator--margin-right: $common-spacing-200 !default;
+$ipb-modal--title--span--separator--margin-top: calc(-1 * #{$ipb-modal--title--span--separator--height} / 2) !default;
 $ipb-modal--title--span--separator--border-radius: $common-border-radius-full !default;
 $ipb-modal--title--span--separator--background-color: $common-color-grey-800 !default;
 
@@ -92,6 +93,7 @@ $ipb-modal--title--span--separator--background-color: $common-color-grey-800 !de
       display: inline-block;
       vertical-align: middle;
       margin-right: $ipb-modal--title--span--separator--margin-right;
+      margin-top: $ipb-modal--title--span--separator--margin-top;
       width: $ipb-modal--title--span--separator--width;
       height: $ipb-modal--title--span--separator--height;
       border-radius: $ipb-modal--title--span--separator--border-radius;
