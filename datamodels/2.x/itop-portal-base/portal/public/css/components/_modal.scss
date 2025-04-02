@@ -8,6 +8,7 @@ $ipb-modal--max-height: 90vh !default;
 $ipb-modal--max-width: 90vw !default;
 $ipb-modal--border-radius: $common-border-radius-500 !default;
 
+$ipb-modal--header--padding: $common-spacing-500 !default;
 $ipb-modal--header--background-color: $common-color-white-100 !default;
 $ipb-modal--header--color: $common-color-grey-900 !default;
 $ipb-modal--header--border-radius: $ipb-modal--border-radius $ipb-modal--border-radius 0 0 !default;
@@ -15,6 +16,8 @@ $ipb-modal--header--border-radius: $ipb-modal--border-radius $ipb-modal--border-
 $ipb-modal--header--close--color: $common-color-grey-900 !default;
 $ipb-modal--header--close--opacity: 1 !default;
 $ipb-modal--header--close--hover--color: $common-color-grey-700 !default;
+
+$ipb-modal--footer-padding: $ipb-modal--header--padding !default;
 
 $ipb-modal--backdrop--opacity: 0.6 !default;
 $ipb-modal--backdrop--background-color: $common-color-blue-grey-800 !default;
@@ -60,6 +63,7 @@ $ipb-modal--title--span--separator--background-color: $common-color-grey-800 !de
 }
 
 .modal-header {
+  padding: $ipb-modal--header--padding;
   border-radius:$ipb-modal--header--border-radius !important;
   .close {
     color: $ipb-modal--header--close--color;
@@ -70,6 +74,10 @@ $ipb-modal--title--span--separator--background-color: $common-color-grey-800 !de
       color: $ipb-modal--header--close--hover--color;
     }
   }
+}
+
+.modal-footer {
+  padding: $ipb-modal--footer-padding;
 }
 
 .modal-title {
