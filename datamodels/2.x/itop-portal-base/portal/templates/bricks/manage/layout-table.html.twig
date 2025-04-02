@@ -43,9 +43,10 @@
     {% endif %}
 
     {% if iTableCount == 0 %}
-        <div class="panel panel-default">
+        <div class="ipb-panel panel panel-default">
             <div class="panel-body">
-                <h3 class="text-center">{{ 'Brick:Portal:Manage:Table:NoData'|dict_s }}</h3>
+                <div class="ipb-manage-brick--no-result--illustration ipb-svg-illustration--container">{{ source("illustrations/undraw_empty.svg") }}</div>
+                <h3 class="ipb-manage-brick--no-result--text text-center">{{ 'Brick:Portal:Manage:Table:NoData'|dict_s }}</h3>
             </div>
         </div>
     {% endif %}

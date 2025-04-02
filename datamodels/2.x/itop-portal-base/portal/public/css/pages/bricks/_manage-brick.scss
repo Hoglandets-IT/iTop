@@ -25,6 +25,13 @@ $ipb-manage-brick--tabs--tab--active--indicator--border-radius: $common-border-r
 
 $ipb-manage-brick--panel--body--table--margin-top: $common-spacing-500 !default;
 
+$ipb-manage-brick--no-result--illustration--width: 100% !default;
+$ipb-manage-brick--no-result--illustration--padding-y: $common-spacing-600 !default;
+$ipb-manage-brick--no-result--illustration--padding-x: $common-spacing-500 !default;
+$ipb-manage-brick--no-result--illustration--svg--max-width: $common-size-700 !default;
+
+$ipb-manage-brick--no-result--text--color: $common-color-grey-800 !default;
+
 .ipb-manage-brick--panel--body {
   padding: $ipb-manage-brick--panel--body--padding-y $ipb-manage-brick--panel--body--padding-x 0 $ipb-manage-brick--panel--body--padding-x;
   
@@ -115,4 +122,21 @@ $common-color-blue-300 $common-color-blue-950 "rgb(255, 127, 14)"
 .c3-chart-arc:has(path[style="fill: #{$originalColor}; cursor: pointer; opacity: 1;"])  text {
   fill: $text !important;
 }
+}
+
+.ipb-manage-brick--no-result--illustration {
+  width: $ipb-manage-brick--no-result--illustration--width;
+  display: flex;
+  flex-direction: column;;
+  padding: $ipb-manage-brick--no-result--illustration--padding-y $ipb-manage-brick--no-result--illustration--padding-x;
+  > svg {
+    max-width: $ipb-manage-brick--no-result--illustration--svg--max-width;
+    height: inherit;
+    align-self: center;
+  }
+}
+
+.ipb-manage-brick--no-result--text {
+  color: $ipb-manage-brick--no-result--text--color;
+  @extend %common-font-ral-med-300;
 }
