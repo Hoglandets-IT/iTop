@@ -1,13 +1,22 @@
 $ipb-form-control--color: $common-color-grey-800 !default;
-$ipb-form-control--border-radius: $common-border-radius-500 !default;
+$ipb-form-control--border-radius: $common-border-radius-300 !default;
 $ipb-form-control--box-shadow: none !default;
+$ipb-form-control--input-group-addon--border-top-right-radius: 0 !default;
+$ipb-form-control--input-group-addon--border-bottom-right-radius: 0 !default;
+
+$ipb-input-group-addon--border: 1px solid $ipb-color-grey-300 !default;
+$ipb-input-group-addon--border-radius: $ipb-form-control--border-radius !default;
+$ipb-input-group-addon--background-color: $common-color-grey-100 !default;
+$ipb-input-group-addon--color: $common-color-grey-800 !default;
+$ipb-input-group-addon--form-control--border-top-left-radius: 0 !default;
+$ipb-input-group-addon--form-control--border-bottom-left-radius: 0 !default;
 
 $ipb-form-control--is-focused--border-color: $common-color-primary-700 !default;
 $ipb-form-control--is-focused--box-shadow: none !default;
 
 .form-control {
   color: $ipb-form-control--color;
-  border-radius: $common-border-radius-500 !important;
+  border-radius: $ipb-form-control--border-radius;
   -webkit-box-shadow: $ipb-form-control--box-shadow;
   box-shadow: $ipb-form-control--box-shadow;
   &:focus {
@@ -15,4 +24,22 @@ $ipb-form-control--is-focused--box-shadow: none !default;
     box-shadow: $ipb-form-control--is-focused--box-shadow;
     -webkit-box-shadow: $ipb-form-control--is-focused--box-shadow;
   }
+}
+
+.form-control:has(+ .input-group-addon) {
+  border-top-right-radius: $ipb-form-control--input-group-addon--border-top-right-radius;
+  border-bottom-right-radius: $ipb-form-control--input-group-addon--border-bottom-right-radius;
+}
+
+.input-group-addon {
+  border: $ipb-input-group-addon--border;
+  border-radius: $ipb-input-group-addon--border-radius;
+  background-color: $ipb-input-group-addon--background-color;
+  color: $ipb-input-group-addon--color;
+
+}
+
+.form-control + .input-group-addon {
+  border-top-left-radius: $ipb-input-group-addon--form-control--border-top-left-radius;
+  border-bottom-left-radius: $ipb-input-group-addon--form-control--border-bottom-left-radius;
 }
