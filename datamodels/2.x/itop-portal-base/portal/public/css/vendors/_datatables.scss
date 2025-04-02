@@ -15,8 +15,11 @@ $ipb-vendors--datatables--paginate-button--disabled--colors: map-get(map-get(map
 $ipb-vendors--datatables--paginate-button--active--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'primary'), '') !default;
 $ipb-vendors--datatables--paginate-button--active--hover--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'primary'), ':hover') !default;
 
-$ipb-vendors-datatables--row--background-color--is-odd: $common-color-white-100 !default;
-$ipb-vendors-datatables--row--background-color--is-even: $common-color-white-200 !default;
+$ipb-vendors-datatables--row--is-odd--background-color: $common-color-white-100 !default;
+$ipb-vendors-datatables--row--is-even--background-color: $common-color-white-200 !default;
+$ipb-vendors-datatables--row--is-selected--color: $common-color-blue-900 !default;
+$ipb-vendors-datatables--row--is-selected--background-color: $common-color-blue-200 !default;
+$ipb-vendors-datatables--row--is-selected--hover--background-color: $common-color-blue-100 !default;
 
 $ipb-vendors-datatables--row-highlight--first-cell--width: 3px !default;
 
@@ -60,10 +63,10 @@ $ipb-vendors-datatables--row-highlight--first-cell--colors:(
 }
 
 .table-striped > tbody > tr{
-  background-color: $ipb-vendors-datatables--row--background-color--is-even;
+  background-color: $ipb-vendors-datatables--row--is-even--background-color;
   cursor: pointer;
   &:nth-of-type(2n+1) {
-    background-color: $ipb-vendors-datatables--row--background-color--is-odd;
+    background-color: $ipb-vendors-datatables--row--is-odd--background-color;
   }
   @each $sColorLabel, $aAttributes in $ipb-vendors-datatables--row-highlight--colors {
     $sBgColor: nth($aAttributes, 1);
@@ -133,4 +136,16 @@ $ipb-vendors-datatables--row-highlight--first-cell--colors:(
 
 .dataTables_length, .dataTables_filter, .dataTables_info {
   @extend %common-font-ral-nor-150;
+}
+
+table.dataTable  {
+  > thead, tbody, tfoot {
+    > tr.selected {
+        background-color: $ipb-vendors-datatables--row--is-selected--background-color;
+        color: $ipb-vendors-datatables--row--is-selected--color;
+      &:hover {
+        background-color: $ipb-vendors-datatables--row--is-selected--hover--background-color;
+      }
+    }
+  }
 }
