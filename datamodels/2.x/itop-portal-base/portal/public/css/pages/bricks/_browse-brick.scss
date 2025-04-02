@@ -103,6 +103,13 @@ $ipb-browse-brick--list-group-item--tree-item-wrapper--padding-bottom: $common-s
 $ipb-browse-brick--list-group--tree--margin: $common-spacing-0 !default;
 $ipb-browse-brick--list-group--tree--background-color: $common-color-white-100 !default;
 
+$ipb-browse-brick--no-item--illustration--max-width: 100% !default;
+$ipb-browse-brick--no-item--illustration--padding-y: $common-spacing-600 !default;
+$ipb-browse-brick--no-item--illustration--padding-x: $common-spacing-500 !default;
+$ipb-browse-brick--no-item--illustration--svg--max-width: $common-size-700 !default;
+
+$ipb-browse-brick--no-item--text--color: $ipb-color-grey-800 !default;
+
 // Common
 .ipb-browse-brick-panel {
   .row {
@@ -380,4 +387,21 @@ $ipb-browse-brick--list-group--tree--background-color: $common-color-white-100 !
 .list-group.tree {
   margin: $ipb-browse-brick--list-group--tree--margin;
   background-color: $ipb-browse-brick--list-group--tree--background-color;
+}
+
+.ipb-browse-brick--no-item--illustration {
+  width: $ipb-browse-brick--no-item--illustration--max-width;
+  display: flex;
+  flex-direction: column;;
+  padding: $ipb-browse-brick--no-item--illustration--padding-y $ipb-browse-brick--no-item--illustration--padding-x;
+  > svg {
+    max-width: $ipb-browse-brick--no-item--illustration--svg--max-width;
+    height: inherit;
+    align-self: center;
+  }
+}
+
+.ipb-browse-brick--no-item--text {
+  color: $ipb-browse-brick--no-item--text--color;
+  @extend %common-font-ral-med-300;
 }

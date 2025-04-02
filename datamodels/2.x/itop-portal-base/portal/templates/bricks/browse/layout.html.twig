@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block pMainContentHolder%}
-	{% if iItemsCount > 0 or sSearchValue is not null %}
+	{% if iItemsCount > 0 or sSearchValue is not empty %}
         {% block bBrowseHeaderContent %}
         {% endblock %}
 		<div class="ipb-panel ipb-browse-brick-panel panel panel-default">
@@ -36,7 +36,8 @@
 	{% else %}
 		<div class="ipb-panel panel panel-default">
 			<div class="ipb-panel--body panel-body">
-				<h3 class="text-center">{{ 'Brick:Portal:Browse:Filter:NoData'|dict_s }}</h3>
+                <div class="ipb-browse-brick--no-item--illustration ipb-svg-illustration--container">{{ source('illustrations/undraw_empty_alternative.svg') }}</div>
+				<h3 class="ipb-browse-brick--no-item--text text-center">{{ 'Brick:Portal:Browse:Filter:NoData'|dict_s }}</h3>
 			</div>
 		</div>
 	{% endif %}
