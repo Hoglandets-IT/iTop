@@ -133,6 +133,7 @@ if (!defined('PORTAL_ID'))
 
 // Env. vars to be used in templates and others
 $_ENV['COMBODO_CURRENT_ENVIRONMENT'] = utils::GetCurrentEnvironment();
+$_ENV['COMBODO_APPROOT'] = APPROOT;
 $_ENV['COMBODO_ABSOLUTE_URL'] = utils::GetAbsoluteUrlAppRoot();
 $_ENV['COMBODO_CONF_APP_ICON_URL'] = MetaModel::GetConfig()->Get('app_icon_url');
 $_ENV['COMBODO_MODULES_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot();
