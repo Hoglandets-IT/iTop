@@ -32,7 +32,7 @@
         {% endif %}
     </div>
 
-    <ul class="nav nav-pills _tabs">
+    <ul class="ipb-tabs nav nav-pills _tabs">
         {% if aTabsValues is defined and aTabsValues|length > 0 %}
             <li{% if sTab == "user-info" %} class="active"{% endif %} data-id="user-info" data-label="{{ 'MyAccount:UserInfo:Tab:Title'|dict_s }}">
                 <a href="{{ app.url_generator.generate('p_user_profile_brick', {'sBrickId': oBrick.GetId(), 'sDisplayMode': '_self', 'sTab': "user-info"}) }}"

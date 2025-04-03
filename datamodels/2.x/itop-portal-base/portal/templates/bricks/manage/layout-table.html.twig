@@ -4,7 +4,7 @@
 
 {% block pMainContentHolder %}
     {% if aGroupingTabsValues|length > 1 %}
-        <ul class="ipb-manage-brick--tabs nav nav-pills grouping_tabs">
+        <ul class="ipb-manage-brick--tabs ipb-tabs nav nav-pills grouping_tabs">
             {% for aGroupingTab in aGroupingTabsValues %}
                 <li{% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %} class="active"{% endif %} data-id="{{ aGroupingTab.value }}" data-label="{{ aGroupingTab.label }}" data-item-count="{{ aGroupingTab.count }}">
                     <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': sDisplayMode, 'sGroupingTab': aGroupingTab.value}) }}"

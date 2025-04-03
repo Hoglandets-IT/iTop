@@ -1,0 +1,55 @@
+$ipb-tabs--tab--border: solid 1px $common-color-grey-400 !default;
+$ipb-tabs--tab--badge--border-radius: $common-border-radius-500 !default;
+$ipb-tabs--tab--badge--padding-y: 3px !default;
+$ipb-tabs--tab--badge--padding-x: 5px !default;
+$ipb-tabs--tab--badge--margin-left: $common-spacing-200 !default;
+
+$ipb-tabs--tab--background-color: $common-color-grey-100 !default;
+$ipb-tabs--tab--color: $common-color-grey-900 !default;
+$ipb-tabs--tab--active--background-color: $common-color-white-100 !default;
+$ipb-tabs--tab--active--badge--background-color: $common-color-grey-200 !default;
+$ipb-tabs--tab--active--indicator--background-color: $common-color-primary-600 !default;
+$ipb-tabs--tab--active--indicator--width: $common-size-150 !default;
+$ipb-tabs--tab--active--indicator--height: $ipb-tabs--tab--active--indicator--width !default;
+$ipb-tabs--tab--active--indicator--margin-right: $common-spacing-300 !default;
+$ipb-tabs--tab--active--indicator--border-radius: $common-border-radius-full !default;
+
+.ipb-tabs.nav-pills > li{
+  > a {
+    display: flex;
+    align-items: center;
+    background-color: $ipb-tabs--tab--background-color;
+    color: $ipb-tabs--tab--color;
+
+    @extend %common-font-ral-med-150;
+
+    > .badge {
+      color: $common-color-grey-900;
+      background-color: transparent;
+      border-radius: $ipb-tabs--tab--badge--border-radius;
+      padding: $ipb-tabs--tab--badge--padding-y $ipb-tabs--tab--badge--padding-x;
+      margin-left: $ipb-tabs--tab--badge--margin-left;
+    }
+
+    border: $ipb-tabs--tab--border;
+    border-bottom: none;
+  }
+
+  &.active > a {
+    background-color: $ipb-tabs--tab--active--background-color;
+
+    &:before {
+      content: " ";
+      display: inline-block;
+      width: $ipb-tabs--tab--active--indicator--width;
+      height: $ipb-tabs--tab--active--indicator--height;
+      margin-right: $ipb-tabs--tab--active--indicator--margin-right;
+      border-radius: $ipb-tabs--tab--active--indicator--border-radius;
+      background-color: $ipb-tabs--tab--active--indicator--background-color;
+    }
+
+    > .badge {
+      background-color: $ipb-tabs--tab--active--badge--background-color;
+    }
+  }
+}
