@@ -76,7 +76,9 @@ We would like to give a special thank you 🤗 to the people from the community 
 
 ### Names
 
+- Al Hallak, Amr (a.k.a [@v4yne1](https://github.com/v4yne1))
 - Alves, David
+- Audon, Florian
 - Beck, Pedro
 - Beer, Christian (a.k.a [@ChristianBeer](https://www.github.com/ChristianBeer))
 - Bilger, Jean-François
@@ -88,20 +90,26 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Colantoni, Maria Laura
 - Couronné, Guy
 - Dejin, Bie (a.k.a [@bdejin](https://github.com/bdejin))
+- Delicado, Elodie
 - Dvořák, Lukáš
 - Goethals, Stefan
 - Giuva, Vincenzo Katriel (a.k.a [@DarkNight97boss](https://github.com/DarkNight97boss))
 - Gumble, David
+- Heloir, Arthur 
+- Janssens, Jelle (a.k.a [@janssensjelle](https://github.com/janssensjelle))
 - Ji, Leeb (冀利斌) (a.k.a [@chileeb](https://github.com/chileeb))
 - Kaltefleiter, Lars (a.k.a [@larhip](https://www.github.com/larhip))
 - Khamit, Shamil
 - Kincel, Martin
 - Konečný, Kamil
 - Kunin, Vladimir
-- Lassiter, Dennis
+- Lassiter, Denis (a.k.a [@delassiter](https://github.com/delassiter))
 - Lazcano, Federico
 - Lucas, Jonathan
 - Malik, Remie
+- Mantel, Ina 
+- Martin, Pierre (a.k.a [@Worty](https://github.com/worty-syn))
+- Melchiorre, Romain
 - Mindêllo de Andrade, Lucas (a.k.a [@rokam](https://www.github.com/rokam))
 - Mozart de Oliveira, Eduardo (a.k.a [@eduardomozart](https://github.com/eduardomozart))
 - Raenker, Martin
@@ -113,10 +121,12 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Seki, Shoji
 - Shilov, Vladimir
 - Stetina, Pavel (a.k.a [@Stetinac](https://github.com/Stetinac))
-- Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya)-stukalov)
+- Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya-stukalov))
 - Tarjányi, Csaba (a.k.a [@tacsaby](https://github.com/tacsaby))
+- Toraya, Chairat (a.k.a [@Kyokito1412](https://github.com/Kyokito1412))
 - Tulio, Marco
 - Turrubiates, Miguel
+- Višnjić, Aldin (a.k.a[@viliald](https://github.com/viliald))
 - Vlk, Karel (a.k.a [@vlk-charles](https://www.github.com/vlk-charles))
 
 ### Aliases
@@ -138,4 +148,6 @@ We would like to give a special thank you 🤗 to the people from the community 
 - [ITOMIG](https://www.itomig.de/)
 - [Pimkie](https://www.pimkie.com/)
 - [Super-Visions](https://www.super-visions.com/)
-
+- [Defence Tech Cyber Security - Malware Lab](https://github.com/DefenceTechSecurity)
+- Orange Cyberdefense
+- MipihSIB
