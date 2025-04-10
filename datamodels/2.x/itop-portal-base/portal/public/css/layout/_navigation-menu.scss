@@ -1,7 +1,12 @@
-@import "../../../../../../node_modules/bulma-scss/utilities/mixins";
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+@import "../node_modules/bulma-scss/utilities/mixins";
 
 $ipb-navigation-menu--flex-column-gap: $common-spacing-300 !default;
-$ipb-navigation-menu--background-color: $common-color-blue-grey-900 !default;
 $ipb-navigation-menu--nav-vertical--width: 60px !default;
 $ipb-navigation-menu--nav-vertical--is-expanded--width: 280px !default;
 $ipb-navigation-menu--nav-horizontal--height: 56px !default;
@@ -14,16 +19,11 @@ $ipb-navigation-menu--menu-entry--wrapper--flex-column-gap: $common-spacing-500 
 $ipb-navigation-menu--menu-entry--size: 44px !default;
 $ipb-navigation-menu--menu-entry--border-radius: $common-border-radius-500 !default;
 $ipb-navigation-menu--menu-entry--padding: $common-spacing-300 !default;
-$ipb-navigation-menu--menu-entry--active--icon--color: $common-color-orange-600 !default;
-$ipb-navigation-menu--menu-entry--active--color: $common-color-grey-800 !default;
-$ipb-navigation-menu--menu-entry--active--background-color: $common-color-white-100 !default;
 $ipb-navigation-menu--menu-entry--icon-size: 28px !default;
 $ipb-navigation-menu--menu-entry--font-size: 2rem !default;
 $ipb-navigation-menu--separator--width: $common-spacing-400 !default;
-$ipb-navigation-menu--menu-entry--more--background-color: #455a6447 !default;
 $ipb-navigation-menu--user-part--flex-column-gap: $common-spacing-300 !default;
 $ipb-navigation-menu--user-card--flex-column-gap: $common-spacing-300;
-$ipb-navigation-menu--user-card--photo--background-color: #585653 !default;
 $ipb-navigation-menu--user-card--photo--size: 36px !default;
 $dropdown-menu--items-remainder--padding: $common-spacing-300 !default;
 $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !default;
@@ -36,7 +36,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
   display: flex;
   flex-direction: column;
   border-radius: 0 $ipb-navigation-menu--border-radius $ipb-navigation-menu--border-radius 0;
-  background-color: $ipb-navigation-menu--background-color;
   column-gap: $ipb-navigation-menu--flex-column-gap;
 
   // in expanded state
@@ -125,16 +124,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
     @include ipb-text-overflow-ellipsis;
     @extend %common-font-ral-nor-200;
   }
-
-  &.active .ipb-navigation-menu--menu-entry {
-    background-color: $ipb-navigation-menu--menu-entry--active--background-color;
-    color: $ipb-navigation-menu--menu-entry--active--color;
-
-    .ipb-navigation-menu--menu-entry--icon {
-      color: $ipb-navigation-menu--menu-entry--active--icon--color;
-    }
-  }
-
 }
 
 // menu entry
@@ -151,7 +140,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
   align-items: center;
   column-gap: $ipb-navigation-menu--menu-entry--wrapper--flex-column-gap;
   border-radius: $ipb-navigation-menu--menu-entry--border-radius;
-  color: whitesmoke;
   @include ipb-transition(#{"background-color, color"});
 
   // entry icon
@@ -161,13 +149,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
     font-size: $ipb-navigation-menu--menu-entry--font-size;
     text-align: center;
   }
-
-  // hover and focus effect
-  &:hover, &:focus:not(.ipb-not-focusable) {
-    color: white;
-    background-color: $common-color-blue-grey-700;
-  }
-
 }
 
 // drop down items remainder
@@ -178,7 +159,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 // drop down menu items remainder
 .ipb-dropdown-menu--items-remainder {
   padding: $dropdown-menu--items-remainder--padding;
-  background-color: $ipb-navigation-menu--background-color;
   border-bottom-left-radius: $dropdown-menu--items-remainder--border-radius;
   border-bottom-right-radius: $dropdown-menu--items-remainder--border-radius;
   -webkit-box-shadow: none;
@@ -195,7 +175,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
   display: flex;
   align-items: center;
   column-gap: $ipb-navigation-menu--user-part--flex-column-gap;
-  background-color: $common-color-grey-800;
   border-radius: 0 0 $ipb-navigation-menu--border-radius 0;
 
   // toggle mobile menu
@@ -213,7 +192,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
   align-items: center;
   justify-content: center;
   @extend %common-font-ral-nor-150;
-  color: white !important;
   text-decoration: none;
   overflow-x: hidden;
 
@@ -226,7 +204,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
     background-size: 100%;
     background-position: center center;
     background-repeat: no-repeat;
-    background-color: $ipb-navigation-menu--user-card--photo--background-color;
     border-radius: 100%;
   }
 
@@ -247,9 +224,7 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
         @include ipb-text-overflow-ellipsis;
       }
     }
-
   }
-
 }
 
 // MOBILE MENU ////////////////////////////////////////////
@@ -267,7 +242,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
   top: $ipb-navigation-menu--nav-horizontal--height;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.28);
   z-index: 9998;
 }
 
@@ -405,7 +379,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
         width: 100%;
         max-height: 0;
         padding: 0 12px;
-        background-color: $ipb-navigation-menu--background-color;
         z-index: 9999;
         @include ipb-transition(max-height, ease, 0.5s);
 
@@ -463,9 +436,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
           @include ipb-toggle-nav-animated-cross;
         }
       }
-
     }
-
   }
-
 }

@@ -1,16 +1,14 @@
-$ipb-dropdown--background-color: $ipb-color-white-100 !default;
-$ipb-dropdown--border:  1px solid $ipb-color-grey-300 !default;
-$ipb-dropdown--border-radius:  $common-border-radius-400 !default;
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
-$ipb-dropdown--li--background-color:  $ipb-dropdown--background-color !default;
+/* SCSS variables (can be overloaded) */
+$ipb-dropdown--border-radius:  $common-border-radius-400 !default;
 
 $ipb-dropdown--a--padding-y:  $common-spacing-400 !default;
 $ipb-dropdown--a--padding-x:  $common-spacing-500 !default;
 $ipb-dropdown--a--border-radius:  $ipb-dropdown--border-radius !default;
-$ipb-dropdown--a--color:  $ipb-color-grey-900 !default;
-
-$ipb-dropdown--li--hover--background-color:  $ipb-color-grey-200 !default;
-$ipb-dropdown--li--hover--a--color:  $ipb-color-grey-800 !default;
 
 $ipb-dropdown--icon--margin-right: $common-spacing-300 !default;
 
@@ -18,12 +16,9 @@ ipb-dropdown {
   display: none;
   position: absolute;
   width: max-content;
-  background: $ipb-dropdown--background-color;
-  border: $ipb-dropdown--border;
   border-radius: $ipb-dropdown--border-radius;
   list-style: none;
   li {
-    background-color: $ipb-dropdown--li--background-color;
     a {
       display: inline-block;
       width: 100%;
@@ -31,13 +26,6 @@ ipb-dropdown {
       border-radius: $ipb-dropdown--a--border-radius;
       cursor: pointer;
       text-decoration: none;
-      color: $ipb-dropdown--a--color;
-    }
-    &:hover {
-      background: $ipb-dropdown--li--hover--background-color;
-      a {
-        color: $ipb-dropdown--li--hover--a--color;
-      }
     }
   }
 }

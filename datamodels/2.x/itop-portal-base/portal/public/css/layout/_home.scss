@@ -1,4 +1,7 @@
-/* SCSS variables */
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 .ipb-home .ipb-page--main-wrapper:before{
   content: '';
@@ -8,8 +11,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../img/backgrounds/dots-left-top.svg");
-  background-size: 30%;
   background-position-y: top;
   background-position-x: left;
   background-repeat: no-repeat;
@@ -24,8 +25,6 @@
   right: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../img/backgrounds/dots-right-bottom.svg");
-  background-size: 30%;
   background-position-y: bottom;
   background-position-x: right;
   background-repeat: no-repeat;

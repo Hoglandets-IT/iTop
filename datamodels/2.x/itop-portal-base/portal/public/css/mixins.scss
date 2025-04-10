@@ -1,6 +1,11 @@
-/* SCSS variables */
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
 $ipb-following-dot--size: $common-size-150 !default;
-$ipb-following-dot--color: $common-color-orange-600 !default;
+$ipb-following-dot--color: $ipb-color-primary-600 !default;
 $ipb-following-dot--margin-top: calc(-1 * #{$ipb-following-dot--size} / 2) !default;
 $ipb-following-dot--margin-bottom: auto !default;
 $ipb-following-dot--margin-x: $common-spacing-300 !default;
@@ -19,7 +24,7 @@ $ipb-following-dot--margin-x: $common-spacing-300 !default;
 }
 
 /* SCSS variables */
-$ipb-heavy-animated-border--border-color: $common-color-blue-grey-700 !default;
+$ipb-heavy-animated-border--border-color: $ipb-color-blue-grey-700 !default;
 $ipb-heavy-animated-border--border-width: $common-size-50 !default;
 $ipb-heavy-animated-border--border-radius: $common-border-radius-500 !default;
 
@@ -45,7 +50,7 @@ $ipb-heavy-animated-border--border-radius: $common-border-radius-500 !default;
 
 
 /* SCSS variables */
-$ipb-toggle-nav--color: white !default;
+$ipb-toggle-nav--color: $ipb-color-white-100 !default;
 
 @mixin ipb-toggle-nav($color:$ipb-toggle-nav--color) {
 
@@ -147,7 +152,7 @@ $ipb-toggle-nav--color: white !default;
 }
 
 /* SCSS variables */
-$ipb-scrollbar--color: $common-color-grey-200 $common-color-blue-grey-800 !default;
+$ipb-scrollbar--color: $ipb-color-grey-200 $ipb-color-blue-grey-800 !default;
 
 @mixin ipb-scrollbar($overflowX:hidden, $overflowY:auto, $scrollbarWidth:thin, $scrollbarColor:$ipb-scrollbar--color) {
   overflow-x: $overflowX;
