@@ -38,7 +38,6 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 
   &[data-role="navigation-trigger"] {
     cursor: pointer;
-    @include ipb-heavy-animated-border;
   }
 }
 
@@ -141,25 +140,16 @@ $ipb-tile--manage-brick--top-list--margin-top: $common-spacing-500 !default;
 /* title */
 
 .ipb-tile--manage .ipb-tile--title {
-
   display: flex;
   align-items: center;
 
-  > span:first-child {
-    @include ipb-text-overflow-ellipsis;
-  }
-
   > span:nth-child(2) {
-    @include ipb-following-dot;
-
     > .class-icon {
       width: 20px;
       margin-left: 5px;
       vertical-align: baseline;
     }
   }
-
-
 }
 
 /* chart */

@@ -42,11 +42,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
   &.ipb-is-expanded {
     width: $ipb-navigation-menu--nav-vertical--is-expanded--width;
 
-    // expand menu toggle animation
-    .ipb-navigation-menu--top-part--toggle--expand-menu {
-      @include ipb-toggle-nav-animated-chevron-right;
-    }
-
     // make menu entry fill available space
     .ipb-navigation-menu--menu-entry--brick-item {
       width: 100%;
@@ -82,11 +77,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 
 }
 
-// expand toggle menu
-.ipb-navigation-menu--top-part--toggle--expand-menu {
-  @include ipb-toggle-nav;
-}
-
 // SEPARATOR ////////////////////////////////////////////
 
 .ipb-navigation-menu--separator {
@@ -101,7 +91,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
   display: flex;
   flex-direction: column;
   padding: 0 $ipb-navigation-menu--middle-part--is-vertical--padding;
-  @include ipb-scrollbar;
 }
 
 // menu entries
@@ -118,10 +107,8 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 
 // entry wrapper
 .ipb-navigation-menu--menu-entry--wrapper {
-
   // entry title
   .ipb-navigation-menu--menu-entry--title {
-    @include ipb-text-overflow-ellipsis;
     @extend %common-font-ral-nor-200;
   }
 }
@@ -140,7 +127,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
   align-items: center;
   column-gap: $ipb-navigation-menu--menu-entry--wrapper--flex-column-gap;
   border-radius: $ipb-navigation-menu--menu-entry--border-radius;
-  @include ipb-transition(#{"background-color, color"});
 
   // entry icon
   .ipb-navigation-menu--menu-entry--icon {
@@ -219,20 +205,11 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
     .ipb-navigation-menu--user-card--name {
       flex-grow: 1;
       overflow-x: hidden;
-
-      > div {
-        @include ipb-text-overflow-ellipsis;
-      }
     }
   }
 }
 
 // MOBILE MENU ////////////////////////////////////////////
-
-// mobile open toggle menu
-.ipb-navigation-menu--user-part--toggle--open-mobile-menu {
-  @include ipb-toggle-nav;
-}
 
 // mobile menu overlay
 .ipb-navigation-menu-overlay {
@@ -380,7 +357,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
         max-height: 0;
         padding: 0 12px;
         z-index: 9999;
-        @include ipb-transition(max-height, ease, 0.5s);
 
         .ipb-navigation-menu--menu-entries {
           margin: 15px 0;
@@ -429,11 +405,6 @@ $dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !defau
 
         .ipb-navigation-menu--middle-part {
           max-height: 100%;
-        }
-
-        // toggle animation
-        .ipb-navigation-menu--user-part--toggle--open-mobile-menu {
-          @include ipb-toggle-nav-animated-cross;
         }
       }
     }

@@ -20,6 +20,9 @@ body{
 
 .ipb-page--main-header--information--title{
   color: $ipb-page--main-header--information--title--color;
+    > span ~ span {
+      @include ipb-following-dot;
+    }
 }
 
 .ipb-page--main-header--information--subtitle {

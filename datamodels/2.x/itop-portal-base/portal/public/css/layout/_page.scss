@@ -51,10 +51,6 @@ body{
 .ipb-page--main-header--information--title{
   font-size: $ipb-page--main-header--information--title--font-size;
   font-weight: bold;
-
-  > span ~ span {
-    @include ipb-following-dot;
-  }
 }
 
 .ipb-page--main-header--information--subtitle{
