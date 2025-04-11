@@ -40,7 +40,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
     'Class:AuditFilterField/Attribute:type/Value:date+'  => 'In Audit rules and Audit categories you can use date Filter Fields.~~',
     'Class:AuditFilterField/Attribute:oql' => 'Query for select~~',
     'Class:AuditFilterField/Attribute:oql+' => 'OQL query defining the set of objects to be selected in audit rules and audit categories~~',
-    'Class:AuditFilterField/Attribute:values' => 'List of avalaible values~~',
+    'Class:AuditFilterField/Attribute:values' => 'List of available values~~',
     'Class:AuditFilterField/Attribute:values+' => ' Defining the list of values to be selected in audit rules and audit categories~~',
     'Class:AuditFilterField/Attribute:oql/Error:Empty' => 'If selected type is "Select defined by OQL", Oql field is mandatory~~',
     'Class:AuditFilterField/Attribute:values/Error:Empty' => 'If selected type is "Select defined by values", Values field is mandatory~~',
