@@ -2134,6 +2134,7 @@ EOF
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
+			$this->CompileCommonProperty('computed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeEnum') {
 			$this->CompileAttributeEnumValues($sModuleRelativeDir, $sClass, $sAttCode, $oField, $aParameters, $sCss);
@@ -2141,6 +2142,7 @@ EOF
 			$this->CompileCommonProperty('sql', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
+			$this->CompileCommonProperty('computed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		} elseif ($sAttType == 'AttributeMetaEnum') {
 			$this->CompileAttributeEnumValues($sModuleRelativeDir, $sClass, $sAttCode, $oField, $aParameters, $sCss);
@@ -2269,6 +2271,7 @@ EOF
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
 			$this->CompileCommonProperty('allowed_values', $oField, $aParameters, $sModuleRelativeDir);
+			$this->CompileCommonProperty('computed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$aParameters['depends_on'] = $sDependencies;
 		}
 
@@ -2413,7 +2416,19 @@ EOF
 					}
 					$aParameters['thresholds'] = 'array('.implode(', ', $aThresholds).')';
 					break;
+				case 'computed':
+					$oComputed = $oField->GetOptionalElement('computed');
+					if(is_null($oComputed)) {
+						break;
+					}
 
+					$sExpression = self::QuoteForPHP($oComputed->GetChildText('expression'));
+					if(is_null($sExpression) || $sExpression === '') {
+						throw new DOMFormatException("missing (or empty) mandatory tag expression under the tag '".$oField->nodeName."'");
+					}
+
+					$aParameters['expression'] = $sExpression;
+					break;
 				default:
 					return false;
 			}

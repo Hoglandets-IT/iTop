@@ -181,6 +181,23 @@ abstract class AttributeDefinition
 		return $this->GetSearchType() != static::SEARCH_WIDGET_TYPE_RAW;
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function IsComputed()
+	{
+		return $this->IsParam('expression');
+	}
+
+	/**
+	 * @return array
+	 * @throws \OQLException
+	 */
+	protected function GetComputedPrerequisiteAttributes(): array {
+		$oExpression = Expression::FromOQL($this->m_aParams['expression']);
+		return $oExpression->ListRequiredFields();
+	}
+
 	/** @var string */
 	protected $m_sCode;
 	/** @var array */
@@ -2717,7 +2734,11 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return $this->Get("depends_on");
+		$aPrerequisiteAttributes = $this->Get("depends_on");
+		if($this->HasParam('expression')) {
+			$aPrerequisiteAttributes = array_merge($aPrerequisiteAttributes, $this->GetComputedPrerequisiteAttributes());
+		}
+		return $aPrerequisiteAttributes;
 	}
 
 	public static function IsBasedOnDBColumns()
@@ -2732,7 +2753,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function IsWritable()
 	{
-		return !$this->IsMagic();
+		return !$this->IsMagic() && !$this->IsComputed();
 	}
 
 	public function GetSQLExpr()

@@ -2661,7 +2661,6 @@ abstract class MetaModel
 	 */
 	public static function GetAttributeFlags($sClass, $sState, $sAttCode)
 	{
-		$iFlags = 0; // By default (if no life cycle) no flag at all
 		if (self::HasLifecycle($sClass)) {
 			$aStates = MetaModel::EnumStates($sClass);
 			if (!array_key_exists($sState, $aStates)) {

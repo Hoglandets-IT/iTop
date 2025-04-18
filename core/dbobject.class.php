@@ -708,6 +708,8 @@ abstract class DBObject implements iDisplay
 
 		$this->UpdateMetaAttributes(array($sAttCode));
 
+		$this->UpdateDependentComputedAttributes($sAttCode);
+
 		// The object has changed, reset caches
 		$this->m_bCheckStatus = null;
 
@@ -6991,6 +6993,24 @@ abstract class DBObject implements iDisplay
 	public function HasContextSection(string $sSection): bool
 	{
 		return array_key_exists($sSection, $this->aContext);
+	}
+
+	/**
+	 * @param string $sAttCode
+	 *
+	 * @return void
+	 * @throws CoreException
+	 * @throws OQLException
+	 */
+	private function UpdateDependentComputedAttributes(string $sAttCode): void
+	{
+		foreach (MetaModel::GetDependentAttributes(get_class($this), $sAttCode) as $sCode) {
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sCode);
+			if ($oAttDef->IsComputed()) {
+				$oExpression = Expression::FromOQL($oAttDef->GetParams()['expression']);
+				$this->_Set($sCode, $this->EvaluateExpression($oExpression));
+			}
+		}
 	}
 }
 
