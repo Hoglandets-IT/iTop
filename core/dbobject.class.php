@@ -706,9 +706,9 @@ abstract class DBObject implements iDisplay
 		}
 		$this->_Set($sAttCode, $realvalue);
 
-		$this->UpdateMetaAttributes(array($sAttCode));
-
 		$this->UpdateDependentComputedAttributes($sAttCode);
+
+		$this->UpdateMetaAttributes(array($sAttCode));
 
 		// The object has changed, reset caches
 		$this->m_bCheckStatus = null;
@@ -7001,6 +7001,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @throws CoreException
 	 * @throws OQLException
+	 * @throws Exception
 	 */
 	private function UpdateDependentComputedAttributes(string $sAttCode): void
 	{
@@ -7008,7 +7009,11 @@ abstract class DBObject implements iDisplay
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sCode);
 			if ($oAttDef->IsComputed()) {
 				$oExpression = Expression::FromOQL($oAttDef->GetParams()['expression']);
-				$this->_Set($sCode, $this->EvaluateExpression($oExpression));
+				$value = $this->EvaluateExpression($oExpression);
+				$aAllowedValues = $oAttDef->GetAllowedValues();
+				if(is_null($aAllowedValues) || in_array($value, $aAllowedValues)) {
+					$this->_Set($sCode, $oAttDef->MakeRealValue($value, $this));
+				} ;
 			}
 		}
 	}

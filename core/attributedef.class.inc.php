@@ -2735,7 +2735,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
 		$aPrerequisiteAttributes = $this->Get("depends_on");
-		if($this->HasParam('expression')) {
+		if($this->IsComputed()) {
 			$aPrerequisiteAttributes = array_merge($aPrerequisiteAttributes, $this->GetComputedPrerequisiteAttributes());
 		}
 		return $aPrerequisiteAttributes;
@@ -2983,14 +2983,12 @@ class AttributeInteger extends AttributeDBField
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
+		if (is_null($proposedValue) || $proposedValue === '')
 		{
 			return null;
+		} elseif(gettype($proposedValue) !== 'integer') {
+			IssueLog::Warning("Trying to set integer attribute ".$this->GetCode()." to type".gettype($proposedValue)".");
 		}
-		if ($proposedValue === '')
-		{
-			return null;
-		} // 0 is transformed into '' !
 
 		return (int)$proposedValue;
 	}
