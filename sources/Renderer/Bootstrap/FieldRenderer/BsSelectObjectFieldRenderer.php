@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use ApplicationContext;
+use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use Combodo\iTop\Renderer\RenderingOutput;
 use ContextTag;
 use CoreException;
@@ -29,6 +30,7 @@ use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use ModuleDesign;
 use utils;
 
 /**
@@ -103,8 +105,15 @@ class BsSelectObjectFieldRenderer extends BsFieldRenderer
 					$oOutput->AddHtml('<div class="col-xs-' . ( $this->oField->GetHierarchical() ? 10 : 12 ) . ' col-sm-' . ( $this->oField->GetHierarchical() ? 9 : 12 ) . ' col-md-' . ( $this->oField->GetHierarchical() ? 10 : 12 ) . '">');
 					$oOutput->AddHtml('<select id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" class="form-control">');
 					$oOutput->AddHtml('<option value="">')->AddHtml(Dict::S('UI:SelectOne'), false)->AddHtml('</option>');
-					// - Retrieving choices
-					$oChoicesSet = new DBObjectSet($oSearch);
+
+                     if (defined('PORTAL_ID'))
+                    {
+                        $oModuleDesign = new ModuleDesign(PORTAL_ID);
+                        $oScopeValidatorHelper = new ScopeValidatorHelper($oModuleDesign, PORTAL_ID);
+                        $oScopeValidatorHelper->AddScopeToQuery($oSearch, $oSearch->GetClass());
+                    }
+
+                    $oChoicesSet = new DBObjectSet($oSearch);
 					$oChoicesSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 					while ($oChoice = $oChoicesSet->Fetch())
 					{
