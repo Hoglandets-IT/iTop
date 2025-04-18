@@ -2987,7 +2987,7 @@ class AttributeInteger extends AttributeDBField
 		{
 			return null;
 		} elseif(gettype($proposedValue) !== 'integer') {
-			IssueLog::Warning("Trying to set integer attribute ".$this->GetCode()." to type".gettype($proposedValue)".");
+			IssueLog::Warning("Trying to set integer attribute ".$this->GetCode()." to type".gettype($proposedValue).".");
 		}
 
 		return (int)$proposedValue;
