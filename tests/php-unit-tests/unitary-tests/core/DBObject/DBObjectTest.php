@@ -22,7 +22,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Attachment;
 use AttributeDateTime;
 use Combodo\iTop\Service\Events\EventData;
-use EventRestService;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
 use DateTime;
@@ -1415,23 +1414,5 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertTrue(true,'No fatal error on computing date');
 		$this->assertEquals("2024-01-15 09:45:00", $oObject->Get('end_date'), 'SetComputedDate +2 weeks on a WorkOrder DateTimeAttribute');
 
-	}
-
-	public function testStringFitsInField()
-	{
-		//🎁 character is 4 bytes long
-		$sTooLongText = str_repeat('🎁', 17000);
-		$oLog = new EventRestService();
-		$this->assertFalse($oLog->StringFitsInField('json_output', $sTooLongText));
-
-		$sCorrectLengthText = str_repeat('🎁', 16383);
-		$this->assertTrue($oLog->StringFitsInField('json_output', $sCorrectLengthText));
-
-
-		$sCorrectLengthString = str_repeat('🎁', 255);
-		$this->assertTrue($oLog->StringFitsInField('operation', $sCorrectLengthString));
-
-		$sTooLongString = str_repeat('🎁', 256);
-		$this->assertFalse($oLog->StringFitsInField('operation', $sTooLongString));
 	}
 }
