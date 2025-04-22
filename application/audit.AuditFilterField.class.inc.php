@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 
 
 /**
@@ -33,16 +34,6 @@ class AuditFilterField extends cmdbAbstractObject
             'db_table'            => 'priv_auditfilterfield',
             'db_key_field'        => 'id',
             'db_finalclass_field' => '',
-            'uniqueness_rules'    => array(
-                'no_duplicate' => array(
-                    'attributes'  => array(
-                        0 => 'placeholder',
-                    ),
-                    'filter'      => '',
-                    'disabled'    => false,
-                    'is_blocking' => true,
-                ),
-            ),
             'style'               => new ormStyle(null, null, null, null, null, '../images/icons/icons8-audit-filtre.svg'),
         );
         MetaModel::Init_Params($aParams);
@@ -51,6 +42,10 @@ class AuditFilterField extends cmdbAbstractObject
         MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum("select_oql,select_values,number,date" , true), "display_style"=>'list', "sql"=>'type', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
         MetaModel::Init_AddAttribute(new AttributeOQL("oql", array("allowed_values" => null, "sql" => "oql", "default_value" => "", "is_null_allowed" => true, "depends_on" => array())));
         MetaModel::Init_AddAttribute(new AttributeString("values", array("allowed_values" => null, "sql" => "values", "default_value" => "", "is_null_allowed" => true, "depends_on" => array())));
+
+
+	    MetaModel::Init_AddAttribute(new AttributeExternalKey("auditdomain_id", array("targetclass" => "AuditDomain", "jointype" => null, "allowed_values" => null, "sql" => "auditdomain_id", "is_null_allowed" => false, "on_target_delete" => DEL_SILENT, "depends_on" => array(),	    )));
+	    MetaModel::Init_AddAttribute(new AttributeExternalField("auditdomain_name", array("allowed_values" => null, "extkey_attcode" => 'auditdomain_id', "target_attcode" => 'name', "always_load_in_tables" => false)));
 
         // Display lists
         MetaModel::Init_SetZListItems('details', array('label', 'placeholder', 'type', 'oql', 'values')); // Attributes to be displayed for the complete details

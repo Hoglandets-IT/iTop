@@ -763,6 +763,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'Všechny kategorie',
 	'UI:Audit:Interactive:Button:Back' => 'Návrat k auditu',
 	'UI:Audit:Interactive:Button:Configuration' => 'Nastavení Auditu',
+	'UI:Audit:Interactive:Button:Run' => 'Run the audit~~',
 	'UI:Audit:ViewRules' => 'Kontrola pravidel',
 	'UI:Audit:HeaderAuditRule' => 'Pravidlo auditu',
 	'UI:Audit:HeaderNbObjects' => 'Počet objektů',

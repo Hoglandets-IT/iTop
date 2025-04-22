@@ -770,6 +770,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'All categories~~',
 	'UI:Audit:Interactive:Button:Back' => 'Back to the audit~~',
 	'UI:Audit:Interactive:Button:Configuration' => 'Audit configuration~~',
+	'UI:Audit:Interactive:Button:Run' => 'Run the audit~~',
 	'UI:Audit:ViewRules' => 'Check the rules~~',
 	'UI:Audit:HeaderAuditRule' => '監査ルール',
 	'UI:Audit:HeaderNbObjects' => 'オブジェクト数',

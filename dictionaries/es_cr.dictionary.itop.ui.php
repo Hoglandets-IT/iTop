@@ -761,6 +761,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'Todas las categorias',
 	'UI:Audit:Interactive:Button:Back' => 'Volver a la auditoría',
 	'UI:Audit:Interactive:Button:Configuration' => 'Configuración de auditoría',
+	'UI:Audit:Interactive:Button:Run' => 'Run the audit~~',
 	'UI:Audit:ViewRules' => 'Revisar las reglas',
 	'UI:Audit:HeaderAuditRule' => 'Reglas de Auditoría',
 	'UI:Audit:HeaderNbObjects' => '# Objetos',

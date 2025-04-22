@@ -777,6 +777,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'Toutes les catégories',
 	'UI:Audit:Interactive:Button:Back' => 'Retour à l\'audit',
 	'UI:Audit:Interactive:Button:Configuration' => 'Configurer l\'audit',
+	'UI:Audit:Interactive:Button:Run' => 'Lancer l\'audit',
 	'UI:Audit:ViewRules' => 'Vérifier les régles d\'audit',
 	'UI:Audit:HeaderAuditRule' => 'Règle d\'audit',
 	'UI:Audit:HeaderNbObjects' => 'Nb d\'Objets',

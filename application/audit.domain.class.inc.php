@@ -51,11 +51,11 @@ class AuditDomain extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("description" => "Short name for this category", "allowed_values" => null, "sql" => "name", "default_value" => "", "is_null_allowed" => false, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values" => null, "sql" => "description", "default_value" => "", "is_null_allowed" => true, "depends_on" => array())));
 		MetaModel::Init_AddAttribute(new AttributeImage("icon", array("is_null_allowed" => true, "depends_on" => array(), "display_max_width" => 96, "display_max_height" => 96, "storage_max_width" => 256, "storage_max_height" => 256, "default_image" => null, "always_load_in_tables" => false)));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("categories_list",
-			array("linked_class" => "lnkAuditCategoryToAuditDomain", "ext_key_to_me" => "domain_id", "ext_key_to_remote" => "category_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("categories_list", array("linked_class" => "lnkAuditCategoryToAuditDomain", "ext_key_to_me" => "domain_id", "ext_key_to_remote" => "category_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSet("filterfield_list", array("linked_class"=>"AuditFilterField", "ext_key_to_me"=>"auditdomain_id", "allowed_values"=>null, "count_min"=>0, "count_max"=>5,"edit_mode"=>LINKSET_EDITMODE_INPLACE, "depends_on"=>array(), "tracking_level"=>LINKSET_TRACKING_ALL)));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'icon', 'categories_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('name', 'description', 'icon', 'categories_list', 'filterfield_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('description',)); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description')); // Criteria of the std search form

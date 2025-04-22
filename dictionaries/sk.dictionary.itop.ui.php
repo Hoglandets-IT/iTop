@@ -771,6 +771,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'All categories~~',
 	'UI:Audit:Interactive:Button:Back' => 'Back to the audit~~',
 	'UI:Audit:Interactive:Button:Configuration' => 'Audit configuration~~',
+	'UI:Audit:Interactive:Button:Run' => 'Run the audit~~',
 	'UI:Audit:ViewRules' => 'Check the rules~~',
 	'UI:Audit:HeaderAuditRule' => 'Pravidlo auditu',
 	'UI:Audit:HeaderNbObjects' => '# Objekty',

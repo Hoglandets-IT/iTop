@@ -763,6 +763,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'Alle categorieën',
 	'UI:Audit:Interactive:Button:Back' => 'Terug naar de audit',
 	'UI:Audit:Interactive:Button:Configuration' => 'Audit configuratie',
+	'UI:Audit:Interactive:Button:Run' => 'Run the audit~~',
 	'UI:Audit:ViewRules' => 'Check the rules~~',
 	'UI:Audit:HeaderAuditRule' => 'Auditregel',
 	'UI:Audit:HeaderNbObjects' => '# objecten',

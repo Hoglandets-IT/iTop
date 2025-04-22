@@ -12,6 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Text\Text;
@@ -22,6 +23,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\CSVPage;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Adds the context parameters to the audit rule query
@@ -151,212 +153,526 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext, $aParam
 }
 
 
+/**
+ * @param \Combodo\iTop\Application\WebPage\iTopWebPage $oP
+ * @param string $sSubTitle
+ * @param \DBObjectSet $oCategoriesSet
+ * @param string $sAddingParams
+ * @param array $aFilterParams
+ * @param \ApplicationContext $oAppContext
+ * @param mixed $currentOrganization
+ *
+ * @return array
+ * @throws \ArchivedObjectException
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \DictExceptionMissingString
+ * @throws \MySQLException
+ */
+function DisplayAuditResult(WebPage $oP, string $sSubTitle, DBObjectSet $oCategoriesSet, ApplicationContext $oAppContext, int $sDomainKey = null, string $sAddingParams = '', array $aFilterParams = []): array
+{
+	$oP->AddUiBlock(TitleUIBlockFactory::MakeNeutral($sSubTitle));
+
+	$oTotalBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-audit.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsAudited'));
+	$oErrorBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-delete.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsInError'));
+	$oWorkingBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-checkmark.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsValidated'));
+
+	$aCSSClasses = ['ibo-dashlet--is-inline', 'ibo-dashlet-badge'];
+
+	$oDashletContainerTotal = new DashletContainer();
+	$oDashletContainerError = new DashletContainer();
+	$oDashletContainerWorking = new DashletContainer();
+
+	$oDashletContainerTotal->AddSubBlock($oTotalBlock)->AddCSSClasses($aCSSClasses);
+	$oDashletContainerError->AddSubBlock($oErrorBlock)->AddCSSClasses($aCSSClasses);
+	$oDashletContainerWorking->AddSubBlock($oWorkingBlock)->AddCSSClasses($aCSSClasses);
+
+	$oDashboardRow = new DashboardRow();
+
+	$oDashboardColumnTotal = new DashboardColumn(false, true);
+	$oDashboardColumnError = new DashboardColumn(false, true);
+	$oDashboardColumnWorking = new DashboardColumn(false, true);
+
+	$oDashboardColumnTotal->AddUIBlock($oDashletContainerTotal);
+	$oDashboardColumnError->AddUIBlock($oDashletContainerError);
+	$oDashboardColumnWorking->AddUIBlock($oDashletContainerWorking);
+
+	$oDashboardRow->AddDashboardColumn($oDashboardColumnTotal);
+	$oDashboardRow->AddDashboardColumn($oDashboardColumnError);
+	$oDashboardRow->AddDashboardColumn($oDashboardColumnWorking);
+
+	$oDashboardRow->AddCSSClass('ibo-audit--dashboard');
+
+	$oP->AddUiBlock($oDashboardRow);
+
+	$aAuditCategoryPanels = [];
+	/** @var AuditCategory $oAuditCategory */
+	while ($oAuditCategory = $oCategoriesSet->fetch()) {
+		$oAuditCategoryPanelBlock = new Panel($oAuditCategory->GetName());
+		$oAuditCategoryPanelBlock->SetIsCollapsible(true);
+		// Create toolbar and add it to panel
+		$oToolbar = \Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory::MakeForButton();
+		$oAuditCategoryPanelBlock->AddToolbarBlock($oToolbar);
+		// Add a button in the above toolbar
+		$sAuditCategoryClass = get_class($oAuditCategory);
+		if (UserRights::IsActionAllowed($sAuditCategoryClass, UR_ACTION_READ)) {
+			$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-wrench fa-lg', Dict::S('UI:Audit:ViewRules'), ApplicationContext::MakeObjectUrl($sAuditCategoryClass, $oAuditCategory->GetKey()).$sAddingParams.'&#ObjectProperties=tab_ClassAuditCategoryAttributerules_list'),);
+		}
+		$aResults = array();
+		try {
+			$iCount = 0;
+			$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'), $aFilterParams);
+			$oDefinitionFilter->UpdateContextFromUser();
+			FilterByContext($oDefinitionFilter, $oAppContext);
+
+			$aObjectsWithErrors = array();
+			$oAppContext = new ApplicationContext();
+			$sCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
+			if (!empty($sCurrentOrganization)) {
+				if (MetaModel::IsValidFilterCode($oDefinitionFilter->GetClass(), 'org_id')) {
+					$oDefinitionFilter->AddCondition('org_id', $sCurrentOrganization, '=');
+				}
+			}
+			$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
+			$iCount = $oDefinitionSet->Count();
+			$oRulesFilter = new DBObjectSearch('AuditRule');
+			$oRulesFilter->AddCondition('category_id', $oAuditCategory->GetKey(), '=');
+			foreach ($aFilterParams as $sFieldName => $sCurrentValue) {
+				$oRulesFilter->AddInternalParam($sFieldName, $sCurrentValue);
+			}
+
+
+
+			$oRulesSet = new DBObjectSet($oRulesFilter);
+			while ($oAuditRule = $oRulesSet->fetch()) {
+				$aRow = array();
+				$aRow['description'] = $oAuditRule->GetName();
+				if ($iCount == 0) {
+					// nothing to check, really !
+					$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&domain=".$sDomainKey."&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams."\">0</a>";
+					$aRow['percent_ok'] = '100.00';
+					$aRow['class'] = $oAuditCategory->GetReportColor($iCount, 0);
+				} else {
+					try {
+						$oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext, $aFilterParams);
+						$aErrors = $oFilter->SelectAttributeToArray('id');
+						$iErrorsCount = count($aErrors);
+						foreach ($aErrors as $aErrorRow) {
+							$aObjectsWithErrors[$aErrorRow['id']] = true;
+						}
+						$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&domain=".$sDomainKey."&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams."&".$oAppContext->GetForLink()."\"><img src=\"".utils::GetAbsoluteUrlAppRoot()."images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>";
+						$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
+						$aRow['class'] = $oAuditCategory->GetReportColor($iCount, $iErrorsCount);
+					}
+					catch (Exception $e) {
+						$aRow['nb_errors'] = Dict::S('UI:Audit:OqlError');
+						$aRow['percent_ok'] = Dict::S('UI:Audit:Error:ValueNA');
+						$aRow['class'] = 'red';
+						$sMessage = Dict::Format('UI:Audit:ErrorIn_Rule_Reason', $oAuditRule->GetHyperlink(), $e->getMessage());
+
+						$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Audit:ErrorIn_Rule'), $sMessage);
+						$oErrorAlert->AddCSSClass('ibo-audit--error-alert');
+						$oP->AddUiBlock($oErrorAlert);
+					}
+				}
+				$aResults[] = $aRow;
+			}
+			$iTotalErrors = count($aObjectsWithErrors);
+			$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
+			$sClass = $oAuditCategory->GetReportColor($iCount, $iTotalErrors);
+
+			$oTotalBlock->SetCount((int)$oTotalBlock->GetCount() + ($iCount));
+			$oErrorBlock->SetCount((int)$oErrorBlock->GetCount() + $iTotalErrors);
+			$oWorkingBlock->SetCount((int)$oWorkingBlock->GetCount() + ($iCount - $iTotalErrors));
+			$oAuditCategoryPanelBlock->SetSubTitle(Dict::Format('UI:Audit:AuditCategory:Subtitle', $iTotalErrors, $iCount, $sOverallPercentOk));
+
+		}
+		catch (Exception $e) {
+			$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), utils::HtmlEntities($e->getMessage()));
+			$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Audit:ErrorIn_Category'), $sMessage);
+			$oErrorAlert->AddCSSClass('ibo-audit--error-alert');
+			$oP->AddUiBlock($oErrorAlert);
+			continue;
+		}
+
+		$oAuditCategoryPanelBlock->SetColorFromColorSemantic($sClass);
+		$oAuditCategoryPanelBlock->AddCSSClass('ibo-audit--audit-category--panel');
+		$aData = [];
+		foreach ($aResults as $aRow) {
+			$aData[] = array(
+				'audit_rule'    => $aRow['description'],
+				'nb_err'        => $aRow['nb_errors'],
+				'percentage_ok' => $aRow['percent_ok'],
+				'@class'        => 'ibo-is-'.$aRow['class'].'',
+			);
+		}
+
+		$aAttribs = array(
+			'audit_rule'    => array('label' => Dict::S('UI:Audit:HeaderAuditRule'), 'description' => Dict::S('UI:Audit:HeaderAuditRule')),
+			'nb_err'        => array('label' => Dict::S('UI:Audit:HeaderNbErrors'), 'description' => Dict::S('UI:Audit:HeaderNbErrors')),
+			'percentage_ok' => array('label' => Dict::S('UI:Audit:PercentageOk'), 'description' => Dict::S('UI:Audit:PercentageOk')),
+		);
+
+		$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData, null, [], "", array('pageLength' => -1));
+		$oAuditCategoryPanelBlock->AddSubBlock($oAttachmentTableBlock);
+		$aAuditCategoryPanels[] = $oAuditCategoryPanelBlock;
+	}
+	foreach ($aAuditCategoryPanels as $oAuditCategoryPanel) {
+		$oP->AddUiBlock($oAuditCategoryPanel);
+	}
+
+	return array($oDefinitionFilter, $e);
+}
+
 try
 {
     require_once('../approot.inc.php');
     require_once(APPROOT.'/application/application.inc.php');
     require_once(APPROOT.'/application/startup.inc.php');
-    IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
+    IssueLog::Error('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
     $bSelectionAuditRulesByDefault = utils::GetConfig()->Get('audit.enable_selection_landing_page');
     $operation = utils::ReadParam('operation', $bSelectionAuditRulesByDefault ? 'selection' : 'audit');
-    $sOQL = 'SELECT AuditFilterField';
-    $oSearch = DBObjectSearch::FromOQL($sOQL);
-    $oAuditFilterSet = new DBObjectSet($oSearch, array(), array());
-    $bHasAudiFilter= ($oAuditFilterSet->Count()>0) ;
-    $oAuditFilterSet->Rewind();
-    $oAppContext = new ApplicationContext();
 
-    require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-    LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-    $oP = new iTopWebPage(Dict::S('UI:Audit:Title'));
+	$oAppContext = new ApplicationContext();
 
-    switch($operation)
-    {
-        case 'csv':
-            $oP->DisableBreadCrumb();
-            // Big result sets cause long OQL that cannot be passed (serialized) as a GET parameter
-            // Therefore we don't use the standard "search_oql" operation of UI.php to display the CSV
-            $iCategory = utils::ReadParam('category', '');
-            $iRuleIndex = utils::ReadParam('rule', 0);
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-            $aFilterParams = [];
-            $sAddingParams = '';
-            if ($bHasAudiFilter) {
-                while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
-                    $sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
-                    $sAddingParams .= '&'.$oAuditFilter->Get('placeholder').'='.$sCurrentValue;
-                    $aFilterParams[$oAuditFilter->Get('placeholder')] = $sCurrentValue;
-                }
-            }
+	if ($operation ==  'calculate') {
+		IssueLog::Error($operation);
+		$oP = new AjaxPage(Dict::S('UI:Audit:Title'));
 
-            $oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
-            $oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'),$aFilterParams);
-            $oDefinitionFilter->UpdateContextFromUser();
-            FilterByContext($oDefinitionFilter, $oAppContext);
-            $oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-            $oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext, $aFilterParams);
-            $oErrorObjectSet = new CMDBObjectSet($oFilter);
-            $oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
-            $sFileName = utils::ReadParam('filename', null, true, 'string');
-            $bAdvanced = utils::ReadParam('advanced', false);
-            $sAdvanced = $bAdvanced ? '&advanced=1' : '';
+		$sDomainKey = utils::ReadParam('domain', '');
+		$oAuditDomain = MetaModel::GetObject('AuditDomain', $sDomainKey);
+		$oAuditFilterSet = $oAuditDomain->Get('filterfield_list');
 
-            if ($sFileName != null)
-            {
-                $oP = new CSVPage("iTop - Export");
-                $sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
-                $sCSVData = cmdbAbstractObject::GetSetAsCSV($oErrorObjectSet, array('localize_values' => true, 'fields_advanced' => $bAdvanced), $sCharset);
-                if ($sCharset == 'UTF-8')
-                {
-                    $sOutputData = UTF8_BOM.$sCSVData;
-                }
-                else
-                {
-                    $sOutputData = $sCSVData;
-                }
-                if ($sFileName == '')
-                {
-                    // Plain text => Firefox will NOT propose to download the file
-                    $oP->add_header("Content-type: text/plain; charset=$sCharset");
-                }
-                else
-                {
-                    $sCSVName = basename($sFileName); // pseudo sanitization, just in case
-                    // Force the name of the downloaded file, since windows gives precedence to the extension over of the mime type
-                    $oP->add_header("Content-disposition: attachment; filename=\"$sCSVName\"");
-                    $oP->add_header("Content-type: text/csv; charset=$sCharset");
-                }
-                $oP->add($sOutputData);
-                $oP->TrashUnexpectedOutput();
-                $oP->output();
-                exit;
-            } else {
-                $sTitle = Dict::S('UI:Audit:AuditErrors');
-                $oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
+			$sCurrentValue = utils::ReadPostedParam($oAuditFilter->Get('placeholder'), '');
+			$sAddingParams .= '&'.$oAuditFilter->Get('placeholder').'='.$sCurrentValue;
+			$aFilterParams[$oAuditFilter->Get('placeholder')] = $sCurrentValue;
+		}
+		IssueLog::Error($sAddingParams);
+		$oCategoriesSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditCategory AS c JOIN lnkAuditCategoryToAuditDomain AS lnk ON lnk.category_id = c.id WHERE lnk.domain_id = :domain", array('domain' => $oAuditDomain->GetKey())));
+		$sDomainName = $oAuditDomain->GetName();
+		$sSubTitle = Dict::Format('UI:Audit:Interactive:Domain:SubTitle', $sDomainName);
+		DisplayAuditResult($oP, $sSubTitle, $oCategoriesSet, $oAppContext, $sDomainKey, $sAddingParams, $aFilterParams);
+		$oP->output();
+	} else {
 
-			    $oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
-                $oP->AddUiBlock($oBackButton);
-                $oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
+		$oP = new iTopWebPage(Dict::S('UI:Audit:Title'));
 
-                $sBlockId = 'audit_errors';
-                $oP->p("<div id=\"$sBlockId\">");
-                $oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'csv', array('show_obsolete_data' => true));
-                $oBlock->Display($oP, 1);
-                $oP->p("</div>");
-                // Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
-                $oP->add_ready_script(" $('#1>textarea').height(400);"); // adjust the size of the block
-                $sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams;
-                $oDownloadButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
+		switch ($operation) {
+			case 'csv':
+				$oP->DisableBreadCrumb();
+				// Big result sets cause long OQL that cannot be passed (serialized) as a GET parameter
+				// Therefore we don't use the standard "search_oql" operation of UI.php to display the CSV
+				$iCategory = utils::ReadParam('category', '');
+				$iRuleIndex = utils::ReadParam('rule', 0);
 
-                $oP->add_ready_script("$('a[href*=\"webservices/export.php?expression=\"]').attr('href', '".$sExportUrl."&filename=audit.csv".$sAdvanced."');");
-                $oP->add_ready_script("$('#1 :checkbox').removeAttr('onclick').on('click', function() { var sAdvanced = ''; if (this.checked) sAdvanced = '&advanced=1'; window.location.href='$sExportUrl'+sAdvanced; } );");
-            }
-            break;
+				$sFilterText = "";
+				$aFilterParams = [];
+				$sAddingParams = '';
+				$sDomainKey = utils::ReadParam('domain', '');
+				if(!is_null($sDomainKey)) {
+					$oAuditDomain = MetaModel::GetObject('AuditDomain', $sDomainKey);
+					$oAuditFilterSet = $oAuditDomain->Get('filterfield_list');
 
-        case 'errors':
-            $sTitle = Dict::S('UI:Audit:AuditErrors');
-            $iCategory = utils::ReadParam('category', '');
-            $iRuleIndex = utils::ReadParam('rule', 0);
+					while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
+						$sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
+						$sAddingParams .= '&' . $oAuditFilter->Get('placeholder') . '=' . $sCurrentValue;
+						$aFilterParams[$oAuditFilter->Get('placeholder')] = $sCurrentValue;
+						try {
+							$sName = '';
+							if (utils::IsNotNullOrEmptyString($oAuditFilter->Get('oql'))) {
+								$oSearch = new DBObjectSet(DBObjectSearch::FromOQL($oAuditFilter->Get('oql')));
+								$sClass = $oSearch->GetClass();
+								$oObject = MetaModel::GetObject($sClass, $sCurrentValue);
+								$sName = $oObject->GetName();
+							} else {//this is a list of values
+								$sName = $sCurrentValue;//$oAuditFilter->Get('values')[$sCurrentValue];
+							}
+							$sFilterText .= '<li>' . $oAuditFilter->Get('label') . ': ' . $sName . '</li>';
+						} catch (Exception $e) {
+							$sFilterText .= '<li> no '.$oAuditFilter->Get('label').' filter' . '</li>';
+						}
 
-            $aFilterParams = [];
-            $sAddingParams = '';
-            $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:FilterList'));
-            if ($bHasAudiFilter) {
-                while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
-                    $sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
-                    $sAddingParams .= "&".$oAuditFilter->Get('placeholder')."=$sCurrentValue";
-                    $aFilterParams[$oAuditFilter->Get('placeholder')] = $sCurrentValue;
-                    $sName = '';
-                    if (utils::IsNotNullOrEmptyString($oAuditFilter->Get('oql'))) {
-                        $oSearch = new DBObjectSet(DBObjectSearch::FromOQL($oAuditFilter->Get('oql')));
-                        $sClass = $oSearch->GetClass();
-                        $oObject = MetaModel::GetObject($sClass, $sCurrentValue);
-                        $sName = $oObject->GetName();
-                    } else {//this is a list of values
-                        $sName = $oAuditFilter->Get('values')[$sCurrentValue];
-                    }
-                    $sFilterText .= '<li>'.$oAuditFilter->Get('label').': '.$sName.'</li>';
-                }
-                $oPanel->AddSubBlock(new Html($sFilterText.'</ul>'));
-            }
+					}
 
-            $oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
-            $oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'), $aFilterParams);
-            $oDefinitionFilter->UpdateContextFromUser();
-            FilterByContext($oDefinitionFilter, $oAppContext);
-            $oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-            $oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext,$aFilterParams);
-            $oErrorObjectSet = new CMDBObjectSet($oFilter);
-            $oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
-            $sDescription = get_class($oAuditRule).": ".$oAuditRule->GetName();
-            $oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, $sDescription, '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+				}
+				$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
+				$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'), $aFilterParams);
+				$oDefinitionFilter->UpdateContextFromUser();
+				FilterByContext($oDefinitionFilter, $oAppContext);
+				$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
+				$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext, $aFilterParams);
+				$oErrorObjectSet = new CMDBObjectSet($oFilter);
+				$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
+				$sFileName = utils::ReadParam('filename', null, true, 'string');
+				$bAdvanced = utils::ReadParam('advanced', false);
+				$sAdvanced = $bAdvanced ? '&advanced=1' : '';
 
-			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:Interactive:Button:Back'), "./audit.php?".$oAppContext->GetForLink());
-            $oP->AddUiBlock($oBackButton);
-            $oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
-            if ($bHasAudiFilter) {
-                $oP->AddUiBlock($oPanel);
-                $oP->AddUiBlock(new Html('<br>'));
-            }
-            $sBlockId = 'audit_errors';
-            $oP->p("<div id=\"$sBlockId\">");
-            $oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list', array('show_obsolete_data' => true));
-            $oBlock->Display($oP, 1);
-            $oP->p("</div>");
-			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams;
-            $oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
-            break;
+				if ($sFileName != null) {
+					$oP = new CSVPage("iTop - Export");
+					$sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
+					$sCSVData = cmdbAbstractObject::GetSetAsCSV($oErrorObjectSet, array('localize_values' => true, 'fields_advanced' => $bAdvanced), $sCharset);
+					if ($sCharset == 'UTF-8') {
+						$sOutputData = UTF8_BOM.$sCSVData;
+					} else {
+						$sOutputData = $sCSVData;
+					}
+					if ($sFileName == '') {
+						// Plain text => Firefox will NOT propose to download the file
+						$oP->add_header("Content-type: text/plain; charset=$sCharset");
+					} else {
+						$sCSVName = basename($sFileName); // pseudo sanitization, just in case
+						// Force the name of the downloaded file, since windows gives precedence to the extension over of the mime type
+						$oP->add_header("Content-disposition: attachment; filename=\"$sCSVName\"");
+						$oP->add_header("Content-type: text/csv; charset=$sCharset");
+					}
+					$oP->add($sOutputData);
+					$oP->TrashUnexpectedOutput();
+					$oP->output();
+					exit;
+				} else {
+					$sTitle = Dict::S('UI:Audit:AuditErrors');
+					$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-        case 'selection':
-            $sEnableDisableButtonJS ='';
-            $aAllFields = [];
-            $oP->SetBreadCrumbEntry('ui-tool-auditselection', Dict::S('UI:Audit:Interactive:Selection:BreadCrumb'), Dict::S('UI:Audit:Interactive:Selection:BreadCrumb+'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-            if (UserRights::IsActionAllowed('AuditCategory', UR_ACTION_MODIFY)) {
-                $oButton = ButtonUIBlockFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot()."pages/UI.php?c[menu]=AuditCategories", Dict::S('UI:Audit:Interactive:Button:Configuration'), 'fas fa-wrench');
-                $oP->AddUiBlock($oButton);
-            }
-            $oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:Interactive:Selection:Title')));
+					$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
+					$oP->AddUiBlock($oBackButton);
+					$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
 
-            $sAuditUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit";
-            $sAllDomainUrl = $sAuditUrl;
-            $sOpenDashlet = '';
-            $sGetParams = '';
+					if ($sFilterText != "") {
+						$oPanel = PanelUIBlockFactory::MakeNeutral('', Dict::S('UI:Audit:Interactive:FilterList'));
+						$oP->AddUiBlock($oPanel);
+						$oPanel->AddSubBlock(new Html($sFilterText.'</ul>'));
+						$oP->AddUiBlock(new Html('<br>'));
+					}
 
-            if ($bHasAudiFilter) {
-                $aAuditPreferences= appUserPreferences::GetPref('audit_pref', []);
-                IssueLog::Error('bbb'.json_encode($aAuditPreferences));
-                $oPanel = PanelUIBlockFactory::MakeNeutral('',Dict::S('UI:Audit:Interactive:Selection:SubTitleParams'));
-                $sPanelFilterId =$oPanel->GetId();
-                $oForm = FormUIBlockFactory::MakeStandard('audit_filter_form');
-                $oForm->AddSubBlock($oPanel);
-                $oP->AddUiBlock($oForm);
+					$sBlockId = 'audit_errors';
+					$oP->p("<div id=\"$sBlockId\">");
+					$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'csv', array('show_obsolete_data' => true));
+					$oBlock->Display($oP, 1);
+					$oP->p("</div>");
+					// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
+					$oP->add_ready_script(" $('#1>textarea').height(400);"); // adjust the size of the block
+					$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&domain=".$sDomainKey."&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams;
+					$oDownloadButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('fas fa-chevron-left', Dict::S('UI:Audit:InteractiveAudit:Back'), "./audit.php?".$oAppContext->GetForLink());
 
-                while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
-                    $sPlaceholder = $oAuditFilter->Get('placeholder');
-                    $sCurrentValue = utils::ReadParam($sPlaceholder, isset($aAuditPreferences[$sPlaceholder])?$aAuditPreferences[$sPlaceholder]:'');
+					$oP->add_ready_script("$('a[href*=\"webservices/export.php?expression=\"]').attr('href', '".$sExportUrl."&filename=audit.csv".$sAdvanced."');");
+					$oP->add_ready_script("$('#1 :checkbox').removeAttr('onclick').on('click', function() { var sAdvanced = ''; if (this.checked) sAdvanced = '&advanced=1'; window.location.href='$sExportUrl'+sAdvanced; } );");
+				}
+				break;
 
-                    $oBlock = FieldUIBlockFactory::MakeStandard($oAuditFilter->Get('label'));
-                    $oBlock->SetAttLabel($oAuditFilter->Get('label'))
-                        ->AddDataAttribute("input-id", $sPlaceholder)
-                        ->AddDataAttribute("input-type", 'input-type');
-                    $oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content", "ibo-input-field-wrapper"]);
-                    $oValue->AddSubBlock($oAuditFilter->GetFieldBlock($oP, $sCurrentValue));
-                    $oP->add_ready_script('$("#'.$sPlaceholder.'").on("change", enableDisableButton)');
-                    $oBlock->AddSubBlock($oValue);
-                    $oPanel->AddSubBlock($oBlock);
+			case 'errors':
+				$sTitle = Dict::S('UI:Audit:AuditErrors');
+				$iCategory = utils::ReadParam('category', '');
+				$iRuleIndex = utils::ReadParam('rule', 0);
+				$sDomainKey = utils::ReadParam('domain', '');
 
-                    //for links
-                    $sGetParams .= $sPlaceholder.'=$("[name='.$sPlaceholder.']").val();';
-                    $sAuditUrl .= '&'.$sPlaceholder.'=\'+'.$sPlaceholder.'+\'';
+				$aFilterParams = [];
+				$sAddingParams = '';
+				$oPanel = PanelUIBlockFactory::MakeNeutral('', Dict::S('UI:Audit:Interactive:FilterList'));
+				if (!empty($sDomainKey)) {
+					IssueLog::Error('ERROR domaine'.$sDomainKey);
+					$oAuditDomain = MetaModel::GetObject('AuditDomain', $sDomainKey);
+					$oAuditFilterSet = $oAuditDomain->Get('filterfield_list');
+					$bHasAudiFilter = ($oAuditFilterSet->Count() > 0);
+					if ($bHasAudiFilter) {
+						while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
+							$sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
+							$sAddingParams .= "&".$oAuditFilter->Get('placeholder')."=$sCurrentValue";
+							$aFilterParams[$oAuditFilter->Get('placeholder')] = $sCurrentValue;
+							$sName = '';
+							if (utils::IsNotNullOrEmptyString($oAuditFilter->Get('oql'))) {
+								$oSearch = new DBObjectSet(DBObjectSearch::FromOQL($oAuditFilter->Get('oql')));
+								$sClass = $oSearch->GetClass();
+								$oObject = MetaModel::GetObject($sClass, $sCurrentValue);
+								$sName = $oObject->GetName();
+							} else {//this is a list of values
+								$sName = $oAuditFilter->Get('values')[$sCurrentValue];
+							}
+							$sFilterText .= '<li>'.$oAuditFilter->Get('label').': '.$sName.'</li>';
+						}
+						$oPanel->AddSubBlock(new Html($sFilterText.'</ul>'));
+					}
+				}
 
-                    //for JS
-                    $aAllFields[$sPlaceholder] = 0;
-                }
+				$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
+				$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'), $aFilterParams);
+				$oDefinitionFilter->UpdateContextFromUser();
+				FilterByContext($oDefinitionFilter, $oAppContext);
+				$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
+				$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext, $aFilterParams);
+				$oErrorObjectSet = new CMDBObjectSet($oFilter);
+				$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
+				$sDescription = get_class($oAuditRule).": ".$oAuditRule->GetName();
+				$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, $sDescription, '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-            $sSavePrefJs = <<<EOF
-function saveAuditPref(paramFunction){
+				$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('UI:Audit:Interactive:Button:Back'), "./audit.php?".$oAppContext->GetForLink());
+				$oP->AddUiBlock($oBackButton);
+				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
+				if ($bHasAudiFilter) {
+					$oP->AddUiBlock($oPanel);
+					$oP->AddUiBlock(new Html('<br>'));
+				}
+				$sBlockId = 'audit_errors';
+				$oP->p("<div id=\"$sBlockId\">");
+				$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list', array('show_obsolete_data' => true));
+				$oBlock->Display($oP, 1);
+				$oP->p("</div>");
+				$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&domain=".$sDomainKey."&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams;
+				$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
+				break;
+
+			case 'selection':
+				$oP->SetBreadCrumbEntry('ui-tool-auditselection', Dict::S('UI:Audit:Interactive:Selection:BreadCrumb'), Dict::S('UI:Audit:Interactive:Selection:BreadCrumb+'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+				if (UserRights::IsActionAllowed('AuditCategory', UR_ACTION_MODIFY)) {
+					$oButton = ButtonUIBlockFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot()."pages/UI.php?c[menu]=AuditCategories", Dict::S('UI:Audit:Interactive:Button:Configuration'), 'fas fa-wrench');
+					$oP->AddUiBlock($oButton);
+				}
+				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:Interactive:Selection:Title')));
+				$oP->AddUiBlock(new Text(Dict::S('UI:Audit:Interactive:Selection:SubTitle')));
+
+				// Header block to select all audit categories
+				$oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
+				$iCategoryCount = $oCategoriesSet->Count();
+
+				$oDashboardRow = new DashboardRow();
+				$oDashboardRow->AddCSSClass('ibo-audit--dashboard');
+				$oDashboardColumn = new DashboardColumn(false, true);
+				$oDashboardRow->AddDashboardColumn($oDashboardColumn);
+
+				$sOQL = 'SELECT AuditFilterField';
+				$oSearch = DBObjectSearch::FromOQL($sOQL);
+				$oAuditFilterSet = new DBObjectSet($oSearch, array(), array());
+				if ($oAuditFilterSet->Count() == 0) {
+					$oAllCategoriesDashlet = new DashletContainer();
+
+					$oAllCategoriesDashlet
+						->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge'])
+						->AddSubBlock(DashletFactory::MakeForDashletBadge(
+							utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-audit.svg',
+							utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit",
+							$iCategoryCount,
+							Dict::S('UI:Audit:Interactive:Selection:BadgeAll')
+						));
+					$oDashboardColumn->AddUIBlock($oAllCategoriesDashlet);
+					$oP->AddUiBlock($oDashboardRow);
+				}
+
+				// Three column layout to display all available audit domains
+				$oDashboardRow = new DashboardRow();
+				$oDashboardRow
+					->AddCSSClass('ibo-audit--dashboard')
+					->AddDashboardColumn(new DashboardColumn(false, true))
+					->AddDashboardColumn(new DashboardColumn(false, true))
+					->AddDashboardColumn(new DashboardColumn(false, true));
+
+				// Fetch all audit domains with at least on linked category
+				$oDomainSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditDomain AS domain JOIN lnkAuditCategoryToAuditDomain AS lnk ON lnk.domain_id = domain.id"));
+				$oDomainSet->SetOrderBy(array('name' => true));
+				$iDomainCnt = 0;
+				/** @var AuditDomain $oAuditDomain */
+				while ($oAuditDomain = $oDomainSet->Fetch()) {
+				$sDomainUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=audit&domain=".$oAuditDomain->GetKey();
+					$sIconUrl = utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-puzzle.svg';
+					/** @var \ormDocument $oImage */
+					$oImage = $oAuditDomain->Get('icon');
+					if (!$oImage->IsEmpty()) {
+						$sIconUrl = $oImage->GetDisplayURL(get_class($oAuditDomain), $oAuditDomain->GetKey(), 'icon');
+					}
+					$iCategoryCount = $oAuditDomain->Get('categories_list')->Count();
+					$oDomainBlock = DashletFactory::MakeForDashletBadge($sIconUrl, $sDomainUrl, $iCategoryCount, $oAuditDomain->Get('name'));
+					$oDomainDashlet = new DashletContainer();
+					$oDomainDashlet->AddSubBlock($oDomainBlock)->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge']);
+					$oDashboardRow->GetSubBlocks()[$iDomainCnt % 3]->AddUIBlock($oDomainDashlet); // ;
+					$iDomainCnt++;
+							}
+
+				$oP->AddUiBlock($oDashboardRow);
+				break;
+
+			case 'audit':
+			default:
+
+				$sDomainKey = utils::ReadParam('domain', '');
+				$oAuditDomain = null;
+				$sCategories = utils::ReadParam('categories', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);  // May contain commas
+				// Default case, full audit
+
+				IssueLog::Error('AUDIT: '.$sCategories);
+				$oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
+				$sTitle = Dict::S('UI:Audit:Interactive:All:Title');
+				$sSubTitle = Dict::S('UI:Audit:Interactive:All:SubTitle');
+				$sBreadCrumbLabel = Dict::S('UI:Audit:Interactive:All:BreadCrumb');
+				$sBreadCrumbTooltip = Dict::S('UI:Audit:Interactive:All:BreadCrumb+');
+
+				$oP->SetBreadCrumbEntry('ui-tool-audit', $sBreadCrumbLabel, $sBreadCrumbTooltip, '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+				$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral("./audit.php?".$oAppContext->GetForLink(), Dict::S('UI:Audit:Interactive:Button:Back'), 'fas fa-chevron-left');
+				$oP->AddUiBlock($oBackButton);
+				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle));
+
+				if (!empty($sCategories)) {  // Case with a set of categories
+					$oCategoriesSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditCategory WHERE id IN (:categories)", array('categories' => explode(',', $sCategories))));
+					$sCategories = implode(", ", $oCategoriesSet->GetColumnAsArray('name'));
+					$oCategoriesSet->Rewind();
+					$sTitle = Dict::Format('UI:Audit:Interactive:Categories:Title', $sCategories);
+					$sSubTitle = Dict::Format('UI:Audit:Interactive:Categories:SubTitle', $oCategoriesSet->Count());
+					$sBreadCrumbLabel = Dict::Format('UI:Audit:Interactive:Categories:BreadCrumb', $oCategoriesSet->Count());
+					$sBreadCrumbTooltip = Dict::Format('UI:Audit:Interactive:Categories:BreadCrumb+', $sCategories);
+
+				} elseif (!empty($sDomainKey)) {  // Case with a single Domain
+					$oAuditDomain = MetaModel::GetObject('AuditDomain', $sDomainKey);
+					$oCategoriesSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditCategory AS c JOIN lnkAuditCategoryToAuditDomain AS lnk ON lnk.category_id = c.id WHERE lnk.domain_id = :domain", array('domain' => $oAuditDomain->GetKey())));
+					$sDomainName = $oAuditDomain->GetName();
+					$sTitle = Dict::Format('UI:Audit:Interactive:Domain:Title', $sDomainName);
+					$sSubTitle = Dict::Format('UI:Audit:Interactive:Domain:SubTitle', $sDomainName);
+					$sBreadCrumbLabel = Dict::Format('UI:Audit:Interactive:Domain:BreadCrumb', $sDomainName);
+					$sBreadCrumbTooltip = Dict::Format('UI:Audit:Interactive:Domain:BreadCrumb+', $sDomainName);
+
+
+					$sOpenDashlet = '';
+					$sGetParams = '';
+
+					$oAuditFilterSet = $oAuditDomain->Get('filterfield_list');
+					$bHasAudiFilter= ($oAuditFilterSet->Count()>0) ;
+
+					if ($bHasAudiFilter) {
+						$aAuditPreferences = appUserPreferences::GetPref('audit_pref', []);
+						IssueLog::Error('bbb'.json_encode($aAuditPreferences));
+						$oPanel = PanelUIBlockFactory::MakeNeutral('', Dict::S('UI:Audit:Interactive:Selection:SubTitleParams'));
+						$sPanelFilterId = $oPanel->GetId();
+						$oForm = FormUIBlockFactory::MakeStandard('audit_filter_form');
+						$oForm->AddSubBlock($oPanel);
+						$oP->AddUiBlock($oForm);
+
+						//$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'calculate'));
+						//$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('domain', $sDomainKey));
+						while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
+							$sPlaceholder = $oAuditFilter->Get('placeholder');
+							$sCurrentValue = utils::ReadParam($sPlaceholder, isset($aAuditPreferences[$sPlaceholder]) ? $aAuditPreferences[$sPlaceholder] : '');
+
+							$oBlock = FieldUIBlockFactory::MakeStandard($oAuditFilter->Get('label'));
+							$oBlock->SetAttLabel($oAuditFilter->Get('label'))
+								->AddDataAttribute("input-id", $sPlaceholder)
+								->AddDataAttribute("input-type", 'input-type');
+							$oValue = UIContentBlockUIBlockFactory::MakeStandard("", ["form-field-content", "ibo-input-field-wrapper"]);
+							$oValue->AddSubBlock($oAuditFilter->GetFieldBlock($oP, $sCurrentValue));
+							$oBlock->AddSubBlock($oValue);
+							$oPanel->AddSubBlock($oBlock);
+
+							//for links
+							$sGetParams .= $sPlaceholder.'=$("[name='.$sPlaceholder.']").val();';
+							//       $sAuditUrl .= '&'.$sPlaceholder.'=\'+'.$sPlaceholder.'+\'';
+							$sAuditUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=calculate&domain=".$sDomainKey;
+							//for JS
+							$aAllFields[$sPlaceholder] = 0;
+						}
+
+						$sSavePrefJs = <<<JS
+function saveAuditPref(){
     var aPref = {};
     $('#audit_filter_form input').each(function(){
         if($(this).attr('name')!=undefined){
@@ -376,355 +692,43 @@ function saveAuditPref(paramFunction){
             }
         }
     });
+
      $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			{operation: 'set_pref', code: 'audit_pref', value: aPref})
-	.done(paramFunction); 
+			{operation: 'set_pref', code: 'audit_domain_$sDomainKey', value: aPref})
+		.done(function( ) {
+				$.ajax({
+					method: "POST",
+					url: '$sAuditUrl',
+					data: aPref
+				})
+				.done(function( html ) {
+				    $( "#results" ).html( html );
+				});
+		}); 
 }
-EOF;
-            $oP->add_script($sSavePrefJs);
-                $sAllDomainUrl = '#';
-                $sOpenDashlet = 'saveAuditPref(function(){'.$sGetParams.' window.location = \''.$sAuditUrl.'\';});stop_propagation(event);';
-            }
-            $oP->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Audit:Interactive:Selection:SubTitle'),2));
-
-            // Header block to select all audit categories
-            $oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
-            $iCategoryCount = $oCategoriesSet->Count();
-
-            $oDashboardRow = new DashboardRow();
-            $oDashboardRow->AddCSSClass('ibo-audit--dashboard');
-            $oDashboardColumn = new DashboardColumn(false, true);
-            $oDashboardRow->AddDashboardColumn($oDashboardColumn);
-            $oAllCategoriesDashlet = new DashletContainer();
-
-            $oAllCategoriesDashlet
-                ->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge'])
-                ->AddSubBlock(DashletFactory::MakeForDashletBadge(
-                    utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-audit.svg',
-                    $sAllDomainUrl,
-                    $iCategoryCount,
-                    Dict::S('UI:Audit:Interactive:Selection:BadgeAll')
-                ));
-            if ($bHasAudiFilter) {
-                foreach ($aAllFields as $sPlaceholder => $iValue) {
-                    if($sFieldCondition != ''){
-                        $sFieldCondition .= ' && ';
-                    }
-                    $sFieldCondition .= '$("[name=' . $sPlaceholder . ']").val() != "" ';
-                }
-                if ($sFieldCondition != '') {
-                    $sEnableDisableButtonJS .= 'if(' . $sFieldCondition . '){ $("#' . $oAllCategoriesDashlet->GetId() . ' a").removeClass("ibo-dashlet-badge--disabled"); } else { $("#' . $oAllCategoriesDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled"); }';
-               }
-                $oP->add_ready_script('$("#'.$oAllCategoriesDashlet->GetId().' a").click(function(){'.$sOpenDashlet.'});');
-            }
-            $oDashboardColumn->AddUIBlock($oAllCategoriesDashlet);
-            $oP->AddUiBlock($oDashboardRow);
-
-            // Three column layout to display all available audit domains
-            $oDashboardRow = new DashboardRow();
-            $oDashboardRow
-                ->AddCSSClass('ibo-audit--dashboard')
-                ->AddDashboardColumn(new DashboardColumn(false, true))
-                ->AddDashboardColumn(new DashboardColumn(false, true))
-                ->AddDashboardColumn(new DashboardColumn(false, true));
-
-            // Fetch all audit domains with at least on linked category
-            $oDomainSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditDomain AS domain JOIN lnkAuditCategoryToAuditDomain AS lnk ON lnk.domain_id = domain.id"));
-            $oDomainSet->SetOrderBy(array('name' => true));
-            $iDomainCnt = 0;
-            /** @var AuditDomain $oAuditDomain */
-            while($oAuditDomain = $oDomainSet->Fetch()) {
-				$sDomainUrl = $sAuditUrl.'&domain='.$oAuditDomain->GetKey();
-                $sIconUrl = utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-puzzle.svg';
-                /** @var \ormDocument $oImage */
-                $oImage = $oAuditDomain->Get('icon');
-                if (!$oImage->IsEmpty()) {
-                    $sIconUrl = $oImage->GetDisplayURL(get_class($oAuditDomain), $oAuditDomain->GetKey(), 'icon');
-                }
-                $iCategoryCount = $oAuditDomain->Get('categories_list')->Count();
-
-                if ($bHasAudiFilter) {
-                    //modif URLLink In order to send params
-                    $sOpenDashlet = 'saveAuditPref(function(){'.$sGetParams.' window.location = \''.$sDomainUrl.'\';});stop_propagation(event);';
-                    $sDomainUrl = '#';
-                }
-
-                $oDomainBlock = DashletFactory::MakeForDashletBadge($sIconUrl, $sDomainUrl, $iCategoryCount, $oAuditDomain->Get('name'));
-                $oDomainDashlet = new DashletContainer();
-                $oDomainDashlet->AddSubBlock($oDomainBlock)->AddCSSClasses(['ibo-dashlet--is-inline', 'ibo-dashlet-badge']);
-                $oDashboardRow->GetSubBlocks()[$iDomainCnt % 3]->AddUIBlock($oDomainDashlet); // ;
-                $iDomainCnt++;
-                if ($bHasAudiFilter) {
-                    $sFieldCondition = '';
-
-                    $aDependentFields = $oAuditDomain->GetDependentFields();
-                    foreach ($aDependentFields as $sPlaceholder) {
-                        if($sFieldCondition != ''){
-                            $sFieldCondition .= ' && ';
-                        }
-                        $sFieldCondition .= '$("[name=' . $sPlaceholder . ']").val() != "" ';
-                    }
-                    if ($sFieldCondition != '') {
-                        $sEnableDisableButtonJS .= 'if(' . $sFieldCondition . '){ $("#' . $oDomainDashlet->GetId() . ' a").removeClass("ibo-dashlet-badge--disabled"); } else { $("#' . $oDomainDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled"); }';
-                        $oP->add_ready_script('$("#' . $oDomainDashlet->GetId() . ' a").addClass("ibo-dashlet-badge--disabled")');
-                    }
-                    $oP->add_ready_script('$("#'.$oDomainBlock->GetId().' a").click(function(){'.$sOpenDashlet.'});');
-                    $oDomainBlock->SetClassDescription($oDomainBlock->GetClassDescription() . Dict::Format('Class:AuditDomain/Select:DependentFields', implode(', <br>- ', $aDependentFields)));
-                }
-            }
-            $oP->AddUiBlock($oDashboardRow);
-            if ($bHasAudiFilter) {
-                //add function in order to disable some audit button if necessaries values are not selected
-
-                $oP->add_script('function enableDisableButton() {'.$sEnableDisableButtonJS.'}');
-                $sListFieldsJS = implode(',', array_keys($aAllFields));
-                $sJS = <<<JS
-            var observerOrgFromId = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutationRecord) {
-                    if ($.inArray(mutationRecord.target.id, [$sListFieldsJS])) {
-                        console.warn('llllaaaa');
-                        enableDisableButton();
-                    }
-                });
-            });
-            observerOrgFromId.observe(document.getElementById('$sPanelFilterId'), { attributes : true, attributeFilter : ['value'], subtree: true,childList: true });
-            $('body').on('click', 'a.ibo-dashlet-badge--disabled', function(event) {
-                event.preventDefault();
-            });
 JS;
-               $oP->add_ready_script($sJS);
-               // initialise state of dashlet buttons
-               $oP->add_ready_script('enableDisableButton();');
-            }
+						$oP->add_script($sSavePrefJs);
+						$sAllDomainUrl = '#';
+						$sOpenDashlet = 'console.warn("blop");saveAuditPref();';
 
-            break;
+						$oP->add_script($sSavePrefJs);
 
-        case 'audit':
-        default:
-            $sDomainKey = utils::ReadParam('domain', '');
-            $oAuditDomain = null;
-            $sCategories = utils::ReadParam('categories', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);  // May contain commas
-            // Default case, full audit
-            $oCategoriesSet = new DBObjectSet(new DBObjectSearch('AuditCategory'));
-            $sTitle = Dict::S('UI:Audit:Interactive:All:Title');
-            $sSubTitle = Dict::S('UI:Audit:Interactive:All:SubTitle');
-            $sBreadCrumbLabel = Dict::S('UI:Audit:Interactive:All:BreadCrumb');
-            $sBreadCrumbTooltip = Dict::S('UI:Audit:Interactive:All:BreadCrumb+');
+						$sActionLabel = Dict::S('UI:Audit:Interactive:Button:Run');
+						$oSubmitButton = ButtonUIBlockFactory::MakeForSecondaryAction($sActionLabel);
+						$oSubmitButton->SetOnClickJsCode($sOpenDashlet);
+						$oForm->AddSubBlock($oSubmitButton);
 
-            if (!empty($sCategories)) {  // Case with a set of categories
-                $oCategoriesSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditCategory WHERE id IN (:categories)", array('categories' => explode(',', $sCategories))));
-                $sCategories = implode(", ", $oCategoriesSet->GetColumnAsArray('name'));
-                $oCategoriesSet->Rewind();
-                $sTitle = Dict::Format('UI:Audit:Interactive:Categories:Title', $sCategories);
-                $sSubTitle = Dict::Format('UI:Audit:Interactive:Categories:SubTitle', $oCategoriesSet->Count());
-                $sBreadCrumbLabel = Dict::Format('UI:Audit:Interactive:Categories:BreadCrumb', $oCategoriesSet->Count());
-                $sBreadCrumbTooltip = Dict::Format('UI:Audit:Interactive:Categories:BreadCrumb+', $sCategories);
+						$oP->AddUiBlock(UIContentBlockUIBlockFactory::MakeStandard('results', ['ibo-audit--audit-results']));
+					}
 
-            } elseif (!empty($sDomainKey)) {  // Case with a single Domain
-                $oAuditDomain = MetaModel::GetObject('AuditDomain', $sDomainKey);
-                $oCategoriesSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT AuditCategory AS c JOIN lnkAuditCategoryToAuditDomain AS lnk ON lnk.category_id = c.id WHERE lnk.domain_id = :domain", array('domain' => $oAuditDomain->GetKey())));
-                $sDomainName = $oAuditDomain->GetName();
-                $sTitle = Dict::Format('UI:Audit:Interactive:Domain:Title', $sDomainName);
-                $sSubTitle = Dict::Format('UI:Audit:Interactive:Domain:SubTitle', $sDomainName);
-                $sBreadCrumbLabel = Dict::Format('UI:Audit:Interactive:Domain:BreadCrumb', $sDomainName);
-                $sBreadCrumbTooltip = Dict::Format('UI:Audit:Interactive:Domain:BreadCrumb+', $sDomainName);
-                if ($bHasAudiFilter) {
-                    if ($oAuditDomain != null) {
-                        $aListNecessaryParameters = $oAuditDomain->GetDependentFields();
-                        if ($aListNecessaryParameters == []) {
-                            $bHasAudiFilter = false;
-                        } else {
-                            $oSearch->AddCondition('placeholder',$aListNecessaryParameters, 'IN');
-                            $oAuditFilterSet = new DBObjectSet($oSearch, array(), array());
-                        }
-                    }
-                }
-            }
+				}
 
-            $oP->SetBreadCrumbEntry('ui-tool-audit', $sBreadCrumbLabel, $sBreadCrumbTooltip, '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-			$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral("./audit.php?".$oAppContext->GetForLink(), Dict::S('UI:Audit:Interactive:Button:Back'), 'fas fa-chevron-left');
-            $oP->AddUiBlock($oBackButton);
-            $oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle));
-
-            $aFilterParams = [];
-            $sAddingParams = '';
-            if ($bHasAudiFilter) {
-                $oPanel = PanelUIBlockFactory::MakeNeutral('', Dict::S('UI:Audit:Interactive:FilterList'));
-                $oP->AddUiBlock($oPanel);
-
-                while ($oAuditFilter = $oAuditFilterSet->Fetch()) {
-                    $sCurrentValue = utils::ReadParam($oAuditFilter->Get('placeholder'), '');
-                    try {
-                        $sAddingParams .= '&' . $oAuditFilter->Get('placeholder') . '=' . $sCurrentValue;
-                        $aFilterParams[$oAuditFilter->Get('placeholder')] = $sCurrentValue;
-                        $sName = '';
-                        if (utils::IsNotNullOrEmptyString($oAuditFilter->Get('oql'))) {
-                            $oSearch = new DBObjectSet(DBObjectSearch::FromOQL($oAuditFilter->Get('oql')));
-                            $sClass = $oSearch->GetClass();
-                            $oObject = MetaModel::GetObject($sClass, $sCurrentValue);
-                            $sName = $oObject->GetName();
-                        } else {//this is a list of values
-                            $sName = $sCurrentValue;//$oAuditFilter->Get('values')[$sCurrentValue];
-                        }
-                        $sFilterText .= '<li>' . $oAuditFilter->Get('label') . ': ' . $sName . '</li>';
-                    } catch (Exception $e) {
-                        $sFilterText .= '<li> no '.$oAuditFilter->Get('label').' filter' . '</li>';
-                    }
-
-                }
-                $oPanel->AddSubBlock(new Html($sFilterText . '</ul>'));
-            }
-            $oP->AddUiBlock(new Html('<br>'));
-
-            $oP->AddUiBlock(new Text($sSubTitle));
-
-            $oTotalBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-audit.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsAudited'));
-            $oErrorBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-delete.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsInError'));
-            $oWorkingBlock = DashletFactory::MakeForDashletBadge(utils::GetAbsoluteUrlAppRoot().'images/icons/icons8-checkmark.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsValidated'));
-
-            $aCSSClasses = ['ibo-dashlet--is-inline', 'ibo-dashlet-badge'];
-
-            $oDashletContainerTotal = new DashletContainer();
-            $oDashletContainerError = new DashletContainer();
-            $oDashletContainerWorking = new DashletContainer();
-
-            $oDashletContainerTotal->AddSubBlock($oTotalBlock)->AddCSSClasses($aCSSClasses);
-            $oDashletContainerError->AddSubBlock($oErrorBlock)->AddCSSClasses($aCSSClasses);
-            $oDashletContainerWorking->AddSubBlock($oWorkingBlock)->AddCSSClasses($aCSSClasses);
-
-            $oDashboardRow = new DashboardRow();
-
-            $oDashboardColumnTotal = new DashboardColumn(false, true);
-            $oDashboardColumnError = new DashboardColumn(false, true);
-            $oDashboardColumnWorking = new DashboardColumn(false, true);
-
-            $oDashboardColumnTotal->AddUIBlock($oDashletContainerTotal);
-            $oDashboardColumnError->AddUIBlock($oDashletContainerError);
-            $oDashboardColumnWorking->AddUIBlock($oDashletContainerWorking);
-
-            $oDashboardRow->AddDashboardColumn($oDashboardColumnTotal);
-            $oDashboardRow->AddDashboardColumn($oDashboardColumnError);
-            $oDashboardRow->AddDashboardColumn($oDashboardColumnWorking);
-
-            $oDashboardRow->AddCSSClass('ibo-audit--dashboard');
-
-            $oP->AddUiBlock($oDashboardRow);
-
-            $aAuditCategoryPanels = [];
-            /** @var AuditCategory $oAuditCategory */
-            while ($oAuditCategory = $oCategoriesSet->fetch()) {
-                $oAuditCategoryPanelBlock = new Panel($oAuditCategory->GetName());
-                $oAuditCategoryPanelBlock->SetIsCollapsible(true);
-                // Create toolbar and add it to panel
-                $oToolbar = \Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory::MakeForButton();
-                $oAuditCategoryPanelBlock->AddToolbarBlock($oToolbar);
-                // Add a button in the above toolbar
-                $sAuditCategoryClass = get_class($oAuditCategory);
-                if (UserRights::IsActionAllowed($sAuditCategoryClass, UR_ACTION_READ)) {
-                    $oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-wrench fa-lg', Dict::S('UI:Audit:ViewRules'), ApplicationContext::MakeObjectUrl($sAuditCategoryClass, $oAuditCategory->GetKey()).$sAddingParams.'&#ObjectProperties=tab_ClassAuditCategoryAttributerules_list'),);
-                }
-                $aResults = array();
-                try {
-                    $iCount = 0;
-                    $oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'),$aFilterParams);
-                    $oDefinitionFilter->UpdateContextFromUser();
-                    FilterByContext($oDefinitionFilter, $oAppContext);
-
-                    $aObjectsWithErrors = array();
-                    if (!empty($currentOrganization)) {
-                        if (MetaModel::IsValidFilterCode($oDefinitionFilter->GetClass(), 'org_id')) {
-                            $oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
-                        }
-                    }
-                    $oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-                    $iCount = $oDefinitionSet->Count();
-                    $oRulesFilter = new DBObjectSearch('AuditRule');
-                    $oRulesFilter->AddCondition('category_id', $oAuditCategory->GetKey(), '=');
-                    foreach ($aFilterParams as $sFieldName => $sCurrentValue) {
-                        $oRulesFilter->AddInternalParam($sFieldName, $sCurrentValue);
-                    }
-
-                    $oRulesSet = new DBObjectSet($oRulesFilter);
-                    while ($oAuditRule = $oRulesSet->fetch()) {
-                        $aRow = array();
-                        $aRow['description'] = $oAuditRule->GetName();
-                        if ($iCount == 0) {
-                            // nothing to check, really !
-							$aRow['nb_errors'] = "<a href=\"audit.php?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams."\">0</a>";
-                            $aRow['percent_ok'] = '100.00';
-                            $aRow['class'] = $oAuditCategory->GetReportColor($iCount, 0);
-                        } else {
-                            try {
-                                $oFilter = GetRuleResultFilter($oAuditRule->GetKey(), $oDefinitionFilter, $oAppContext, $aFilterParams);
-                                $aErrors = $oFilter->SelectAttributeToArray('id');
-                                $iErrorsCount = count($aErrors);
-                                foreach ($aErrors as $aErrorRow) {
-                                    $aObjectsWithErrors[$aErrorRow['id']] = true;
-                                }
-								$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey().$sAddingParams."&".$oAppContext->GetForLink()."\"><img src=\"" . utils::GetAbsoluteUrlAppRoot() . "images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>";
-                                $aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
-                                $aRow['class'] = $oAuditCategory->GetReportColor($iCount, $iErrorsCount);
-                            }
-                            catch (Exception $e) {
-                                $aRow['nb_errors'] = Dict::S('UI:Audit:OqlError');
-                                $aRow['percent_ok'] = Dict::S('UI:Audit:Error:ValueNA');
-                                $aRow['class'] = 'red';
-                                $sMessage = Dict::Format('UI:Audit:ErrorIn_Rule_Reason', $oAuditRule->GetHyperlink(), $e->getMessage());
-
-                                $oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Audit:ErrorIn_Rule'), $sMessage);
-                                $oErrorAlert->AddCSSClass('ibo-audit--error-alert');
-                                $oP->AddUiBlock($oErrorAlert);
-                            }
-                        }
-                        $aResults[] = $aRow;
-                    }
-                    $iTotalErrors = count($aObjectsWithErrors);
-                    $sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
-                    $sClass = $oAuditCategory->GetReportColor($iCount, $iTotalErrors);
-
-                    $oTotalBlock->SetCount((int)$oTotalBlock->GetCount() + ($iCount));
-                    $oErrorBlock->SetCount((int)$oErrorBlock->GetCount() + $iTotalErrors);
-                    $oWorkingBlock->SetCount((int)$oWorkingBlock->GetCount() + ($iCount - $iTotalErrors));
-                    $oAuditCategoryPanelBlock->SetSubTitle(Dict::Format('UI:Audit:AuditCategory:Subtitle', $iTotalErrors, $iCount, $sOverallPercentOk));
-
-                }
-                catch(Exception $e)
-                {
-                    $sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), utils::HtmlEntities($e->getMessage()));
-                    $oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Audit:ErrorIn_Category'), $sMessage);
-                    $oErrorAlert->AddCSSClass('ibo-audit--error-alert');
-                    $oP->AddUiBlock($oErrorAlert);
-                    continue;
-                }
-
-                $oAuditCategoryPanelBlock->SetColorFromColorSemantic($sClass);
-                $oAuditCategoryPanelBlock->AddCSSClass('ibo-audit--audit-category--panel');
-                $aData = [];
-                foreach($aResults as $aRow)
-                {
-                    $aData[] = array(
-                        'audit_rule' => $aRow['description'],
-                        'nb_err' => $aRow['nb_errors'],
-                        'percentage_ok' => $aRow['percent_ok'],
-                        '@class' => 'ibo-is-'.$aRow['class'].'',
-                    );
-                }
-
-                $aAttribs = array(
-                    'audit_rule' => array('label' => Dict::S('UI:Audit:HeaderAuditRule'), 'description' => Dict::S('UI:Audit:HeaderAuditRule')),
-                    'nb_err' => array('label' => Dict::S('UI:Audit:HeaderNbErrors'), 'description' => Dict::S('UI:Audit:HeaderNbErrors')),
-                    'percentage_ok' => array('label' => Dict::S('UI:Audit:PercentageOk'), 'description' => Dict::S('UI:Audit:PercentageOk')),
-                );
-
-                $oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData, null, [], "", array('pageLength' => -1));
-                $oAuditCategoryPanelBlock->AddSubBlock($oAttachmentTableBlock);
-                $aAuditCategoryPanels[] = $oAuditCategoryPanelBlock;
-            }
-            foreach ($aAuditCategoryPanels as $oAuditCategoryPanel) {
-                $oP->AddUiBlock($oAuditCategoryPanel);
-            }
-    }
-    $oP->output();
+				if (!$bHasAudiFilter) {
+					list($oDefinitionFilter, $e) = DisplayAuditResult($oP, $sSubTitle, $oCategoriesSet, $oAppContext, $sDomainKey);
+				}
+		}
+		$oP->output();
+	}
 }
 catch(CoreException $e)
 {

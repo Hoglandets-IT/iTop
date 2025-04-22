@@ -766,6 +766,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Audit:Interactive:Selection:BadgeAll' => '所有类别',
 	'UI:Audit:Interactive:Button:Back' => '返回审计',
 	'UI:Audit:Interactive:Button:Configuration' => '审计配置',
+	'UI:Audit:Interactive:Button:Run' => 'Run the audit~~',
 	'UI:Audit:ViewRules' => '检查规则',
 	'UI:Audit:HeaderAuditRule' => '审计规则',
 	'UI:Audit:HeaderNbObjects' => '# 对象',

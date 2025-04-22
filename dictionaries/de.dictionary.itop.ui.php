@@ -765,6 +765,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'Alle Kategorien',
 	'UI:Audit:Interactive:Button:Back' => 'Zurück zum Audit',
 	'UI:Audit:Interactive:Button:Configuration' => 'Audit konfigurieren',
+	'UI:Audit:Interactive:Button:Run' => 'Run the audit~~',
 	'UI:Audit:ViewRules' => 'Prüfen Sie die Audit-Regeln',
 	'UI:Audit:HeaderAuditRule' => 'Audit-Regel',
 	'UI:Audit:HeaderNbObjects' => '# Objekte',
