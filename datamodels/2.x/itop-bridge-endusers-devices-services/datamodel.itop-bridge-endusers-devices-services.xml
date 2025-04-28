@@ -6,10 +6,10 @@
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>180</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>190</rank>
             </item>
           </items>
@@ -20,10 +20,10 @@
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>200</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>210</rank>
             </item>
           </items>
@@ -34,10 +34,10 @@
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>170</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>180</rank>
             </item>
           </items>
@@ -48,10 +48,10 @@
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>170</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>180</rank>
             </item>
           </items>
@@ -62,10 +62,10 @@
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>60</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>70</rank>
             </item>
           </items>
@@ -76,10 +76,10 @@
       <presentation>
         <details>
           <items>
-            <item id="providercontracts_list" _delta="define">
+            <item id="providercontracts_list" _delta="define_if_not_exists">
               <rank>170</rank>
             </item>
-            <item id="services_list" _delta="define">
+            <item id="services_list" _delta="define_if_not_exists">
               <rank>180</rank>
             </item>
           </items>
