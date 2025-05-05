@@ -401,6 +401,7 @@ return array(
     'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => $baseDir . '/sources/Controller/Base/Layout/ActivityPanelController.php',
     'Combodo\\iTop\\Controller\\Base\\Layout\\ObjectController' => $baseDir . '/sources/Controller/Base/Layout/ObjectController.php',
     'Combodo\\iTop\\Controller\\Links\\LinkSetController' => $baseDir . '/sources/Controller/Links/LinkSetController.php',
+    'Combodo\\iTop\\Controller\\Links\\SynchroReplicaController' => $baseDir . '/sources/Controller/Links/SynchroReplicaController.php',
     'Combodo\\iTop\\Controller\\Newsroom\\iTopNewsroomController' => $baseDir . '/sources/Controller/Newsroom/iTopNewsroomController.php',
     'Combodo\\iTop\\Controller\\Notifications\\ActionController' => $baseDir . '/sources/Controller/Notifications/ActionController.php',
     'Combodo\\iTop\\Controller\\Notifications\\NotificationsCenterController' => $baseDir . '/sources/Controller/Notifications/NotificationsCenterController.php',
@@ -3127,6 +3128,7 @@ return array(
     'Twig\\Util\\DeprecationCollector' => $vendorDir . '/twig/twig/src/Util/DeprecationCollector.php',
     'Twig\\Util\\ReflectionCallable' => $vendorDir . '/twig/twig/src/Util/ReflectionCallable.php',
     'Twig\\Util\\TemplateDirIterator' => $vendorDir . '/twig/twig/src/Util/TemplateDirIterator.php',
+    'UI' => $baseDir . '/sources/Controller/UI.php',
     'UIExtKeyWidget' => $baseDir . '/application/ui.extkeywidget.class.inc.php',
     'UIHTMLEditorWidget' => $baseDir . '/application/ui.htmleditorwidget.class.inc.php',
     'UILinksWidget' => $baseDir . '/application/ui.linkswidget.class.inc.php',
@@ -3230,5 +3232,5 @@ return array(
     'privUITransactionFile' => $baseDir . '/application/transaction.class.inc.php',
     'privUITransactionSession' => $baseDir . '/application/transaction.class.inc.php',
     'utils' => $baseDir . '/application/utils.inc.php',
-    'ï¿½' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
+    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );

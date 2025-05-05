@@ -329,8 +329,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         ),
         'League\\OAuth2\\Client\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/oauth2-client/src',
-            1 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            0 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            1 => __DIR__ . '/..' . '/league/oauth2-client/src',
         ),
         'Laminas\\Validator\\' => 
         array (
@@ -791,6 +791,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => __DIR__ . '/../..' . '/sources/Controller/Base/Layout/ActivityPanelController.php',
         'Combodo\\iTop\\Controller\\Base\\Layout\\ObjectController' => __DIR__ . '/../..' . '/sources/Controller/Base/Layout/ObjectController.php',
         'Combodo\\iTop\\Controller\\Links\\LinkSetController' => __DIR__ . '/../..' . '/sources/Controller/Links/LinkSetController.php',
+        'Combodo\\iTop\\Controller\\Links\\SynchroReplicaController' => __DIR__ . '/../..' . '/sources/Controller/Links/SynchroReplicaController.php',
         'Combodo\\iTop\\Controller\\Newsroom\\iTopNewsroomController' => __DIR__ . '/../..' . '/sources/Controller/Newsroom/iTopNewsroomController.php',
         'Combodo\\iTop\\Controller\\Notifications\\ActionController' => __DIR__ . '/../..' . '/sources/Controller/Notifications/ActionController.php',
         'Combodo\\iTop\\Controller\\Notifications\\NotificationsCenterController' => __DIR__ . '/../..' . '/sources/Controller/Notifications/NotificationsCenterController.php',
@@ -3517,6 +3518,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Twig\\Util\\DeprecationCollector' => __DIR__ . '/..' . '/twig/twig/src/Util/DeprecationCollector.php',
         'Twig\\Util\\ReflectionCallable' => __DIR__ . '/..' . '/twig/twig/src/Util/ReflectionCallable.php',
         'Twig\\Util\\TemplateDirIterator' => __DIR__ . '/..' . '/twig/twig/src/Util/TemplateDirIterator.php',
+        'UI' => __DIR__ . '/../..' . '/sources/Controller/UI.php',
         'UIExtKeyWidget' => __DIR__ . '/../..' . '/application/ui.extkeywidget.class.inc.php',
         'UIHTMLEditorWidget' => __DIR__ . '/../..' . '/application/ui.htmleditorwidget.class.inc.php',
         'UILinksWidget' => __DIR__ . '/../..' . '/application/ui.linkswidget.class.inc.php',
@@ -3620,7 +3622,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
