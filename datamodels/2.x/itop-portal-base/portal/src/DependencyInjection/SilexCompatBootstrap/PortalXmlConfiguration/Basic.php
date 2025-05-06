@@ -77,7 +77,7 @@ class Basic extends AbstractConfiguration
 				'id'              => $_ENV['PORTAL_ID'],
 				'ui_version' => '2025',
 				'ui_settings' => [
-					'navigation_menu' => 'horizontal',
+					'navigation_menu' => 'vertical',
 				],
 				'name'            => 'Page:DefaultTitle',
 				'logo'            => Branding::GetPortalLogoAbsoluteUrl(),
