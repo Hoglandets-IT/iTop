@@ -53,14 +53,7 @@ class DBRestore extends DBBackup
 		$sUser = self::EscapeShellArg($this->sDBUser);
 		$sPwd = self::EscapeShellArg($this->sDBPwd);
 		$sDBName = self::EscapeShellArg($this->sDBName);
-		if (empty($this->sMySQLBinDir))
-		{
-			$sMySQLExe = 'mysql';
-		}
-		else
-		{
-			$sMySQLExe = '"'.$this->sMySQLBinDir.'/mysql"';
-		}
+		$sMySQLExe = DBBackup::MakeSafeMySQLCommand($this->sMySQLBinDir, 'mysql');
 		if (is_null($this->iDBPort))
 		{
 			$sPortOption = '';

@@ -552,14 +552,15 @@ class SetupUtils
 		if (empty($sMySQLBinDir) && null != MetaModel::GetConfig()) {
 			$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 		}
-
-		if (empty($sMySQLBinDir)) {
-			$sMySQLDump = 'mysqldump';
+		try {
+			$sMySQLDump = DBBackup::MakeSafeMySQLCommand($sMySQLBinDir, 'mysqldump');
+		} catch (Exception $e) {
+			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
+			return $aResult;
 		}
-		else {
-			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - Found mysql_bindir: '.$sMySQLBinDir);
-			$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
-		}
+        if (!empty($sMySQLBinDir)) {
+	        $aResult[] = new CheckResult(CheckResult::TRACE, 'Info - Found mysql_bindir: '.$sMySQLBinDir);
+        }
 		$sCommand = "$sMySQLDump -V 2>&1";
 
 		$aOutput = array();
