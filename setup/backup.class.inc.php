@@ -628,7 +628,7 @@ EOF;
 	 * @return string the command to launch mysqldump (without its params)
 	 * @throws \BackupException
 	 */
-	public static function MakeSafeMySQLCommand(string $sMySQLBinDir, string $sCmd)
+	public static function MakeSafeMySQLCommand($sMySQLBinDir, string $sCmd)
 	{
 		if (empty($sMySQLBinDir)) {
 			$sMySQLCommand = $sCmd;
