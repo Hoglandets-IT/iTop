@@ -595,6 +595,22 @@ function ExportInitButton(sSelector) {
 	});
 }
 
+function ExportImpactButton(sSelector) {
+	$(sSelector).on('click', function () {
+		var form = $('#export-form');
+		var actionUrl = form.attr('action');
+
+		$.ajax({
+			type: "POST",
+			url: actionUrl,
+			data: form.serialize(), // serializes the form's elements.
+			success: function (data) {
+				$(sSelector).html(data); // show response from the php script.
+			}
+		});
+	});
+}
+
 /**
  * @deprecated 3.0.0 N°4367 deprecated, use {@see CombodoSanitizer.EscapeHtml} instead
  *

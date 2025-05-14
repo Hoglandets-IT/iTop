@@ -496,6 +496,7 @@ $(function()
 				{
 					sHtml += '<li><a href="#" id="'+sPopupMenuId+'_attachment">'+this.options.export_as_attachment.label+'</a></li>';
 				}
+				sHtml += '<li><a href="#"  id="' + sPopupMenuId + '_bob" href="' + this.options.export_as_bob.url + '">' + this.options.export_as_bob.label + '</a></li>';
 				//sHtml += '<li><a href="#" id="'+sPopupMenuId+'_reload">Refresh</a></li>';
 				sHtml += '</ul></li></ul></div>';
 				sHtml += '</div>';
@@ -507,6 +508,9 @@ $(function()
 
 
 				var me = this;
+				$('#' + sPopupMenuId + '_bob').on('click', function () {
+					me.export_as_bob();
+				});
 				$('#'+sPopupMenuId+'_pdf').on('click', function() { me.export_as_pdf(); });
 				$('#'+sPopupMenuId+'_attachment').on('click', function() { me.export_as_attachment(); });
 				$('#'+sId+'_zoom').slider({ min: 0, max: 5, value: 1, step: 0.25, change: function() { me._on_zoom_change( $(this).slider('value')); } });
@@ -575,8 +579,47 @@ $(function()
 				});
 
 			},
-			export_as_pdf: function()
+			export_as_bob: function ()
 			{
+				var sId = this.element.attr('id');
+				var me = this;
+				var oParams = {};
+				oParams.g = this.options.grouping_threshold;
+				oParams.context_key = this.options.context_key;
+				oParams.transaction_id = this.options.transaction_id;
+				oParams.contexts = {};
+				$('#' + sId + '_contexts').multiselect('getChecked').each(function () {
+					oParams.contexts[$(this).val()] = me.options.additional_contexts[$(this).val()].oql;
+				});
+
+				oParams.excluded_classes = {};
+				for (k in this.options.excluded_classes) {
+					oParams.excluded_classes[k] = this.options.excluded_classes[k];
+				}
+				oParams.sources = {};
+				for (var k1 in this.options.sources) {
+					oParams.sources[k1] = {};
+					for (var k2 in this.options.sources[k1]) {
+						oParams.sources[k1][k2] = this.options.sources[k1][k2];
+					}
+				}
+				oParams.excluded = {};
+				for (var k1 in this.options.excluded) {
+					oParams.options.excluded[k1] = {};
+					for (var k2 in this.options.excluded[k1]) {
+						oParams.excluded[k1][k2] = this.options.excluded[k1][k2];
+					}
+				}
+				oParams.list_classes = {};
+				$("#dh_flash_criterion_outer [name= 'excluded[]']").each(function (index, element) {
+					oParams.list_classes[index] = $(element).val();
+				});
+
+				$.post(this.options.export_as_bob.url, oParams, function (data) {
+					$('body').append(data);
+				});
+			},
+			export_as_pdf: function () {
 				this._export_dlg(this.options.labels.export_pdf_title, this.options.export_as_pdf.url, 'download_pdf');
 			},
 			_export_dlg: function(sTitle, sSubmitUrl, sOperation)

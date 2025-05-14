@@ -25,6 +25,7 @@ use Combodo\iTop\Application\WebPage\iTopPDF;
 use Combodo\iTop\Application\WebPage\PDFPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Service\Router\Router;
 
 /**
  * Special kind of Graph for producing some nice output
@@ -1470,6 +1471,7 @@ class DisplayableGraph extends SimpleGraph
 		try {
 			$this->InitFromGraphviz();
 			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
+            $sExportAsPdfURL2 = Router::GetInstance()->GenerateUrl('export.choose_global_params', ['format' => 'pdf']);
 			$sContext = $oAppContext->GetForLink();
 			$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
 			$sExportAsDocumentURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_attachment&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
@@ -1495,7 +1497,8 @@ class DisplayableGraph extends SimpleGraph
 				'sources'              => ($this->bDirectionDown ? $this->aSourceObjects : $this->aSinkObjects),
 				'excluded'             => $aExcludedByClass,
 				'grouping_threshold'   => $iGroupingThreshold,
-				'export_as_pdf'        => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
+                'export_as_pdf' => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
+                'export_as_bob' => array('url' => $sExportAsPdfURL2, 'label' => Dict::S('UI:Relation:ExportAsBob')),
 				'transaction_id'        => utils::GetNewTransactionId(),
 				'export_as_attachment' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsAttachment'), 'obj_class' => $sObjClass, 'obj_key' => $iObjKey),
 				'drill_down'           => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
