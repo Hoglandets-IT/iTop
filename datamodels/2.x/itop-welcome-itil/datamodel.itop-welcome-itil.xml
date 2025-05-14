@@ -34,7 +34,7 @@
             <rank>20</rank>
             <parent>AdminTools</parent>
             <definition>
-                <layout>DashboardLayoutTwoCols</layout>
+        <layout>DashboardLayoutThreeCols</layout>
                 <title>Menu:AuditCategories:Title</title>
                 <cells>
                     <cell id="0">
@@ -66,21 +66,23 @@
                     <cell id="2">
                         <rank>2</rank>
                         <dashlets>
-                            <dashlet id="AuditConfiguration_row1_col0_1" xsi:type="DashletObjectList">
+              <dashlet id="AuditConfiguration_row0_col2_1" xsi:type="DashletPlainText">
                                 <rank>0</rank>
-                                <title>Class:AuditDomain</title>
-                                <query>SELECT AuditDomain</query>
-                                <menu>true</menu>
+                <text>Class:AuditRule+</text>
+              </dashlet>
+              <dashlet id="AuditConfiguration_row0_col2_2" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>AuditRule</class>
                             </dashlet>
                         </dashlets>
                     </cell>
                     <cell id="3">
                         <rank>3</rank>
                         <dashlets>
-                            <dashlet id="AuditConfiguration_row1_col1_1" xsi:type="DashletObjectList">
+              <dashlet id="AuditConfiguration_row1_col0_1" xsi:type="DashletObjectList">
                                 <rank>0</rank>
-                                <title>Class:AuditCategory</title>
-                                <query>SELECT AuditCategory</query>
+                <title>Class:AuditDomain</title>
+                <query>SELECT AuditDomain</query>
                                 <menu>true</menu>
                             </dashlet>
                         </dashlets>
@@ -88,47 +90,21 @@
                     <cell id="4">
                         <rank>4</rank>
                         <dashlets>
-                            <dashlet id="AuditConfiguration_row2_col1_1" xsi:type="DashletPlainText">
+              <dashlet id="AuditConfiguration_row1_col1_1" xsi:type="DashletObjectList">
                                 <rank>0</rank>
-                                <text>Class:AuditRule+</text>
-                            </dashlet>
-                            <dashlet id="AuditConfiguration_row2_col1_2" xsi:type="DashletBadge">
-                                <rank>1</rank>
-                                <class>AuditRule</class>
+                <title>Class:AuditCategory</title>
+                <query>SELECT AuditCategory</query>
+                <menu>true</menu>
                             </dashlet>
                         </dashlets>
                     </cell>
                     <cell id="5">
                         <rank>5</rank>
                         <dashlets>
-                            <dashlet id="AuditConfiguration_row2_col2_1" xsi:type="DashletPlainText">
-                                <rank>0</rank>
-                                <text>Class:AuditFilterField+</text>
-                            </dashlet>
-                            <dashlet id="AuditConfiguration_row2_col2_2" xsi:type="DashletBadge">
-                                <rank>1</rank>
-                                <class>AuditFilterField</class>
-                            </dashlet>
-                        </dashlets>
-                    </cell>
-                    <cell id="6">
-                        <rank>6</rank>
-                        <dashlets>
-                            <dashlet id="AuditConfiguration_row3_col1_1" xsi:type="DashletObjectList">
+              <dashlet id="AuditConfiguration_row1_col2_1" xsi:type="DashletObjectList">
                                 <rank>0</rank>
                                 <title>Class:AuditRule</title>
                                 <query>SELECT AuditRule</query>
-                                <menu>true</menu>
-                            </dashlet>
-                        </dashlets>
-                    </cell>
-                    <cell id="7">
-                        <rank>7</rank>
-                        <dashlets>
-                            <dashlet id="AuditConfiguration_row3_col2_1" xsi:type="DashletObjectList">
-                                <rank>0</rank>
-                                <title>Class:AuditFilterField</title>
-                                <query>SELECT AuditFilterField</query>
                                 <menu>true</menu>
                             </dashlet>
                         </dashlets>
