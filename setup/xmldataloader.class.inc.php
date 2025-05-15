@@ -278,10 +278,6 @@ class XMLDataLoader
 						$oDoc = new ormDocument($data, $sMimeType, $sFileName);
 						$oTargetObj->Set($sAttCode, $oDoc);
 					}
-					elseif ($oAttDef instanceof AttributeTagSet)
-					{
-						// TODO
-                    }
 					else
 					{
 						$value = (string)$oSubNode;
@@ -289,8 +285,9 @@ class XMLDataLoader
 						if ($value == '')
 						{
 							$value = $oAttDef->GetNullValue();
+						} else {
+							$value = $oAttDef->MakeRealValue($value, $oTargetObj);
 						}
-
 						$res = $oTargetObj->CheckValue($sAttCode, $value);
 						if ($res !== true)
 						{

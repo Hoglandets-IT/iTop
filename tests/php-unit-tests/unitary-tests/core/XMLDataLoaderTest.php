@@ -103,13 +103,27 @@ class XMLDataLoaderTest extends ItopDataTestCase
 		<obsolescence_flag>no</obsolescence_flag>
 		<obsolescence_date></obsolescence_date>
 	</Person>
+	<TriggerOnObjectUpdate alias="TriggerOnObjectUpdate" id="4">
+		<description>Contact updated</description>
+		<action_list></action_list>
+		<context>GUI:Console</context>
+		<complement>class restriction: Contact</complement>
+		<subscription_policy>allow_no_channel</subscription_policy>
+		<target_class>Contact</target_class>
+		<filter>SELECT `Person` FROM Person AS `Person` WHERE ((`status` = &apos;active&apos;) AND ((`org_id` = :current_contact-&gt;org_id) OR (`org_id` = :this-&gt;org_id)))</filter>
+		<target_attcodes>email,name</target_attcodes>
+		<finalclass>TriggerOnObjectUpdate</finalclass>
+		<friendlyname>Contact updated</friendlyname>
+	</TriggerOnObjectUpdate>
 </Set>
 XML;
 		$this->CreateFromXMLString($sXML);
 
 		$oPerson = MetaModel::GetObjectByName('Person', 'Zacharie Zmillpatt');
+		$oTrigger = MetaModel::GetObjectByName('TriggerOnObjectUpdate', 'Contact updated');
 
 		$this->assertEquals('Zanzibar', $oPerson->Get('location_id_friendlyname'));
 		$this->assertEquals('ZuperTest', $oPerson->Get('org_id_friendlyname'));
+		$this->assertEquals('email, name', (string)$oTrigger->Get('target_attcodes')); // should add space after comma
 	}
 }
