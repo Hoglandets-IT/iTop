@@ -94,6 +94,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expandir todo',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Desplegar todo',
 	'Brick:Portal:Browse:Filter:NoData' => 'Sin elementos',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Volver',
 ));
 
 // ManageBrick brick

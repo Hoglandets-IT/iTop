@@ -96,6 +96,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expandir todos',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Recolher todos',
 	'Brick:Portal:Browse:Filter:NoData' => 'Sem dados',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Voltar',
 ));
 
 // ManageBrick brick

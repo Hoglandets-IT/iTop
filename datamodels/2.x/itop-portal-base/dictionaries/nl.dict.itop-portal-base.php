@@ -97,6 +97,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Toon alles',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Verberg alles',
 	'Brick:Portal:Browse:Filter:NoData' => 'Geen gegevens',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Terug',
 ));
 
 // ManageBrick brick

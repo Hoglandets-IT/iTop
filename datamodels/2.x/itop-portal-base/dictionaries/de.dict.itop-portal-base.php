@@ -96,6 +96,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Alle expandieren',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Alle kollabieren',
 	'Brick:Portal:Browse:Filter:NoData' => 'Kein Eintrag',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Zurück',
 ));
 
 // ManageBrick brick

@@ -92,6 +92,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expand all',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Collapse all',
 	'Brick:Portal:Browse:Filter:NoData' => 'No item',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Back',
 ));
 
 // ManageBrick brick

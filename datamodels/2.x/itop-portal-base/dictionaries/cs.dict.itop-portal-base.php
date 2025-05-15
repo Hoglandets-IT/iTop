@@ -96,6 +96,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Rozbalit vše',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Sbalit vše',
 	'Brick:Portal:Browse:Filter:NoData' => 'Žádná položka',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Zpět',
 ));
 
 // ManageBrick brick

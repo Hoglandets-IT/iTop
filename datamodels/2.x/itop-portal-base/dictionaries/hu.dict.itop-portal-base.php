@@ -96,6 +96,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Összes kinyitása',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Összecsukás',
 	'Brick:Portal:Browse:Filter:NoData' => 'Nincs elem',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Vissza',
 ));
 
 // ManageBrick brick

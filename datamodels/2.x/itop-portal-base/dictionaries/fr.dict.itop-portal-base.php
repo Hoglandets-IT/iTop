@@ -96,6 +96,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Tout déplier',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Tout replier',
 	'Brick:Portal:Browse:Filter:NoData' => 'Aucun élément',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Retour',
 ));
 
 // ManageBrick brick

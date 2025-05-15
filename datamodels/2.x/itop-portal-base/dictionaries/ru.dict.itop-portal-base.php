@@ -97,6 +97,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Развернуть все',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Свернуть все',
 	'Brick:Portal:Browse:Filter:NoData' => 'Нет элементов',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Назад',
 ));
 
 // ManageBrick brick

@@ -96,6 +96,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Rozwiń wszystkie',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Zwiń wszystkie',
 	'Brick:Portal:Browse:Filter:NoData' => 'Brak elementu',
+	'Brick:Portal:Browse:Mosaic:Back' => 'Wstecz',
 ));
 
 // ManageBrick brick
