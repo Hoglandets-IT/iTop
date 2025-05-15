@@ -106,6 +106,8 @@ class DBBackup
 	/** @var string */
 	protected $sDBName;
 	/** @var string */
+	protected $sMySQLBinDir = '';
+	/** @var string */
 	protected $sDBSubName;
 
 	/**
@@ -133,7 +135,6 @@ class DBBackup
 		$this->sDBSubName = $oConfig->get('db_subname');
 	}
 
-	protected $sMySQLBinDir = '';
 
 	/**
 	 * Create a normalized backup name, depending on the current date/time and Database
@@ -362,8 +363,9 @@ class DBBackup
 		}
 
 		$this->LogInfo("Starting backup of $this->sDBHost/$this->sDBName(suffix:'$this->sDBSubName')");
+		$sMySQLBinDir = utils::ReadParam('mysql_bindir', $this->sMySQLBinDir, true);
 
-		$sMySQLDump = $this->GetMysqldumpCommand();
+		$sMySQLDump = $this->MakeSafeMySQLCommand($sMySQLBinDir, 'mysqldump');
 
 		// Store the results in a temporary file
 		$sTmpFileName = self::EscapeShellArg($sBackupFileName);
@@ -624,20 +626,22 @@ EOF;
 
 	/**
 	 * @return string the command to launch mysqldump (without its params)
+	 * @throws \BackupException
 	 */
-	private function GetMysqldumpCommand()
+	public static function MakeSafeMySQLCommand($sMySQLBinDir, string $sCmd)
 	{
-		$sMySQLBinDir = utils::ReadParam('mysql_bindir', $this->sMySQLBinDir, true);
-		if (empty($sMySQLBinDir))
-		{
-			$sMysqldumpCommand = 'mysqldump';
+		if (empty($sMySQLBinDir)) {
+			$sMySQLCommand = $sCmd;
 		}
-		else
-		{
-			$sMysqldumpCommand = '"'.$sMySQLBinDir.'/mysqldump"';
+		else {
+			$sMySQLBinDir = escapeshellcmd($sMySQLBinDir);
+			$sMySQLCommand = '"'.$sMySQLBinDir.'/$sCmd"';
+			if (!file_exists($sMySQLCommand)) {
+				throw new BackupException("$sCmd not found in $sMySQLBinDir");
+			}
 		}
 
-		return $sMysqldumpCommand;
+		return $sMySQLCommand;
 	}
 }
 
