@@ -777,7 +777,7 @@ class utilsTest extends ItopTestCase
 			'array' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, ['AD05nb+','apply_modify'], ['AD05nb','apply_modify']],
 			'good url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schools.com', 'https://www.w3schools.com'],
 			'bad url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https//www.w3schools.com', null],
-			'url with injection' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<img zzz src=x onerror=alert(1) //>', null],
+			'url with injection' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<img zzz src=x onerror=alert(1) //>', 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<imgzzzsrc=xonerror=alert(1)//>'],
 			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
 		];
 	}
