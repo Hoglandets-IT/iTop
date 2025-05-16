@@ -524,9 +524,7 @@ EOF
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
-		if (!array_key_exists('dashboard_div_id', $aExtraParams)) {
-			$aExtraParams['dashboard_div_id'] = utils::Sanitize($this->GetId(), '', 'element_identifier');
-		}
+		$aExtraParams['dashboard_div_id'] = utils::Sanitize($aExtraParams['dashboard_div_id'] ?? null, $this->GetId(), utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
 		/** @var \DashboardLayoutMultiCol $oLayout */
 		$oLayout = new $this->sLayoutClass();
@@ -1052,7 +1050,7 @@ EOF
 		$sSelectorHtml .= '</div>';
 
 		$sFile = addslashes($this->GetDefinitionFile());
-		$sReloadURL = $this->GetReloadURL();
+		$sReloadURL = json_encode($this->GetReloadURL());
 
 		$bFromDashboardPage = isset($aAjaxParams['from_dashboard_page']) ? isset($aAjaxParams['from_dashboard_page']) : false;
 		if ($bFromDashboardPage) {
@@ -1141,7 +1139,6 @@ JS
 			->AddCSSClass('ibo-action-button');
 
 		$oToolbar->AddSubBlock($oActionButton);
-
 		$aActions = array();
 		$sFile = addslashes(utils::LocalPath($this->sDefinitionFile));
 		$sJSExtraParams = json_encode($aExtraParams);
@@ -1166,7 +1163,7 @@ JS
 		$oToolbar->AddSubBlock($oActionButton)
 			->AddSubBlock($oActionsMenu);
 
-		$sReloadURL = $this->GetReloadURL();
+		$sReloadURL = json_encode($this->GetReloadURL());
 		$oPage->add_script(
 			<<<EOF
 function EditDashboard(sId, sDashboardFile, aExtraParams)
@@ -1273,7 +1270,7 @@ EOF
 		$sTitle = json_encode($this->sTitle);
 		$sFile = json_encode($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
-		$sReloadURL = $this->GetReloadURL();
+		$sReloadURL = json_encode($this->GetReloadURL());
 
 		$sExitConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
 		$sCancelConfirmationMessage = addslashes(Dict::S('UI:CancelConfirmationMessage'));
