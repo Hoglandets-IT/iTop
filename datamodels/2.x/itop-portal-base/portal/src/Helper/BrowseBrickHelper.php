@@ -513,7 +513,7 @@ class BrowseBrickHelper
 			$aItems[$sCurrentIndex] = array(
 				'level_alias' => $aCurrentRowKeys[0],
 				'id' => $aCurrentRowValues[0]->GetKey(),
-				'name' => $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['name_att']),
+				'name' => utils::EscapeHtml($aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['name_att'])),
 				'class' => get_class($aCurrentRowValues[0]),
 				'subitems' => array(),
 				'filter_data' => $this->GetFilterData($aLevelsProperties[$aCurrentRowKeys[0]], $aCurrentRowKeys[0], $aCurrentRowValues[0]),
