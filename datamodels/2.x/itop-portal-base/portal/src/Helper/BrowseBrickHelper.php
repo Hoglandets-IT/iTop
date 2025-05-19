@@ -335,7 +335,7 @@ class BrowseBrickHelper
 			$aRow[$key] = array(
 				'level_alias' => $key,
 				'id' => $sCurrentObjectId,
-				'name' => $value->Get($sNameAttCode),
+				'name' => utils::EscapeHtml($value->Get($sNameAttCode)),
 				'class' => $sCurrentObjectClass,
 				'action_rules_token' => $this->PrepareActionRulesForItems($aItems, $key, $aLevelsProperties),
 				'metadata' => array(
