@@ -502,6 +502,7 @@ return array(
     'Combodo\\iTop\\Service\\Events\\EventService' => $baseDir . '/sources/Service/Events/EventService.php',
     'Combodo\\iTop\\Service\\Events\\EventServiceLog' => $baseDir . '/sources/Service/Events/EventServiceLog.php',
     'Combodo\\iTop\\Service\\Events\\iEventServiceSetup' => $baseDir . '/sources/Service/Events/iEventServiceSetup.php',
+    'Combodo\\iTop\\Service\\Export\\ExportController' => $baseDir . '/sources/Controller/Export/ExportController.php',
     'Combodo\\iTop\\Service\\Import\\CSVImportPageProcessor' => $baseDir . '/sources/Service/Import/CSVImportPageProcessor.php',
     'Combodo\\iTop\\Service\\InterfaceDiscovery\\InterfaceDiscovery' => $baseDir . '/sources/Service/InterfaceDiscovery/InterfaceDiscovery.php',
     'Combodo\\iTop\\Service\\Links\\LinkSetDataTransformer' => $baseDir . '/sources/Service/Links/LinkSetDataTransformer.php',
@@ -3230,5 +3231,5 @@ return array(
     'privUITransactionFile' => $baseDir . '/application/transaction.class.inc.php',
     'privUITransactionSession' => $baseDir . '/application/transaction.class.inc.php',
     'utils' => $baseDir . '/application/utils.inc.php',
-    'ï¿½' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
+    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );

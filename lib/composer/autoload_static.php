@@ -892,6 +892,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Service\\Events\\EventService' => __DIR__ . '/../..' . '/sources/Service/Events/EventService.php',
         'Combodo\\iTop\\Service\\Events\\EventServiceLog' => __DIR__ . '/../..' . '/sources/Service/Events/EventServiceLog.php',
         'Combodo\\iTop\\Service\\Events\\iEventServiceSetup' => __DIR__ . '/../..' . '/sources/Service/Events/iEventServiceSetup.php',
+        'Combodo\\iTop\\Service\\Export\\ExportController' => __DIR__ . '/../..' . '/sources/Controller/Export/ExportController.php',
         'Combodo\\iTop\\Service\\Import\\CSVImportPageProcessor' => __DIR__ . '/../..' . '/sources/Service/Import/CSVImportPageProcessor.php',
         'Combodo\\iTop\\Service\\InterfaceDiscovery\\InterfaceDiscovery' => __DIR__ . '/../..' . '/sources/Service/InterfaceDiscovery/InterfaceDiscovery.php',
         'Combodo\\iTop\\Service\\Links\\LinkSetDataTransformer' => __DIR__ . '/../..' . '/sources/Service/Links/LinkSetDataTransformer.php',
