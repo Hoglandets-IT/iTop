@@ -775,7 +775,7 @@ try
 			$oP->add_comment('Objects updated: '.$oStatLog->Get('stats_nb_obj_updated').' ('.$oStatLog->Get('stats_nb_obj_updated_warnings')." warnings)");
 			$oP->add_comment('Objects update errors: '.$oStatLog->Get('stats_nb_obj_updated_errors'));
 			$oP->add_comment('Objects reconciled (updated): '.$oStatLog->Get('stats_nb_obj_new_updated').' ('.$oStatLog->Get('stats_nb_obj_new_updated_warnings').' warnings)');
-			$oP->add_comment('Objects reconciled (unchanged): '.$oStatLog->Get('stats_nb_obj_new_unchanged').' ('.$oStatLog->Get('stats_nb_obj_new_updated_warnings').' warnings)');
+			$oP->add_comment('Objects reconciled (unchanged): '.$oStatLog->Get('stats_nb_obj_new_unchanged').' ('.$oStatLog->Get('stats_nb_obj_new_unchanged_warnings').' warnings)');
 			$oP->add_comment('Objects reconciliation errors: '.$oStatLog->Get('stats_nb_replica_reconciled_errors'));
 			$oP->add_comment('Replica disappeared, no action taken: '.$oStatLog->Get('stats_nb_replica_disappeared_no_action'));
 		}
