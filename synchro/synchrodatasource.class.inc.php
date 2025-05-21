@@ -2440,7 +2440,9 @@ class SynchroReplica extends DBObject implements iDisplay
 			// Really modified ?
 			if ($oDestObj->IsModified())
 			{
-				$oDestObj::SetCurrentChange($oChange);
+				if(method_exists(get_class($oDestObj), "SetCurrentChange")){		
+					$oDestObj::SetCurrentChange($oChange);
+				}
 				$oDestObj->DBUpdate();
 				$bModified = true;
 				$oStatLog->AddTrace('Updated object - Values: {'.implode(', ', $aValueTrace).'}', $this);
@@ -2499,7 +2501,10 @@ class SynchroReplica extends DBObject implements iDisplay
 					$aValueTrace[] = "$sAttCode: $value";
 				}
 			}
-			$oDestObj::SetCurrentChange($oChange);
+
+			if(method_exists(get_class($oDestObj), "SetCurrentChange")){		
+				$oDestObj::SetCurrentChange($oChange);
+			}
 			$iNew = $oDestObj->DBInsert();
 
 			$this->Set('dest_id', $oDestObj->GetKey());
