@@ -89,9 +89,9 @@ try {
 		$oOption = SelectOptionUIBlockFactory::MakeForSelectOption("", Dict::S('UI:CSVImport:ClassesSelectOne'), false);
 		$oSelectBlock->AddSubBlock($oOption);
 		$aValidClasses = array();
-		$aClassCategories = array('bizmodel', 'addon/authentication');
+		$aClassCategories = array('bizmodel', 'addon/authentication', 'grant_by_profile');
 		if (UserRights::IsAdministrator()) {
-			$aClassCategories = array('bizmodel', 'application', 'addon/authentication');
+			$aClassCategories = array('bizmodel', 'application', 'addon/authentication', 'grant_by_profile');
 		}
 		foreach ($aClassCategories as $sClassCategory) {
 			foreach (MetaModel::GetClasses($sClassCategory) as $sClassName) {
