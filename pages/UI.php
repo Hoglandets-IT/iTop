@@ -1989,7 +1989,7 @@ catch(CoreException $e)
 	{
 		$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
 	}	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
+	$oP->error(Dict::Format('UI:Error_Details', Str::pure2html($e->getHtmlDesc())));
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())
@@ -2025,7 +2025,7 @@ catch(Exception $e)
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));
+	$oP->error(Dict::Format('UI:Error_Details', Str::pure2html($e->getMessage())));
 	$oP->output();
 
 	if (MetaModel::IsLogEnabledIssue())
