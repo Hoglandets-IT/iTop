@@ -611,7 +611,7 @@ JS
 					if ($oAttDef->IsExternalKey())
 					{
 						/** @var \AttributeExternalKey $oAttDef */
-						$aAttProperties['value'] = $oRemoteItem->Get($sAttCode . '_friendlyname');
+						$aAttProperties['value'] = \Str::pure2html($oRemoteItem->Get($sAttCode . '_friendlyname'));
 
 						// Checking if user can access object's external key
 						$sObjectUrl = ApplicationContext::MakeObjectUrl($oAttDef->GetTargetClass(), $oRemoteItem->Get($sAttCode));
