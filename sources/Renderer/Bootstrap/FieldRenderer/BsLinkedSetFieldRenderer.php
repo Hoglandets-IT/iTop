@@ -893,7 +893,7 @@ JS
 				} else if ($oAttDef->IsExternalKey()) {
 
 					/** @var \AttributeExternalKey $oAttDef */
-					$aAttProperties['value_html'] = $oItem->Get($sAttCode.'_friendlyname');
+					$aAttProperties['value_html'] = utils::EscapeHtml($oItem->Get($sAttCode.'_friendlyname'));
 
 					// Checking if user can access object's external key
 					$sObjectUrl = ApplicationContext::MakeObjectUrl($oAttDef->GetTargetClass(), $oItem->Get($sAttCode));
