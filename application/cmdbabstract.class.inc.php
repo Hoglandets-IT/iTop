@@ -3079,7 +3079,7 @@ JS
 		} else {
 			$sCancelButtonOnClickScript .= "function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)};";
 		}
-		$sCancelButtonOnClickScript .= "$('#form_{$this->m_iFormId} button.cancel').on('click', fOnClick{$this->m_iFormId}CancelButton);";
+		$sCancelButtonOnClickScript .= "$('#form_{$this->m_iFormId} button.cancel').on('click.navigation.itop', fOnClick{$this->m_iFormId}CancelButton);";
 		$oPage->add_ready_script($sCancelButtonOnClickScript);
 
 		$iFieldsCount = count($aFieldsMap);
