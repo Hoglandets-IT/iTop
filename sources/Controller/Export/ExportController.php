@@ -3,21 +3,11 @@ declare(strict_types=1);
 
 namespace Combodo\iTop\Service\Export;
 
-use ArchivedObjectException;
-use AttributeDateTime;
-use BulkChange;
 use BulkExport;
-use CellChangeSpec;
-use CMDBChange;
-use CMDBObject;
-use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
@@ -26,26 +16,11 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFact
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\AjaxPage;
-use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
-use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 use Combodo\iTop\Service\Router\Router;
-use CoreException;
-use CSVParser;
-use CSVParserException;
-use DBObjectSearch;
-use DBObjectSet;
 use Dict;
-use DictExceptionMissingString;
-use ExcelBulkExport;
 use Exception;
 use MetaModel;
-use MissingQueryArgument;
-use MySQLException;
-use MySQLHasGoneAwayException;
-use OQLException;
-use PDFBulkExport;
-use ReflectionException;
 use UserRights;
 use utils;
 
@@ -628,7 +603,10 @@ EOF
     }*/
     public static function OperationSelectColumns()
     {
-        $oP = new WebPage();
+		//select all the fields for the 'customs' classes
+
+	    $sJSTitle = json_encode(utils::EscapeHtml(utils::ReadParam('dialog_title', '', false, 'raw_data')));
+	    $oP = new AjaxPage($sJSTitle);
         $sFormat = utils::ReadParam('format', '');
         $oForm = self::GetFormWithHiddenParams($sFormat, $oP);
 
@@ -646,17 +624,14 @@ EOF
 
 
         $sWidgetId = 'tabular_fields_selector';
-        $aSelectedClasses = utils::ReadParam('class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
-       // $oSet = new CMDBObjectSet(new DBObjectSearch($sClass));
-       // $aSelectedClasses = $oSearch->GetSelectedClasses();
-        $aAuthorizedClasses = array();
-        foreach($aSelectedClasses as $sAlias => $sClassName)
+	    $aClassesChoice = [];
+        $aClasses = utils::ReadParam('list_classes', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
+        foreach($aClasses as $sClassName)
         {
-            if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ) != UR_ALLOWED_NO)
-            {
-                $aAuthorizedClasses[$sAlias] = $sClassName;
-            }
+	        $sSelection = utils::ReadParam($sClassName, '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
+	        $aClassesChoice[$sClassName] = $sSelection;
         }
+
         $aAllFieldsByAlias = array();
         $aAllAttCodes = array();
        /* foreach($aAuthorizedClasses as $sAlias => $sClass)
