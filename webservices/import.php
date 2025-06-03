@@ -739,7 +739,8 @@ try
 		null, // synchro scope
 		null, // on delete
 		$sDateFormat,
-		$bLocalize
+		$bLocalize,
+		count($aFieldList)
 	);
 
 	if ($bSimulate)

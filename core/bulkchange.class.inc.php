@@ -472,8 +472,10 @@ class BulkChange
 	protected $m_bLocalizedValues;
 	/** @var array Cache for resolving external keys based on the given search criterias */
 	protected $m_aExtKeysMappingCache;
+	/** @var int number of columns */
+	protected $m_iNbCol;
 
-	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null, $sDateFormat = null, $bLocalize = false)
+	public function __construct($sClass, $aData, $aAttList, $aExtKeys, $aReconcilKeys, $sSynchroScope = null, $aOnDisappear = null, $sDateFormat = null, $bLocalize = false, $iNbCol = 0)
 	{
 		$this->m_sClass = $sClass;
 		$this->m_aData = $aData;
@@ -485,6 +487,7 @@ class BulkChange
 		$this->m_sDateFormat = $sDateFormat;
 		$this->m_bLocalizedValues = $bLocalize;
 		$this->m_aExtKeysMappingCache = array();
+		$this->m_iNbCol =$iNbCol;
 	}
 
 	protected function ResolveExternalKey($aRowData, $sAttCode, &$aResults)
@@ -1236,19 +1239,14 @@ class BulkChange
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
-		$iNBFields = count($this->m_aAttList);
-		foreach ($this->m_aExtKeys as $aReconcilKeys) {
-			$iNBFields += count($aReconcilKeys);
-		}
-
 		// Avoid too many events
 		cmdbAbstractObject::SetEventDBLinksChangedBlocked(true);
 		try {
 			foreach ($this->m_aData as $iRow => $aRowData) {
 				set_time_limit(intval($iLoopTimeLimit));
 				// Stop if not the good number of cols in $aRowData
-				if(count($aRowData) != $iNBFields){
-					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-NbField',count($aRowData),$iNBFields) );
+				if($this->m_iNbCol>0 && count($aRowData) != $this->m_iNbCol){
+					$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-NbField',count($aRowData),$this->m_iNbCol) );
 					continue;
 				}
 
