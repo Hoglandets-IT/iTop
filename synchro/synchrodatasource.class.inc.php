@@ -2440,7 +2440,9 @@ class SynchroReplica extends DBObject implements iDisplay
 			// Really modified ?
 			if ($oDestObj->IsModified())
 			{
-				$oDestObj::SetCurrentChange($oChange);
+				if(method_exists(get_class($oDestObj), "SetCurrentChange")){
+					$oDestObj::SetCurrentChange($oChange);
+				}
 				$oDestObj->DBUpdate();
 				$bModified = true;
 				$oStatLog->AddTrace('Updated object - Values: {'.implode(', ', $aValueTrace).'}', $this);
@@ -2499,7 +2501,11 @@ class SynchroReplica extends DBObject implements iDisplay
 					$aValueTrace[] = "$sAttCode: $value";
 				}
 			}
-			$oDestObj::SetCurrentChange($oChange);
+
+			if(method_exists(get_class($oDestObj), "SetCurrentChange")){
+				//N°8413 - Make data synchro work on DBObject
+				$oDestObj::SetCurrentChange($oChange);
+			}
 			$iNew = $oDestObj->DBInsert();
 
 			$this->Set('dest_id', $oDestObj->GetKey());
@@ -2552,7 +2558,10 @@ class SynchroReplica extends DBObject implements iDisplay
 					$oDestObj->Set($sAttCode, $value);
 				}
 				$this->Set('info_last_modified', date(AttributeDateTime::GetSQLFormat()));
-				$oDestObj::SetCurrentChange($oChange);
+				if(method_exists(get_class($oDestObj), "SetCurrentChange")){
+					//N°8413 - Make data synchro work on DBObject
+					$oDestObj::SetCurrentChange($oChange);
+				}
 				$oDestObj->DBUpdate();
 				$oStatLog->AddTrace('Replica marked as obsolete', $this);
 				$oStatLog->Inc('stats_nb_obj_obsoleted');
@@ -2590,7 +2599,10 @@ class SynchroReplica extends DBObject implements iDisplay
 				$oCheckDeletionPlan = new DeletionPlan();
 				if ($oDestObj->CheckToDelete($oCheckDeletionPlan))
 				{
-					$oDestObj::SetCurrentChange($oChange);
+					if(method_exists(get_class($oDestObj), "SetCurrentChange")){
+						//N°8413 - Make data synchro work on DBObject
+						$oDestObj::SetCurrentChange($oChange);
+					}
 					$oDestObj->DBDelete();
 					$this->DBDelete();
 					$oStatLog->Inc('stats_nb_obj_deleted');
@@ -2636,7 +2648,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 
 		// $sExtAttCode is a valid attribute code
-		// 
+		//
 		$sClass = $this->Get('base_class');
 
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sExtAttCode);
@@ -2745,7 +2757,7 @@ class SynchroReplica extends DBObject implements iDisplay
 	public function GetHilightClass()
 	{
 		// Possible return values are:
-		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
+		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
 		return HILIGHT_CLASS_NONE; // Not hilighted by default
 	}
 
