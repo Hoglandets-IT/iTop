@@ -251,7 +251,10 @@ class BulkChangeTest extends ItopDataTestCase
 			$this->debug("oServer->GetKey():".$oServer->GetKey());
 		}
 
-
+		$iNBFields = count($aAttributes);
+		foreach ($aExtKeys as $aListFields) {
+				$iNBFields += count($aListFields);
+		}
 		$oBulk = new BulkChange(
 			"Server",
 			$aCsvData,
@@ -261,7 +264,8 @@ class BulkChangeTest extends ItopDataTestCase
 			null,
 			null,
 			"Y-m-d H:i:s", // date format
-			true // localize
+			true, // localize,
+			$iNBFields
 		);
 		$aRes = $oBulk->Process();
 		static::assertNotNull($aRes);
