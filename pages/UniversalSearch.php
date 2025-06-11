@@ -56,8 +56,8 @@ $oP->SetBreadCrumbEntry('ui-tool-universalsearch', Dict::S('Menu:UniversalSearch
 $sSearchHeaderForceDropdown = '<select  id="select_class" name="baseClass" onChange="this.form.submit();">';
 $aClassLabels = array();
 foreach (MetaModel::GetClasses('bizmodel, grant_by_profile') as $sCurrentClass) {
-	if ((MetaModel::HasCategory('grant_by_profile') && UserRights::IsActionAllowed($sCurrentClass, UR_ACTION_BULK_MODIFY))
-		|| (MetaModel::HasCategory('bizmodel') && UserRights::IsActionAllowed($sCurrentClass, UR_ACTION_BULK_READ))) {
+	if ((MetaModel::HasCategory($sCurrentClass, 'grant_by_profile') && UserRights::IsActionAllowed($sCurrentClass, UR_ACTION_BULK_MODIFY))
+		|| (MetaModel::HasCategory($sCurrentClass, 'bizmodel') && UserRights::IsActionAllowed($sCurrentClass, UR_ACTION_BULK_READ))) {
 		$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
 	}
 }
