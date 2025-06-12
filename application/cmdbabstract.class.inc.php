@@ -176,6 +176,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 */
 	protected $sDisplayMode;
 	protected $aFieldsMap;
+    /*store posted values in order to be used in GetAttributeFlag*/
+    protected $aPostedValues = [];
 
 	/**
 	 * If true, bypass IsActionAllowedOnAttribute when writing this object
@@ -3884,7 +3886,36 @@ HTML;
 		return $aWriteableAttList;
 	}
 
-	/**
+    /**
+     * function to test if the posted value or fi not exists the existing value matches the expected value
+     * this is used to check the current value in GetAttributeFlag function (useful to manage dynamic readonly attributes)
+     * @param $sAttr
+     * @param $sValue
+     * @return bool
+     * @throws ArchivedObjectException
+     * @throws CoreException
+     */
+    public function GetCurrentValue($sAttr)
+    {
+        if (array_key_exists($sAttr, $this->aPostedValues)) {
+            return $this->aPostedValues[$sAttr];
+        }
+        return $this->Get($sAttr);
+    }
+
+    /*
+     * This function checks if the value of the attribute has been modified in screen
+     * this is used to check if field has been modifed in GetAttributeFlag function (useful to manage dynamic readonly attributes)
+     */
+    public function IsModifiedValue($sAttr)
+    {
+        if (array_key_exists($sAttr, $this->aPostedValues)) {
+            return $this->aPostedValues[$sAttr] == $this->Get($sAttr);
+        }
+        return false;
+    }
+
+    /**
 	 * Compute the attribute flags depending on the object state
 	 */
 	public function GetFormAttributeFlags($sAttCode)
@@ -4110,6 +4141,7 @@ HTML;
 
 		$aErrors = array();
 		$aFinalValues = array();
+        $this->aPostedValues = $aValues; // Store the values for later use (e.g. in getAttributeFlag)
 		foreach($this->GetWriteableAttList(array_keys($aValues), $aErrors, $aAttFlags) as $sAttCode => $oAttDef)
 		{
 			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
