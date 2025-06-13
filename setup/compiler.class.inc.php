@@ -22,6 +22,7 @@ use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\DesignDocument;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
@@ -3300,7 +3301,7 @@ EOF;
 			$sFileId = $oFileRef->getAttribute('ref');
 			if ($sFileId !== '')
 			{
-				$sQuotedFileId = self::QuoteForPHP($sFileId);
+				$sQuotedFileId = DesignDocument::XPathQuote($sFileId);
 				$oNodes = $this->oFactory->GetNodes("/itop_design/files/file[@id=$sQuotedFileId]");
 				if ($oNodes->length == 0)
 				{
