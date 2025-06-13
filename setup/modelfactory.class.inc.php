@@ -2610,6 +2610,10 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 			$oResult = $oXPath->query($sXPath, $oContextNode);
 		}
 
+		if ($oResult === false) {
+			throw new \Exception("Invalid XPath: $sXPath");
+		}
+
 		return $oResult;
 	}
 

@@ -2652,7 +2652,7 @@ EOF
 		if (is_null($sIconRelPath)) {
 			$sIconRelPath = "null";
 		} else {
-			$sIconRelPath = "'$sModuleRelDir/$sIconRelPath'";
+			$sIconRelPath = self::QuoteForPHP("$sModuleRelDir/$sIconRelPath");
 		}
 
 		// CSS classes representing the element (regular and alternative)
@@ -3300,7 +3300,8 @@ EOF;
 			$sFileId = $oFileRef->getAttribute('ref');
 			if ($sFileId !== '')
 			{
-				$oNodes = $this->oFactory->GetNodes("/itop_design/files/file[@id='$sFileId']");
+				$sQuotedFileId = self::QuoteForPHP($sFileId);
+				$oNodes = $this->oFactory->GetNodes("/itop_design/files/file[@id=$sQuotedFileId]");
 				if ($oNodes->length == 0)
 				{
 					throw new DOMFormatException('Could not find the file with ref '.$sFileId);

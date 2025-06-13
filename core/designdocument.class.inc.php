@@ -501,7 +501,8 @@ class DesignElement extends \DOMElement
 			{
 				$sSearchId = $oRefNode->getAttribute('id');
 			}
-			$sXPath = './'.$oRefNode->tagName."[@id='$sSearchId']";
+			$sQuotedId = DesignDocument::XPathQuote($sSearchId);
+			$sXPath = './'.$oRefNode->tagName."[@id=$sQuotedId]";
 
 			$oRes = $oXPath->query($sXPath, $oRoot);
 		}
