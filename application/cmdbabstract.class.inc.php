@@ -1337,7 +1337,7 @@ HTML
 					}
 				}
 			}
-
+            $aHeader['friendlyname'] = ['label' => MetaModel::GetName($sClassName)];
 			foreach ($aList[$sAlias] as $sAttCodeEx => $oAttDef) {
 				$sColLabel = $bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx) : $sAttCodeEx;
 
@@ -1358,6 +1358,7 @@ HTML
 			$aRow = [];
 			foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
 				$oObj = $aObjects[$sAlias];
+                $aRow["friendlyname"] = $oObj->Get('friendlyname');
 				foreach ($aList[$sAlias] as $sAttCodeEx => $oAttDef) {
 					if (is_null($oObj)) {
 						$aRow[$oAttDef->GetCode()] = '';
