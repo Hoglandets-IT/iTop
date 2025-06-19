@@ -316,4 +316,13 @@ class SessionHandlerTest extends ItopDataTestCase
 
 		$this->assertEquals('gabuzomeu', $aJson['shadok'] ?? '', "Should report the current login mode in [shadok]: $sFirstContent");
 	}
+
+	public function testGenerateSessionContentWithPreviousNonArrayContentAndWithAdditionalDataProvidedBySessionHandlerExtension()
+	{
+		\utils::GetConfig()->Set('sessions_tracking.session_handler_extension', 'Combodo\iTop\Test\UnitTest\SessionTracker\BasicSessionHandlerExtension');
+		$this->CreateUserAndLogIn();
+		$oSessionHandler = new SessionHandler();
+		$sContent = $this->GenerateSessionContent($oSessionHandler, json_encode(null));
+		$this->assertNotNull($sContent, "Call to CompleteSessionData should NOT fail due to Argument #1 (\$aJson) must be of type array, null given");
+	}
 }
