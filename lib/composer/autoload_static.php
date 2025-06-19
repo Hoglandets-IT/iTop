@@ -915,6 +915,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectsEvents' => __DIR__ . '/../..' . '/sources/Service/TemporaryObjects/TemporaryObjectsEvents.php',
         'Combodo\\iTop\\SessionTracker\\SessionGC' => __DIR__ . '/../..' . '/sources/SessionTracker/SessionGC.php',
         'Combodo\\iTop\\SessionTracker\\SessionHandler' => __DIR__ . '/../..' . '/sources/SessionTracker/SessionHandler.php',
+        'Combodo\\iTop\\SessionTracker\\iSessionHandlerExtension' => __DIR__ . '/../..' . '/sources/SessionTracker/iSessionHandlerExtension.php',
         'CompileCSSService' => __DIR__ . '/../..' . '/application/compilecssservice.class.inc.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Config' => __DIR__ . '/../..' . '/core/config.class.inc.php',
@@ -3620,7 +3621,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
