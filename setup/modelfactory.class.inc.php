@@ -69,14 +69,37 @@ class MFException extends Exception
 	 * MFException constructor.
 	 *
 	 * @inheritDoc
+	 *
+	 * @param $message
+	 * @param $code: error code
+	 * @param $oNode: dom node
+	 * @param $sXPath: XML xpath: if provided used in exception message. otherwise computed via $oNode
+	 * @param $sExtraInfo: additional information stored in exception
+	 * @param $oParentFallbackNode: fallback dom node (usually parent). in case $oNode XML line is wrong (set to 0), line number computed/displayed in error message comes from $oParentFallbackNode
 	 */
-	public function __construct($message = null, $code = null, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
+	public function __construct($message, $code, $oNode, $sXPath = null, $sExtraInfo = '', $oParentFallbackNode=null)
 	{
-		parent::__construct($message, $code, $previous);
+		$iSourceLineNumber = ModelFactory::GetXMLLineNumber($oNode);
+		if ($iSourceLineNumber==0 && ! is_null($oParentFallbackNode)){
+			$iSourceLineNumber = ModelFactory::GetXMLLineNumber($oParentFallbackNode);
+		}
+
+		if (is_null($sXPath)){
+			$sXPath = DesignDocument::GetItopNodePath($oNode);
+		}
+
 		$this->iSourceLineNumber = $iSourceLineNumber;
 		$this->iSourceLineOffset = 0;
 		$this->sXPath = $sXPath;
 		$this->sExtraInfo = $sExtraInfo;
+		parent::__construct("$sXPath at line $iSourceLineNumber: $message", $code);
+
+		$aContext = [
+			'error' => $code,
+			'stack' => $this->getTraceAsString(),
+			'extra_info' => $sExtraInfo,
+		];
+		\IssueLog::Error($this->getMessage(), null, $aContext);
 	}
 
 	/**
@@ -749,35 +772,8 @@ class ModelFactory
 			case 'define_if_not_exists':
 				/** @var \MFElement $oParentNode */
 				$oParentNode = $oSubClassNode->parentNode;
-				self::ThrowMFException("_delta=\"$sParentDeltaSpec\" not supported for classes in hierarchy", MFException::NOT_FOUND, $oParentNode);
+				throw new MFException("_delta=\"$sParentDeltaSpec\" not supported for classes in hierarchy", MFException::NOT_FOUND, $oParentNode);
 		}
-	}
-
-	/**
-	 * @covers N°8306: try to print correct XML line number
-	 * @param string $sMsg
-	 * @param $code
-	 * @param $oNode
-	 * @param $sExtraInfo
-	 * @param $sItopNodePath
-	 *
-	 * @return mixed
-	 * @throws \MFException
-	 */
-	public static function ThrowMFException(string $sMsg, $code, $oNode, $sExtraInfo='', $sItopNodePath=null, $oParentFallbackNode=null)
-	{
-		$iLine = ModelFactory::GetXMLLineNumber($oNode);
-		if ($iLine==0 && ! is_null($oParentFallbackNode)){
-			$iLine = ModelFactory::GetXMLLineNumber($oParentFallbackNode);
-		}
-
-		if (is_null($sItopNodePath)){
-			$sItopNodePath = DesignDocument::GetItopNodePath($oNode);
-		}
-
-		$oMFException = new MFException("$sItopNodePath at line $iLine: $sMsg", $code, $iLine, $sItopNodePath, $sExtraInfo);
-		\IssueLog::Debug(__METHOD__, null, [$oMFException->getMessage(), $oMFException->getTraceAsString()]);
-		throw $oMFException;
 	}
 
 	/**
@@ -832,7 +828,7 @@ class ModelFactory
 						// Move class after new parent class (before its next sibling)
 						$oNodeForTargetParent = $oTargetDocument->GetNodes("/itop_design/classes/class[@id=\"$sParentClassName\"]")->item(0);
 						if (is_null($oNodeForTargetParent)) {
-							self::ThrowMFException("invalid parent class '$sParentClassName'", MFException::NOT_FOUND, $oSourceParentClassNode);
+							throw new MFException("invalid parent class '$sParentClassName'", MFException::NOT_FOUND, $oSourceParentClassNode);
 						}
 						$oNextParentSibling = $oNodeForTargetParent->nextSibling;
 						if ($oNextParentSibling) {
@@ -860,14 +856,14 @@ class ModelFactory
 				if (!$oTargetNode || $oTargetNode->IsRemoved()) {
 					// The node does not exist or is marked as removed
 					if ($bMustExist) {
-						self::ThrowMFException("could not be found or marked as removed", MFException::NOT_FOUND, $oSourceNode);
+						throw new MFException("could not be found or marked as removed", MFException::NOT_FOUND, $oSourceNode);
 					}
 					if ($bIfExists) {
 						// Do not continue deeper
 						$oTargetNode = null;
 					} else {
 						if (!$bSpecifiedMerge && $sMode === self::LOAD_DELTA_MODE_STRICT && ($sSearchId !== '' || is_null($oSourceNode->GetFirstElementChild()))) {
-							self::ThrowMFException("could not be found or marked as removed (strict mode)", MFException::NOT_FOUND, $oSourceNode, 'strict mode');
+							throw new MFException("could not be found or marked as removed (strict mode)", MFException::NOT_FOUND, $oSourceNode, null, 'strict mode');
 						}
 
 						// Ignore renaming non-existant node
@@ -916,7 +912,7 @@ class ModelFactory
 					if (is_null($oSourceNode->GetFirstElementChild()) && $oTargetParentNode instanceof MFElement) {
 						// Leaf node
 						if ($sMode === self::LOAD_DELTA_MODE_STRICT && !$oSourceNode->hasAttribute('_rename_from') && trim($oSourceNode->GetText('')) !== '') {
-							self::ThrowMFException("cannot be modified without _delta flag (strict mode)", MFException::AMBIGUOUS_LEAF, $oSourceNode, 'strict mode');
+							throw new MFException("cannot be modified without _delta flag (strict mode)", MFException::AMBIGUOUS_LEAF, $oSourceNode, null, 'strict mode');
 						} else {
 							// Lax mode: same as redefine
 							// Replace the existing node by the given node - copy child nodes as well
@@ -990,16 +986,16 @@ class ModelFactory
 				$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
 
 				if ($oTargetNode == null) {
-					self::ThrowMFException("could not be deleted (not found)", MFException::COULD_NOT_BE_DELETED, $oSourceNode);
+					throw new MFException("could not be deleted (not found)", MFException::COULD_NOT_BE_DELETED, $oSourceNode);
 				}
 				if ($oTargetNode->IsRemoved()) {
-					self::ThrowMFException("could not be deleted (already marked as deleted)", MFException::ALREADY_DELETED, $oSourceNode);
+					throw new MFException("could not be deleted (already marked as deleted)", MFException::ALREADY_DELETED, $oSourceNode);
 				}
 				$oTargetNode->Delete();
 				break;
 
 			default:
-				self::ThrowMFException("unexpected value for attribute _delta: '".$sDeltaSpec."'", MFException::INVALID_DELTA, $oSourceNode, $sDeltaSpec);
+				throw new MFException("unexpected value for attribute _delta: '".$sDeltaSpec."'", MFException::INVALID_DELTA, $oSourceNode, null, $sDeltaSpec);
 		}
 
 		if ($oTargetNode && $oTargetNode->parentNode) {
@@ -2129,7 +2125,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 */
 	public function IsInDefinition()
 	{
-		// Iterate through the parents: reset the flag if any of them has a flag set 
+		// Iterate through the parents: reset the flag if any of them has a flag set
 		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode)
 		{
 			if ($oParent->GetAlteration() != '')
@@ -2211,7 +2207,7 @@ class MFElement extends Combodo\iTop\DesignElement
 				$sExceptionMessage = <<<EOF
 could not be added : already exists in `{$sExistingPath}` at line {$iExistingLine}
 EOF;
-				ModelFactory::ThrowMFException($sExceptionMessage, MFException::COULD_NOT_BE_ADDED, $oNode);
+				throw new MFException($sExceptionMessage, MFException::COULD_NOT_BE_ADDED, $oNode);
 			}
 			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
@@ -2249,13 +2245,13 @@ EOF;
 		if (!$oExisting)
 		{
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
-			ModelFactory::ThrowMFException('could not be modified (not found)', MFException::COULD_NOT_BE_MODIFIED_NOT_FOUND, $oNode, '', $sPath, $oParentFallbackNode);
+			throw new MFException('could not be modified (not found)', MFException::COULD_NOT_BE_MODIFIED_NOT_FOUND, $oNode, '', $sPath, $oParentFallbackNode);
 		}
 		$sPrevFlag = $oExisting->GetAlteration();
 		$sOldId = $oExisting->getAttribute('_old_id');
 		if ($oExisting->IsRemoved()) {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
-			ModelFactory::ThrowMFException('could not be modified (marked as deleted)', MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $oNode, '', $sPath, $oParentFallbackNode);
+			throw new MFException('could not be modified (marked as deleted)', MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $oNode, '', $sPath, $oParentFallbackNode);
 		}
 		$oExisting->ReplaceWithSingleNode($oNode);
 		if (!$this->IsInDefinition()) {
