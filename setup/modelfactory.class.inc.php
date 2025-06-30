@@ -70,7 +70,7 @@ class MFException extends Exception
 	 *
 	 * @inheritDoc
 	 */
-	public function __construct($message = null, $code = null, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
+	public function __construct($message = null, $code = 0, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
 	{
 		parent::__construct($message, $code, $previous);
 		$this->iSourceLineNumber = $iSourceLineNumber;
