@@ -1,5 +1,7 @@
 <?php
 
+namespace applicationContext;
+
 /**
  * @covers ApplicationContext
  */
@@ -7,9 +9,10 @@ class ApplicationContextTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 {
 	public function testGetForLink()
 	{
-		$_REQUEST['c']['menu'] = 'TargetOverview';
-		$_REQUEST['c']['org_id'] = '3';
-		$oApplicationContext = new ApplicationContext(true);
+		$oApplicationContext = new MockApplicationContext([
+			'org_id' => '3',
+			'menu' => 'TargetOverview',
+		]);
 
 		$sExpected = '&c[org_id]=3&c[menu]=TargetOverview';
 		$sActual = $oApplicationContext->GetForLink(true);
