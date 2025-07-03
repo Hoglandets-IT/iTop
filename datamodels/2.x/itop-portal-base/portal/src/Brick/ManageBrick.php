@@ -900,7 +900,7 @@ class ManageBrick extends PortalBrick
 									if (!$oModeNode->hasAttribute('id'))
 									{
 										throw new DOMFormatException('ManageBrick: Display mode must have a unique ID attribute',
-											null, null, $oModeNode);
+											0, null, $oModeNode);
 									}
 
 									$sModeId = $oModeNode->getAttribute('id');
@@ -938,7 +938,7 @@ class ManageBrick extends PortalBrick
 					{
 						if (!$oFieldNode->hasAttribute('id'))
 						{
-							throw new DOMFormatException('ManageBrick : Field must have a unique ID attribute', null,
+							throw new DOMFormatException('ManageBrick : Field must have a unique ID attribute', 0,
 								null, $oFieldNode);
 						}
 						$this->AddField($oFieldNode->getAttribute('id'));
@@ -958,7 +958,7 @@ class ManageBrick extends PortalBrick
 									if (!$oFieldNode->hasAttribute('id'))
 									{
 										throw new DOMFormatException('ManageBrick : Field must have a unique ID attribute',
-											null,
+											0,
 											null, $oFieldNode);
 									}
 									$this->AddExportField($oFieldNode->getAttribute('id'));
@@ -1020,7 +1020,7 @@ class ManageBrick extends PortalBrick
 									if (!$oGroupNode->hasAttribute('id'))
 									{
 										throw new DOMFormatException('ManageBrick : Group must have a unique ID attribute',
-											null, null, $oGroupNode);
+											0, null, $oGroupNode);
 									}
 									$sGroupId = $oGroupNode->getAttribute('id');
 
@@ -1046,12 +1046,12 @@ class ManageBrick extends PortalBrick
 									if (!isset($aGroup['title']) || $aGroup['title'] === '')
 									{
 										throw new DOMFormatException('ManageBrick : Group must have a title tag and it must not be empty',
-											null, null, $oGroupNode);
+											0, null, $oGroupNode);
 									}
 									if (!isset($aGroup['condition']) || $aGroup['condition'] === '')
 									{
 										throw new DOMFormatException('ManageBrick : Group must have a condition tag and it must not be empty',
-											null, null, $oGroupNode);
+											0, null, $oGroupNode);
 									}
 									$aGroups[] = $aGroup;
 								}
