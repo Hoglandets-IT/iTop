@@ -157,7 +157,7 @@ class _Ticket extends cmdbAbstractObject
 		$aCIsToImpactCode = array();
 		$aSources = array();
 		$aExcluded = array();
-		if (MetaModel::IsValidClass('FunctionalCI'))
+		if (MetaModel::IsValidClass('FunctionalCI') && MetaModel::IsValidAttCode('FunctionalCI', 'functionalcis_list'))
 		{
 			/** @var ormLinkSet $oCIsSet */
 			$oCIsSet = $this->Get('functionalcis_list');
