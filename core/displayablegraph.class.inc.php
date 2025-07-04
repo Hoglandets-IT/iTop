@@ -453,6 +453,11 @@ class DisplayableNode extends GraphNode
 		}
 	}
 
+	public static function GetTooltipAttributes($sClass)
+	{
+		return MetaModel::GetZListItems($sClass, 'list');
+	}
+
 	public function GetTooltip($aContextDefs)
 	{
 		$sHtml = '';
@@ -474,7 +479,7 @@ class DisplayableNode extends GraphNode
 			$sHtml .= '<hr/>';
 		}
 		$sHtml .= '<table><tbody>';
-		foreach(MetaModel::GetZListItems($sSubClass, 'list') as $sAttCode)
+		foreach(static::GetTooltipAttributes($sSubClass) as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sSubClass, $sAttCode);
 			$sHtml .= '<tr><td>'.$oAttDef->GetLabel().':&nbsp;</td><td>'.$oCurrObj->GetAsHtml($sAttCode).'</td></tr>';

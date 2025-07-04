@@ -203,6 +203,8 @@ class RelationEdge extends GraphEdge
  */ 
 class RelationGraph extends SimpleGraph
 {
+	private const OPTIMIZED_QUICK_AND_DIRTY = true; // For testing purposes only, to be removed later
+
 	protected $aSourceNodes; // Index of source nodes (for a quicker access)
 	protected $aSinkNodes; // Index of sink nodes (for a quicker access)
 	protected $aRedundancySettings; // Cache of user settings
@@ -261,16 +263,23 @@ class RelationGraph extends SimpleGraph
 			IssueLog::Error("Invalid context query '$sOQL'. A context query must contain at least two columns.");
 			throw new Exception("Invalid context query '$sOQL'. A context query must contain at least two columns. Columns: ".implode(', ', $aAliases).'. ');
 		}
-		$aAliasNames = array_keys($aAliases);
-		$oCondition = new BinaryExpression(new FieldExpression('id', $aAliasNames[0]), '=', new VariableExpression('id'));
-		$oSearch->AddConditionExpression($oCondition);
-		
-		$sClass = $oSearch->GetClass();
-		if (!array_key_exists($sClass, $this->aContextSearches))
-		{
-			$this->aContextSearches[$sClass] = array();
+
+		if (self::OPTIMIZED_QUICK_AND_DIRTY) {
+			$sClass = $oSearch->GetClass();
+			$this->aContextSearches[$sClass][] = array('key' => $key, 'search' => $oSearch);
 		}
-		$this->aContextSearches[$sClass][] = array('key' => $key, 'search' => $oSearch);
+		else {
+			$aAliasNames = array_keys($aAliases);
+			$oCondition = new BinaryExpression(new FieldExpression('id', $aAliasNames[0]), '=', new VariableExpression('id'));
+			$oSearch->AddConditionExpression($oCondition);
+
+			$sClass = $oSearch->GetClass();
+			if (!array_key_exists($sClass, $this->aContextSearches))
+			{
+				$this->aContextSearches[$sClass] = array();
+			}
+			$this->aContextSearches[$sClass][] = array('key' => $key, 'search' => $oSearch);
+		}
 	}
 
 	/**
@@ -365,18 +374,7 @@ class RelationGraph extends SimpleGraph
 		$oKPI->ComputeAndReport(__FUNCTION__.' - Determine reached nodes');
 		
 		$oKPI = new ExecutionKPI();
-		// Mark also the "context" nodes as reached and record the "root causes" for each node
-		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $oNode)
-		{
-			$oObj = $oNode->GetProperty('object');
-			$aRootCauses = array();
-			if (!is_null($oObj) && $this->IsPartOfContext($oObj, $aRootCauses))
-			{
-				$oNode->SetProperty('context_root_causes', $aRootCauses);
-				$oNode->ReachDown('is_reached', true);
-			}	
-		}
+		$this->MarkContextNodesAsReached();
 		$oKPI->ComputeAndReport(__FUNCTION__.' - Mark context nodes as reached');
 
 		$oKPI = new ExecutionKPI();
@@ -439,6 +437,11 @@ class RelationGraph extends SimpleGraph
 	 */
 	protected function AddRelatedObjects($sRelCode, $bDown, $oObjectNode, $iMaxDepth, $bEnableRedundancy)
 	{
+		if (self::OPTIMIZED_QUICK_AND_DIRTY) {
+			$this->AddRelatedObjects_Optimized();
+			return;
+		}
+
 		if ($iMaxDepth > 0)
 		{
 			if ($oObjectNode instanceof RelationRedundancyNode)
@@ -528,6 +531,64 @@ class RelationGraph extends SimpleGraph
 			}
 		}
 	}
+
+	public function AddRelatedObjects_Optimized()
+	{
+		$sRelCode = 'impact';
+
+		// TODO : dehardcode against the source nodes
+		$sSQLQuery = file_get_contents(APPROOT.'/impact_server1.sql');
+
+		$aRes = CMDBSource::QueryToArray($sSQLQuery, MYSQLI_ASSOC);
+
+		$oKPI = new ExecutionKPI();
+		$aClassToId = [];
+		foreach ($aRes as $aRow) {
+			if (is_null($aRow['parent_class']) || is_null($aRow['parent_id'])) {
+				// No parent => source node already present in the graph
+				continue;
+			}
+			$aClassToId[$aRow['class']][$aRow['id']] = $aRow['name'];
+		}
+		$oKPI->ComputeAndReport('AddRelatedObjectsDown - Create aClassToId');
+
+		$oKPI = new ExecutionKPI();
+		// One query per class => not too bad
+		// Note: it is not possible to use the root class as we need to load the tooltip attributes
+		foreach ($aClassToId as $sClass => $aIds) {
+			$oSearch = new DBObjectSearch($sClass);
+			$oSearch->AllowAllData();
+			$oSearch->AddCondition('id', array_keys($aIds), 'IN');
+			$oSet = new DBObjectSet($oSearch);
+			$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => DisplayableNode::GetTooltipAttributes($sClass)]);
+			while ($oObj = $oSet->Fetch()) {
+				$sNodeId = RelationObjectNode::MakeId($oObj);
+				if (!isset($this->aNodes[$sNodeId])) {
+					$this->aNodes[$sNodeId] = new RelationObjectNode($this, $oObj);
+				}
+			}
+		}
+		$oKPI->ComputeAndReport('AddRelatedObjectsDown - Query each class and create nodes: '.count($aClassToId));
+
+		$oKPI = new ExecutionKPI();
+		foreach ($aRes as $aRow) {
+			if (is_null($aRow['parent_class']) || is_null($aRow['parent_id'])) {
+				// No parent, so no edge
+				continue;
+			}
+			if ($aRow['backtracking'] == 0) {
+				$oSourceNode = $this->GetNode("{$aRow['parent_class']}::{$aRow['parent_id']}");
+				$oSinkNode = $this->GetNode("{$aRow['class']}::{$aRow['id']}");
+			}
+			else {
+				$oSourceNode = $this->GetNode("{$aRow['class']}::{$aRow['id']}");
+				$oSinkNode = $this->GetNode("{$aRow['parent_class']}::{$aRow['parent_id']}");
+			}
+			new RelationEdge($this, $oSourceNode, $oSinkNode);
+		}
+		$oKPI->ComputeAndReport('AddRelatedObjectsDown - Create edges : '.count($aRes));
+	}
+
 
 	/**
 	 * Determine if there is a redundancy (or use the existing one) and add the corresponding nodes/edges
@@ -763,4 +824,71 @@ class RelationGraph extends SimpleGraph
 		}
 	}
 
+	/**
+	 * Mark "context" nodes as reached and record the "root causes" for each node
+	 */
+	private function MarkContextNodesAsReached()
+	{
+		if (self::OPTIMIZED_QUICK_AND_DIRTY) {
+			$this->MarkContextNodesAsReached_Optimized();
+			return;
+		}
+
+		$oIterator = new RelationTypeIterator($this, 'Node');
+		foreach($oIterator as $oNode)
+		{
+			$oObj = $oNode->GetProperty('object');
+			$aRootCauses = array();
+			if (!is_null($oObj) && $this->IsPartOfContext($oObj, $aRootCauses))
+			{
+				$oNode->SetProperty('context_root_causes', $aRootCauses);
+				$oNode->ReachDown('is_reached', true);
+			}
+		}
+	}
+
+	private function MarkContextNodesAsReached_Optimized()
+	{
+		$oIterator = new RelationTypeIterator($this, 'Node');
+		// 1. Group all nodes by class
+		$aClassToId = [];
+		foreach ($oIterator as $oNode) {
+			$oObj = $oNode->GetProperty('object');
+			if ($oObj) {
+				$aClassToId[get_class($oObj)][$oObj->GetKey()] = $oNode;
+			}
+		}
+		// 2. For each class, perform a search to find the context objects
+		$aContextNodes = [];
+		foreach ($aClassToId as $sClass => $aIdToNodes) {
+			foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL) as $sParentClass)
+			{
+				if (!array_key_exists($sParentClass, $this->aContextSearches)) {
+					continue; // No context search for this class
+				}
+				foreach ($this->aContextSearches[$sParentClass] as $aContextQuery)
+				{
+					$oKPI = new ExecutionKPI();
+					/** @var \DBSearch $oSearch */
+					$oSearch = $aContextQuery['search']->DeepClone();
+					$oSearch->AddCondition('id', array_keys($aIdToNodes), 'IN');
+					$aAliasNames = array_keys($oSearch->GetSelectedClasses());
+					$sObjectAlias = $aAliasNames[0];
+					$sRootCauseAlias = $aAliasNames[1];
+					$oSet = new DBObjectSet($oSearch);
+					$oSet->OptimizeColumnLoad([$sObjectAlias => [], $sRootCauseAlias => []]);
+					while($aRow = $oSet->FetchAssoc()) {
+						$oRootCauseObject = $aRow[$sRootCauseAlias];
+						if (is_null($oRootCauseObject)) continue;
+
+						$oNode = $aIdToNodes[$aRow[$sObjectAlias]->GetKey()];
+						$aRootCauses = $oNode->GetProperty('context_root_causes', []);
+						$aRootCauses[$aContextQuery['key']][$oRootCauseObject->GetKey()] = $oRootCauseObject;
+						$oNode->SetProperty('context_root_causes', $aRootCauses);
+					}
+					$oKPI->ComputeStats('Query to find context objects', $sClass.' - '.$aContextQuery['key']);
+				}
+			}
+		}
+	}
 }
