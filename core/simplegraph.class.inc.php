@@ -517,8 +517,10 @@ EOF
 			@fclose($rFile);
 			$aOutput = array();
 			$CommandLine = "\"$sDotExecutable\" -v -Tpng < \"$sDotFilePath\" -o\"$sImageFilePath\" 2>&1";
-		
+
+			$oKPI = new ExecutionKPI();
 			exec($CommandLine, $aOutput, $iRetCode);
+			$oKPI->ComputeStats('Graphviz execution png', 'png');
 			if ($iRetCode != 0)
 			{
 				$sHtml = '';
@@ -573,8 +575,10 @@ EOF
 			@fclose($rFile);
 			$aOutput = array();
 			$CommandLine = "\"$sDotExecutable\" -v -Tdot < \"$sDotFilePath\" -o\"$sXdotFilePath\" 2>&1";
-	
+
+			$oKPI = new ExecutionKPI();
 			exec($CommandLine, $aOutput, $iRetCode);
+			$oKPI->ComputeStats('Graphviz execution dot', 'dot');
 			if ($iRetCode != 0)
 			{
 				$sHtml = '';

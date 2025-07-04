@@ -1862,6 +1862,7 @@ EOF
 				}
 
 				// Remove excluded classes from the graph
+				$oKPI = new ExecutionKPI();
 				if (count($aExcludedClasses) > 0) {
 					$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
 					foreach ($oIterator as $oNode) {
@@ -1871,6 +1872,7 @@ EOF
 						}
 					}
 				}
+				$oKPI->ComputeAndReport('Filtering nodes');
 
 				$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
 				$oGraph->InitFromGraphviz();

@@ -283,6 +283,8 @@ class RelationGraph extends SimpleGraph
 	 */
 	public function IsPartOfContext(DBObject $oObj, &$aRootCauses)
 	{
+		$oKPI = new ExecutionKPI();
+
 		$bRet = false;
 		$sFinalClass = get_class($oObj);
 		$aParentClasses = MetaModel::EnumParentClasses($sFinalClass, ENUM_PARENT_CLASSES_ALL);
@@ -313,6 +315,7 @@ class RelationGraph extends SimpleGraph
 				}
 			}
 		}
+		$oKPI->ComputeStats(__METHOD__, get_class($oObj));
 		return $bRet;
 	}
 
@@ -329,6 +332,7 @@ class RelationGraph extends SimpleGraph
 	 */
 	public function ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy, $aUnreachableObjects = array())
 	{
+		$oKPI = new ExecutionKPI();
 		//echo "<h5>Sources only...</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		// Build the graph out of the sources
 		foreach ($this->aSourceNodes as $oSourceNode)
@@ -336,8 +340,10 @@ class RelationGraph extends SimpleGraph
 			$this->AddRelatedObjects($sRelCode, true, $oSourceNode, $iMaxDepth, $bEnableRedundancy);
 			//echo "<h5>After processing of {$oSourceNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		}
+		$oKPI->ComputeAndReport(__FUNCTION__.' - AddRelatedObjects');
 		
 		// Mark the unreachable nodes
+		$oKPI = new ExecutionKPI();
 		foreach ($aUnreachableObjects as $oObj)
 		{
 			$sNodeId = RelationObjectNode::MakeId($oObj);
@@ -347,14 +353,18 @@ class RelationGraph extends SimpleGraph
 				$oNode->SetProperty('is_reached_allowed', false);
 			}
 		}
+		$oKPI->ComputeAndReport(__FUNCTION__.' - Mark unreachable nodes');
 		
 		// Determine the reached nodes
+		$oKPI = new ExecutionKPI();
 		foreach ($this->aSourceNodes as $oSourceNode)
 		{
 			$oSourceNode->ReachDown('is_reached', true);
 			//echo "<h5>After reaching from {$oSourceNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		}
+		$oKPI->ComputeAndReport(__FUNCTION__.' - Determine reached nodes');
 		
+		$oKPI = new ExecutionKPI();
 		// Mark also the "context" nodes as reached and record the "root causes" for each node
 		$oIterator = new RelationTypeIterator($this, 'Node');
 		foreach($oIterator as $oNode)
@@ -367,9 +377,13 @@ class RelationGraph extends SimpleGraph
 				$oNode->ReachDown('is_reached', true);
 			}	
 		}
+		$oKPI->ComputeAndReport(__FUNCTION__.' - Mark context nodes as reached');
+
+		$oKPI = new ExecutionKPI();
 		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
 			$this->ApplyUserRightsOnGraph();
 		}
+		$oKPI->ComputeAndReport(__FUNCTION__.' - Apply user rights on graph');
 	}
 
 	/**
@@ -384,6 +398,7 @@ class RelationGraph extends SimpleGraph
 	 */
 	public function ComputeRelatedObjectsUp($sRelCode, $iMaxDepth, $bEnableRedundancy)
 	{
+		$oKPI = new ExecutionKPI();
 		//echo "<h5>Sinks only...</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		// Build the graph out of the sinks
 		foreach ($this->aSinkNodes as $oSinkNode)
@@ -407,6 +422,7 @@ class RelationGraph extends SimpleGraph
 		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
 			$this->ApplyUserRightsOnGraph();
 		}
+		$oKPI->ComputeStats('GetRelatedObjects-Up', '');
 	}
 
 

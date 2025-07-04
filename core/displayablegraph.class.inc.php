@@ -864,6 +864,7 @@ class DisplayableGraph extends SimpleGraph
 	 */
 	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true, $bForPdf = false)
 	{
+		$oKPI = new ExecutionKPI();
 		$oNewGraph = new DisplayableGraph();
 		$oNewGraph->bDirectionDown = $bDirectionDown;
 		$iPreviousTimeLimit = ini_get('max_execution_time');
@@ -1017,6 +1018,7 @@ class DisplayableGraph extends SimpleGraph
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 
+		$oKPI->ComputeStats('FromRelationGraph', '');
 		return $oNewGraph;
 	}
 
@@ -1027,6 +1029,7 @@ class DisplayableGraph extends SimpleGraph
 	 */
 	public function InitFromGraphviz()
 	{
+		$oKPI = new ExecutionKPI();
 		$sDot = $this->DumpAsXDot();
 		if (strpos($sDot, 'digraph') === false)
 		{
@@ -1054,6 +1057,7 @@ class DisplayableGraph extends SimpleGraph
 				}
 			}
 		}
+		$oKPI->ComputeStats('InitFromGraphviz', '');
 	}
 
 	public function GetBoundingBox()
