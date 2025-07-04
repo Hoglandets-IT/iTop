@@ -9,6 +9,7 @@ An attempt to accelerate the process of impact analysis by relying on recursive 
 - [ ] Restore redundancy computation
 
 # TODO to finalize the feature
+- [ ] Unit tests for the whole stuff
 - [ ] Deshardcode the query against the source nodes
 - [ ] Deshardcode the query against the datamodel
     - [ ] Get the algorithm from make_quick_impact_query.php
