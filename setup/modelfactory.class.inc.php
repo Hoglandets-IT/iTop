@@ -2040,7 +2040,7 @@ class MFElement extends Combodo\iTop\DesignElement
 						{
 							// Houston!
 							$sXPath = DesignDocument::GetItopNodePath($this);
-							throw new DOMFormatException("id '$key' already used in $sXPath", null, null, $oItem);
+							throw new DOMFormatException("id '$key' already used in $sXPath", 0, null, $oItem);
 						}
 						$res[$key] = $oItem->GetNodeAsArrayOfItems();
 					}
