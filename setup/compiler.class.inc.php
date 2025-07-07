@@ -1826,7 +1826,7 @@ EOF;
 				// Search field in parent class
 				$oField = $this->GetFieldInParentClasses($oClass, $sStateAttCode);
 				if ($oField == null) {
-					throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
+					throw new DOMFormatException("Non existing attribute '$sStateAttCode'", 0, null, $oStateAttribute);
 				}
 			}
 			$oCodeNodes = $this->oFactory->GetNodes('values/value/code', $oField);
