@@ -2135,6 +2135,25 @@ XML
 </nodeA>
 </root>',
 			],
+			'N°8440 Quotes are allowed in ids'                     => [
+				'sInitialXML'  => <<<XML
+<nodeA>
+	<nodeB id="I'm happy"/>
+</nodeA>
+XML
+				,
+				'sDeltaXML'    => <<<XML
+<nodeA>
+	<nodeB id="I'm happy" _delta="redefine"/>
+	<nodeB id="I'm happy" _delta="delete"/>
+</nodeA>
+XML
+				,
+				'sExpectedXML' => <<<XML
+<nodeA/>
+XML
+				,
+			],
 		];
 	}
 
