@@ -2224,6 +2224,11 @@ class MenuBlock extends DisplayBlock
 					$aFavoriteRegularActions[$key] = $aRegularActions[$key];
 					unset($aRegularActions[$key]);
 				}
+				// Toolkit actions
+				if (isset($aToolkitActions[$key])) {
+					$aFavoriteRegularActions[$key] = $aToolkitActions[$key];
+					unset($aToolkitActions[$key]);
+				}
 
 				// Transitions
 				if (isset($aTransitionActions[$key])) {
@@ -2313,7 +2318,27 @@ class MenuBlock extends DisplayBlock
 						break;
 
 					case 'UI:Menu:EMail':
-						$sIconClass = 'fas fa-share-alt';
+						$sIconClass = 'far fa-envelope fa-lg';
+						$sLabel = '';
+						break;
+					case 'UI:Menu:OpenOQL':
+						$sIconClass = 'fas fa-play fa-sm';
+						$sLabel = '';
+						break;
+					case 'UI:Menu:ExportXLSX':
+						$sIconClass = 'far fa-file-excel fa-lg';
+						$sLabel = '';
+						break;
+					case 'UI:Menu:CSVExport':
+						$sIconClass = 'fas fa-file-csv fa-lg';
+						$sLabel = '';
+						break;
+					case 'UI:Menu:PrintableVersion':
+						$sIconClass = 'fas fa-print';
+						$sLabel = '';
+						break;
+					case 'UI:Menu:ExportPDF':
+						$sIconClass = 'fas fa-file-pdf fa-lg';
 						$sLabel = '';
 						break;
 
