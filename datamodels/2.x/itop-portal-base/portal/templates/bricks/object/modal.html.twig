@@ -12,7 +12,7 @@
         </i>
     {% endif %}
 	{% if form.title is defined %}
-        <span>{{ form.title|raw }}</span>{% if form.title_complement %}<span>{{ form.title_complement|raw }}</span>{% endif %}
+        <span>{{ form.title|raw }}</span>{% if form.title_complement is defined %}<span>{{ form.title_complement|raw }}</span>{% endif %}
 	{% endif %}
 {% endblock %}
 
