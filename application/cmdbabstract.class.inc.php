@@ -3925,7 +3925,7 @@ HTML;
 	public static function GetShortcutActions($sFinalClass)
 	{
 		$sShortcutActions = MetaModel::GetConfig()->Get('shortcut_actions');
-		$aShortcutActions = explode(',', $sShortcutActions);
+		$aShortcutActions = array_map('trim', explode(',', $sShortcutActions));
 
 		return $aShortcutActions;
 	}
