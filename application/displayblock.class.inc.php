@@ -2354,7 +2354,7 @@ class MenuBlock extends DisplayBlock
 					$oActionButton = ButtonUIBlockFactory::MakeIconAction($sIconClass, $aAction['label'], $aAction['label'], $sLabel,false); //utils::Sanitize($sActionId.md5($aAction['onclick']), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER))
 					$oActionButton->SetOnClickJsCode($aAction['onclick']);
 				} else {
-					$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget); // utils::Sanitize($sActionId, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER));
+					$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, utils::Sanitize($sActionId, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER));
 				}
 				// ResourceId should not be sanitized
 				$oActionButton->AddDataAttribute('resource-id', $sActionId);
