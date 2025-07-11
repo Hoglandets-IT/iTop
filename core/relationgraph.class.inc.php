@@ -203,8 +203,7 @@ class RelationEdge extends GraphEdge
  */ 
 class RelationGraph extends SimpleGraph
 {
-	private const OPTIMIZED_QUICK_AND_DIRTY = true; // For testing purposes only, to be removed later
-
+	private static bool $bOptimizationEnabled = true;
 	protected $aSourceNodes; // Index of source nodes (for a quicker access)
 	protected $aSinkNodes; // Index of sink nodes (for a quicker access)
 	protected $aRedundancySettings; // Cache of user settings
@@ -217,6 +216,16 @@ class RelationGraph extends SimpleGraph
 		$this->aSinkNodes = array();
 		$this->aRedundancySettings = array();
 		$this->aContextSearches = array();
+	}
+
+	static public function GetOptimizationEnabled(): bool
+	{
+		return static::$bOptimizationEnabled;
+	}
+
+	static public function SetOptimizationEnabled(bool $bEnabled)
+	{
+		static::$bOptimizationEnabled = $bEnabled;
 	}
 
 	/**
@@ -264,7 +273,7 @@ class RelationGraph extends SimpleGraph
 			throw new Exception("Invalid context query '$sOQL'. A context query must contain at least two columns. Columns: ".implode(', ', $aAliases).'. ');
 		}
 
-		if (self::OPTIMIZED_QUICK_AND_DIRTY) {
+		if (static::GetOptimizationEnabled()) {
 			$sClass = $oSearch->GetClass();
 			$this->aContextSearches[$sClass][] = array('key' => $key, 'search' => $oSearch);
 		}
@@ -437,7 +446,7 @@ class RelationGraph extends SimpleGraph
 	 */
 	protected function AddRelatedObjects($sRelCode, $bDown, $oObjectNode, $iMaxDepth, $bEnableRedundancy)
 	{
-		if (self::OPTIMIZED_QUICK_AND_DIRTY) {
+		if (static::GetOptimizationEnabled()) {
 			$this->AddRelatedObjects_Optimized();
 			return;
 		}
@@ -829,7 +838,7 @@ class RelationGraph extends SimpleGraph
 	 */
 	private function MarkContextNodesAsReached()
 	{
-		if (self::OPTIMIZED_QUICK_AND_DIRTY) {
+		if (static::GetOptimizationEnabled()) {
 			$this->MarkContextNodesAsReached_Optimized();
 			return;
 		}
