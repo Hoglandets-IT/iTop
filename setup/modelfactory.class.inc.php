@@ -219,6 +219,10 @@ class MFModule
 			return;
 		}
 
+		if (!is_dir($sRootDir)) {
+			$sRootDir = APPROOT.$sRootDir;
+		}
+
 		// Scan the module's root directory to find the datamodel(*).xml files
 		if ($hDir = opendir($sRootDir))
 		{
