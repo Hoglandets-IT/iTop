@@ -3,8 +3,11 @@
 namespace Combodo\iTop\SessionTracker;
 
 	/**
-	 * Experimental, for internal use only, subject to change without notice.
+	 * @experimental for internal use only, subject to change without notice.
+	 *
      * Do not use this interface in your code.
+	 *
+	 * @since 3.2.2
 	 */
 interface iSessionHandlerExtension {
 	public function __construct();
