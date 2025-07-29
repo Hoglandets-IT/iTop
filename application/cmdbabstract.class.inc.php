@@ -4575,28 +4575,6 @@ HTML;
 		InlineImage::FinalizeInlineImages($this);
 	}
 
-	/**
-	 * @deprecated 3.1.1 3.2.0 N°6966 We will have only one DBClone method in the future
-	 */
-	protected function DBCloneTracked_Internal($newKey = null)
-	{
-        /** @var cmdbAbstractObject $oNewObj */
-        $oNewObj = MetaModel::GetObject(get_class($this), parent::DBCloneTracked_Internal($newKey));
-
-		// Invoke extensions after insertion (the object must exist, have an id, etc.)
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$sExtensionClass = get_class($oExtensionInstance);
-			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBInsert()");
-            $oKPI = new ExecutionKPI();
-			$oExtensionInstance->OnDBInsert($oNewObj, self::GetCurrentChange());
-            $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBInsert');
-		}
-
-		return $oNewObj;
-	}
-
 	public function DBUpdate()
 	{
 		$this->LogCRUDEnter(__METHOD__);

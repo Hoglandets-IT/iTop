@@ -434,14 +434,6 @@ abstract class CMDBObject extends DBObject
 
 	public function DBClone($newKey = null)
 	{
-		return $this->DBCloneTracked_Internal();
-	}
-
-	/**
-	 * @deprecated 3.1.1 3.2.0 N°6966 We will have only one DBClone method in the future
-	 */
-	protected function DBCloneTracked_Internal($newKey = null)
-	{
 		$newKey = parent::DBClone($newKey);
 		$oClone = MetaModel::GetObject(get_class($this), $newKey);
 
