@@ -72,7 +72,6 @@
       "sources"
     ],
     "exclude-from-classmap": [
-      "application/twigextension.class.inc.php",
       "core/oql/build/PHP/",
       "core/apc-emulation.php",
       "application/startup.inc.php",
