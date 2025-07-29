@@ -221,17 +221,10 @@ class QueryOQL extends Query
 	{
 		try{
 			// retrieve attributes
-			$sFields = trim($this->Get('fields'));
 			$sOql = $this->Get('oql');
 
 			// construct base url depending on version
-			$bExportV1Recommended = ($sFields == '');
-			if ($bExportV1Recommended) {
-				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
-			}
-			else{
-				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
-			}
+			$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
 
 			// search object from OQL
 			$oSearch = DBObjectSearch::FromOQL($sOql);
@@ -256,22 +249,9 @@ class QueryOQL extends Query
 		$oPage->add_script("$('[name=\"attr_oql\"]').addClass('ibo-query-oql ibo-is-code'); $('[data-attribute-code=\"oql\"]').addClass('ibo-query-oql ibo-is-code');");
 
 		if (!$bEditMode) {
-			$sFields = trim($this->Get('fields'));
-			$bExportV1Recommended = ($sFields == '');
-			if ($bExportV1Recommended) {
-				$oFieldAttDef = MetaModel::GetAttributeDef('QueryOQL', 'fields');
-				$oAlert = AlertUIBlockFactory::MakeForFailure()
-					->SetIsClosable(false)
-					->SetIsCollapsible(false);
-				$oAlert->AddCSSClass('mb-5');
-				$oAlert->AddSubBlock(new Html(Dict::Format('UI:Query:UrlV1', '')));
-				$oPage->AddSubBlock($oAlert);
-				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
-			} else {
-				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
-			}
+			$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
+
 			$sOql = $this->Get('oql');
-			$sMessage = null;
 			try {
 				$oSearch = DBObjectSearch::FromOQL($sOql);
 				$aParameters = $oSearch->GetQueryParams();

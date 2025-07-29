@@ -90,35 +90,6 @@ class QueryTest extends ItopDataTestCase
 	}
 
 	/**
-	 * Test query export V1 usage.
-	 *
-	 * @param string $sDescription query description
-	 * @param string $sOql query oql phrase
-	 *
-	 * @dataProvider getQueryProvider
-	 */
-	public function testQueryExportV1Usage(string $sDescription, string $sOql)
-	{
-		// create query OQL
-		$oQuery = $this->CreateQueryOQL($this->dataName(), $sDescription, $sOql);
-
-		// call export service
-		$this->CallExportService($oQuery);
-
-		// reload to update counter (done by export process)
-		$oQuery->Reload();
-
-		// extract counter
-		$iResult = $oQuery->Get('export_count');
-
-		// delete the query
-		$oQuery->DBDelete();
-
-		// test
-		$this->assertEquals(1, $iResult);
-	}
-
-	/**
 	 * Test query export V2 usage.
 	 *
 	 * @param string $sDescription query description
