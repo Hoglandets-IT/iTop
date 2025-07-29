@@ -417,8 +417,17 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function AddCondition($sFilterCode, $value, $sOpCode = null, $bParseSearchString = false)
 	{
-		MyHelpers::CheckKeyInArray('filter code in class: '.$this->GetClass(), $sFilterCode, MetaModel::GetFilterAttribList($this->GetClass()));
-
+		if (MetaModel::IsValidFilterCode($this->GetClass(),$sFilterCode) == false){
+		/*	$sArrayDesc = if (count($aData) == 0)
+			{
+				$sArrayDesc = "{}";
+			}
+			else
+			{
+				$sArrayDesc = "{".implode(", ", $aData)."}";
+			}*/
+			throw new CoreException("Wrong value for '".$this->GetClass()."', found '$sFilterCode'");// while expecting a value in $sArrayDesc");
+		}
 		$oField = new FieldExpression($sFilterCode, $this->GetClassAlias());
 		if (empty($sOpCode)) {
 			if ($sFilterCode == 'id') {

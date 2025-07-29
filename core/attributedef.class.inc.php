@@ -955,16 +955,6 @@ abstract class AttributeDefinition
 	//abstract protected GetBasicFilterHTMLInput();
 	abstract public function GetBasicFilterSQLExpr($sOpCode, $value);
 
-	/**
-	 *  since 3.1.0 return has changed (N°4690 - Deprecate "FilterCodes")
-	 *
-	 * @return array filtercode => attributecode
-	 */
-	public function GetFilterDefinitions()
-	{
-		return array();
-	}
-
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return (string)$sValue;
@@ -2788,11 +2778,6 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return $aColumns;
 	}
 
-	public function GetFilterDefinitions()
-	{
-		return array($this->GetCode() => $this->GetCode());
-	}
-
 	public function GetBasicFilterOperators()
 	{
 		return array("=" => "equals", "!=" => "differs from");
@@ -4260,13 +4245,6 @@ class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 		return 64;
 	}
 
-	public function GetFilterDefinitions()
-	{
-		// Note: due to this, you will get an error if a password is being declared as a search criteria (see ZLists)
-		// not allowed to search on passwords!
-		return array();
-	}
-
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (utils::IsNullOrEmptyString($sValue))
@@ -4305,13 +4283,6 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 	public function GetMaxSize()
 	{
 		return 255;
-	}
-
-	public function GetFilterDefinitions()
-	{
-		// Note: due to this, you will get an error if a an encrypted field is declared as a search criteria (see ZLists)
-		// not allowed to search on encrypted fields !
-		return array();
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
@@ -7986,11 +7957,6 @@ class AttributeExternalField extends AttributeDefinition
 		return true;
 	}
 
-	public function GetFilterDefinitions()
-	{
-		return array($this->GetCode() => $this->GetCode());
-	}
-
 	public function GetBasicFilterOperators()
 	{
 		$oExtAttDef = $this->GetExtAttDef();
@@ -8477,11 +8443,6 @@ class AttributeBlob extends AttributeDefinition
 		$aColumns[$this->GetCode().'_downloads_count'] = 'INT(11) UNSIGNED';
 
 		return $aColumns;
-	}
-
-	public function GetFilterDefinitions()
-	{
-		return array();
 	}
 
 	public function GetBasicFilterOperators()
@@ -9121,25 +9082,6 @@ class AttributeStopWatch extends AttributeDefinition
 		}
 
 		return $aColumns;
-	}
-
-	public function GetFilterDefinitions()
-	{
-		$aRes = array(
-			$this->GetCode()              => $this->GetCode(),
-			$this->GetCode().'_started'   => $this->GetCode(),
-			$this->GetCode().'_laststart' => $this->GetCode(),
-			$this->GetCode().'_stopped'   => $this->GetCode(),
-		);
-		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
-			$sPrefix = $this->GetCode().'_'.$iThreshold;
-			$aRes[$sPrefix.'_deadline'] = $this->GetCode();
-			$aRes[$sPrefix.'_passed'] = $this->GetCode();
-			$aRes[$sPrefix.'_triggered'] = $this->GetCode();
-			$aRes[$sPrefix.'_overrun'] = $this->GetCode();
-		}
-
-		return $aRes;
 	}
 
 	public function GetBasicFilterOperators()
@@ -9912,11 +9854,6 @@ class AttributeSubItem extends AttributeDefinition
 		return array();
 	}
 
-	public function GetFilterDefinitions()
-	{
-		return array($this->GetCode() => $this->GetCode());
-	}
-
 	public function GetBasicFilterOperators()
 	{
 		return array();
@@ -10197,12 +10134,6 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 		$oPassword->SetPassword($sClearPwd);
 
 		return $oPassword;
-	}
-
-	public function GetFilterDefinitions()
-	{
-		return array();
-		// still not working... see later...
 	}
 
 	public function GetBasicFilterOperators()
@@ -12650,11 +12581,6 @@ class AttributeFriendlyName extends AttributeDefinition
 	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
 	{
 		return '';
-	}
-
-	public function GetFilterDefinitions()
-	{
-		return array($this->GetCode() => $this->GetCode());
 	}
 
 	public function GetBasicFilterOperators()

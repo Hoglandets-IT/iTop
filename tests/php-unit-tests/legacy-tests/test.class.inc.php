@@ -25,7 +25,6 @@
 
 
 require_once(APPROOT.'/core/attributedef.class.inc.php');
-require_once(APPROOT.'/core/filterdef.class.inc.php');
 require_once(APPROOT.'/core/stimulus.class.inc.php');
 require_once(APPROOT.'/core/MyHelpers.class.inc.php');
 

@@ -1134,22 +1134,6 @@ abstract class MetaModel
 		return self::$m_aAttribOrigins[$sClass][$sAttCode];
 	}
 
-	/**     *
-	 * @param string $sClass
-	 * @param string $sAttCode
-	 *
-	 * @return mixed
-	 * @throws \CoreException
-	 */
-	final public static function GetFilterCodeOrigin($sClass, $sAttCode)
-	{
-		if ($sAttCode == 'id') {
-			return MetaModel::GetRootClass($sClass);
-		}
-
-		return MetaModel::GetAttributeOrigin($sClass, self::$m_aFilterAttribList[$sClass][$sAttCode]);
-	}
-
 	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
@@ -1508,9 +1492,9 @@ abstract class MetaModel
 	 */
 	final public static function GetFiltersList($sClass)
 	{
-		self::_check_subclass($sClass);
-
-		return array_keys(self::$m_aFilterAttribList[$sClass]);
+		$aFilterList = MetaModel::GetAttributesList($sClass);
+		$aFilterList[] = 'id';
+		return $aFilterList;
 	}
 
 	/**
@@ -1613,11 +1597,11 @@ abstract class MetaModel
 	 */
 	final public static function IsValidFilterCode($sClass, $sFilterCode)
 	{
-		if (!array_key_exists($sClass, self::$m_aFilterAttribList)) {
-			return false;
+		if ($sFilterCode == 'id') {
+			return true;
 		}
 
-		return (array_key_exists($sFilterCode, self::$m_aFilterAttribList[$sClass]));
+		return self::IsValidAttCode($sClass, $sFilterCode);
 	}
 
 	/**
@@ -1896,56 +1880,6 @@ abstract class MetaModel
 		}
 
 		return "";
-	}
-
-	/**
-	 * @var array array of (FilterCode => AttributeCode)
-	 */
-	private static $m_aFilterAttribList = array();
-
-	/**
-	 * @deprecated 3.0.0 do not use : dead code, will be removed in the future N°4690 - Deprecate "FilterCodes"
-	 * instead of array_keys(MetaModel::GetClassFilterDefs($sClass)); use MetaModel::GetFiltersList($sClass)
-	 *
-	 * @param string $sClass
-	 *
-	 * @return mixed
-	 * @throws \CoreException
-	 */
-	public static function GetClassFilterDefs($sClass)
-	{
-		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use MetaModel::GetClassFilterDefs: dead code, will be removed in the future. Use MetaModel::GetFiltersList or MetaModel::GetFiltersAttributes');
-
-		return self::$m_aFilterAttribList[$sClass];
-	}
-
-	/**
-	 *
-	 * @param string $sClass
-	 *
-	 * @return array ($sFilterCode=>$sAttributeCode) + id=>id
-	 * @throws \CoreException
-	 */
-	public static function GetFilterAttribList($sClass)
-	{
-		return self::$m_aFilterAttribList[$sClass];
-	}
-
-	/**
-	 * @deprecated 3.0.0 do not use : dead code, will be removed in the future use GetLabel instead N°4690 - Deprecate "FilterCodes"
-	 *
-	 * @param string $sClass
-	 * @param string $sFilterCode
-	 *
-	 * @return string
-	 * @throws \CoreException
-	 */
-	public static function GetFilterLabel($sClass, $sFilterCode)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use MetaModel::GetFilterLabel : dead code, will be removed in the future. Use MetaModel::GetLabel instead');
-
-		return this::GetLabel($sClass, $sFilterCode);
 	}
 
 	/**
@@ -2821,25 +2755,6 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated 3.1.0 use GetAllowedValues_att  N°4690 - Deprecate "FilterCodes"
-	 *
-	 * @param string $sClass
-	 * @param string $sFltCode
-	 * @param array $aArgs
-	 * @param string $sContains
-	 *
-	 * @return mixed
-	 * @throws \CoreException
-	 */
-	public static function GetAllowedValues_flt($sClass, $sFltCode, $aArgs = array(), $sContains = '')
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use MetaModel::GetAllowedValues_flt: dead code, will be removed in the future. Use MetaModel::GetAllowedValues');
-
-		return self::GetAllowedValues_att($sClass, $sFltCode);
-	}
-
-
-	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 * @param array $aArgs
@@ -2911,8 +2826,6 @@ abstract class MetaModel
 		$oAttribute->SetHostClass($sTargetClass);
 		self::$m_aAttribDefs[$sTargetClass][$sCode] = $oAttribute;
 		self::$m_aAttribOrigins[$sTargetClass][$sCode] = $sOriginClass;
-
-		self::$m_aFilterAttribList[$sTargetClass][$sCode] = $sCode;
 	}
 
 	/**
@@ -3076,9 +2989,6 @@ abstract class MetaModel
 				if (array_key_exists('finalclass', self::$m_aAttribDefs[$sChildClass])) {
 					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as an attribute code");
 				}
-				if (array_key_exists('finalclass', self::$m_aFilterAttribList[$sChildClass])) {
-					throw new CoreException("Class $sChildClass, 'finalclass' is a reserved keyword, it cannot be used as a filter code");
-				}
 				$oCloned = clone $oClassAtt;
 				$oCloned->SetFixedValue($sChildClass);
 				self::AddMagicAttribute($oCloned, $sChildClass, $sRootClass);
@@ -3140,12 +3050,6 @@ abstract class MetaModel
 		// Add magic attributes to external keys (finalclass, friendlyname, archive_flag, obsolescence_flag)
 		foreach (self::GetClasses() as $sClass) {
 			foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef) {
-				// Compute the filter codes
-				//
-				foreach ($oAttDef->GetFilterDefinitions() as $sFilterCode => $sCode) {
-					self::$m_aFilterAttribList[$sClass][$sFilterCode] = $sCode;
-				}
-
 				// Compute the fields that will be used to display a pointer to another object
 				//
 				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) {
@@ -3252,7 +3156,6 @@ abstract class MetaModel
 			if (array_key_exists('id', self::$m_aAttribDefs[$sClass])) {
 				throw new CoreException("Class $sClass, 'id' is a reserved keyword, it cannot be used as an attribute code");
 			}
-			self::$m_aFilterAttribList[$sClass]['id'] = 'id';
 		}
 	}
 
@@ -3412,7 +3315,6 @@ abstract class MetaModel
 
 		self::$m_aAttribDefs[$sClass] = array();
 		self::$m_aAttribOrigins[$sClass] = array();
-		self::$m_aFilterAttribList[$sClass] = array();
 	}
 
 	/**
@@ -6512,7 +6414,6 @@ abstract class MetaModel
 				self::$m_aAttribDefs = $result['m_aAttribDefs'];
 				self::$m_aAttribOrigins = $result['m_aAttribOrigins'];
 				self::$m_aIgnoredAttributes = $result['m_aIgnoredAttributes'];
-				self::$m_aFilterAttribList = $result['m_aFilterList'];
 				self::$m_aListInfos = $result['m_aListInfos'];
 				self::$m_aListData = $result['m_aListData'];
 				self::$m_aRelationInfos = $result['m_aRelationInfos'];
@@ -6548,7 +6449,6 @@ abstract class MetaModel
 				$aCache['m_aAttribDefs'] = self::$m_aAttribDefs; // array of ("classname" => array of attributes)
 				$aCache['m_aAttribOrigins'] = self::$m_aAttribOrigins; // array of ("classname" => array of ("attcode"=>"sourceclass"))
 				$aCache['m_aIgnoredAttributes'] = self::$m_aIgnoredAttributes; //array of ("classname" => array of ("attcode")
-				$aCache['m_aFilterList'] = self::$m_aFilterAttribList; // array of ("classname" => array filterdef)
 				$aCache['m_aListInfos'] = self::$m_aListInfos; // array of ("listcode" => various info on the list, common to every classes)
 				$aCache['m_aListData'] = self::$m_aListData; // array of ("classname" => array of "listcode" => list)
 				$aCache['m_aRelationInfos'] = self::$m_aRelationInfos; // array of ("relcode" => various info on the list, common to every classes)
