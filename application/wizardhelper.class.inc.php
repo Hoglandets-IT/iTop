@@ -351,22 +351,6 @@ class WizardHelper
 	}
 
 	/**
-	 * @return string JS code to be executed for fields update
-	 * @since 3.0.0 N°3198
-	 * @deprecated 3.0.3-2 3.0.4 3.1.1 3.2.0 Use {@see \WizardHelper::AddJsForUpdateFields()} instead
-	 */
-	public function GetJsForUpdateFields()
-	{
-		$sWizardHelperJsVar = (!is_null($this->m_aData['m_sWizHelperJsVarName'])) ? utils::Sanitize($this->m_aData['m_sWizHelperJsVarName'], '', utils::ENUM_SANITIZATION_FILTER_PARAMETER) : 'oWizardHelper'.$this->GetFormPrefix();
-		$sWizardHelperJson = $this->ToJSON();
-
-		return <<<JS
-{$sWizardHelperJsVar}.m_oData = {$sWizardHelperJson};
-{$sWizardHelperJsVar}.UpdateFields();
-JS;
-	}
-
-	/**
 	 * Add necessary JS snippets (to the page) to be executed for fields update
 	 *
 	 * @param WebPage $oPage
