@@ -1417,32 +1417,6 @@ class DisplayableGraph extends SimpleGraph
 	}
 
 	/**
-	 * Display the graph inside the given page, with the "filter" drawer above it
-	 *
-	 * @deprecated 3.1.1 3.2.0 N°3767 Use \DisplayableGraph::DisplayFilterBox() and \DisplayableGraph::DisplayGraph() instead
-	 *
-	 * @param WebPage $oP
-	 * @param array $aResults
-	 * @param string $sRelation
-	 * @param ApplicationContext $oAppContext
-	 * @param array $aExcludedObjects
-	 * @param string $sObjClass
-	 * @param int $iObjKey
-	 * @param string $sContextKey
-	 * @param array $aContextParams
-	 * @param bool $bLazyLoading since 2.7.7 3.0.1
-	 *
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 *
-	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false)
-	{
-		$oP->AddSubBlock($this->DisplayFilterBox($oP, $aResults, $bLazyLoading));
-		$this->DisplayGraph($oP, $sRelation, $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams, $bLazyLoading);
-	}
-
-	/**
 	 * Display only the graph inside the given page, with the parameters of filter box draw with DisplayFilterBox
 	 *
 	 * @param WebPage $oP
@@ -1579,31 +1553,6 @@ class DisplayableGraph extends SimpleGraph
 	}
 EOF
 		);
-	}
-
-	/**
-	 * @param string $sContextKey
-	 * @param array $aContextParams
-	 * @param array $aExcludedObjects
-	 * @param WebPage $oP
-	 * @param array $aResults
-	 * @param bool $bLazyLoading
-	 *
-	 * @return array
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 *
-	 * @deprecated 3.1.1 3.2.0 N°3767 Use \DisplayableGraph::DisplayFilterBox() and \DisplayableGraph::GetFilteringData() instead
-	 */
-	public function DisplayFiltering(string $sContextKey, array $aContextParams, array $aExcludedObjects, WebPage $oP, array $aResults, bool $bLazyLoading = false): array
-	{
-		$oP->Add($this->DisplayFilterBox($oP, $aResults, $bLazyLoading));
-
-		return $this->GetFilteringData($sContextKey, $aContextParams, $aExcludedObjects);
 	}
 
 	/**
