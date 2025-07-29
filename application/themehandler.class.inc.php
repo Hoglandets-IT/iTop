@@ -56,18 +56,6 @@ class ThemeHandler
 	}
 
 	/**
-	 * Return the ID of the theme currently defined in the config. file
-	 *
-	 * @deprecated 3.0.0, will be removed in 3.1, see N°3898
-	 * @return string
-	 */
-	public static function GetCurrentThemeId()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		static::GetCurrentUserThemeId();
-	}
-
-	/**
 	 * @return string ID of the theme currently defined in the config. file, which applies to all users by default. If non defined, fallback on the default one.
 	 * @since 3.0.0
 	 */
