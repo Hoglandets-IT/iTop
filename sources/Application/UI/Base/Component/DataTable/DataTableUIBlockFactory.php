@@ -631,26 +631,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
-	 * @deprecated 3.1.0 N°6261 Use \DataTableUIBlockFactory::MakeForRendering instead
-	 * @param string $sListId
-	 * @param DBObjectSet $oSet
-	 * @param array $aExtraParams
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
-	 */
-	public static function MakeForRenderingObject(string $sListId, DBObjectSet $oSet, $aExtraParams = array())
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use DataTableUIBlockFactory::MakeForRendering instead');
-
-		return static::MakeForRendering($sListId, $oSet, $aExtraParams);
-	}
-
-	/**
 	 * @param array $aColumns
 	 * @param string $sSelectMode
 	 * @param string $sFilter
