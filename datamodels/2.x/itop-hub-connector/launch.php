@@ -283,8 +283,6 @@ try {
 	switch ($sTargetRoute) {
 		case 'inform_after_setup':
 		// Hidden IFRAME at the end of the setup
-		require_once (APPROOT.'/application/ajaxwebpage.class.inc.php');
-
         $sParamToken = utils::ReadParam('setup_token');
         $oTokenValidation = new TokenValidation();
         $bIsTokenValid = $oTokenValidation->isSetupTokenValid($sParamToken);

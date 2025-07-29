@@ -91,15 +91,6 @@ function _MaintenanceJsonMessage($sTitle, $sMessage)
 		$oP->AddData($aMessage);
 		$oP->Output();
 	} else {
-		@include_once(APPROOT."/application/ajaxwebpage.class.inc.php");
-		if (class_exists('ajax_page')) {
-			$oP = new ajax_page($sTitle);
-			$oP->add_header('Access-Control-Allow-Origin: *');
-			$oP->SetContentType('application/json');
-			$oP->add('{"code":100, "message":"'.$sMessage.'"}');
-			$oP->Output();
-		} else {
-			_MaintenanceTextMessage($sMessage);
-		}
+		_MaintenanceTextMessage($sMessage);
 	}
 }
