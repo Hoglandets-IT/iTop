@@ -461,16 +461,6 @@ abstract class CMDBObject extends DBObject
 		return $oDeletionPlan;
 	}
 
-	/**
-	 * @deprecated 3.1.1 3.2.0 N°6967 We will have only one DBDelete method in the future
-	 */
-	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
-	{
-		$ret = parent::DBDelete($oDeletionPlan);
-
-		return $ret;
-	}
-
 	public function DBArchive()
 	{
 		// Note: do the job anyway, so as to repair any DB discrepancy

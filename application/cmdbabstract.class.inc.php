@@ -4668,25 +4668,6 @@ HTML;
 		parent::PostDeleteActions();
 	}
 
-	/**
-	 * @deprecated 3.1.1 3.2.0 N°6967 We will have only one DBDelete method in the future
-	 */
-	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
-	{
-		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$sExtensionClass = get_class($oExtensionInstance);
-			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBDelete()");
-            $oKPI = new ExecutionKPI();
-			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
-            $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBDelete');
-		}
-
-		return parent::DBDeleteTracked_Internal($oDeletionPlan);
-	}
-
 	public function IsModified()
 	{
 		if (parent::IsModified())
