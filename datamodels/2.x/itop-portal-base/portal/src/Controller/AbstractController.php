@@ -112,39 +112,6 @@ abstract class AbstractController extends SymfonyAbstractController implements T
 	}
 
 	/**
-	 * @param string $sRouteName
-	 * @param array  $aRouteParams
-	 * @param array  $aQueryParameters
-	 *
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 *
-	 * @deprecated 2.7.6 N°4356 use {@see ForwardToRoute} instead !
-	 */
-	protected function ForwardFromRoute($sRouteName, $aRouteParams, $aQueryParameters)
-	{
-		return $this->forward($this->GetControllerNameFromRoute($sRouteName), $aRouteParams, $aQueryParameters);
-	}
-
-	/**
-	 * Returns a string containing the controller and action name of a specific route, typically used for request forwarding.
-	 *
-	 * Example: 'p_object_create' returns 'Combodo\iTop\Portal\Controller\ObjectController::CreateAction'
-	 *
-	 * @param string $sRouteName
-	 *
-	 * @return string
-	 *
-	 * @deprecated 2.7.6 N°4356 use {@see ForwardToRoute} instead !
-	 */
-	protected function GetControllerNameFromRoute($sRouteName)
-	{
-		$oRouteCollection = $this->oRouter->getRouteCollection();
-		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
-
-		return $aRouteDefaults['_controller'];
-	}
-
-	/**
 	 * Returns the controller template path
 	 *
 	 * @since 3.2.1
