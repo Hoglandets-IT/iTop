@@ -289,7 +289,7 @@ class ormStyleTest extends ItopTestCase
 				'#ABCDEF',
 				'#123456',
 				'fas fa-user',
-				'images/user-request.png',
+				'images/user-request.svg',
 			],
 			'Style with empty icon path' => [
 				'regular-class',

@@ -1860,7 +1860,7 @@
 										  AND (I.id != :this->id)
 										]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.svg</icon>
                   <default>yes</default>
                 </item>
               </items>
@@ -1882,7 +1882,7 @@
 										  AND (I.id != :this->id)
 										]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.svg</icon>
                   <default>yes</default>
                 </item>
               </items>
@@ -1904,7 +1904,7 @@
 										  AND (I.id != :this->id)
 										]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.svg</icon>
                   <default>yes</default>
                 </item>
               </items>
@@ -1929,7 +1929,7 @@
 										  AND (L.impact_code != 'not_impacted')
 										]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.dvg</icon>
                   <default>yes</default>
                 </item>
               </items>
@@ -1946,7 +1946,7 @@
 										  AND (L.impact_code != 'not_impacted')
 										]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-incident-mgmt-itil/images/incident-red.png</icon>
+                  <icon>itop-incident-mgmt-itil/images/incident-red.svg</icon>
                   <default>yes</default>
                 </item>
               </items>

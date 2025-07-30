@@ -4641,7 +4641,7 @@
                       AND (C.id != :this->id)
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.svg</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4656,7 +4656,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.svg</icon>
                 </item>
               </items>
             </down>
@@ -4678,7 +4678,7 @@
                       AND (C.id != :this->id)
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.svg</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4693,7 +4693,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.svg</icon>
                 </item>
               </items>
             </down>
@@ -4715,7 +4715,7 @@
                       AND (C.id != :this->id)
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.svg</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4730,7 +4730,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.svg</icon>
                 </item>
               </items>
             </down>
@@ -4755,7 +4755,7 @@
                       AND (L.impact_code != 'not_impacted')
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.svg</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4769,7 +4769,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.svg</icon>
                 </item>
               </items>
             </down>
@@ -4786,7 +4786,7 @@
                       AND (L.impact_code != 'not_impacted')
                     ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-ongoing.svg</icon>
                 </item>
                 <item id="recent_changes" _delta="define">
                   <oql><![CDATA[
@@ -4800,7 +4800,7 @@
                       AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                     ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt-itil/images/change-done.png</icon>
+                  <icon>itop-change-mgmt-itil/images/change-done.svg</icon>
                 </item>
               </items>
             </up>

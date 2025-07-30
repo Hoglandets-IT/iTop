@@ -876,7 +876,7 @@
                                           AND (C.id != :this->id)
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -892,7 +892,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>
@@ -915,7 +915,7 @@
                                           AND (C.id != :this->id)
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -931,7 +931,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>
@@ -954,7 +954,7 @@
                                           AND (C.id != :this->id)
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -970,7 +970,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>
@@ -996,7 +996,7 @@
                                           AND (L.impact_code != 'not_impacted')
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -1011,7 +1011,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>
@@ -1029,7 +1029,7 @@
                                           AND (L.impact_code != 'not_impacted')
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -1044,7 +1044,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>
