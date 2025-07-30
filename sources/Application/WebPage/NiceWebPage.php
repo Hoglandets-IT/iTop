@@ -64,11 +64,6 @@ class NiceWebPage extends WebPage
 	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
 		/** @deprecated 3.0.0 Not used in the backoffice since the introduction of the new tooltip lib. */
 		'js/hovertip.js',
-		/** @deprecated 3.0.0 N°2737 - Migrate table to DataTables plugin to be iso with the end-users portal, will be removed in 3.x */
-		'js/datatable.js',
-		'js/jquery.tablesorter.js',
-		'js/jquery.tablesorter.pager.js',
-		'js/jquery.tablehover.js',
 	];
 
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
