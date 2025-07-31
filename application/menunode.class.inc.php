@@ -10,7 +10,6 @@ use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/application/template.class.inc.php');
 require_once(APPROOT."/application/user.dashboard.class.inc.php");
 
 
@@ -999,10 +998,6 @@ class MenuGroup extends MenuNode
  */
 class TemplateMenuNode extends MenuNode
 {
-	/**
-	 * @var string
-	 */
-	protected $sTemplateFile;
 
 	/**
 	 * Create a menu item based on a custom template and inserts it into the application's main menu
@@ -1018,17 +1013,6 @@ class TemplateMenuNode extends MenuNode
 	public function __construct($sMenuId, $sTemplateFile, $iParentIndex, $fRank = 0.0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
-		$this->sTemplateFile = $sTemplateFile;
-		$this->aReflectionProperties['template_file'] = $sTemplateFile;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function GetHyperlink($aExtraParams)
-	{
-		if ($this->sTemplateFile == '') return '';
-		return parent::GetHyperlink($aExtraParams);
 	}
 
 	/**
@@ -1037,18 +1021,7 @@ class TemplateMenuNode extends MenuNode
 	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
-		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
-		$sTemplate = @file_get_contents($this->sTemplateFile);
-		if ($sTemplate !== false)
-		{
-			$aExtraParams['table_id'] = 'Menu_'.$this->GetMenuId();
-			$oTemplate = new DisplayTemplate($sTemplate);
-			$oTemplate->Render($oPage, $aExtraParams);
-		}
-		else
-		{
-			$oPage->p("Error: failed to load template file: '{$this->sTemplateFile}'"); // No need to translate ?
-		}
+		//DO NOTHING this type of menu is only used for title not clickable
 	}
 }
 

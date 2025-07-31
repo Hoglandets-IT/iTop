@@ -1999,7 +1999,6 @@
     <menu id="UserRequest:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>3</rank>
       <parent>RequestManagement</parent>
-      <template_file/>
     </menu>
     <menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode" _delta="define">
       <rank>0</rank>

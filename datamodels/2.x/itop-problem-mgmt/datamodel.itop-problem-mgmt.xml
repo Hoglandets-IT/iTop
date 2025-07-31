@@ -731,7 +731,6 @@
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
       <rank>5</rank>
       <parent>ProblemManagement</parent>
-      <template_file/>
     </menu>
     <menu id="Problem:Overview" xsi:type="DashboardMenuNode" _delta="define">
       <rank>0</rank>

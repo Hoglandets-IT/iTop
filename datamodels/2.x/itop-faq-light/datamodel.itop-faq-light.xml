@@ -217,7 +217,6 @@
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
       <rank>5</rank>
       <parent>ProblemManagement</parent>
-      <template_file/>
     </menu>
     <menu id="FAQCategory" xsi:type="OQLMenuNode" _delta="define">
       <rank>4.5</rank>

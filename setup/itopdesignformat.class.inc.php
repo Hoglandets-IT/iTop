@@ -1129,7 +1129,7 @@ class iTopDesignFormat
 	 */
 	protected function From32To33($oFactory)
 	{
-		// Nothing for now...
+		$this->RemoveNodeFromXPath("/itop_design/menus/menu[@xsi:type='TemplateMenuNode']/template_file");
 	}
 
 	/**

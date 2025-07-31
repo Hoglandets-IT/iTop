@@ -2882,9 +2882,7 @@ CSS;
 			break;
 
 		case 'TemplateMenuNode':
-			$sTemplateFile = $oMenu->GetChildText('template_file');
-			$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
-			$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
+			$sNewMenu = "new TemplateMenuNode('$sMenuId', '', $sParentSpec, $fRank {$sOptionalEnableParams});";
 			break;
 
 		case 'MenuGroup':

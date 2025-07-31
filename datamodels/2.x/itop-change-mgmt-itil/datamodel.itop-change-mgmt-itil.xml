@@ -4591,7 +4591,6 @@
     <menu id="Change:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>3</rank>
       <parent>ChangeManagement</parent>
-      <template_file/>
     </menu>
     <menu id="MyChanges" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>

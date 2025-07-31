@@ -111,7 +111,6 @@
     <menu id="UserManagement" xsi:type="TemplateMenuNode" _delta="define">
       <rank>10</rank>
       <parent>AdminTools</parent>
-      <template_file/>
     </menu>
     <menu id="UserAccountsMenu" xsi:type="OQLMenuNode" _delta="define">
       <rank>11</rank>
@@ -141,7 +140,6 @@
     <menu id="Queries" xsi:type="TemplateMenuNode" _delta="define">
       <rank>30</rank>
       <parent>AdminTools</parent>
-      <template_file/>
     </menu>
     <menu id="RunQueriesMenu" xsi:type="WebPageMenuNode" _delta="define">
       <rank>31</rank>
@@ -188,7 +186,6 @@
     <menu id="Integrations" xsi:type="TemplateMenuNode" _delta="define">
       <rank>50</rank>
       <parent>ConfigurationTools</parent>
-      <template_file/>
     </menu>
     <menu id="DataSources" xsi:type="OQLMenuNode" _delta="define">
       <rank>20</rank>

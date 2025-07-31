@@ -1892,7 +1892,6 @@
     <menu id="Catalogs" xsi:type="TemplateMenuNode" _delta="define">
       <rank>50</rank>
       <parent>DataAdministration</parent>
-      <template_file/>
     </menu>
     <menu id="Organization" xsi:type="OQLMenuNode" _delta="define">
       <rank>10</rank>
