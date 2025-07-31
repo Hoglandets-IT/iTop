@@ -145,18 +145,6 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$this->bHasDelta = true;
 	}
 
-    /**
-     * @param DBObject $oObject
-     * @param string $sClassAlias
-     *
-     * @deprecated Since iTop 2.4, use {@link \ormLinkSet::AddItem()} instead.
-     */
-	public function AddObject(DBObject $oObject, $sClassAlias = '')
-    {
-	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
-	    $this->AddItem($oObject);
-    }
-
 	/**
 	 * @param $iObjectId
 	 */

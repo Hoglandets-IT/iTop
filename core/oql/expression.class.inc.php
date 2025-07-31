@@ -90,26 +90,6 @@ abstract class Expression {
 		return $aRet;
 	}
 
-
-	/**
-	 * recursive rendering
-	 *
-	 * @deprecated 3.0.0 use RenderExpression
-	 *
-	 * @param array $aArgs used as input by default, or used as output if bRetrofitParams set to True
-	 * @param bool $bRetrofitParams
-	 *
-	 * @return array|string
-	 * @throws \MissingQueryArgument
-	 */
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
-	{
-		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use RenderExpression');
-
-		return $this->RenderExpression(false, $aArgs, $bRetrofitParams);
-	}
-
 	/**
 	 * recursive rendering
 	 *
