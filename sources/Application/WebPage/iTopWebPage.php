@@ -904,9 +904,9 @@ HTML;
 			$this->add_style($oExtensionInstance->GetStyle());
 		}
 
-		/** @var \iBackofficeStyleExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iBackofficeSaasExtension') as $oExtensionInstance) {
-			$this->add_saas($oExtensionInstance->GetSaas());
+		/** @var \iBackofficeSassExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeSassExtension') as $oExtensionInstance) {
+			$this->add_saas($oExtensionInstance->GetSass());
 		}
 
 		// TODO 3.0.0 not displayed ?

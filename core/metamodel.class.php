@@ -7674,7 +7674,7 @@ abstract class MetaModel
 			'iBackofficeReadyScriptExtension',
 			'iBackofficeLinkedStylesheetsExtension',
 			'iBackofficeStyleExtension',
-			'iBackofficeSaasExtension',
+			'iBackofficeSassExtension',
 			'iBackofficeDictEntriesExtension',
 			'iBackofficeDictEntriesPrefixesExtension',
 			'iPortalUIExtension',

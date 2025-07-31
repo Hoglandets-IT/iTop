@@ -1458,21 +1458,21 @@ interface iBackofficeStyleExtension
 }
 
 /**
- * Implement this interface to add saas file (SCSS) to the backoffice pages.
+ * Implement this interface to add sass file (SCSS) to the backoffice pages.
  * example: return "css/setup.scss"
  *
  * @api
  * @package BackofficeUIExtensibilityAPI
  * @since 3.3.0
  */
-interface iBackofficeSaasExtension
+interface iBackofficeSassExtension
 {
 	/**
 	 * @api
 	 * @see \iTopWebPage::$a_styles
 	 * @return string
 	 */
-	public function GetSaas(): string;
+	public function GetSass(): string;
 }
 /**
  * Implement this interface to add Dict entries

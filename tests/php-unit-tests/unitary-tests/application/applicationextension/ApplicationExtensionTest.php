@@ -123,8 +123,8 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 				\iBackofficeStyleExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
 			],
-			\iBackofficeSaasExtension::class => [
-				\iBackofficeSaasExtension::class,
+			\iBackofficeSassExtension::class => [
+				\iBackofficeSassExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
 			],
 			\iBackofficeDictEntriesExtension::class => [
