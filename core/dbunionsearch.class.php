@@ -479,12 +479,12 @@ class DBUnionSearch extends DBSearch
 		return $aParams;
 	}
 
-	public function GetQueryParams($bExcludeMagicParams = true)
+	public function GetQueryParams()
 	{
 		$aParams = array();
 		foreach ($this->aSearches as $oSearch)
 		{
-			$aParams = array_merge($oSearch->GetQueryParams($bExcludeMagicParams), $aParams);
+			$aParams = array_merge($oSearch->GetQueryParams(), $aParams);
 		}
 		return $aParams;
 	}

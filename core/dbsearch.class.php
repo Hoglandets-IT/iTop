@@ -533,11 +533,9 @@ abstract class DBSearch
     /**
      * @internal
      *
-     * @param bool $bExcludeMagicParams
-     *
      * @return mixed
      */
-	abstract public function GetQueryParams($bExcludeMagicParams = true);
+	abstract public function GetQueryParams();
 
     /**
      * @internal

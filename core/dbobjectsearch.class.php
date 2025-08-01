@@ -1373,44 +1373,41 @@ class DBObjectSearch extends DBSearch
 		$this->m_aParams[$sKey] = $value;
 	}
 
-	public function GetQueryParams($bExcludeMagicParams = true)
+	public function GetQueryParams()
 	{
 		$aParams = array();
 		$this->m_oSearchCondition->RenderExpression(false, $aParams, true);
 
-		if ($bExcludeMagicParams)
-		{
-			$aRet = array();
+		$aRet = array();
 
-			// Make the list of acceptable arguments... could be factorized with run_query, into oSearch->GetQueryParams($bExclude magic params)
-			$aNakedMagicArguments = array();
-			foreach (MetaModel::PrepareQueryArguments(array(),array(), $this->GetExpectedArguments()) as $sArgName => $value)
+		// Make the list of acceptable arguments... could be factorized with run_query, into oSearch->GetQueryParams()
+		$aNakedMagicArguments = array();
+		foreach (MetaModel::PrepareQueryArguments(array(),array(), $this->GetExpectedArguments()) as $sArgName => $value)
+		{
+			$iPos = strpos($sArgName, '->object()');
+			if ($iPos === false)
 			{
-				$iPos = strpos($sArgName, '->object()');
-				if ($iPos === false)
-				{
-					$aNakedMagicArguments[$sArgName] = $value;
-				}
-				else
-				{
-					$aNakedMagicArguments[substr($sArgName, 0, $iPos)] = true;
-				}
+				$aNakedMagicArguments[$sArgName] = $value;
 			}
-			foreach ($aParams as $sParam => $foo)
+			else
 			{
-				$iPos = strpos($sParam, '->');
-				if ($iPos === false)
-				{
-					$sRefName = $sParam;
-				}
-				else
-				{
-					$sRefName = substr($sParam, 0, $iPos);
-				}
-				if (!array_key_exists($sRefName, $aNakedMagicArguments))
-				{
-					$aRet[$sParam] = $foo;
-				}
+				$aNakedMagicArguments[substr($sArgName, 0, $iPos)] = true;
+			}
+		}
+		foreach ($aParams as $sParam => $foo)
+		{
+			$iPos = strpos($sParam, '->');
+			if ($iPos === false)
+			{
+				$sRefName = $sParam;
+			}
+			else
+			{
+				$sRefName = substr($sParam, 0, $iPos);
+			}
+			if (!array_key_exists($sRefName, $aNakedMagicArguments))
+			{
+				$aRet[$sParam] = $foo;
 			}
 		}
 
