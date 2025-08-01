@@ -55,6 +55,7 @@ $(document).ready(function()
 	// Hide tooltips when a modal is opening, otherwise it might be overlapping it
 	oBodyElem.on('show.bs.modal', '.modal', function ()
 	{
+		// We'll probably never have this kind of tooltip anymore, but just in case
 		$(this).find('.tooltip.in').tooltip('hide');
 
 		// Set the z-index of the modal and its backdrop in case we have several modals opened
