@@ -912,9 +912,6 @@ HTML;
 		// TODO 3.0.0 not displayed ?
 		$this->GetContentLayout()->SetExtraHtmlContent(utils::FilterXSS($this->s_content));
 
-		// TODO 3.0.0 : to be removed
-		$this->outputCollapsibleSectionInit();
-
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
 			'sAbsoluteUrlAppRoot' => $sAbsoluteUrlAppRoot,

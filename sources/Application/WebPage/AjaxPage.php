@@ -210,8 +210,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 			}
 
 			ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
-
-			$this->outputCollapsibleSectionInit();
 		}
 
 		// Render the blocks
