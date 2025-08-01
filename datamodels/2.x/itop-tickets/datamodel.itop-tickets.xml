@@ -1016,7 +1016,6 @@
                           <rules>
                             <rule id="contact-to-userrequest"/>
                             <rule id="servicesubcategory-to-userrequest"/>
-                            <rule id="go-to-open-request-on-submit"/>
                           </rules>
                         </action>
                         <action id="view" xsi:type="view"/>
