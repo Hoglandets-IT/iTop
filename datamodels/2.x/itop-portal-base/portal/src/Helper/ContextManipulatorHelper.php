@@ -15,7 +15,6 @@ use DBObjectSearch;
 use DBObjectSet;
 use DBProperty;
 use DBSearch;
-use DeprecatedCallsLog;
 use DOMFormatException;
 use DOMNodeList;
 use Exception;
@@ -41,8 +40,6 @@ class ContextManipulatorHelper
 {
 	/** @var string ENUM_RULE_CALLBACK_BACK */
 	const ENUM_RULE_CALLBACK_BACK = 'back';
-	/** @var string ENUM_RULE_CALLBACK_GOTO */
-	const ENUM_RULE_CALLBACK_GOTO = 'goto';
 	/** @var string ENUM_RULE_CALLBACK_OPEN */
 	const ENUM_RULE_CALLBACK_OPEN = 'open';
 	/** @var string ENUM_RULE_CALLBACK_OPEN_VIEW */
@@ -184,16 +181,7 @@ class ContextManipulatorHelper
 
 								$aRule[$sSubNodeName]['refresh'] = $sRefresh;
 								break;
-							case static::ENUM_RULE_CALLBACK_GOTO:
-								// Retrieving value
-								$sBrickId = $oSubNode->GetUniqueElement('brick')->GetText();
-								if ($sBrickId === null)
-								{
-									throw new DOMFormatException('Brick tag value must not be empty.', null, null, $oSubNode);
-								}
 
-								$aRule[$sSubNodeName]['brick_id'] = $sBrickId;
-								break;
 							case static::ENUM_RULE_CALLBACK_OPEN:
 								// Default value
 								$sMode = static::ENUM_RULE_CALLBACK_OPEN_VIEW;
@@ -422,75 +410,6 @@ class ContextManipulatorHelper
 				$oDestinationObject->ExecActions($aRule['preset'], array('source' => $oDestinationObject));
 			}
 		}
-	}
-
-	/**
-	 * Returns a hash array of urls for each type of callback
-	 *
-	 * eg :
-	 * array(
-	 *     'submit' => 'http://localhost/',
-	 *     'cancel' => null
-	 * );
-	 *
-	 * @since 2.3.0
-	 * @deprecated 2.7.0 N°1192 Use navigation rules for form callbacks
-	 *
-	 * @param array     $aData
-	 * @param \DBObject $oObject
-	 * @param boolean   $bModal
-	 *
-	 * @return array
-	 *
-	 * @throws \Exception
-	 */
-	public function GetCallbackUrls(array $aData, DBObject $oObject, $bModal = false)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Use navigation rules for form callbacks');
-		$aResults = array(
-			'submit' => null,
-			'cancel' => null,
-		);
-
-		if (isset($aData['rules'])) {
-			foreach ($aData['rules'] as $sId) {
-				// Retrieving current rule
-				$aRule = $this->GetRule($sId);
-
-				// For each type of callbacks, we check if there is a rule to apply
-				foreach (array('submit', 'cancel') as $sCallbackName)
-				{
-					if (is_array($aRule[$sCallbackName]))
-					{
-						// Previously declared rule on a callback is overwritten by the last
-						$sCallbackUrl = null;
-						switch ($aRule[$sCallbackName]['type'])
-						{
-							case static::ENUM_RULE_CALLBACK_BACK:
-								if (!$bModal)
-								{
-									$sCallbackUrl = ($_SERVER['HTTP_REFERER'] !== '') ? $_SERVER['HTTP_REFERER'] : null;
-								}
-								break;
-
-							case static::ENUM_RULE_CALLBACK_GOTO:
-								$oBrick = $this->oBrickCollection->GetBrickById($aRule[$sCallbackName]['brick_id']);
-								$sCallbackUrl = $this->oRouter->generate($oBrick->GetRouteName(), array('sBrickId' => $oBrick->GetId()));
-								break;
-
-							case static::ENUM_RULE_CALLBACK_OPEN:
-								$sCallbackUrl = ($oObject->IsNew()) ? null : $this->oRouter->generate('p_object_'.$aRule[$sCallbackName]['mode'],
-									array('sObjectClass' => get_class($oObject), 'sObjectId' => $oObject->GetKey()));
-								break;
-						}
-
-						$aResults[$sCallbackName] = $sCallbackUrl;
-					}
-				}
-			}
-		}
-
-		return $aResults;
 	}
 
 	/**

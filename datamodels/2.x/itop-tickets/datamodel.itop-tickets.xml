@@ -1569,11 +1569,6 @@
             <preset id="2">copy(service_id, service_id)</preset>
           </presets>
         </action_rule>
-        <action_rule id="go-to-open-request-on-submit" _delta="define">
-          <submit xsi:type="goto">
-            <brick>ongoing-tickets-for-portal-user</brick>
-          </submit>
-        </action_rule>
       </action_rules>
       <navigation_rules>
         <!-- Open a manage brick (simple method) -->
