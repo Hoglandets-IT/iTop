@@ -396,41 +396,6 @@ abstract class CMDBObject extends DBObject
 		}
 	}
 
-	/**
-	 * Helper to ultimately check user rights before writing (Insert, Update or Delete)
-	 * The check should never fail, because the UI should prevent from such a usage
-	 * Anyhow, if the user has found a workaround... the security gets enforced here
-	 *
-	 * @deprecated 3.0.0 N°2591 will be removed in 3.1.0
-	 *
-	 * @param bool $bSkipStrongSecurity
-	 * @param int $iActionCode
-	 *
-	 * @throws \SecurityException
-	 */
-	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		if (is_null($bSkipStrongSecurity)) {
-			// This is temporary
-			// We have implemented this safety net right before releasing iTop 1.0
-			// and we decided that it was too risky to activate it
-			// Anyhow, users willing to have a very strong security could set
-			// skip_strong_security = 0, in the config file
-			$bSkipStrongSecurity = MetaModel::GetConfig()->Get('skip_strong_security');
-		}
-		if (!$bSkipStrongSecurity)
-		{
-			$sClass = get_class($this);
-			$oSet = DBObjectSet::FromObject($this);
-			if (!UserRights::IsActionAllowed($sClass, $iActionCode, $oSet))
-			{
-				// Intrusion detected
-				throw new SecurityException('You are not allowed to modify objects of class: '.$sClass);
-			}
-		}
-	}
-
 	public function DBClone($newKey = null)
 	{
 		$newKey = parent::DBClone($newKey);

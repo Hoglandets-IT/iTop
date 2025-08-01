@@ -308,15 +308,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		// Deprecated in 3.0.0  N°2591 Will be removed in 3.1
-		'skip_strong_security' => [
-			'type' => 'bool',
-			'description' => 'Disable strong security - TEMPORARY: this flag should be removed when we are more confident in the recent change in security',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
 		'query_optimization_enabled' => [
 			'type' => 'bool',
 			'description' => 'The queries are optimized based on the assumption that the DB integrity has been preserved. By disabling the optimization one can ensure that the fetched data is clean... but this can be really slower or not usable at all (some queries will exceed the allowed number of joins in MySQL: 61!)',
