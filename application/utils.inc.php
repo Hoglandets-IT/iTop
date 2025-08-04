@@ -1570,9 +1570,6 @@ class utils
 				$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
 				$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
 				$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
-				$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
-				$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
-				$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 
 				$aResult = array(
 					new SeparatorPopupMenuItem(),
