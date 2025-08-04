@@ -233,7 +233,6 @@ class WebPage implements Page
 		$this->InitializeInitScripts();
 		$this->InitializeReadyScripts();
 		$this->InitializeLinkedScripts();
-		$this->InitializeCompatibilityLinkedScripts();
 		$this->InitializeDictEntries();
 		$this->InitializeStyles();
 		$this->InitializeLinkedStylesheets();
@@ -898,37 +897,6 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add a script (as an include, i.e. link) to the header of the page.<br>
-	 * Handles duplicates : calling twice with the same script will add the script only once
-	 *
-	 * @param string $sLinkedScriptAbsUrl
-	 *
-	 * @return void
-	 * @uses WebPage::$a_linked_scripts
-	 * @since 3.2.0 N°6935 $sLinkedScriptAbsUrl MUST be an absolute URL
-	 * @deprecated 3.2.0 N°7315 Use {@see static::LinkScriptFromXXX()} instead
-	 */
-	public function add_linked_script($sLinkedScriptAbsUrl)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		// Ensure there is actually a URI
-		if (utils::IsNullOrEmptyString(trim($sLinkedScriptAbsUrl))) {
-			return;
-		}
-
-		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
-		if (false === stripos($sLinkedScriptAbsUrl, "://")) {
-			IssueLog::Debug("Linked script added to page with a non absolute URL, it may lead to it not being loaded and causing javascript errors. See alternatives WebPage::LinkScriptFromXXX", null, [
-				"linked_script_url" => $sLinkedScriptAbsUrl,
-				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
-			]);
-		}
-
-		$this->a_linked_scripts[$sLinkedScriptAbsUrl] = $sLinkedScriptAbsUrl;
-	}
-
-	/**
 	 * Use to include JS files from the iTop package (e.g. `<ITOP>/js/*`)
 	 *
 	 * The provided JS code will be executed at step 2 of the JS execution chain:
@@ -990,27 +958,6 @@ class WebPage implements Page
 	public function LinkScriptFromURI(string $sFileAbsURI): void
 	{
 		$this->LinkResourceFromURI($sFileAbsURI, static::ENUM_RESOURCE_TYPE_JS);
-	}
-
-	/**
-	 * Initialize compatibility linked scripts for the page
-	 *
-	 * @see static::COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @since 3.0.0
-	 */
-	protected function InitializeCompatibilityLinkedScripts(): void
-	{
-		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_js_files');
-		if ($bIncludeDeprecatedFiles) {
-			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_JS, static::ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES);
-		}
-
-		$bIncludeMovedFiles = utils::GetConfig()->Get('compatibility.include_moved_js_files');
-		if ($bIncludeMovedFiles) {
-			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_JS, static::ENUM_COMPATIBILITY_MODE_MOVED_FILES);
-		}
 	}
 
 	/**

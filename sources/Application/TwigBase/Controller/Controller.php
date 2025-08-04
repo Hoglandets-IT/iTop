@@ -771,12 +771,6 @@ abstract class Controller extends AbstractController
 
 	private function AddLinkedScriptToPage($sLinkedScript)
 	{
-		// iTop 3.1 and older compatibility, if not an URI we don't know if its relative to app root or module root
-		if (strpos($sLinkedScript, "://") === false) {
-			$this->m_oPage->add_linked_script($sLinkedScript);
-			return;
-		}
-
 		$this->m_oPage->LinkScriptFromURI($sLinkedScript);
 	}
 
