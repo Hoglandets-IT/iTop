@@ -107,16 +107,6 @@ class ExampleFor_ApplicationPopupMenuItem extends \ApplicationPopupMenuItem
 }
       ]]></content>
     </snippet>
-    <snippet id="ExampleFor_iPageUIExtension" _delta="define">
-      <placement>core</placement>
-      <rank>0</rank>
-      <content><![CDATA[
-class ExampleFor_iPageUIExtension extends \AbstractPageUIExtension
-{
-	// Do nothing, we just need the class to exists for the unit test
-}
-      ]]></content>
-    </snippet>
     <snippet id="ExamplePageUIBlockExtension" _delta="define">
       <placement>core</placement>
       <rank>0</rank>

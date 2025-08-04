@@ -87,10 +87,6 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 				\iPopupMenuExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
 			],
-			\iPageUIExtension::class => [
-				\iPageUIExtension::class,
-				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
-			],
 			\iPageUIBlockExtension::class => [
 				\iPageUIBlockExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,

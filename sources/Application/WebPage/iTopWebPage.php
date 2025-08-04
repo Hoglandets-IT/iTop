@@ -38,7 +38,6 @@ use Dict;
 use ExecutionKPI;
 use InlineImage;
 use iPageUIBlockExtension;
-use iPageUIExtension;
 use MetaModel;
 use UserRights;
 use utils;
@@ -624,33 +623,8 @@ JS
 	}
 
 	/**
-	 * Render the banner HTML which can come from both iTop itself and from extensions
-	 *
-	 * @see \iPageUIExtension::GetBannerHtml()
-	 * @internal
-	 *
-	 * @return string
-	 * @since 3.0.0
-	 */
-	protected function RenderBannerHtml()
-	{
-		$sBannerHtml = '';
-
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
-		$sAPIClassName = iPageUIExtension::class;
-		/** @var \iPageUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
-			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetBannerHtml", "use " . iPageUIBlockExtension::class . "::GetBannerBlock() instead");
-			$sBannerHtml .= $oExtensionInstance->GetBannerHtml($this);
-		}
-
-		return $sBannerHtml;
-	}
-
-	/**
 	 * Render the banner UIBlock which can come from both iTop itself and from extensions
 	 *
-	 * @see \iPageUIExtension::GetBannerHtml()
 	 * @internal
 	 *
 	 * @return iUIBlock
@@ -673,34 +647,10 @@ JS
 		return $oBanner;
 	}
 
-	/**
-	 * Render the header HTML which can come from both iTop itself and from extensions
-	 *
-	 * @see \iPageUIExtension::GetNorthPaneHtml()
-	 * @internal
-	 *
-	 * @return string
-	 * @since 3.0.0
-	 */
-	protected function RenderHeaderHtml()
-	{
-		$sHeaderHtml = '';
-
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
-		$sAPIClassName = iPageUIExtension::class;
-		/** @var \iPageUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
-			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetNorthPaneHtml", "use " . iPageUIBlockExtension::class . "::GetHeaderBlock() instead");
-			$sHeaderHtml .= $oExtensionInstance->GetNorthPaneHtml($this);
-		}
-
-		return $sHeaderHtml;
-	}
 
 	/**
 	 * Render the header UIBlock which can come from both iTop itself and from extensions
 	 *
-	 * @see \iPageUIExtension::GetHeaderHtml()
 	 * @internal
 	 *
 	 * @return iUIBlock
@@ -772,34 +722,10 @@ HTML;
 		return $oHeader;
 	}
 
-	/**
-	 * Render the footer HTML which can come from both iTop itself and from extensions
-	 *
-	 * @see \iPageUIExtension::GetSouthPaneHtml()
-	 * @internal
-	 *
-	 * @return string
-	 * @since 3.0.0
-	 */
-	protected function RenderFooterHtml()
-	{
-		$sFooterHtml = '';
-
-		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
-		$sAPIClassName = iPageUIExtension::class;
-		/** @var \iPageUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
-			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetSouthPaneHtml", "use " . iPageUIBlockExtension::class . "::GetFooterBlock() instead");
-			$sFooterHtml .= $oExtensionInstance->GetSouthPaneHtml($this);
-		}
-
-		return $sFooterHtml;
-	}
 
 	/**
 	 * Render the footer UIBlock which can come from both iTop itself and from extensions
 	 *
-	 * @see \iPageUIExtension::GetSouthPaneHtml()
 	 * @internal
 	 *
 	 * @return iUIBlock
@@ -939,11 +865,8 @@ HTML;
 
 		// Layouts
 		$aData['aLayouts'] = [
-			'sBanner' => $this->RenderBannerHtml(),
 			'oBanner' => $this->RenderBannerBlock(),
-			'sHeader' => $this->RenderHeaderHtml(),
 			'oHeader' => $this->RenderHeaderBlock(),
-			'sFooter' => $this->RenderFooterHtml(),
 			'oFooter' => $this->RenderFooterBlock(),
 		];
 		// - Prepare navigation menu

@@ -7665,7 +7665,6 @@ abstract class MetaModel
 			'iApplicationUIExtension',
 			'iApplicationObjectExtension',
 			'iPopupMenuExtension',
-			'iPageUIExtension',
 			'iPageUIBlockExtension',
 			'iBackofficeLinkedScriptsExtension',
 			'iBackofficeEarlyScriptExtension',

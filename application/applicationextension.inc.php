@@ -1174,61 +1174,6 @@ class JSButtonItem extends JSPopupMenuItem
  * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
  *
  * @api
- * @package     UIExtensibilityAPI
- * @since 2.0
- * @deprecated 3.0.0 If you need to include:
- *   * JS/CSS files/snippets, use {@see \iBackofficeLinkedScriptsExtension}, {@see \iBackofficeLinkedStylesheetsExtension}, etc instead
- *   * HTML (and optionally JS/CSS), use {@see \iPageUIBlockExtension} to manipulate {@see \Combodo\iTop\Application\UI\Base\UIBlock} instead
- */
-interface iPageUIExtension
-{
-	/**
-	 * Add content to the header of the page
-	 *
-	 * @api
-	 * @param iTopWebPage $oPage The page to insert stuff into.
-	 *
-	 * @return string The HTML content to add into the page
-	 */
-	public function GetNorthPaneHtml(iTopWebPage $oPage);
-
-	/**
-	 * Add content to the footer of the page
-	 *
-	 * @api
-	 * @param iTopWebPage $oPage The page to insert stuff into.
-	 *
-	 * @return string The HTML content to add into the page
-	 */
-	public function GetSouthPaneHtml(iTopWebPage $oPage);
-
-	/**
-	 * Add content to the "admin banner"
-	 *
-	 * @api
-	 * @param iTopWebPage $oPage The page to insert stuff into.
-	 *
-	 * @return string The HTML content to add into the page
-	 */
-	public function GetBannerHtml(iTopWebPage $oPage);
-}
-
-/**
- * Implement this interface to add content to any iTopWebPage
- *
- * There are 3 places where content can be added:
- *
- * * The north pane: (normaly empty/hidden) at the top of the page, spanning the whole
- *   width of the page
- * * The south pane: (normaly empty/hidden) at the bottom of the page, spanning the whole
- *   width of the page
- * * The admin banner (two tones gray background) at the left of the global search.
- *   Limited space, use it for short messages
- *
- * Each of the methods of this interface is supposed to return the HTML to be inserted at
- * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
- *
- * @api
  * @package     BackofficeUIExtensibilityAPI
  * @since 3.0.0
  */
@@ -1260,43 +1205,7 @@ interface iPageUIBlockExtension
 }
 
 /**
- * Extend this class instead of iPageUIExtension if you don't need to overload all methods
- *
- * @api
- * @package     UIExtensibilityAPI
- * @since       2.7.0
- * @deprecated 3.0.0 use AbstractPageUIBlockExtension instead
- */
-abstract class AbstractPageUIExtension implements iPageUIExtension
-{
-	/**
-	 * @inheritDoc
-	 */
-	public function GetNorthPaneHtml(iTopWebPage $oPage)
-	{
-		return '';
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function GetSouthPaneHtml(iTopWebPage $oPage)
-	{
-		return '';
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function GetBannerHtml(iTopWebPage $oPage)
-	{
-		return '';
-	}
-
-}
-
-/**
- * Extend this class instead of iPageUIExtension if you don't need to overload all methods
+ * Extend this class instead of iPageUIBlockExtension if you don't need to overload all methods
  *
  * @api
  * @package     UIBlockExtensibilityAPI
