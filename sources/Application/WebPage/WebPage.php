@@ -236,7 +236,6 @@ class WebPage implements Page
 		$this->InitializeDictEntries();
 		$this->InitializeStyles();
 		$this->InitializeLinkedStylesheets();
-		$this->InitializeCompatibilityLinkedStylesheets();
 		$this->aPreloadedFonts = WebResourcesHelper::GetPreloadedFonts();
 		$this->a_headers = [];
 		$this->a_base = ['href' => '', 'target' => ''];
@@ -1115,36 +1114,6 @@ JS;
 	}
 
 	/**
-	 * Add a CSS stylesheet (as an include, i.e. link) to the header of the page
-	 * Handles duplicates since 3.0.0 : calling twig with the same stylesheet will add the stylesheet only once
-	 *
-	 * @param string $sLinkedStylesheet
-	 * @param string $sCondition
-	 * @return void
-	 * @since 3.2.0 N°6935 $sLinkedStylesheet MUST be an absolute URL
-	 * @deprecated 3.2.0 N°7315 Use {@see static::LinkStylesheetFromXXX()} instead
-	 */
-	public function add_linked_stylesheet($sLinkedStylesheet, $sCondition = "")
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		// Ensure there is actually a URI
-		if (utils::IsNullOrEmptyString(trim($sLinkedStylesheet))) {
-			return;
-		}
-
-		// Check if URI is absolute ("://" do allow any protocol), otherwise warn that it's a deprecated behavior
-		if (false === stripos($sLinkedStylesheet, "://")) {
-			IssueLog::Debug("Linked stylesheet added to page with a non absolute URL, it may lead to it not being loaded and causing visual glitches. See alternatives WebPage::LinkStylesheetFromXXX", null, [
-				"linked_stylesheet_url" => $sLinkedStylesheet,
-				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
-			]);
-		}
-
-		$this->a_linked_stylesheets[$sLinkedStylesheet] = array('link' => $sLinkedStylesheet, 'condition' => $sCondition);
-	}
-
-	/**
 	 * Use to link CSS files from the iTop package (e.g. `<ITOP>/css/*`)
 	 *
 	 * @param string $sFileRelPath Rel. path from iTop app. root of the CSS file to link (e.g. `css/login.css`)
@@ -1188,58 +1157,6 @@ JS;
 	public function LinkStylesheetFromURI(string $sFileAbsURI): void
 	{
 		$this->LinkResourceFromURI($sFileAbsURI, static::ENUM_RESOURCE_TYPE_CSS);
-	}
-
-	/**
-	 * Initialize compatibility linked stylesheets for the page
-	 *
-	 * @see static::COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH
-	 * @see static::COMPATIBILITY_DEPRECATED_LINKED_STYLESHEETS_REL_PATH
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @since 3.0.0
-	 */
-	protected function InitializeCompatibilityLinkedStylesheets(): void
-	{
-		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_css_files');
-		if ($bIncludeDeprecatedFiles) {
-			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_CSS, static::ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES);
-		}
-
-		$bIncludeMovedFiles = utils::GetConfig()->Get('compatibility.include_moved_css_files');
-		if ($bIncludeMovedFiles) {
-			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_CSS, static::ENUM_COMPATIBILITY_MODE_MOVED_FILES);
-		}
-	}
-
-	/**
-	 * Add compatibility files of $sFileType from $sMode (which are declared in {@see static::COMPATIBILITY_<MODE>_LINKED_<TYPE>_REL_PATH}) back to the page
-	 *
-	 * @param string $sFileType {@uses static::ENUM_COMPATIBILITY_FILE_TYPE_XXX}
-	 * @param string $sMode {@uses static::ENUM_COMPATIBILITY_MODE_XXX}
-	 *
-	 * @uses static::add_linked_script Depending on $sFileType
-	 * @uses static::add_linked_stylesheet Depending on $sFileType
-	 *
-	 * @throws \Exception
-	 * @since 3.0.0
-	 */
-	protected function AddCompatibilityFiles(string $sFileType, string $sMode): void
-	{
-		$sConstantName = 'COMPATIBILITY_'.strtoupper($sMode).'_LINKED_'. ($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'STYLESHEETS' : 'SCRIPTS') .'_REL_PATH';
-		$sMethodName = 'add_linked_'.($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'stylesheet' : 'script');
-
-		// Add ancestors files
-		foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
-			foreach (constant($sParentClass.'::'.$sConstantName) as $sFile) {
-				$this->$sMethodName(utils::GetAbsoluteUrlAppRoot().$sFile);
-			}
-		}
-
-		// Add current class files
-		foreach (constant('static::'.$sConstantName) as $sFile) {
-			$this->$sMethodName(utils::GetAbsoluteUrlAppRoot().$sFile);
-		}
 	}
 
 	/**

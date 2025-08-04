@@ -776,11 +776,6 @@ abstract class Controller extends AbstractController
 
 	private function AddLinkedStylesheetToPage($sLinkedStylesheet)
 	{
-		// iTop 3.1 and older compatibility, if not an URI we don't know if its relative to app root or module root
-		if (strpos($sLinkedStylesheet, "://") === false) {
-			$this->m_oPage->add_linked_stylesheet($sLinkedStylesheet);
-		}
-
 		$this->m_oPage->LinkStylesheetFromURI($sLinkedStylesheet);
 	}
 
