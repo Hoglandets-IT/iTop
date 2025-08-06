@@ -1517,7 +1517,7 @@ JS
 					$sDBNameInput .= '</select>';
 				}
 				$oPage->add_ready_script('$("#db_name_container").html("'.addslashes($sDBNameInput).'");');
-				$oPage->add_ready_script('$("#db_name").bind("click keyup change", function() { $("#existing_db").prop("checked", true); WizardUpdateButtons(); });');
+				$oPage->add_ready_script('$("#db_name").on("click keyup change", function() { $("#existing_db").prop("checked", true); WizardUpdateButtons(); });');
 
 			}
 		}

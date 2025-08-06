@@ -14,7 +14,7 @@ jQuery.fn.popupmenu = function ()
 	var popupmenu = null;
 	return this.each(function() 
 	{
-		$(this).bind('click.popup_menu', function (evt)
+		$(this).on('click.popup_menu', function (evt)
 		{
 			var previous_popup = popupmenu;
 			var bMenuClosed = false;
@@ -58,7 +58,7 @@ jQuery.fn.popupmenu = function ()
 			evt.stopPropagation();
 		});
 
-		$(document).bind('click.popup_menu', function(evt)
+		$(document).on('click.popup_menu', function(evt)
 		{
 			if (popupmenu)
 			{

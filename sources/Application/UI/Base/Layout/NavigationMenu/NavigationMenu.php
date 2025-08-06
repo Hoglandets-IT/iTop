@@ -390,7 +390,7 @@ $sPageJS
 $sPageReadyJS
 $(document).ready(function() {
 	$('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').on('extkeychange', function() { 
-		$('[data-role="ibo-navigation-menu--silo-selection--form"]').submit();
+		$('[data-role="ibo-navigation-menu--silo-selection--form"]').trigger('submit');
 	});
 	$('[data-role="ibo-navigation-menu--silo-selection--form"] #label_org_id').on('click', function() { 
 		if ($('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').val() == '') { 

@@ -118,7 +118,7 @@ MicroPlugin.mixin = function (Interface) {
       loaded: {}
     };
 
-    if (isArray(plugins)) {
+    if (Array.isArray(plugins)) {
       for (i = 0, n = plugins.length; i < n; i++) {
         if (typeof plugins[i] === 'string') {
           queue.push(plugins[i]);
@@ -665,7 +665,7 @@ var getInputSelection = function (input) {
     result.start = input.selectionStart;
     result.length = input.selectionEnd - result.start;
   } else if (document.selection) {
-    input.focus();
+    input.trigger('focus');
     var sel = document.selection.createRange();
     var selLen = document.selection.createRange().text.length;
     sel.moveStart('character', -input.value.length);
@@ -830,7 +830,7 @@ var Selectize = function($input, settings) {
 
 	var computedStyle = window.getComputedStyle && window.getComputedStyle(input, null);
 	dir = computedStyle ? computedStyle.getPropertyValue('direction') : input.currentStyle && input.currentStyle.direction;
-  dir = dir || $input.parents('[dir]:first').attr('dir') || '';
+  dir = dir || $input.parents('[dir]').first().attr('dir') || '';
 
   self.settings = {};
 
@@ -1180,7 +1180,7 @@ $.extend(Selectize.prototype, {
     }
 
 		if (!self.isFocused || !self.isOpen) {
-			self.focus();
+			self.trigger('focus');
 			e.preventDefault();
 		}
 	},
@@ -1194,7 +1194,7 @@ $.extend(Selectize.prototype, {
 			if (!defaultPrevented) {
         window.setTimeout(function () {
           if (!self.isOpen) {
-            self.focus();
+            self.trigger('focus');
           }
         }, 0);
 			}
@@ -1377,7 +1377,7 @@ $.extend(Selectize.prototype, {
 		var wasFocused = self.isFocused;
 
 		if (self.isDisabled) {
-			self.blur();
+			self.trigger('blur');
 			e && e.preventDefault();
 			return false;
 		}
@@ -1415,7 +1415,7 @@ $.extend(Selectize.prototype, {
 			self.setCaret(self.items.length);
 			self.refreshState();
 
-			dest && dest.focus && dest.focus();
+			dest && dest.focus && dest.trigger('focus');
 
 			self.isBlurring = false;
 			self.ignoreFocus = false;
@@ -1589,7 +1589,7 @@ $.extend(Selectize.prototype, {
 
 		self.hideInput();
 		if (!this.isFocused) {
-			self.focus();
+			self.trigger('focus');
 		}
 	},
 
@@ -1637,7 +1637,7 @@ $.extend(Selectize.prototype, {
 			self.hideInput();
 			self.close();
 		}
-		self.focus();
+		self.trigger('focus');
 	},
 
 	hideInput: function() {
@@ -1658,7 +1658,7 @@ $.extend(Selectize.prototype, {
 		if (self.isDisabled) return self;
 
 		self.ignoreFocus = true;
-		self.$control_input[0].focus();
+		self.$control_input[0].trigger('focus');
 		window.setTimeout(function() {
 			self.ignoreFocus = false;
 			self.onFocus();
@@ -1667,7 +1667,7 @@ $.extend(Selectize.prototype, {
 	},
 
 	blur: function(dest) {
-		this.$control_input[0].blur();
+		this.$control_input[0].trigger('blur');
 		this.onBlur(null, dest);
 		return this;
 	},
@@ -1837,17 +1837,17 @@ $.extend(Selectize.prototype, {
       		if (results.items.length > 0) {
 			$active_before = active_before && self.getOption(active_before);
 			if (results.query !== "" && self.settings.setFirstOptionActive) {
-			$active = $dropdown_content.find('[data-selectable]:first')
+				$active = $dropdown_content.find('[data-selectable]').first();
 			} else if (results.query !== "" && $active_before && $active_before.length) {
-			$active = $active_before;
+				$active = $active_before;
 			} else if (self.settings.mode === 'single' && self.items.length) {
-			$active = self.getOption(self.items[0]);
+				$active = self.getOption(self.items[0]);
 			}
 			if (!$active || !$active.length) {
 			if ($create && !self.settings.addPrecedence) {
 				$active = self.getAdjacentOption($create, 1);
 			} else {
-				$active = $dropdown_content.find('[data-selectable]:first');
+				$active = $dropdown_content.find('[data-selectable]').first();
 			}
 			}
 			} else {
@@ -2350,7 +2350,7 @@ $.extend(Selectize.prototype, {
       (self.settings.mode === "multi" && self.isFull())
     )
       return;
-		self.focus();
+		self.trigger('focus');
 		self.isOpen = true;
 		self.refreshState();
 		self.$dropdown.css({ visibility: 'hidden', display: 'block' });
@@ -2368,7 +2368,7 @@ $.extend(Selectize.prototype, {
 			self.hideInput();
 
 			if (self.isBlurring) {
-				self.$control_input[0].blur(); 
+				self.$control_input[0].trigger('blur');
 			}
 		}
 

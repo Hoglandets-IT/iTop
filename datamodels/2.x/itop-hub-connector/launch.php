@@ -291,7 +291,7 @@ try {
 	        $aDataToPost = MakeDataToPost($sTargetRoute);
 	        $oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
 	        $oPage->add('<input type="hidden" name="json" value="'.utils::EscapeHtml(json_encode($aDataToPost)).'">');
-	        $oPage->add_ready_script('$("#hub_launch_form").submit();');
+	        $oPage->add_ready_script('$("#hub_launch_form").trigger(\'submit\');');
         } else {
             IssueLog::Error('TokenValidation failed on inform_after_setup page');
             throw new Exception("Not allowed");
@@ -378,7 +378,7 @@ $("#GoToHubBtn").on("click", function() {
 	window.setTimeout(function () {
 		var bNewWindow = $('#itophub_open_in_new_window').prop("checked");
 		if(bNewWindow) { $("#hub_launch_form").attr("target", "_blank"); } else { $("#hub_launch_form").removeAttr("target"); }
-		$('#hub_launch_form').submit();
+		$('#hub_launch_form').trigger('submit');
 		window.setTimeout(function () {
 			$("#GoToHubBtn").prop('disabled', false);
 			$("#hub_launch_image").removeClass("animate");

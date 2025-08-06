@@ -135,16 +135,16 @@ EOF
 		$oOpenAllButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Open All', '', '', false, 'lifecycleOpenAll');
 		$oOpenAllButton->SetOnClickJsCode(
 			<<<JS
-				$('#LifeCycleList').find('.expandable-hitarea').click();
-				$('#LifeCycleAttrOptList').find('.expandable-hitarea').click();
+				$('#LifeCycleList').find('.expandable-hitarea').trigger('click');
+				$('#LifeCycleAttrOptList').find('.expandable-hitarea').trigger('click');
 JS
 
 		);
 		$oCloseAllButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Close All', '', '', false, 'lifecycleCloseAll');
 		$oCloseAllButton->SetOnClickJsCode(
 			<<<JS
-				$('#LifeCycleList').find('.collapsable-hitarea').click();
-				$('#LifeCycleAttrOptList').find('.collapsable-hitarea').click();
+				$('#LifeCycleList').find('.collapsable-hitarea').trigger('click');
+				$('#LifeCycleAttrOptList').find('.collapsable-hitarea').trigger('click');
 JS
 
 		);

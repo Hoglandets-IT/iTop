@@ -390,7 +390,7 @@ try
 
 				$oPage->add_ready_script(
 					<<<EOF
-		$('select[name^=field]').change( DoCheckMapping );
+		$('select[name^=field]').on('change', DoCheckMapping );
 		aDefaultKeys = new Array($sDefaultKeys);
 		aReadOnlyKeys = new Array($sReadOnlyKeys);
 		DoCheckMapping();

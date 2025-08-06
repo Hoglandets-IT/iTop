@@ -12,7 +12,7 @@ oWelcomePopupDialogElem.dialog({
 	title: oWelcomePopupDialogElem.attr('data-title'),
     open: function () {
         // Focus on acknowledge button
-        const oAckButton = oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary:first');
+        const oAckButton = oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary').first();
         oAckButton.trigger('focus');
 
         // Count stack items and change button label to close if there is only one
@@ -75,13 +75,13 @@ oWelcomePopupDialogElem
                     oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"][data-uuid="' + sUUIDEscapedForSelector + '"]').addClass('ibo-is-acknowledged');
 
                     // Display next message if any
-                    const oNextStackItemElem = oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]:not(.ibo-is-acknowledged):first');
+                    const oNextStackItemElem = oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]:not(.ibo-is-acknowledged)').first();
                     if (oNextStackItemElem.length > 0) {
                         oNextStackItemElem.trigger('click');
 
                         // Count non acknowledged stack items and change button label to close if there is only one
                         if (oWelcomePopupDialogElem.find('[data-role="ibo-welcome-popup--stack-item"]:not(.ibo-is-acknowledged)').length === 1) {
-                            const oAckButton = oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary:first');
+                            const oAckButton = oWelcomePopupDialogElem.closest('[role="dialog"]').find('.ui-dialog-buttonset .ibo-is-primary').first();
                             oAckButton.text({{ 'UI:WelcomePopup:Button:AcknowledgeAndClose'|dict_s|json_encode|raw }});
                         }
                     } else {

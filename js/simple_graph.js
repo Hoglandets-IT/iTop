@@ -86,13 +86,13 @@ $(function()
 						me._on_tabs_activate(ui);
 					});
 				}
-				$(window).bind('resized', function () {
+				$(window).on('resized', function () {
 					var that = me;
 					window.setTimeout(function () {
 						that._on_resize();
 					}, 50);
 				});
-				$('#dh_flash').bind('toggle_complete', function () {
+				$('#dh_flash').on('toggle_complete', function () {
 					var that = me;
 					window.setTimeout(function () {
 						that._on_resize();
@@ -655,7 +655,7 @@ $(function()
 					close: function() { $(this).remove(); },
 					buttons: [
 						{text: this.options.labels['cancel'], click: function() { $(this).dialog('close');} },
-						{text: this.options.labels['export'], click: function() { $('#graph_'+me.element.attr('id')+'_export_dlg').submit(); $(this).dialog('close');} },
+						{text: this.options.labels['export'], click: function() { $('#graph_'+me.element.attr('id')+'_export_dlg').trigger('submit'); $(this).dialog('close');} },
 					]
 				});
 			},

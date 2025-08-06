@@ -320,9 +320,9 @@ HTML
 		//$oPage->add('</fieldset>');
 		$oPage->add_ready_script(
 <<<JS
-	$("#radio_update").bind('change', function() { if (this.checked ) { $('#upgrade_info').show(); WizardUpdateButtons(); } else { $('#upgrade_info').hide(); } });
-	$("#radio_install").bind('change', function() { if (this.checked ) { $('#upgrade_info').hide(); WizardUpdateButtons(); } else { $('#upgrade_info').show(); } });
-	$("#db_backup_path").bind('change keyup', function() { WizardAsyncAction('check_backup', { db_backup_path: $('#db_backup_path').val() }); });
+	$("#radio_update").on('change', function() { if (this.checked ) { $('#upgrade_info').show(); WizardUpdateButtons(); } else { $('#upgrade_info').hide(); } });
+	$("#radio_install").on('change', function() { if (this.checked ) { $('#upgrade_info').hide(); WizardUpdateButtons(); } else { $('#upgrade_info').show(); } });
+	$("#db_backup_path").on('change keyup', function() { WizardAsyncAction('check_backup', { db_backup_path: $('#db_backup_path').val() }); });
 JS
 		);
 	}
@@ -619,7 +619,7 @@ HTML
 			$oPage->add_ready_script(
 <<<EOF
 	$("#changes_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
-	$('input[name=upgrade_type]').bind('click change', function() { WizardUpdateButtons(); });
+	$('input[name=upgrade_type]').on('click change', function() { WizardUpdateButtons(); });
 EOF
 			);
 
@@ -740,7 +740,7 @@ This data remains anonymous until it is associated to a user account on iTop Hub
 		    $oPage->add('<label for="rgpd_consent">&nbsp;I accept the processing of my personal data</label>');
 		    $oPage->add('</fieldset>');
 	    }
-	    $oPage->add_ready_script('$(".check_select").bind("click change", function() { WizardUpdateButtons(); });');
+	    $oPage->add_ready_script('$(".check_select").on("click change", function() { WizardUpdateButtons(); });');
 
 	    $oPage->add_script(
 		    <<<JS
@@ -923,9 +923,9 @@ class WizStepAdminAccount extends WizardStep
 		$oPage->add('</fieldset>');
 		$oPage->add_ready_script(
 			<<<EOF
-		$('#admin_user').bind('change keyup', function() { WizardUpdateButtons(); } );
-		$('#admin_pwd').bind('change keyup', function() { WizardUpdateButtons(); } );
-		$('#confirm_pwd').bind('change keyup', function() { WizardUpdateButtons(); } );
+		$('#admin_user').on('change keyup', function() { WizardUpdateButtons(); } );
+		$('#admin_pwd').on('change keyup', function() { WizardUpdateButtons(); } );
+		$('#confirm_pwd').on('change keyup', function() { WizardUpdateButtons(); } );
 EOF
 		);
 	}
@@ -1066,8 +1066,8 @@ class WizStepInstallMiscParams extends AbstractWizStepMiscParams
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		$oPage->add_ready_script(
 			<<<EOF
-		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
-		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val(), authent: $('#authent_token').val()}); } ).trigger('init');
+		$('#application_url').on('change keyup', function() { WizardUpdateButtons(); } );
+		$('#graphviz_path').on('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val(), authent: $('#authent_token').val()}); } ).trigger('init');
 		$('#btn_next').on('click', function() {
 			bRet = true;
 			if ($(this).attr('data-graphviz') != 'ok')
@@ -1207,8 +1207,8 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		$oPage->add_ready_script(
 			<<<EOF
-		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
-		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val(), authent: $('#authent_token').val() }); } ).trigger('init');
+		$('#application_url').on('change keyup', function() { WizardUpdateButtons(); } );
+		$('#graphviz_path').on('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val(), authent: $('#authent_token').val() }); } ).trigger('init');
 		$('#btn_next').on('click', function() {
 			bRet = true;
 			if ($(this).attr('data-graphviz') != 'ok')
@@ -1531,7 +1531,7 @@ EOF
 		);
 		$oPage->add_ready_script(
 <<<EOF
-		$('.wiz-choice').bind('change', function() { CheckChoice($(this).attr('id')); } );
+		$('.wiz-choice').on('change', function() { CheckChoice($(this).attr('id')); } );
 		$('.wiz-choice').trigger('change');
 EOF
 		);
@@ -2326,7 +2326,7 @@ class WizStepSummary extends WizardStep
 			<<<JS
 	$("#params_summary div").addClass('closed');
 	$("#params_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
-	$("#btn_next").bind("click.install", function(event) {
+	$("#btn_next").on("click.install", function(event) {
 			$('#summary').hide();
 			$('#installation_progress').show();
 			$(this).prop('disabled', true);	 event.preventDefault(); ExecuteStep("");
@@ -2465,7 +2465,7 @@ EOF
 	$('#progress').progression( {Current:100, Maximum: 100} );
 	WizardUpdateButtons();
 	$("#btn_next").off("click.install");
-	$("#btn_next").click();
+	$("#btn_next").trigger('click');
 EOF
 			);
 		} else {

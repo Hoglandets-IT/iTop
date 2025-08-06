@@ -129,7 +129,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		{
 			dlg.height($(window).height()-70);
 		}
-		var searchForm = dlg.find('div.display_block:first'); // Top search form, enclosing display_block
+		var searchForm = dlg.find('div.display_block').first(); // Top search form, enclosing display_block
 		var results = $('#SearchResultsToAdd_'+me.id);
 		var oPadding = {};
 		var aKeys = ['top', 'right', 'bottom', 'left'];
@@ -257,7 +257,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 						theMap[this.name] = this.value;
 					}
 				}
-				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
+				$(this).parents('tr').first().remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 			}
 		);
 		theMap["sFilter"] = $('#datatable_ResultsToAdd_'+me.id+' [name="filter"]').val();
@@ -300,7 +300,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 			$('#SearchResultsToAdd_'+me.id).html(me.emptyHtml);
 		}
 		$('#label_'+me.id).removeClass('dlg_loading');
-		$('#label_'+me.id).focus();
+		$('#label_'+me.id).trigger('focus');
 		me.ajax_request = null;
 	};
 

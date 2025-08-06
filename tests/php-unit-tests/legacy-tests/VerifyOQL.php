@@ -161,7 +161,7 @@ try
 	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
 	$oP->add("<textarea cols=\"120\" rows=\"8\" id=\"expression\" name=\"expression\">".utils::EscapeHtml($sExpression)."</textarea>\n");
 	$oP->add_ready_script(<<<JS
-$("#expression").select();
+$("#expression").trigger('select');
 $("#expression").on('keyup', function (oEvent) {
     if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
         $(this).closest('form').trigger('submit');

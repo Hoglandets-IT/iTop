@@ -121,7 +121,7 @@ $(function()
 			/*
 			this.datatable.trigger("update").trigger("applyWidgets");
 			this.datatable.tableHover();*/
-			this.datatable.find('.selectList'+this.id).bind('change', function () {
+			this.datatable.find('.selectList'+this.id).on('change', function () {
 				me._updateButtons();
 			});
 
@@ -202,7 +202,7 @@ $(function()
 				me.oDlg = $('<div></div>');
 				$('body').append(me.oDlg);
 				me.oDlg.html(data);
-				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function () {
+				me.oDlg.find('form').removeAttr('onsubmit').on('submit', function () {
 					me._onSearchToAdd();
 					return false;
 				});
@@ -429,7 +429,7 @@ $(function()
 			me.oDlg.find('span.indicator').html('<img src="../images/indicator.gif">');
 			$.post(this.options.submit_to, oParams, function (data) {
 				me.oDlg.html(data);
-				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function () {
+				me.oDlg.find('form').removeAttr('onsubmit').on('submit', function () {
 					me._onCreateRow();
 					return false;
 				});

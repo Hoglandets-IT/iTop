@@ -183,7 +183,7 @@ function CheckFields(sFormId, bDisplayAlert)
 		$('#'+sFormId+' :submit').prop('disable', false);
 		$('#'+sFormId+' :button[type=submit]').prop('disable', false);
 		if (oFormErrors['input_'+sFormId] != null) {
-			$('#'+oFormErrors['input_'+sFormId]).focus();
+			$('#'+oFormErrors['input_'+sFormId]).trigger('focus');
 		}
 	}
 

@@ -179,7 +179,7 @@ $(function() {
 				});
 				// Set focus in the input
 				this.element.on('set_focus.caselog_entry_form.itop', function () {
-					CKEditorInstance.focus();
+					CKEditorInstance.trigger('focus');
 				});
 			},
 

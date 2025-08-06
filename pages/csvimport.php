@@ -422,14 +422,14 @@ EOF
 	{
 		$('input[name=step]').val(3);
 		$('#wizForm').removeAttr('onsubmit'); // No need to perform validation checks when going back
-		$('#wizForm').submit();
+		$('#wizForm').trigger('submit');
 	}
 	
 	function CSVGoBack()
 	{
 		$('input[name=step]').val(2);
 		$('#wizForm').removeAttr('onsubmit'); // No need to perform validation checks when going back
-		$('#wizForm').submit();
+		$('#wizForm').trigger('submit');
 		
 	}
 
@@ -437,7 +437,7 @@ EOF
 	{
 		$('input[name=step]').val(1);
 		$('#wizForm').removeAttr('onsubmit'); // No need to perform validation checks when going back
-		$('#wizForm').submit();
+		$('#wizForm').trigger('submit');
 		
 	}
 
@@ -873,7 +873,7 @@ EOF
 	function GoBack()
 	{
 		$('input[name=step]').val(1);
-		$('#wizForm').submit();
+		$('#wizForm').trigger('submit');
 	}
 	
 	var ajax_request = null;
@@ -1089,7 +1089,7 @@ EOF
 	);
 		$oPage->add_ready_script(
 <<<EOF
-$('#select_template_class').change( function() {
+$('#select_template_class').on('change', function() {
 	DisplayTemplate(this.value);
 });
 EOF

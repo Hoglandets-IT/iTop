@@ -63,7 +63,7 @@ $(function () {
 				let $listLink = $eventTarget
 					.closest(this.js_selectors.dashlet_container)
 					.find(this.js_selectors.dashlet_action_list);
-				$listLink[0].click();
+				$listLink[0].trigger('click');
 			}
 		})
 });

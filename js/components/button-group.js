@@ -24,11 +24,11 @@ $('body').on('enter_loading_state.button_group.itop', '[data-role="ibo-button-gr
 		$(this).find('[data-role="ibo-button"]').each(function(){
 			$(this).prop('disabled', true);
 		});
-		$(this).find('[data-role="ibo-button"]:first').trigger('enter_loading_state.button.itop');
+		$(this).find('[data-role="ibo-button"]').first().trigger('enter_loading_state.button.itop');
 })
 .on('leave_loading_state.button_group.itop', '[data-role="ibo-button-group"]', function(){
 	$(this).find('[data-role="ibo-button"]').each(function(){
 		$(this).prop('disabled', false);
 	});
-	$(this).find('[data-role="ibo-button"]:first').trigger('leave_loading_state.button.itop');
+	$(this).find('[data-role="ibo-button"]').first().trigger('leave_loading_state.button.itop');
 });

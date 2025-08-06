@@ -681,7 +681,7 @@ try
 								$aResult['JSURLs'] = str_replace('"', '\'', $oBlock->sJSURLs);
 								$aResult['js'] = 'charts['.$iRefresh.'].load({json: '.str_replace('"', '\'', $oBlock->sJson).
 									',keys: { x: \'label\', value:  [\'value\']'.
-									'},onclick: function (d) {  var aURLs = $.parseJSON('.str_replace('"', '\'', $oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
+									'},onclick: function (d) {  var aURLs = JSON.parse('.str_replace('"', '\'', $oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
 								break;
 
 							case 'pie':
@@ -692,7 +692,7 @@ try
 								$aResult['JSURLs'] = str_replace('"', '\'', $oBlock->sJSURLs);
 								$aResult['js'] = 'charts['.$iRefresh.'].load({columns: '.str_replace('"', '\'', $oBlock->sJSColumns).
 									',names: '.str_replace('"', '\'', $oBlock->sJSNames).
-									',onclick: function (d) {  var aURLs = $.parseJSON('.str_replace('"', '\'', $oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
+									',onclick: function (d) {  var aURLs = JSON.parse('.str_replace('"', '\'', $oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
 								break;
 						}
 					} else {
@@ -2194,7 +2194,7 @@ EOF
 					<<<EOF
 $('#upload_button').on('change', function() {
 	$('#upload_status').html('<img src="{$sAppRootUrl}images/indicator.gif">'); 
-	$('#upload_form').submit();
+	$('#upload_form').trigger('submit');
 	$(this).prop('disabled', true);
 });
 $('.img-picker').magnificPopup({type: 'image', closeOnContentClick: true });

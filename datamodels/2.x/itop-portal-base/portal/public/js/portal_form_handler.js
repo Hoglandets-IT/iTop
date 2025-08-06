@@ -440,7 +440,7 @@ $(function()
 				window.close();
 
 				// In some browser (eg. Firefox 70), window won't close if it has NOT been open by JS. In that case, we try to redirect to homepage as a fallback.
-				var sHomepageUrl = (this.options.base_url !== null) ? this.options.base_url : $('#sidebar .menu .brick_menu_item:first a').attr('href')
+				var sHomepageUrl = (this.options.base_url !== null) ? this.options.base_url : $('#sidebar .menu .brick_menu_item').first().find('a').attr('href')
 				window.location.href = sHomepageUrl;
 			}
 		},

@@ -33,7 +33,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
 					var table = $(this);
 					var id = $(this).parent();
 					aTruncatedLists[divId] = undefined;
-					var checkbox = (table.find('th:first :checkbox').length > 0);
+					var checkbox = (table.find('th').first().find(':checkbox').length > 0);
 					if (checkbox) {
 						// There is a checkbox in the first column, don't make it sortable
 						table.tablesorter({headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']}).tablesorterPager({container: $("#pager")}); // sortable and zebra tables
@@ -387,7 +387,7 @@ function OpenOql(sOQL) {
 	form.appendChild(input);
 	document.body.appendChild(form);
 	// form.submit() is blocked by the browser
-	$('#run_query_form').submit();
+	$('#run_query_form').trigger('submit');
 	document.body.removeChild(form);
 }
 
@@ -1397,7 +1397,7 @@ let CombodoModal = {
 		let oSelectorElem = null;
 		switch(typeof oOptions.base_modal.selector) {
 			case 'string':
-				oSelectorElem = $(oOptions.base_modal.selector);
+				oSelectorElem = $(oOptions.base_modal.selector).first();
 				if (oSelectorElem.length === 0) {
 					CombodoJSConsole.Error('Could not open modal dialog as the selector option did not return any element: ' + oOptions.base_modal.selector);
 					return null;

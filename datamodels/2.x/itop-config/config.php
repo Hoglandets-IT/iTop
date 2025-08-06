@@ -326,7 +326,7 @@ editor.commands.addCommand({
         var submitButton = $('#submit_button');
         
         if (submitButton.is(":enabled")) {
-            editorForm.submit();
+            editorForm.trigger('submit');
         }
     }
 });

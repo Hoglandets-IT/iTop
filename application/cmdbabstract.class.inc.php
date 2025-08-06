@@ -2931,11 +2931,11 @@ JS
 				$sStatesSelection .= '</select>';
 				$sStatesSelection .= '<input type="hidden" id="obj_state_orig" name="obj_state_orig" value="'.$this->GetState().'"/>';
 				$oPage->add_ready_script(<<<JS
-$('.state_select_{$this->m_iFormId}').change( function() {
+$('.state_select_{$this->m_iFormId}').on('change', function() {
 	if ($('#obj_state_orig').val() != $(this).val()) {
 		$('.state_select_{$this->m_iFormId}').val($(this).val());
 		$('#form_{$this->m_iFormId}').data('force_submit', true);
-		$('#form_{$this->m_iFormId}').submit();
+		$('#form_{$this->m_iFormId}').trigger('submit');
 	}
 });
 JS

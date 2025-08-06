@@ -363,7 +363,7 @@ $('#$sDialogId').dialog({
 		buttons: [
 		{ text: "$sOkButtonLabel", click: function() {
 			var oForm = $(this).closest('.ui-dialog').find('form');
-			oForm.submit();
+			oForm.trigger('submit');
 			if (AnimateDlgButtons)
 			{
 				sFormId = oForm.attr('id');

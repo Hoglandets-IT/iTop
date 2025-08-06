@@ -367,7 +367,7 @@ $(function()
 					oEvent.stopImmediatePropagation();
 
 					// Simulate click on the only menu item
-					this.element.find(this.js_selectors.compose_menu_item+':first').trigger('click');
+					this.element.find(this.js_selectors.compose_menu_item).first().trigger('click');
 				}
 
 				// Else, the compose menu will open automatically
@@ -1550,7 +1550,7 @@ $(function()
 			 */
 			_CreateEntryGroup: function (sAuthorLogin, sOrigin, sPosition = 'start') {
 				// Note: When using the ActivityPanel, there should always be at least one entry group already, the one from the object creation
-				let oEntryGroupElem = this.element.find(this.js_selectors.entry_group+':first')
+				let oEntryGroupElem = this.element.find(this.js_selectors.entry_group).first()
 					.clone()
 					.attr('data-entry-author-login', sAuthorLogin)
 					.attr('data-entry-group-origin', sOrigin)

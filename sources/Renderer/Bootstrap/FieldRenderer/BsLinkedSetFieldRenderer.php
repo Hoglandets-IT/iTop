@@ -694,7 +694,7 @@ EOF
 						{
 							oOptions['base_modal'] = {
 								'usage': 'replace',
-								'selector': '.modal[data-source-element="{$sButtonAddId}"]:first'
+								'selector': '.modal[data-source-element="{$sButtonAddId}"]'
 							};
 						}
 						CombodoModal.OpenModal(oOptions);

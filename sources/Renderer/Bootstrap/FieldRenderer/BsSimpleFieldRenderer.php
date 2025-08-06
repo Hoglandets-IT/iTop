@@ -242,7 +242,7 @@ EOF
 								name: $(me).closest(".form_field").attr("data-field-id"),
 								value: $(me).val()
 							});
-						}).on("mouseup", function(){this.focus();});
+						}).on("mouseup", function(){this.trigger('focus');});
 JS
 					);
 					break;
@@ -275,7 +275,7 @@ JS
 									name: $(me).closest(".form_field").attr("data-field-id"),
 									value: $(me).val()
 								});
-							}).on("mouseup", function(){this.focus();});
+							}).on("mouseup", function(){this.trigger('focus');});
 JS
 						);
 					}

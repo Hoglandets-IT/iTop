@@ -226,7 +226,7 @@ $(function()
 
 			// Focus on right input
 			var oOpElemRadioChecked = this.element.find('.sfc_fg_operator .sfc_op_radio:checked');
-			var oOpElemInputFirst = oOpElemRadioChecked.closest('.sfc_fg_operator').find('.sfc_op_content input[type="text"]:first');
+			var oOpElemInputFirst = oOpElemRadioChecked.closest('.sfc_fg_operator').find('.sfc_op_content input[type="text"]').first();
 
 			oOpElemInputFirst.filter(':not([data-no-auto-focus])').trigger('click').trigger('focus');
 
@@ -656,7 +656,7 @@ $(function()
 				if ($(oEvent.target).is('input[type="text"], select')) {
 					return;
 				}
-				oOpContentElem.focus();
+				oOpContentElem.trigger('focus');
 			});
 			// - Mark as draft on key typing
 			oOpContentElem.on('keydown', function(oEvent){

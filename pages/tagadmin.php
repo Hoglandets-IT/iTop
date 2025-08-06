@@ -55,7 +55,7 @@ try
 
 	$oP->SetBreadCrumbEntry('ui-tool-tag-admin', Dict::S('Menu:TagAdminMenu'), Dict::S('Menu:TagAdminMenu+'), '', 'fas fa-tags', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-	$sSearchHeaderForceDropdown = '<select  id="select_class" name="class" onChange="this.form.submit();">';
+	$sSearchHeaderForceDropdown = '<select  id="select_class" name="class" onChange="this.form.trigger(\'submit\');">';
 	$aClassLabels = array();
 	foreach(MetaModel::EnumChildClasses($sBaseClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sCurrentClass)
 	{

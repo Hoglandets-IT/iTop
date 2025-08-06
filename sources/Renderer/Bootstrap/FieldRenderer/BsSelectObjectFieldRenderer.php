@@ -454,7 +454,7 @@ JS
 				{
 					oOptions['base_modal'] = {
 						'usage': 'replace',
-						'selector': '.modal[data-source-element="{$sSearchButtonId}"]:first'
+						'selector': '.modal[data-source-element="{$sSearchButtonId}"]'
 					};
 				}
 				CombodoModal.OpenModal(oOptions);

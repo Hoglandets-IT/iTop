@@ -181,7 +181,7 @@ try
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 
 	$oP->add_ready_script(<<<JS
-$("#expression").select();
+$("#expression").trigger('select');
 $("#expression").on('keyup', function (oEvent) {
     if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.key === 'Enter') {
         $(this).closest('form').trigger('submit');
@@ -326,8 +326,8 @@ JS
 					$oUseSuggestedQueryButton->SetOnClickJsCode(
 <<<JS
 let \$oQueryTextarea = $('textarea[name=expression]');
-\$oQueryTextarea.val($sEscapedExpression).focus();
-\$oQueryTextarea.closest('form').submit();
+\$oQueryTextarea.val($sEscapedExpression).trigger('focus');
+\$oQueryTextarea.closest('form').trigger('submit');
 JS
 					);
 						$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);

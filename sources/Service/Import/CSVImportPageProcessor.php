@@ -506,14 +506,14 @@ EOF
 function CSVGoBack()
 {
 	$('input[name=step]').val($iCurrentStep-1);
-	$('#wizForm').submit();
+	$('#wizForm').trigger('submit');
 	
 }
 
 function CSVRestart()
 {
 	$('input[name=step]').val(1);
-	$('#wizForm').submit();
+	$('#wizForm').trigger('submit');
 	
 }
 
@@ -560,7 +560,7 @@ function DoSubmit(bConfirm)
 	{
 		// Submit the form
 		$('#wizForm').block();
-		$('#wizForm').submit();
+		$('#wizForm').trigger('submit');
 	}
 	return false;
 }
@@ -575,7 +575,7 @@ function RunImport()
 	$('#dlg_confirmation').dialog('close');
 	// Submit the form
 	$('#wizForm').block();
-	$('#wizForm').submit();
+	$('#wizForm').trigger('submit');
 }
 EOF
 		);

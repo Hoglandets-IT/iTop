@@ -41,11 +41,11 @@ $(function () {
 					fullscreen_elements: '.ibo-is-fullscreen',
 				},
 				block: {
-					panel_header: '[data-role="ibo-panel--header"]:first',
-					panel_header_sticky_sentinel_top: '[data-role="ibo-panel--header--sticky-sentinel-top"]:first',
-					panel_body: '[data-role="ibo-panel--body"]:first',
-					tab_container: '[data-role="ibo-tab-container"]:first',
-					tab_container_tabs_list: '[data-role="ibo-tab-container--tabs-list"]:first',
+					panel_header: '[data-role="ibo-panel--header"]',
+					panel_header_sticky_sentinel_top: '[data-role="ibo-panel--header--sticky-sentinel-top"]',
+					panel_body: '[data-role="ibo-panel--body"]',
+					tab_container: '[data-role="ibo-tab-container"]',
+					tab_container_tabs_list: '[data-role="ibo-tab-container--tabs-list"]',
 				}
 			},
 			// {ScrollMagic.Controller} SM controller for the sticky header
@@ -127,10 +127,10 @@ $(function () {
 
 				let oSMScene = new ScrollMagic.Scene({
 					// Traduction: As soon as the header's top sentinel...
-					triggerElement: this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top)[0],
+					triggerElement: this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).first(),
 					//  ... leaves the viewport...
 					triggerHook: 0,
-					offset: this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).outerHeight()
+					offset: this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).first().outerHeight()
 				})
 					// ... we consider the header as sticking...
 					.on('enter', function () {
@@ -151,18 +151,18 @@ $(function () {
 					.addTo(this.sticky_header_controller);
 			},
 			_onHeaderBecomesSticky: function () {
-				this.element.find(this.js_selectors.block.panel_header).addClass(this.css_classes.is_sticking);
+				this.element.find(this.js_selectors.block.panel_header).first().addClass(this.css_classes.is_sticking);
 				if (this._hasTabContainer()) {
 					this._updateTabsListPosition(false /* Need to wait for the header transition to end */);
 				}
 			},
 			_onHeaderStopsBeingSticky: function () {
-				const fPanelBottomPosition = this.element.position().top + this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).outerHeight();
+				const fPanelBottomPosition = this.element.position().top + this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).first().outerHeight();
 				const fViewportVerticalScrollPosition = this.options.viewport_elem.scrollHeight - this.options.viewport_elem.clientHeight;
 
 				// Test to prevent the screen from flashing (cf bug 4124)
 				if (fPanelBottomPosition < fViewportVerticalScrollPosition) {
-					this.element.find(this.js_selectors.block.panel_header).removeClass(this.css_classes.is_sticking);
+					this.element.find(this.js_selectors.block.panel_header).first().removeClass(this.css_classes.is_sticking);
 					if (this._hasTabContainer()) {
 						this._updateTabsListPosition(false /* Need to wait for the header transition to end */);
 					}
@@ -181,17 +181,17 @@ $(function () {
 				}
 
 				const me = this;
-				const oTabsListElem = this.element.find(this.js_selectors.block.tab_container_tabs_list);
+				const oTabsListElem = this.element.find(this.js_selectors.block.tab_container_tabs_list).first();
 
 				if(this._isHeaderSticking()){
 					// Unfortunately for now the timeout is hardcoded as we don't know how to get notified when the *CSS* transition is done.
 					const iTimeout = bImmediate ? 0 : 300;
 					setTimeout(function(){
-						const oHeaderElem = me.element.find(me.js_selectors.block.panel_header);
+						const oHeaderElem = me.element.find(me.js_selectors.block.panel_header).first();
 						const oHeaderOffset = oHeaderElem.offset();
 						const iHeaderWidth = oHeaderElem.outerWidth();
 						const iHeaderHeight = oHeaderElem.outerHeight();
-						const iPanelBorderWidth = parseInt(me.element.find(me.js_selectors.block.panel_body).css('border-left-width'));
+						const iPanelBorderWidth = parseInt(me.element.find(me.js_selectors.block.panel_body).first().css('border-left-width'));
 
 						oTabsListElem
 							.css('top', oHeaderOffset.top + iHeaderHeight)
@@ -222,7 +222,7 @@ $(function () {
 			 * @private
 			 */
 			_isHeaderSticking: function () {
-				return this.element.find(this.js_selectors.block.panel_header).hasClass(this.css_classes.is_sticking);
+				return this.element.find(this.js_selectors.block.panel_header).first().hasClass(this.css_classes.is_sticking);
 			},
 			/**
 			 * @return {boolean} True if the panel has a tab container
@@ -239,7 +239,7 @@ $(function () {
 				if(!this._hasTabContainer()) {
 					return false;
 				}
-				return this.element.find(this.js_selectors.block.tab_container).hasClass(this.css_classes.is_vertical);
+				return this.element.find(this.js_selectors.block.tab_container).first().hasClass(this.css_classes.is_vertical);
 			},
 		});
 });

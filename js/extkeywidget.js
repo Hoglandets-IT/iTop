@@ -462,7 +462,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		if (dlg.height() > ($(window).height()-70)) {
 			dlg.height($(window).height()-70);
 		}
-		var searchForm = dlg.find('div.display_block:first'); // Top search form, enclosing display_block
+		var searchForm = dlg.find('div.display_block').first(); // Top search form, enclosing display_block
 		var results = $('#dr_'+me.id);
 		var oPadding = {};
 		var aKeys = ['top', 'right', 'bottom', 'left'];
@@ -591,9 +591,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				}
 
 				if ($('#label_'+me.id).length) {
-					$('#label_'+me.id).focus();
+					$('#label_'+me.id).trigger('focus');
 				} else {
-					$('#'+me.id).focus();
+					$('#'+me.id).trigger('focus');
 				}
 
 				me.ajax_request = null;
@@ -633,7 +633,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			$('#dr_'+me.id).html(me.emptyHtml);
 		}
 		$('#label_'+me.id).removeClass('ac_dlg_loading');
-		$('#label_'+me.id).focus();
+		$('#label_'+me.id).trigger('focus');
 		me.ajax_request = null;
 	};
 
@@ -749,7 +749,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		} else {
 			$('#label_'+me.id).removeClass('ac_dlg_loading');
 		}
-		$('#label_'+me.id).focus();
+		$('#label_'+me.id).trigger('focus');
 		$('#ac_create_'+me.id).dialog("destroy");
 		$('#ac_create_'+me.id).remove();
 		$('#ajax_'+me.id).html('');
@@ -820,7 +820,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						$('#label_'+me.id).val(txt);
 						$('#label_'+me.id).data('selected_value',txt);
 						$('#label_'+me.id).removeClass('ac_dlg_loading');
-						$('#label_'+me.id).focus();
+						$('#label_'+me.id).trigger('focus');
 					}
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
@@ -909,7 +909,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		} else {
 			$('#label_'+me.id).removeClass('ac_dlg_loading');
 		}
-		$('#label_'+me.id).focus();
+		$('#label_'+me.id).trigger('focus');
 		$('#dlg_tree_'+me.id).dialog("destroy");
 		$('#dlg_tree_'+me.id).remove();
 	};
@@ -959,7 +959,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						});
 						$('#'+me.id).multiselect('refresh');
 					}
-					$('#label_'+me.id).focus();
+					$('#label_'+me.id).trigger('focus');
 					me.ajax_request = null;
 				},
 				'json'

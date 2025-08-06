@@ -13037,7 +13037,7 @@ class AttributeRedundancySettings extends AttributeDBField
 						$sEditValue = $bSelected ? $iCurrentValue : '';
 						$sValue = '<input class="redundancy-min-up-count" type="string" size="3" name="'.$sName.'" value="'.$sEditValue.'">';
 						// To fix an issue on Firefox: focus set to the option (because the input is within the label for the option)
-						$oPage->add_ready_script("\$('[name=\"$sName\"]').on('click', function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
+						$oPage->add_ready_script("\$('[name=\"$sName\"]').on('click', function(){var me=this; setTimeout(function(){\$(me).trigger('focus');}, 100);});");
 					}
 					else
 					{
@@ -13052,7 +13052,7 @@ class AttributeRedundancySettings extends AttributeDBField
 						$sEditValue = $bSelected ? $iCurrentValue : '';
 						$sValue = '<input class="redundancy-min-up-percent" type="string" size="3" name="'.$sName.'" value="'.$sEditValue.'">';
 						// To fix an issue on Firefox: focus set to the option (because the input is within the label for the option)
-						$oPage->add_ready_script("\$('[name=\"$sName\"]').on('click', function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
+						$oPage->add_ready_script("\$('[name=\"$sName\"]').on('click', function(){var me=this; setTimeout(function(){\$(me).trigger('focus');}, 100);});");
 					}
 					else
 					{

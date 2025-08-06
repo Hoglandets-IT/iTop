@@ -260,7 +260,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 						theMap[this.name] = this.value;
 					}
 				}
-				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
+				$(this).parents('tr').first().remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 			}
 		);
 
@@ -342,7 +342,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		}
 		width = dlg.innerWidth()-padding_right-padding_left-22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
 		height = dlg.innerHeight()-padding_top-padding_bottom-22;
-		wizard = dlg.find('.wizContainer:first');
+		wizard = dlg.find('.wizContainer').first();
 		wizard.width(width);
 		wizard.height(height);
 		form_height = searchForm.outerHeight();
