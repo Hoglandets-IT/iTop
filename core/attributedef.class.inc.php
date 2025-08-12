@@ -955,6 +955,11 @@ abstract class AttributeDefinition
 	//abstract protected GetBasicFilterHTMLInput();
 	abstract public function GetBasicFilterSQLExpr($sOpCode, $value);
 
+	public function GetMagicAttributes()
+	{
+		return [];
+	}
+
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return (string)$sValue;
@@ -9082,6 +9087,24 @@ class AttributeStopWatch extends AttributeDefinition
 		}
 
 		return $aColumns;
+	}
+
+	public function GetMagicAttributes()
+	{
+		$aRes =[
+			$this->GetCode().'_started' ,
+			$this->GetCode().'_laststart',
+			$this->GetCode().'_stopped' ,
+		];
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
+			$sPrefix = $this->GetCode().'_'.$iThreshold;
+			$aRes[] = $sPrefix.'_deadline';
+			$aRes[] = $sPrefix.'_passed';
+			$aRes[] = $sPrefix.'_triggered';
+			$aRes[] = $sPrefix.'_overrun';
+		}
+
+		return $aRes;
 	}
 
 	public function GetBasicFilterOperators()

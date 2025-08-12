@@ -1493,6 +1493,18 @@ abstract class MetaModel
 	final public static function GetFiltersList($sClass)
 	{
 		$aFilterList = MetaModel::GetAttributesList($sClass);
+		if (array_key_exists($sClass, self::$m_aFilterForbiddenAttributes)) {
+			// Remove the attributes that are not allowed in filters
+			foreach (self::$m_aFilterForbiddenAttributes[$sClass] as $sAttCode) {
+				if (array_key_exists($sAttCode, $aFilterList)) {
+					unset($aFilterList[$sAttCode]);
+				}
+			}
+		}
+		if (array_key_exists($sClass, self::$m_aMagicFields)) {
+			// Add the magic fields
+			$aFilterList = array_merge($aFilterList,self::$m_aMagicFields[$sClass]);
+		}
 		$aFilterList[] = 'id';
 		return $aFilterList;
 	}
@@ -1600,7 +1612,12 @@ abstract class MetaModel
 		if ($sFilterCode == 'id') {
 			return true;
 		}
-
+		if (array_key_exists($sClass, self::$m_aMagicFields) && array_key_exists($sFilterCode, self::$m_aMagicFields[$sClass])) {
+			return true;
+		}
+		if (array_key_exists($sClass, self::$m_aFilterForbiddenAttributes) && array_key_exists($sFilterCode, self::$m_aFilterForbiddenAttributes[$sClass])) {
+			return false;
+		}
 		return self::IsValidAttCode($sClass, $sFilterCode);
 	}
 
@@ -1881,6 +1898,16 @@ abstract class MetaModel
 
 		return "";
 	}
+
+	/**
+	 * @var array array of MagicFieldName
+	 */
+	private static $m_aMagicFields = [];
+
+	/**
+	 * @var array array of filter Forbidden Attributes
+	 */
+	private static $m_aFilterForbiddenAttributes = [];
 
 	/**
 	 * @var array array of ("listcode" => various info on the list, common to every classes)
@@ -3050,6 +3077,21 @@ abstract class MetaModel
 		// Add magic attributes to external keys (finalclass, friendlyname, archive_flag, obsolescence_flag)
 		foreach (self::GetClasses() as $sClass) {
 			foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef) {
+				// Compute the filter codes
+				//
+				foreach ($oAttDef->GetMagicFields() as $sCode) {
+					if(!array_key_exists($sClass, self::$m_aMagicFields)) {
+						self::$m_aMagicFields[] = $sClass;
+					}
+					self::$m_aMagicFields[$sClass][] = $sCode;
+				}
+				if(!$oAttDef->IsSearchable()){
+					if(!array_key_exists($sClass, self::$m_aFilterForbiddenAttributes)) {
+						self::$m_aFilterForbiddenAttributes[] = $sClass;
+					}
+					self::$m_aFilterForbiddenAttributes[$sClass][] = $sCode;
+				}
+
 				// Compute the fields that will be used to display a pointer to another object
 				//
 				if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) {
@@ -6414,6 +6456,8 @@ abstract class MetaModel
 				self::$m_aAttribDefs = $result['m_aAttribDefs'];
 				self::$m_aAttribOrigins = $result['m_aAttribOrigins'];
 				self::$m_aIgnoredAttributes = $result['m_aIgnoredAttributes'];
+				self::$m_aFilterForbiddenAttributes = $result['m_aFilterForbiddenAttributes'];
+				self::$m_aMagicFields = $result['m_aMagicFields'];
 				self::$m_aListInfos = $result['m_aListInfos'];
 				self::$m_aListData = $result['m_aListData'];
 				self::$m_aRelationInfos = $result['m_aRelationInfos'];
@@ -6449,6 +6493,8 @@ abstract class MetaModel
 				$aCache['m_aAttribDefs'] = self::$m_aAttribDefs; // array of ("classname" => array of attributes)
 				$aCache['m_aAttribOrigins'] = self::$m_aAttribOrigins; // array of ("classname" => array of ("attcode"=>"sourceclass"))
 				$aCache['m_aIgnoredAttributes'] = self::$m_aIgnoredAttributes; //array of ("classname" => array of ("attcode")
+				$aCache['m_aFilterForbiddenAttributes'] = self::$m_aFilterForbiddenAttributes; // array of ("classname" => array attributename)
+				$aCache['m_aMagicFields'] = self::$m_aMagicFields; // array of ("classname" => array fieldname)
 				$aCache['m_aListInfos'] = self::$m_aListInfos; // array of ("listcode" => various info on the list, common to every classes)
 				$aCache['m_aListData'] = self::$m_aListData; // array of ("classname" => array of "listcode" => list)
 				$aCache['m_aRelationInfos'] = self::$m_aRelationInfos; // array of ("relcode" => various info on the list, common to every classes)
