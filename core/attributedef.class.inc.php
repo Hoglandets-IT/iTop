@@ -955,7 +955,7 @@ abstract class AttributeDefinition
 	//abstract protected GetBasicFilterHTMLInput();
 	abstract public function GetBasicFilterSQLExpr($sOpCode, $value);
 
-	public function GetMagicAttributes()
+	public function GetMagicField()
 	{
 		return [];
 	}
@@ -9089,7 +9089,7 @@ class AttributeStopWatch extends AttributeDefinition
 		return $aColumns;
 	}
 
-	public function GetMagicAttributes()
+	public function GetMagicField()
 	{
 		$aRes =[
 			$this->GetCode().'_started' ,
