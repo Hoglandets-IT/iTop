@@ -23,7 +23,7 @@ class iTopConfigAstValidator
 	 */
 	public function Validate($sConfig)
 	{
-		$oParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $oParser = (new ParserFactory())->createForNewestSupportedVersion();
 
 		$oNodeVisitor = new ConfigNodesVisitor();
 
