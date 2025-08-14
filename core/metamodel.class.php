@@ -3089,7 +3089,7 @@ abstract class MetaModel
 					if(!array_key_exists($sClass, self::$m_aFilterForbiddenAttributes)) {
 						self::$m_aFilterForbiddenAttributes[] = $sClass;
 					}
-					self::$m_aFilterForbiddenAttributes[$sClass][] = $sCode;
+					self::$m_aFilterForbiddenAttributes[$sClass][] = $sAttCode;
 				}
 
 				// Compute the fields that will be used to display a pointer to another object
