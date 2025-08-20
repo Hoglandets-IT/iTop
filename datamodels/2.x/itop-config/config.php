@@ -4,21 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Alert\Alert;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Form\Form;
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\WebPage\iTopConfigEditorPage;
-use Combodo\iTop\Application\WebPage\iTopWebPage;
-use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
-use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
 
 require_once(APPROOT.'application/startup.inc.php');
-
-
 
 /////////////////////////////////////////////////////////////////////
 // Main program
@@ -26,8 +15,6 @@ require_once(APPROOT.'application/startup.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('ConfigEditor');
 
-//$sOperation = utils::ReadParam('operation', 'menu');
-//$oAppContext = new ApplicationContext();
 
 $oP = new iTopConfigEditorPage();
 
