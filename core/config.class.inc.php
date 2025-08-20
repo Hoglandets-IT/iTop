@@ -1833,7 +1833,7 @@ class Config
 	{
 		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
 
-		if ($bIsWindows && (preg_match("/[%!\"]/U", $this->Get('db_pwd')) !== false)) {
+		if ($bIsWindows && (preg_match("/[%!\"]/U", $this->Get('db_pwd')) !== 0)) {
 			return false;
 		}
 
