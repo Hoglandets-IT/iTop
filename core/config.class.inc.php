@@ -20,6 +20,9 @@
  */
 
 
+use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
+use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
+
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
 
@@ -1816,6 +1819,27 @@ class Config
 		return (array_key_exists($sPropCode, $this->m_aSettings));
 	}
 
+	public static function Validate(string $sContents)
+	{
+		$oiTopConfigValidator = new iTopConfigAstValidator();
+		$oiTopConfigValidator->Validate($sContents);
+
+		/// 2 - only after we are sure that there is no malicious code, we can perform a syntax check!
+		$oiTopConfigValidator = new iTopConfigSyntaxValidator();
+		$oiTopConfigValidator->Validate($sContents);
+	}
+
+	function DBPasswordInNewConfigIsOk()
+	{
+		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
+
+		if ($bIsWindows && (preg_match("/[%!\"]/U", $this->Get('db_pwd')) !== false)) {
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * @return string identifier that can be used for example to name WebStorage/SessionStorage keys (they
 	 *     are related to a whole domain, and a domain can host multiple itop)
@@ -3037,4 +3061,6 @@ class ConfigPlaceholdersResolver
 		IssueLog::Error($sErrorMessage, self::class, array($sSourceName, $sKey, $sDefault, $sWholeMask));
 		throw new ConfigException($sErrorMessage);
 	}
+
+
 }

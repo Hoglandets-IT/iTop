@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\WebPage\iTopConfigEditorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
 use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
@@ -22,38 +23,6 @@ const CONFIG_WARNING = 1;
 const CONFIG_INFO = 2;
 
 
-/**
- * @param $sContents
- * @param $oP
- *
- * @throws \Exception
- */
-function TestConfig($sContents, $oP)
-{
-	/// 1- first check if there is no malicious code
-	$oiTopConfigValidator = new iTopConfigAstValidator();
-	$oiTopConfigValidator->Validate($sContents);
-
-	/// 2 - only after we are sure that there is no malicious cade, we can perform a syntax check!
-	$oiTopConfigValidator = new iTopConfigSyntaxValidator();
-	$oiTopConfigValidator->Validate($sContents);
-}
-
-/**
- * @param $sSafeContent
- *
- * @return bool
- */
-function DBPasswordInNewConfigIsOk($sSafeContent)
-{
-	$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
-
-	if ($bIsWindows && (preg_match("@'db_pwd' => '[^%!\"]+',@U", $sSafeContent) === 0)) {
-		return false;
-	}
-
-	return true;
-}
 
 function CheckAsyncTasksRetryConfig(Config $oTempConfig, iTopWebPage $oP)
 {
@@ -76,28 +45,6 @@ function CheckAsyncTasksRetryConfig(Config $oTempConfig, iTopWebPage $oP)
 	return $iWarnings;
 }
 
-/**
- * @param \Exception $e
- *
- * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
- */
-function GetAlertFromException(Exception $e): Alert
-{
-	switch ($e->getCode()) {
-		case CONFIG_WARNING:
-			$oAlert = AlertUIBlockFactory::MakeForWarning('', $e->getMessage());
-			break;
-		case CONFIG_INFO:
-			$oAlert = AlertUIBlockFactory::MakeForInformation('', $e->getMessage());
-			break;
-		case CONFIG_ERROR:
-		default:
-			$oAlert = AlertUIBlockFactory::MakeForDanger('', $e->getMessage());
-	}
-
-	return $oAlert;
-}
-
 /////////////////////////////////////////////////////////////////////
 // Main program
 //
@@ -107,13 +54,8 @@ ApplicationMenu::CheckMenuIdEnabled('ConfigEditor');
 //$sOperation = utils::ReadParam('operation', 'menu');
 //$oAppContext = new ApplicationContext();
 
-$oP = new iTopWebPage(Dict::S('config-edit-title'));
-$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
-$sAceDir = 'node_modules/ace-builds/src-min/';
-$oP->LinkScriptFromAppRoot($sAceDir.'ace.js');
-$oP->LinkScriptFromAppRoot($sAceDir.'mode-php.js');
-$oP->LinkScriptFromAppRoot($sAceDir.'theme-eclipse.js');
-$oP->LinkScriptFromAppRoot($sAceDir.'ext-searchbox.js');
+$oP = new iTopConfigEditorPage();
+
 
 try {
 	$sOperation = utils::ReadParam('operation', '');
@@ -121,7 +63,6 @@ try {
 	if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled()) {
 		$iEditorTopMargin += 6;
 	}
-	$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('config-edit-title')));
 
 	if (MetaModel::GetConfig()->Get('demo_mode')) {
 		throw new Exception(Dict::S('config-not-allowed-in-demo'), CONFIG_INFO);
@@ -163,7 +104,7 @@ try {
 			if ($sConfig === $sOriginalConfig) {
 				throw new Exception(Dict::S('config-no-change'), CONFIG_INFO);
 			}
-			TestConfig($sConfig, $oP); // throws exceptions
+			Config::Validate($sConfig); // throws exceptions
 
 			@chmod($sConfigFile, 0770); // Allow overwriting the file
 			$sTmpFile = tempnam(SetupUtils::GetTmpDir(), 'itop-cfg-');
@@ -184,7 +125,7 @@ try {
 			@unlink($sTmpFile);
 			@chmod($sConfigFile, 0440); // Read-only
 
-			if (DBPasswordInNewConfigIsOk($sConfig)) {
+			if ($oTempConfig->DBPasswordInNewConfigIsOk()) {
 				$oAlert = AlertUIBlockFactory::MakeForSuccess('', Dict::S('config-saved'));
 			} else {
 				$oAlert = AlertUIBlockFactory::MakeForInformation('', Dict::S('config-saved-warning-db-password'));
@@ -201,8 +142,7 @@ try {
 		}
 	}
 	catch (Exception $e) {
-		$oAlert = GetAlertFromException($e);
-		$oP->AddUiBlock($oAlert);
+		$oP->AddAlertFromException($e);
 	}
 
 	// (remove EscapeHtml)  N°5914 - Wrong encoding in modules configuration editor
@@ -228,138 +168,9 @@ try {
 	$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
 	$oP->AddUiBlock($oForm);
 
-	$oP->add_script(
-		<<<'JS'
-var EditorUtils = (function() {
-	var STORAGE_RANGE_KEY = 'cfgEditorRange';
-	var STORAGE_LINE_KEY = 'cfgEditorFirstline';
-	var _editorSavedRange = null;
-	var _editorSavedFirstLine = null;
-	
-	var saveEditorDisplay = function(editor) {
-		_initObjectValues(editor);
-		_persistObjectValues();
-	};
-	
-	var _initObjectValues = function(editor) {
-		_editorSavedRange = editor.getSelectionRange();
-		_editorSavedFirstLine = editor.renderer.getFirstVisibleRow();
-	};
-	
-	var _persistObjectValues = function() {
-		sessionStorage.setItem(EditorUtils.STORAGE_RANGE_KEY, JSON.stringify(_editorSavedRange));
-		sessionStorage.setItem(EditorUtils.STORAGE_LINE_KEY, _editorSavedFirstLine);
-	};
-	
-	var restoreEditorDisplay = function(editor) {
-		_restoreObjectValues();
-		_setEditorDisplay(editor);
-	};
-	
-	var _restoreObjectValues = function() {
-		if ((sessionStorage.getItem(STORAGE_RANGE_KEY) == null) 
-			|| (sessionStorage.getItem(STORAGE_LINE_KEY) == null)) {
-			return;
-		}
-		
-		_editorSavedRange = JSON.parse(sessionStorage.getItem(EditorUtils.STORAGE_RANGE_KEY));
-		_editorSavedFirstLine = sessionStorage.getItem(EditorUtils.STORAGE_LINE_KEY);
-		sessionStorage.removeItem(STORAGE_RANGE_KEY);
-		sessionStorage.removeItem(STORAGE_LINE_KEY);
-	};
-	
-	var _setEditorDisplay = function(editor) {
-		if ((_editorSavedRange == null) || (_editorSavedFirstLine == null)) {
-			return;
-		}
-
-		editor.selection.setRange(_editorSavedRange);
-		editor.renderer.scrollToRow(_editorSavedFirstLine);
-	};
-	
-	var getEditorForm = function(editor) {
-        var editorContainer = $(editor.container);
-        return editorContainer.closest("form");
-	};
-	
-	var updateConfigEditorButtonState = function(editor) {
-	    var isSameContent = (editor.getValue() == $('#prev_config').val());
-	    var hasNoError = $.isEmptyObject(editor.getSession().getAnnotations());
-	    $('#cancel_button').prop('disabled', isSameContent);
-	    $('#submit_button').prop('disabled', isSameContent || !hasNoError);
-	};
-	
-	return {
-		STORAGE_RANGE_KEY: STORAGE_RANGE_KEY,
-		STORAGE_LINE_KEY : STORAGE_LINE_KEY,
-		saveEditorDisplay : saveEditorDisplay,
-		restoreEditorDisplay : restoreEditorDisplay,
-		getEditorForm : getEditorForm,
-		updateConfigEditorButtonState : updateConfigEditorButtonState
-	};
-})();
-JS
-	);
-	$oP->add_ready_script(<<<'JS'
-var editor = ace.edit("new_config");
-
-var configurationSource = $('input[name="new_config"]');
-editor.getSession().setValue(configurationSource.val());
-
-editor.getSession().on('change', function()
-{
-  configurationSource.val(editor.getSession().getValue());
-  EditorUtils.updateConfigEditorButtonState(editor);
-});
-editor.getSession().on("changeAnnotation", function()
-{
-  EditorUtils.updateConfigEditorButtonState(editor);
-});
-
-editor.setTheme("ace/theme/eclipse");
-editor.getSession().setMode("ace/mode/php");
-editor.commands.addCommand({
-    name: 'save',
-    bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
-    exec: function(editor) {
-        var editorForm = EditorUtils.getEditorForm(editor);
-        var submitButton = $('#submit_button');
-        
-        if (submitButton.is(":enabled")) {
-            editorForm.trigger('submit');
-        }
-    }
-});
-
-
-var editorForm = EditorUtils.getEditorForm(editor);
-editorForm.on('submit', function() {
-	EditorUtils.saveEditorDisplay(editor);
-});
-
-
-EditorUtils.restoreEditorDisplay(editor);
-editor.focus();
-JS
-	);
-
-	$sConfirmCancel = addslashes(Dict::S('config-confirm-cancel'));
-	$oP->add_script(<<<JS
-function ResetConfig()
-{
-	$("#operation").attr('value', 'revert');
-	if (confirm('$sConfirmCancel'))
-	{
-		$('input[name="new_config"]').val(prevConfig.val());
-		return true;
-	}
-	return false;
-}
-JS
-	);
+	$oP->AddConfigScripts();
 } catch (Exception $e) {
-	$oAlert = GetAlertFromException($e);
-	$oP->AddUiBlock($oAlert);
+	$oAlert = $oP->AddAlertFromException($e);
 }
 
 $oP->output();
