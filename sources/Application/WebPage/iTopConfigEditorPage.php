@@ -1,7 +1,9 @@
 <?php
 
 namespace Combodo\iTop\Application\WebPage;
+use AsyncTask;
 use Dict;
+use ReflectionClass;
 use utils;
 use Combodo\iTop\Application\UI\Base\Component\Alert\Alert;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
@@ -16,6 +18,10 @@ use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
 
 class iTopConfigEditorPage extends iTopWebPage
 {
+	const CONFIG_ERROR = 0;
+	const CONFIG_WARNING = 1;
+	const CONFIG_INFO = 2;
+
 	public function __construct()
 	{
 		parent::__construct(Dict::S('modules-config-edit-title'));
@@ -31,17 +37,11 @@ class iTopConfigEditorPage extends iTopWebPage
 
 	public function AddAlertFromException(\Exception $e)
 	{
-		switch ($e->getCode()) {
-			case CONFIG_WARNING:
-				$oAlert = AlertUIBlockFactory::MakeForWarning('', $e->getMessage());
-				break;
-			case CONFIG_INFO:
-				$oAlert = AlertUIBlockFactory::MakeForInformation('', $e->getMessage());
-				break;
-			case CONFIG_ERROR:
-			default:
-				$oAlert = AlertUIBlockFactory::MakeForDanger('', $e->getMessage());
-		}
+		$oAlert = match ($e->getCode()) {
+			self::CONFIG_WARNING => AlertUIBlockFactory::MakeForWarning('', $e->getMessage()),
+			self::CONFIG_INFO => AlertUIBlockFactory::MakeForInformation('', $e->getMessage()),
+			default => AlertUIBlockFactory::MakeForDanger('', $e->getMessage()),
+		};
 		$this->AddUiBlock($oAlert);
 	}
 
@@ -117,7 +117,12 @@ var EditorUtils = (function() {
 })();
 JS
 		);
-		$this->add_ready_script(<<<'JS'
+		$this->add_ready_script(<<<JS
+let oSubmitButton = document.getElementById('submit_button');
+let iBottomPosition = oSubmitButton.offsetTop + oSubmitButton.offsetHeight + 10;
+document.getElementById('new_config').style.top = iBottomPosition+"px"; 
+console.log('Set config '+iBottomPosition+' from top');
+
 var editor = ace.edit("new_config");
 
 var configurationSource = $('input[name="new_config"]');
@@ -175,5 +180,53 @@ function ResetConfig()
 JS
 		);
 	}
+
+	public function CheckAsyncTasksRetryConfig(\Config $oTempConfig)
+	{
+		foreach (get_declared_classes() as $sPHPClass) {
+			$oRefClass = new ReflectionClass($sPHPClass);
+			if ($oRefClass->isSubclassOf('AsyncTask') && !$oRefClass->isAbstract()) {
+				$aMessages = AsyncTask::CheckRetryConfig($oTempConfig, $oRefClass->getName());
+
+				if (count($aMessages) !== 0) {
+					foreach ($aMessages as $sMessage) {
+						$oAlert = AlertUIBlockFactory::MakeForWarning('', $sMessage);
+						$this->AddUiBlock($oAlert);
+					}
+				}
+			}
+		}
+
+	}
+
+	public function AddEditor(string $sPrevConfig, string $sNewConfig) {
+		$sConfigChecksum = md5($sPrevConfig);
+
+		// (remove EscapeHtml)  N°5914 - Wrong encoding in modules configuration editor
+		$this->AddUiBlock(new Html('<p>'.Dict::S('config-edit-intro').'</p>'));
+
+		$oForm = new Form();
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'save', 'operation'));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('checksum', $sConfigChecksum));
+
+		//--- Cancel button
+		$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('config-cancel'), 'cancel_button', null, true, 'cancel_button');
+		$oCancelButton->SetOnClickJsCode("return ResetConfig();");
+		$oForm->AddSubBlock($oCancelButton);
+
+		//--- Submit button
+		$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
+		$oForm->AddSubBlock($oSubmitButton);
+
+		//--- Config editor
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sPrevConfig, 'prev_config'));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('new_config', $sNewConfig));
+		$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: 125px; bottom: 0; left: 5px; right: 5px;\"></div>");
+		$this->AddUiBlock($oForm);
+
+		$this->AddConfigScripts();
+	}
+
 
 }

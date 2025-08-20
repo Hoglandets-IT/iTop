@@ -18,32 +18,7 @@ use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
 
 require_once(APPROOT.'application/startup.inc.php');
 
-const CONFIG_ERROR = 0;
-const CONFIG_WARNING = 1;
-const CONFIG_INFO = 2;
 
-
-
-function CheckAsyncTasksRetryConfig(Config $oTempConfig, iTopWebPage $oP)
-{
-	$iWarnings = 0;
-	foreach (get_declared_classes() as $sPHPClass) {
-		$oRefClass = new ReflectionClass($sPHPClass);
-		if ($oRefClass->isSubclassOf('AsyncTask') && !$oRefClass->isAbstract()) {
-			$aMessages = AsyncTask::CheckRetryConfig($oTempConfig, $oRefClass->getName());
-
-			if (count($aMessages) !== 0) {
-				foreach ($aMessages as $sMessage) {
-					$oAlert = AlertUIBlockFactory::MakeForWarning('', $sMessage);
-					$oP->AddUiBlock($oAlert);
-					$iWarnings++;
-				}
-			}
-		}
-	}
-
-	return $iWarnings;
-}
 
 /////////////////////////////////////////////////////////////////////
 // Main program
@@ -59,50 +34,45 @@ $oP = new iTopConfigEditorPage();
 
 try {
 	$sOperation = utils::ReadParam('operation', '');
-	$iEditorTopMargin = 2;
-	if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled()) {
-		$iEditorTopMargin += 6;
-	}
+
 
 	if (MetaModel::GetConfig()->Get('demo_mode')) {
-		throw new Exception(Dict::S('config-not-allowed-in-demo'), CONFIG_INFO);
+		throw new Exception(Dict::S('config-not-allowed-in-demo'), iTopConfigEditorPage::CONFIG_INFO);
 	}
 
 	if (MetaModel::GetModuleSetting('itop-config', 'config_editor', '') == 'disabled') {
-		throw new Exception(Dict::S('config-interactive-not-allowed'), CONFIG_WARNING);
+		throw new Exception(Dict::S('config-interactive-not-allowed'), iTopConfigEditorPage::CONFIG_WARNING);
 	}
 
 	$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
 
-	$iEditorTopMargin += 9;
 	$sConfigContent = file_get_contents($sConfigFile);
 	$sConfigChecksum = md5($sConfigContent);
 	$sConfig = str_replace("\r\n", "\n", $sConfigContent);
 	$sOriginalConfig = $sConfig;
 
 	if (!empty($sOperation)) {
-		$iEditorTopMargin += 5;
 		$sConfig = utils::ReadParam('new_config', '', false, 'raw_data');
 	}
 
 	try {
 		if ($sOperation == 'revert') {
-			throw new Exception(Dict::S('config-reverted'), CONFIG_WARNING);
+			throw new Exception(Dict::S('config-reverted'), iTopConfigEditorPage::CONFIG_WARNING);
 		}
 
 		if ($sOperation == 'save') {
 			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId, true)) {
-				throw new Exception(Dict::S('config-error-transaction'), CONFIG_ERROR);
+				throw new Exception(Dict::S('config-error-transaction'), iTopConfigEditorPage::CONFIG_ERROR);
 			}
 
 			$sChecksum = utils::ReadParam('checksum');
 			if ($sChecksum !== $sConfigChecksum) {
-				throw new Exception(Dict::S('config-error-file-changed'), CONFIG_ERROR);
+				throw new Exception(Dict::S('config-error-file-changed'), iTopConfigEditorPage::CONFIG_ERROR);
 			}
 
 			if ($sConfig === $sOriginalConfig) {
-				throw new Exception(Dict::S('config-no-change'), CONFIG_INFO);
+				throw new Exception(Dict::S('config-no-change'), iTopConfigEditorPage::CONFIG_INFO);
 			}
 			Config::Validate($sConfig); // throws exceptions
 
@@ -132,7 +102,7 @@ try {
 			}
 			$oP->AddUiBlock($oAlert);
 
-			$iWarnings = CheckAsyncTasksRetryConfig($oTempConfig, $oP);
+			$oP->CheckAsyncTasksRetryConfig($oTempConfig);
 
 			// Read the config from disk after save
 			$sConfigContent = file_get_contents($sConfigFile);
@@ -145,32 +115,11 @@ try {
 		$oP->AddAlertFromException($e);
 	}
 
-	// (remove EscapeHtml)  N°5914 - Wrong encoding in modules configuration editor
-	$oP->AddUiBlock(new Html('<p>'.Dict::S('config-edit-intro').'</p>'));
+	$oP->AddEditor($sOriginalConfig, $sOriginalConfig);
 
-	$oForm = new Form();
-	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'save', 'operation'));
-	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
-	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('checksum', $sConfigChecksum));
 
-	//--- Cancel button
-	$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('config-cancel'), 'cancel_button', null, true, 'cancel_button');
-	$oCancelButton->SetOnClickJsCode("return ResetConfig();");
-	$oForm->AddSubBlock($oCancelButton);
-
-	//--- Submit button
-	$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
-	$oForm->AddSubBlock($oSubmitButton);
-
-	//--- Config editor
-	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sOriginalConfig, 'prev_config'));
-	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('new_config', $sOriginalConfig));
-	$oForm->AddHtml("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
-	$oP->AddUiBlock($oForm);
-
-	$oP->AddConfigScripts();
 } catch (Exception $e) {
-	$oAlert = $oP->AddAlertFromException($e);
+	$oP->AddAlertFromException($e);
 }
 
 $oP->output();
