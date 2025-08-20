@@ -764,6 +764,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\WebPage\\WebPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/WebPage.php',
         'Combodo\\iTop\\Application\\WebPage\\XMLPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/XMLPage.php',
         'Combodo\\iTop\\Application\\WebPage\\iTabbedPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/iTabbedPage.php',
+        'Combodo\\iTop\\Application\\WebPage\\iTopConfigEditorPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/iTopConfigEditorPage.php',
         'Combodo\\iTop\\Application\\WebPage\\iTopPDF' => __DIR__ . '/../..' . '/sources/Application/WebPage/iTopPDF.php',
         'Combodo\\iTop\\Application\\WebPage\\iTopWebPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/iTopWebPage.php',
         'Combodo\\iTop\\Application\\WebPage\\iTopWizardWebPage' => __DIR__ . '/../..' . '/sources/Application/WebPage/iTopWizardWebPage.php',

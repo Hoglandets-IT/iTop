@@ -5,16 +5,13 @@ use AsyncTask;
 use Dict;
 use ReflectionClass;
 use utils;
-use Combodo\iTop\Application\UI\Base\Component\Alert\Alert;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
-use Combodo\iTop\Application\WebPage\iTopWebPage;
-use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
-use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
+
 
 class iTopConfigEditorPage extends iTopWebPage
 {
