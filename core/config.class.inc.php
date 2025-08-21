@@ -1819,26 +1819,6 @@ class Config
 		return (array_key_exists($sPropCode, $this->m_aSettings));
 	}
 
-	public static function Validate(string $sContents)
-	{
-		$oiTopConfigValidator = new iTopConfigAstValidator();
-		$oiTopConfigValidator->Validate($sContents);
-
-		/// 2 - only after we are sure that there is no malicious code, we can perform a syntax check!
-		$oiTopConfigValidator = new iTopConfigSyntaxValidator();
-		$oiTopConfigValidator->Validate($sContents);
-	}
-
-	function DBPasswordInNewConfigIsOk()
-	{
-		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
-
-		if ($bIsWindows && (preg_match("/[%!\"]/U", $this->Get('db_pwd')) !== 0)) {
-			return false;
-		}
-
-		return true;
-	}
 
 	/**
 	 * @return string identifier that can be used for example to name WebStorage/SessionStorage keys (they

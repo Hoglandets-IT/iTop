@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Application\WebPage;
 use AsyncTask;
+use Combodo\iTop\Config\Validator\iTopConfigValidator;
 use Dict;
 use ReflectionClass;
 use utils;
@@ -15,9 +16,6 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 
 class iTopConfigEditorPage extends iTopWebPage
 {
-	const CONFIG_ERROR = 0;
-	const CONFIG_WARNING = 1;
-	const CONFIG_INFO = 2;
 
 	public function __construct()
 	{
@@ -35,8 +33,8 @@ class iTopConfigEditorPage extends iTopWebPage
 	public function AddAlertFromException(\Exception $e)
 	{
 		$oAlert = match ($e->getCode()) {
-			self::CONFIG_WARNING => AlertUIBlockFactory::MakeForWarning('', $e->getMessage()),
-			self::CONFIG_INFO => AlertUIBlockFactory::MakeForInformation('', $e->getMessage()),
+			iTopConfigValidator::CONFIG_WARNING => AlertUIBlockFactory::MakeForWarning('', $e->getMessage()),
+			iTopConfigValidator::CONFIG_INFO => AlertUIBlockFactory::MakeForInformation('', $e->getMessage()),
 			default => AlertUIBlockFactory::MakeForDanger('', $e->getMessage()),
 		};
 		$this->AddUiBlock($oAlert);

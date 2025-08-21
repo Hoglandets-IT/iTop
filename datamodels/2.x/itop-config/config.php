@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\WebPage\iTopConfigEditorPage;
+use Combodo\iTop\Config\Validator\iTopConfigValidator;
 
 require_once(APPROOT.'application/startup.inc.php');
 
@@ -24,11 +25,11 @@ try {
 
 
 	if (MetaModel::GetConfig()->Get('demo_mode')) {
-		throw new Exception(Dict::S('config-not-allowed-in-demo'), iTopConfigEditorPage::CONFIG_INFO);
+		throw new Exception(Dict::S('config-not-allowed-in-demo'), iTopConfigValidator::CONFIG_INFO);
 	}
 
 	if (MetaModel::GetModuleSetting('itop-config', 'config_editor', '') == 'disabled') {
-		throw new Exception(Dict::S('config-interactive-not-allowed'), iTopConfigEditorPage::CONFIG_WARNING);
+		throw new Exception(Dict::S('config-interactive-not-allowed'), iTopConfigValidator::CONFIG_WARNING);
 	}
 
 	$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
@@ -44,24 +45,25 @@ try {
 
 	try {
 		if ($sOperation == 'revert') {
-			throw new Exception(Dict::S('config-reverted'), iTopConfigEditorPage::CONFIG_WARNING);
+			throw new Exception(Dict::S('config-reverted'), iTopConfigValidator::CONFIG_WARNING);
 		}
 
 		if ($sOperation == 'save') {
 			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId, true)) {
-				throw new Exception(Dict::S('config-error-transaction'), iTopConfigEditorPage::CONFIG_ERROR);
+				throw new Exception(Dict::S('config-error-transaction'), iTopConfigValidator::CONFIG_ERROR);
 			}
 
 			$sChecksum = utils::ReadParam('checksum');
 			if ($sChecksum !== $sConfigChecksum) {
-				throw new Exception(Dict::S('config-error-file-changed'), iTopConfigEditorPage::CONFIG_ERROR);
+				throw new Exception(Dict::S('config-error-file-changed'), iTopConfigValidator::CONFIG_ERROR);
 			}
 
 			if ($sConfig === $sOriginalConfig) {
-				throw new Exception(Dict::S('config-no-change'), iTopConfigEditorPage::CONFIG_INFO);
+				throw new Exception(Dict::S('config-no-change'), iTopConfigValidator::CONFIG_INFO);
 			}
-			Config::Validate($sConfig); // throws exceptions
+			$oValidator = new iTopConfigValidator();
+			$oValidator->Validate($sConfig);// throws exceptions
 
 			@chmod($sConfigFile, 0770); // Allow overwriting the file
 			$sTmpFile = tempnam(SetupUtils::GetTmpDir(), 'itop-cfg-');
@@ -82,7 +84,7 @@ try {
 			@unlink($sTmpFile);
 			@chmod($sConfigFile, 0440); // Read-only
 
-			if ($oTempConfig->DBPasswordInNewConfigIsOk()) {
+			if ($oValidator->DBPasswordIsOk($oTempConfig->Get('db_pwd'))) {
 				$oAlert = AlertUIBlockFactory::MakeForSuccess('', Dict::S('config-saved'));
 			} else {
 				$oAlert = AlertUIBlockFactory::MakeForInformation('', Dict::S('config-saved-warning-db-password'));
