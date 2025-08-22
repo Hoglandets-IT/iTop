@@ -386,7 +386,6 @@ return array(
     'Combodo\\iTop\\Application\\WebPage\\WebPage' => $baseDir . '/sources/Application/WebPage/WebPage.php',
     'Combodo\\iTop\\Application\\WebPage\\XMLPage' => $baseDir . '/sources/Application/WebPage/XMLPage.php',
     'Combodo\\iTop\\Application\\WebPage\\iTabbedPage' => $baseDir . '/sources/Application/WebPage/iTabbedPage.php',
-    'Combodo\\iTop\\Application\\WebPage\\iTopConfigEditorPage' => $baseDir . '/sources/Application/WebPage/iTopConfigEditorPage.php',
     'Combodo\\iTop\\Application\\WebPage\\iTopPDF' => $baseDir . '/sources/Application/WebPage/iTopPDF.php',
     'Combodo\\iTop\\Application\\WebPage\\iTopWebPage' => $baseDir . '/sources/Application/WebPage/iTopWebPage.php',
     'Combodo\\iTop\\Application\\WebPage\\iTopWizardWebPage' => $baseDir . '/sources/Application/WebPage/iTopWizardWebPage.php',

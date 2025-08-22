@@ -23,6 +23,7 @@ SetupWebPage::AddModule(
 			'src/Validator/iTopConfigAstValidator.php',
 			'src/Validator/iTopConfigSyntaxValidator.php',
 			'src/Validator/iTopConfigValidator.php',
+			'src/Controller/ConfigEditorController.php',
 ),
 		'webservice' => array(),
 		'dictionary' => array(
