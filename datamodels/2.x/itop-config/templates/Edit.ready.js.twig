@@ -110,11 +110,6 @@ editorForm.on('submit', function() {
 EditorUtils.restoreEditorDisplay(editor);
 editor.focus();
 
-		//$sConfirmCancel = addslashes(Dict::S('config-confirm-cancel'));
-function ResetConfig()
-{
-
-}
 
 const repositionEditor = () => {
 	let oSubmitButton = document.getElementById('submit_button');
@@ -126,9 +121,8 @@ repositionEditor();
 document.getElementById('ibo-main-content').addEventListener('click',repositionEditor);
 
 document.getElementById('cancel_button').onclick = ()=>{
-	$("#operation").attr('value', 'revert');
 	if (confirm({{ 'config-confirm-cancel'|dict_s|json_encode|raw }})) {
-		$('input[name="new_config"]').val($('input[name="prev_config"]').val());
+		document.querySelector('input[name="new_config"]').value = document.querySelector('input[name="prev_config"]').value;
 		return true;
 	}
 	return false;

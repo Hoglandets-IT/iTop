@@ -17,7 +17,7 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('ConfigEditor');
 
 
-$oLogCenterController = new ConfigEditorController();
-$oLogCenterController->SetDefaultOperation('Edit');
-$oLogCenterController->HandleOperation();
+$oConfigEditorController = new ConfigEditorController();
+$oConfigEditorController->SetDefaultOperation('Edit');
+$oConfigEditorController->HandleOperation();
 

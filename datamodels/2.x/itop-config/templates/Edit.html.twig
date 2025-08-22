@@ -12,10 +12,7 @@
 {% endfor %}
 
 {% UITitle ForPage {'sTitle':'config-edit-title'|dict_s} %}{% EndUITitle %}
-{#
-{% UIButton ForPrimaryAction {'sLabel':'SysInfo:UI:DownloadReport'|dict_s, 'bIsSubmit':true} %}
-{% UIInput ForHidden {sName:'operation', sValue:'SysInfoReport'} %}
-#}
+
 {% if bShowEditor %}
 	<p>{{ 'config-edit-intro'|dict_s }}</p>
 	{% UIForm Standard {} %}

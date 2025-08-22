@@ -16,7 +16,7 @@ class iTopConfigValidator {
 	 *
 	 * @throws \Exception
 	 */
-	public function Validate($sRawConfig)
+	public function Validate($sRawConfig):void
 	{
 		$oiTopConfigValidator = new iTopConfigAstValidator();
 		$oiTopConfigValidator->Validate($sRawConfig);
@@ -26,7 +26,7 @@ class iTopConfigValidator {
 		$oiTopConfigValidator->Validate($sRawConfig);
 	}
 
-	function DBPasswordIsOk($sPassword)
+	function DBPasswordIsOk($sPassword):bool
 	{
 		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
 

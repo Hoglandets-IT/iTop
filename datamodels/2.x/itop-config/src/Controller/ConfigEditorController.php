@@ -1,4 +1,8 @@
 <?php
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 namespace Combodo\iTop\Config\Controller;
 
@@ -15,27 +19,23 @@ class ConfigEditorController extends Controller
 {
     public const ROUTE_NAMESPACE = 'config_editor';
     public const MODULE_NAME = "itop-config";
-	private $aWarnings = [];
-	private $aInfo = [];
-	private $aErrors = [];
-	private $aSuccesses = [];
+	private array $aWarnings = [];
+	private array $aInfo = [];
+	private array $aErrors = [];
+	private array $aSuccesses = [];
 
 	public function __construct() {
-		$sModuleName = 'itop-config';
-		parent::__construct(MODULESROOT.$sModuleName.'/templates', $sModuleName);
+		parent::__construct(MODULESROOT.self::MODULE_NAME.'/templates', self::MODULE_NAME);
 	}
 
-	// /pages/UI.php?route=config_editor.edit
-
-
-	public function OperationEdit()
+	public function OperationEdit() : void
     {
 		$bShowEditor = true;
 		$sConfigChecksum = '';
 		$sCurrentConfig = '';
 
 	    try {
-			$sOperation = utils::ReadParam('edit_operation', '');
+			$sOperation = utils::ReadParam('edit_operation');
 			if (MetaModel::GetConfig()->Get('demo_mode')) {
 				throw new Exception(Dict::S('config-not-allowed-in-demo'), iTopConfigValidator::CONFIG_INFO);
 			}
@@ -55,7 +55,7 @@ class ConfigEditorController extends Controller
 				}
 				else if ($sOperation == 'save') {
 					$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
-					if (!utils::IsTransactionValid($sTransactionId, true)) {
+					if (!utils::IsTransactionValid($sTransactionId)) {
 						throw new Exception(Dict::S('config-error-transaction'), iTopConfigValidator::CONFIG_ERROR);
 					}
 					$sChecksum = utils::ReadParam('checksum');
@@ -134,20 +134,23 @@ class ConfigEditorController extends Controller
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function AddAceScripts(): void {
+	public function AddAceScripts(): void
+	{
 		$sAceDir = 'node_modules/ace-builds/src-min/';
-		$this->AddLinkedScript(\utils::GetAbsoluteUrlAppRoot().$sAceDir.'ace.js');
-		$this->AddLinkedScript(\utils::GetAbsoluteUrlAppRoot().$sAceDir.'mode-php.js');
-		$this->AddLinkedScript(\utils::GetAbsoluteUrlAppRoot().$sAceDir.'theme-eclipse.js');
-		$this->AddLinkedScript(\utils::GetAbsoluteUrlAppRoot().$sAceDir.'ext-searchbox.js');
+		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().$sAceDir.'ace.js');
+		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().$sAceDir.'mode-php.js');
+		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().$sAceDir.'theme-eclipse.js');
+		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().$sAceDir.'ext-searchbox.js');
 	}
 
 
-	public function AddAlertFromException(Exception $e): void {
+	public function AddAlertFromException(Exception $e): void
+	{
 		$this->AddAlert($e->getMessage(), $e->getCode());
 	}
 
-	public function AddAlert(array|string $sMessage, $iLevel): void {
+	public function AddAlert(array|string $sMessage, $iLevel): void
+	{
 		if (is_array($sMessage)) {
 			foreach ($sMessage as $sSingleMessage) {
 				$this->AddAlert($sSingleMessage, $iLevel);
@@ -166,7 +169,7 @@ class ConfigEditorController extends Controller
 				break;
 			default :
 				$this->aErrors[] = $sMessage;
-		};
+		}
 	}
 
 }
