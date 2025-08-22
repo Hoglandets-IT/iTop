@@ -69,7 +69,6 @@ class ConfigEditorController extends Controller
 						throw new Exception(Dict::S('config-no-change'), iTopConfigValidator::CONFIG_INFO);
 					}
 					$oValidator = new iTopConfigValidator();
-					$sNewConfig = str_replace("\r\n", "\n", $sNewConfig);
 
 					$oValidator->Validate($sNewConfig);// throws exceptions
 

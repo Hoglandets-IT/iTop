@@ -1,14 +1,14 @@
 {% for sError in aErrors %}
-	{% UIAlert ForDanger{sTitle: sError} %}{% EndUIAlert %}
+	{% UIAlert ForDanger{sContent: sError} %}{% EndUIAlert %}
 {% endfor %}
 {% for sWarning in aWarnings %}
-	{% UIAlert ForWarning{sTitle: sWarning} %}{% EndUIAlert %}
+	{% UIAlert ForWarning{sContent: sWarning} %}{% EndUIAlert %}
 {% endfor %}
 {% for sNotice in aNotices %}
-	{% UIAlert ForInformation{sTitle: sNotice} %}{% EndUIAlert %}
+	{% UIAlert ForInformation{sContent: sNotice} %}{% EndUIAlert %}
 {% endfor %}
 {% for sSuccess in aSuccesses %}
-	{% UIAlert ForSuccess{sTitle: sSuccess} %}{% EndUIAlert %}
+	{% UIAlert ForSuccess{sContent: sSuccess} %}{% EndUIAlert %}
 {% endfor %}
 
 {% UITitle ForPage {'sTitle':'config-edit-title'|dict_s} %}{% EndUITitle %}
