@@ -2017,10 +2017,7 @@ class Config
 			$bLoadConfig = false;
 		}
 
-		$this->m_aAddons = array(
-			// Default AddOn, always present can be moved to an official iTop Module later if needed
-			'user rights' => 'addons/userrights/userrightsprofile.class.inc.php',
-		);
+		$this->m_aAddons = [];
 
 		foreach ($this->m_aSettings as $sPropCode => $aSettingInfo)
 		{
@@ -2148,18 +2145,12 @@ class Config
 				array('file' => $sConfigFile, 'expected' => '$MySettings'));
 		}
 
-		if (!array_key_exists('addons', $MyModules))
-		{
-			throw new ConfigException('Missing item in configuration file',
-				array('file' => $sConfigFile, 'expected' => '$MyModules[\'addons\']'));
-		}
-		if (!array_key_exists('user rights', $MyModules['addons']))
+		if (!array_key_exists('addons', $MyModules) || !array_key_exists('user rights', $MyModules['addons']))
 		{
 			// Add one, by default
-			$MyModules['addons']['user rights'] = '/addons/userrights/userrightsnull.class.inc.php';
+			$MyModules['addons']['user rights'] = 'addons/userrights/userrightsprofile.class.inc.php';
+			$this->m_aAddons = $MyModules['addons'];
 		}
-
-		$this->m_aAddons = $MyModules['addons'];
 
 		foreach ($MySettings as $sPropCode => $rawvalue)
 		{
@@ -2266,7 +2257,11 @@ class Config
 
 	public function GetAddons()
 	{
-		return $this->m_aAddons;
+	//	if (array_key_exists("user rights", $this->m_aAddons))		{
+			return $this->m_aAddons;
+	/*	} else {
+			return array_merge($this->m_aAddons,['user rights' => 'addons/userrights/userrightsprofile.class.inc.php']);
+		}*/
 	}
 
 	public function SetAddons($aAddons)
@@ -2701,15 +2696,6 @@ class Config
 			if ($aParserValue['found'])
 			{
 				fwrite($hFile, "\t'addons' => {$aParserValue['value']},\n");
-			}
-			else
-			{
-				fwrite($hFile, "\t'addons' => array (\n");
-				foreach ($this->m_aAddons as $sKey => $sFile)
-				{
-					fwrite($hFile, "\t\t'$sKey' => '$sFile',\n");
-				}
-				fwrite($hFile, "\t),\n");
 			}
 			fwrite($hFile, ");\n");
 			fwrite($hFile, '?'.'>'); // Avoid perturbing the syntax highlighting !
