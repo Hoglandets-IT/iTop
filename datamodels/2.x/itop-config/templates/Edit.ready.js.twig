@@ -77,7 +77,7 @@ editor.getSession().setValue(configurationSource.value);
 
 editor.getSession().on('change', function()
 {
-  configurationSource.val(editor.getSession().getValue());
+  configurationSource.value = editor.getSession().getValue();
   EditorUtils.updateConfigEditorButtonState(editor);
 });
 editor.getSession().on("changeAnnotation", function()
