@@ -2257,11 +2257,11 @@ class Config
 
 	public function GetAddons()
 	{
-	//	if (array_key_exists("user rights", $this->m_aAddons))		{
+		if (array_key_exists("user rights", $this->m_aAddons))		{
 			return $this->m_aAddons;
-	/*	} else {
+		} else {
 			return array_merge($this->m_aAddons,['user rights' => 'addons/userrights/userrightsprofile.class.inc.php']);
-		}*/
+		}
 	}
 
 	public function SetAddons($aAddons)
