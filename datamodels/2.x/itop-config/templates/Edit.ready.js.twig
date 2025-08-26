@@ -46,15 +46,15 @@ var EditorUtils = (function() {
 	};
 
 	var getEditorForm = function(editor) {
-	    var editorContainer = $(editor.container);
-	    return editorContainer.closest("form");
+	    var editorContainer = editor.container;
+	    return editorContainer.parentElement;
 	};
 
 	var updateConfigEditorButtonState = function(editor) {
-	    var isSameContent = (editor.getValue() == $('#prev_config').val());
-	    var hasNoError = $.isEmptyObject(editor.getSession().getAnnotations());
-	    $('#cancel_button').prop('disabled', isSameContent);
-	    $('#submit_button').prop('disabled', isSameContent || !hasNoError);
+	    var isSameContent = (editor.getValue() === document.querySelector('input[name="prev_config"]').value);
+	    var hasNoError = editor.getSession().getAnnotations().length === 0;
+	    document.getElementById('cancel_button').disabled = isSameContent;
+	    document.getElementById('submit_button').disabled = isSameContent || !hasNoError;
 	};
 
 	return {
@@ -70,10 +70,10 @@ var EditorUtils = (function() {
 
 
 
-var editor = ace.edit("new_config");
+editor = ace.edit("new_config");
 
-var configurationSource = $('input[name="new_config"]');
-editor.getSession().setValue(configurationSource.val());
+var configurationSource = document.querySelector('input[name="new_config"]');
+editor.getSession().setValue(configurationSource.value);
 
 editor.getSession().on('change', function()
 {
@@ -92,17 +92,17 @@ editor.commands.addCommand({
     bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
     exec: function(editor) {
         var editorForm = EditorUtils.getEditorForm(editor);
-        var submitButton = $('#submit_button');
+        var submitButton = document.getElementById('submit_button');
 
         if (submitButton.is(":enabled")) {
-            editorForm.trigger('submit');
+           editorForm.trigger('submit');
         }
     }
 });
 
 
 var editorForm = EditorUtils.getEditorForm(editor);
-editorForm.on('submit', function() {
+editorForm.addEventListener('submit', function() {
 	EditorUtils.saveEditorDisplay(editor);
 });
 
