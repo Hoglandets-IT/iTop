@@ -2856,20 +2856,8 @@ class Config
 						}
 					}
 				}
-				if (isset($aModuleInfo['installer']))
-				{
-					$sModuleInstallerClass = $aModuleInfo['installer'];
-					if (!class_exists($sModuleInstallerClass))
-					{
-						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
-					}
-					if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
-					{
-						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
-					}
-					$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
-					call_user_func_array($aCallSpec, array($this));
-				}
+
+				ModuleDiscoveryService::GetInstance()->CallInstallerBeforeWritingConfigMethod($this, $aModuleInfo);
 			}
 		}
 		$this->SetAddOns($aAddOns);
