@@ -377,7 +377,10 @@ class ObjectFormManager extends FormManager
 
 			/** @var Field $oField */
 			$oField = null;
-			if (is_callable([$oAttDef, 'MakeFormField']))
+			if (is_callable([$oAttDef, 'MakeFormFieldForPortal']))
+			{
+				$oField = $oAttDef->MakeFormFieldForPortal($this->oObject, null, $this->oFormHandlerHelper);
+			} elseif (is_callable([$oAttDef, 'MakeFormField']))
 			{
 				$oField = $oAttDef->MakeFormField($this->oObject);
 			}

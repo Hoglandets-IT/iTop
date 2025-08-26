@@ -13333,6 +13333,56 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	/**
+	 * @param DBObject $oHostObject
+	 * @param null $oFormField
+	 * @param ObjectFormHandlerHelper $oHelper
+
+	 * Override to build the relevant form field
+	 *
+	 * When called first, $oFormField is null and will be created (eg. Make). Then when the ::parent is called and the
+	 * $oFormField is passed, MakeFormField behaves more like a Prepare.
+	 */
+	public function MakeFormFieldForPortal(DBObject $oObject, $oFormField = null, $oHelper = null)
+	{
+		//ici
+		if ($oFormField === null)
+		{
+			$sFormFieldClass = static::GetFormFieldClass();
+			$oFormField = new $sFormFieldClass($this->GetCode());
+			$oFormField->SetForm($this->GetFormForPortal($oObject, null, $oHelper));
+		}
+		parent::MakeFormField($oObject, $oFormField);
+
+		return $oFormField;
+	}
+	/**
+	 * @param DBObject $oHostObject
+	 * @param null $sFormPrefix
+	 * @param ObjectFormHandlerHelper $oHelper
+	 *
+	 * @return Combodo\iTop\Form\Form
+	 * @throws \Exception
+	 */
+	public function GetFormForPortal(DBObject $oHostObject, $sFormPrefix = null, $oHelper =null)
+	{
+		try {
+			$oValue = $oHostObject->Get($this->GetCode());
+			$oHandler = $this->GetHandler($oValue->GetValues());
+			$sFormId = utils::IsNullOrEmptyString($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
+			$oHandler->BuildForm($oHostObject, $sFormId, $oHelper);
+			$oForm = $oHandler->GetForm();
+		}
+		catch (Exception $e) {
+			$oForm = new Form('');
+			$oField = new LabelField('');
+			$oField->SetLabel('Custom field error: '.$e->getMessage());
+			$oForm->AddField($oField);
+			$oForm->Finalize();
+		}
+
+		return $oForm;
+	}
+	/**
 	 * Read the data from where it has been stored. This verb must be implemented as soon as LoadFromClassTables returns false
 	 * and LoadInObject returns true
 	 *
