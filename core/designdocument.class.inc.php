@@ -73,7 +73,7 @@ class DesignDocument extends DOMDocument
 
 	public function loadXML(string $source, int $options = 0)
 	{
-		parent::loadXML($source, $options | LIBXML_BIGLINES);
+		return parent::loadXML($source, $options | LIBXML_BIGLINES);
 	}
 
 	/**
