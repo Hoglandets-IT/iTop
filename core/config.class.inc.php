@@ -2857,7 +2857,7 @@ class Config
 					}
 				}
 
-				ModuleDiscoveryService::GetInstance()->CallInstallerBeforeWritingConfigMethod($this, $aModuleInfo);
+				RunTimeEnvironment::CallInstallerHandler($aModuleInfo, "BeforeWritingConfig", [$this]);
 			}
 		}
 		$this->SetAddOns($aAddOns);
