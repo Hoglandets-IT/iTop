@@ -19,13 +19,13 @@ class ConfigEditorController extends Controller
 {
     public const ROUTE_NAMESPACE = 'config_editor';
     public const MODULE_NAME = "itop-config";
-	private array $aWarnings = [];
-	private array $aInfo = [];
-	private array $aErrors = [];
-	private array $aSuccesses = [];
+	protected array $aWarnings = [];
+	protected array $aInfo = [];
+	protected array $aErrors = [];
+	protected array $aSuccesses = [];
 
 	public function __construct() {
-		parent::__construct(MODULESROOT.self::MODULE_NAME.'/templates', self::MODULE_NAME);
+		parent::__construct(MODULESROOT.static::MODULE_NAME.'/templates', static::MODULE_NAME);
 	}
 
 	public function OperationEdit() : void
@@ -134,7 +134,7 @@ class ConfigEditorController extends Controller
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function AddAceScripts(): void
+	protected function AddAceScripts(): void
 	{
 		$sAceDir = 'node_modules/ace-builds/src-min/';
 		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().$sAceDir.'ace.js');
