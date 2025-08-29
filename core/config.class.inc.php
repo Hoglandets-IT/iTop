@@ -2259,6 +2259,9 @@ class Config
 		$this->m_aModuleSettings[$sModule][$sProperty] = $value;
 	}
 
+	/**
+	 * @deprecated 3.3.0 N°8190
+	 */
 	public function GetAddons()
 	{
 		if (array_key_exists("user rights", $this->m_aAddons))		{
@@ -2268,6 +2271,9 @@ class Config
 		}
 	}
 
+	/**
+	 * @deprecated 3.3.0 N°8190
+	 */
 	public function SetAddons($aAddons)
 	{
 		$this->m_aAddons = $aAddons;
