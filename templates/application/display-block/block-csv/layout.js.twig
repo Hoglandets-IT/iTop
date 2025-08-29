@@ -1,6 +1,5 @@
 {# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-{% apply spaceless %}
 $.post(
     '{{ oUIBlock.sAjaxLink|escape('js') }}',
     {{ oUIBlock.sJsonParams|raw }},
@@ -9,4 +8,3 @@ $.post(
         $('#csv_content_loading').hide();
         $('#csv_content').show();
     });
-{% endapply %}

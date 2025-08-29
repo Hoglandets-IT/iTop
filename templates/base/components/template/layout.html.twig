@@ -1,9 +1,7 @@
 {# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-{% apply spaceless %}
-    <template id="{{ oUIBlock.GetId() }}" data-role="ibo-template">
-        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
-            {{ render_block(oSubBlock, {aPage: aPage}) }}
-        {% endfor %}
-    </template>
-{% endapply %}
+<template id="{{ oUIBlock.GetId() }}" data-role="ibo-template">
+    {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+        {{- render_block(oSubBlock, {aPage: aPage}) -}}
+    {% endfor %}
+</template>

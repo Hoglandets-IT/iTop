@@ -13,11 +13,9 @@
             {% endfor %}
         {% endif %}
 >
-    {% apply spaceless %}
-        {% block iboContentBlockContainer %}
-            {% for oSubBlock in oUIBlock.GetSubBlocks() %}
-                {{ render_block(oSubBlock, {aPage: aPage}) }}
-            {% endfor %}
-        {% endblock %}
-    {% endapply %}
+    {% block iboContentBlockContainer %}
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{- render_block(oSubBlock, {aPage: aPage}) -}}
+        {% endfor %}
+    {% endblock %}
 </form>

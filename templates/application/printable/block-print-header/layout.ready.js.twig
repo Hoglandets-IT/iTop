@@ -1,7 +1,5 @@
 {# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-{% apply spaceless %}
-
 var sHiddeableChapters = '<ul role="tablist" class="ibo-block-print--tablist">';
 for (sId in oHiddeableChapters)
 {
@@ -28,5 +26,3 @@ $('fieldset').each(function() {
 $('legend').css('cursor', 'pointer').on('click', function(){
 	$(this).parent('fieldset').toggleClass('not-printable strikethrough');
 });
-
-{% endapply %}

@@ -32,7 +32,6 @@
 				</div>
 			</div>
 			<div class="ibo-activity-entry--sub-information" data-role="ibo-activity-entry--sub-information">
-                {% apply spaceless %}
                     {% block iboActivityEntrySubInformation %}
                         {% if oUIBlock.GetOrigin() is not null and oUIBlock.GetOrigin != constant('Combodo\\iTop\\Core\\CMDBChange\\CMDBChangeOrigin::INTERACTIVE') %}
                             <span class="ibo-activity-entry--origin" data-role="ibo-activity-entry--origin" data-tooltip-content="{{ ('Class:CMDBChange/Attribute:origin/Value:' ~ oUIBlock.GetOrigin())|dict_s }}" data-tooltip-placement="bottom">
@@ -48,7 +47,6 @@
                               data-raw-datetime="{{ oUIBlock.GetRawDateTime() }}"
                               data-formatted-datetime="{{ oUIBlock.GetFormattedDateTime() }}">{{ oUIBlock.GetFormattedDateTime() }}</span>
                     {% endblock %}
-                {% endapply %}
 			</div>
 		{% endblock %}
 	</div>

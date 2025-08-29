@@ -1,9 +1,6 @@
 {# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-{% apply spaceless %}
-
 {% UIContentBlock Standard {'aContainerClasses': ['ibo-update-core', 'ibo-setup--wizard']} %}
-
     {% if bSuccess %}
         {% UIContentBlock Standard {'aContainerClasses': ['ibo-setup--wizard--content']} %}
             {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s, 'sId':'update_progress'} %}
@@ -11,9 +8,7 @@
                 {% set sVersion = 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) %}
                 {% UIField Large {'sLabel':'iTopUpdate:UI:CurrentVersion'|dict_s, 'sValueHtml':sVersion} %}{% EndUIField %}
             {% EndUIFieldSet %}
-
             {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Backup'|dict_s} %}
-
                 {% if bDoBackup or bDoFilesArchive %}
                     {% if bDoBackup %}
                         {% UIField Large {'sLabel':'iTopUpdate:UI:WithDBBackup'|dict_s, 'sValueHtml':sBackupFile} %}{% EndUIField %}
@@ -24,14 +19,11 @@
                 {% else %}
                     {% UIAlert ForWarning {'sContent':'iTopUpdate:UI:WithoutBackup'|dict_s, 'IsCollapsible':false, 'IsClosable':false} %}{% EndUIAlert %}
                 {% endif %}
-
             {% EndUIFieldSet %}
-
             {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Action'|dict_s} %}
                 {% UIAlert ForWarning {'sContent':'iTopUpdate:UI:WarningReadOnlyDuringUpdate'|dict_s, 'IsCollapsible':false, 'IsClosable':false} %}{% EndUIAlert %}
             {% EndUIFieldSet %}
         {% EndUIContentBlock %}
-
         {% UIToolbar ForButton {'AddCSSClass':'ibo-setup--wizard--buttons-container'} %}
             {% UIForm Standard {'CSSClasses':['form-inline']} %}
                 {% UIButton ForCancel {'sId':'cancel-update', 'sLabel':'iTopUpdate:UI:Cancel'|dict_s, 'bIsSubmit':true} %}
@@ -46,17 +38,12 @@
                 {% UIInput ForHidden {'sName':'doFilesArchive', 'sValue':bDoFilesArchive} %}
             {% EndUIForm %}
         {% EndUIToolbar %}
-
     {% else %}
-
         {% UIFieldSet Standard {'sLegend':''} %}
         {% UIAlert ForFailure {'sContent':sError, 'IsCollapsible':false, 'IsClosable':false} %}{% EndUIAlert %}
         {% UIForm Standard {} %}
         {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:Back'|dict_s, 'bIsSubmit':true} %}
         {% EndUIForm %}
         {% EndUIFieldSet %}
-
     {% endif %}
-
 {% EndUIContentBlock %}
-{% endapply %}
