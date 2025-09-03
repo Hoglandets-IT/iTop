@@ -1,3 +1,4 @@
+{% apply spaceless %}
 {% UIAlert ForWarning{sTitle:'', sContent: '', sId: null} %}
 <div id="branding-error-alert-content">
 <div style="display:flex;flex-align: stretch;">
@@ -9,3 +10,4 @@
 <div style="display:flex;align-items:stretch;height:50rem;margin-top:0.5rem;">
 <iframe width="100%" sandbox srcdoc="{{ iframe_content }}"></iframe>
 </div>
+{% endapply %}
