@@ -5,7 +5,7 @@ namespace Combodo\iTop\SessionTracker;
 	/**
 	 * @experimental for internal use only, subject to change without notice.
 	 *
-     * Do not use this interface in your code.
+	 * Do not use this interface in your code.
 	 *
 	 * @since 3.2.2
 	 */
