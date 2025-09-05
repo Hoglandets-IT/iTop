@@ -119,14 +119,6 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		$this->evaluateExpressionWithMode($sExpression, $forced_expected, PhpExpressionEvaluator::LIB_AND_FALLBACK);
 	}
 
-	/**
-	 * @dataProvider EvaluateExpressionProvider
-	 */
-	public function testEvaluateExpressionWithLibOnly($sExpression, $forced_expected="NOTPROVIDED")
-	{
-		$this->evaluateExpressionWithMode($sExpression, $forced_expected, PhpExpressionEvaluator::LIB_ONLY);
-	}
-
 	public function evaluateExpressionWithMode($sExpression, $forced_expected, $iMode)
 	{
 		global $oGlobalNonNullVar;

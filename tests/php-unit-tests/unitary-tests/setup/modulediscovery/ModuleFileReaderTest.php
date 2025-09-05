@@ -16,7 +16,7 @@ class ModuleFileReaderTest extends ItopDataTestCase
 
 	public function testReadModuleFileInformationUnsafe()
 	{
-		$sModuleFilePath = __DIR__.'/resources/module.itop-full-itil.php';
+		$sModuleFilePath = __DIR__.'/resources/all/module.itop-full-itil.php';
 		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
 		$this->assertCount(3, $aRes);
@@ -27,52 +27,23 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		$this->assertEquals('Bridge - Request management ITIL + Incident management ITIL', $aRes[2]['label'] ?? null);
 	}
 
-	public function testAllReadModuleFileConfiguration()
-	{
-		$_SERVER=[
-			'SERVER_NAME' => 'titi'
-		];
-
-		$aErrors=[];
-		foreach (glob(__DIR__.'/resources/all_designer/*.php') as $sModuleFilePath){
-			//var_dump($sModuleFilePath);
-			try{
-				$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
-			} catch(\Exception $e){
-				$aErrors[]=basename($sModuleFilePath);
-				continue;
-			}
-
-			$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
-
-			if ($aExpected !== $aRes){
-				$aErrors[]=basename($sModuleFilePath);
-				continue;
-			}
-			//break;
-			//$this->assertEquals($aExpected, $aRes, $sModuleFilePath);
-		}
-
-		$this->assertEquals([], $aErrors, var_export($aErrors, true));
-	}
-
 	public static function ReadModuleFileConfigurationFileNameProvider()
 	{
-		return [
-			'nominal case : module.itop-full-itil.php' => ['module.itop-full-itil.php'],
-			'constant as value of a dict entry: module.authent-ldap.php' => ['module.authent-ldap.php'],
-			'int operation evaluation required: email-synchro' => ['module.combodo-email-synchro.php'],
-			'module.itop-admin-delegation-profiles-bridge-for-combodo-email-synchro.php' => ['module.itop-admin-delegation-profiles-bridge-for-combodo-email-synchro.php'],
-			'unknown class name to evaluation as installer: module.itop-global-requests-mgmt.php' => ['module.itop-global-requests-mgmt.php'],
-		];
+		$aUsecases=[];
+		foreach (glob(__DIR__.'/resources/all/*.php') as $sModuleFilePath){
+			$aUsecases[basename($sModuleFilePath)]=[$sModuleFilePath];
+		}
+		return $aUsecases;
 	}
 
 	/**
 	 * @dataProvider ReadModuleFileConfigurationFileNameProvider
 	 */
-	public function testReadModuleFileConfigurationVsLegacyMethod(string $sModuleBasename)
+	public function testReadModuleFileConfigurationVsLegacyMethod(string $sModuleFilePath)
 	{
-		$sModuleFilePath = __DIR__."/resources/$sModuleBasename";
+		$_SERVER=[
+			'SERVER_NAME' => 'titi'
+		];
 		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
 		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
@@ -92,8 +63,7 @@ class ModuleFileReaderTest extends ItopDataTestCase
 	 * @throws \ModuleFileReaderException
 	 */
 	public function testReadModuleFileConfiguration_BadlyWrittenDependencies(){
-		//$sModuleFilePath = __DIR__."/resources/module.combodo-make-it-vip.php";
-		$sModuleFilePath = __DIR__."/resources/module.itop-admin-delegation-profiles.php";
+		$sModuleFilePath = __DIR__."/resources/all/module.itop-admin-delegation-profiles.php";
 		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
 		$aExpected = ModuleFileReader::GetInstance()->ReadModuleFileInformationUnsafe($sModuleFilePath);
 
@@ -243,7 +213,7 @@ PHP;
 	public function testGetAndCheckModuleInstallerClass()
 	{
 		$sModuleInstallerClass = "TicketsInstaller" . uniqid();
-		$sPHpCode = file_get_contents(__DIR__.'/resources/module.itop-tickets.php');
+		$sPHpCode = file_get_contents(__DIR__.'/resources/all/module.itop-tickets.php');
 		$sPHpCode = str_replace("TicketsInstaller", $sModuleInstallerClass, $sPHpCode);
 		$this->sTempModuleFilePath = tempnam(__DIR__, "test");
 		file_put_contents($this->sTempModuleFilePath, $sPHpCode);

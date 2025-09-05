@@ -12,7 +12,7 @@ class PhpExpressionEvaluator {
 
 	/** @var iExprEvaluator[] $aPhpParserEvaluators */
 	private static array $aPhpParserEvaluators;
-	private int $iMode=self::ITOP_ALGO;
+	private int $iMode=self::LIB_AND_FALLBACK;
 
 	protected function __construct() {
 	}
@@ -79,8 +79,6 @@ class PhpExpressionEvaluator {
 			$oConstExprEvaluator = new ConstExprEvaluator([$this, "EvaluateExpressionLocally"]);
 		}
 
-		$oConstExprEvaluator->setFunctionsWhitelist(FuncCallEvaluator::WHITELIST);
-		$oConstExprEvaluator->setStaticcallsWhitelist(StaticCallEvaluator::WHITELIST);
 		return $oConstExprEvaluator->evaluateDirectly($oExpression);
 	}
 
