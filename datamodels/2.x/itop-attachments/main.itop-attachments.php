@@ -5,14 +5,15 @@
  */
 
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Service\Events\iEventServiceSetup;
 
-class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExtension
+class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 {
 	const ENUM_GUI_ALL = 'all';
 	const ENUM_GUI_BACKOFFICE = 'backoffice';
 	const ENUM_GUI_PORTALS = 'portals';
-
-	protected static $m_bIsModified = false;
 
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
 	{
@@ -158,45 +159,39 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		return array();
 	}
 
-	public function OnIsModified($oObject)
+	public function RegisterEventsAndListeners() : void
 	{
-		return self::$m_bIsModified;
+		EventService::RegisterListener(EVENT_DB_AFTER_WRITE, [$this, 'OnDBAfterWrite']);
+		EventService::RegisterListener(EVENT_DB_AFTER_DELETE, [$this, 'OnDBAfterDelete']);
 	}
 
-	public function OnCheckToWrite($oObject)
+	public function OnDBAfterWrite(EventData $oEventData)
 	{
-		return array();
-	}
+		$oObject = $oEventData->Get('object');
+		$oCMDBChange = $oEventData->Get('cmdb_change');
+		$bIsNew = $oEventData->Get('is_new');
 
-	public function OnCheckToDelete($oObject)
-	{
-		return array();
-	}
-
-	public function OnDBUpdate($oObject, $oChange = null)
-	{
 		if ($this->IsTargetObject($oObject))
 		{
-			// Get all current attachments
-			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
-			$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
-			while ($oAttachment = $oSet->Fetch())
-			{
-				$oAttachment->SetItem($oObject, true /*updateonchange*/);
+			if($bIsNew){
+				self::UpdateAttachments($oObject, $oCMDBChange);
+			}
+			else{
+				// Get all current attachments
+				$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+				$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
+				while ($oAttachment = $oSet->Fetch())
+				{
+					$oAttachment->SetItem($oObject, true /*updateonchange*/);
+				}
 			}
 		}
 	}
 
-	public function OnDBInsert($oObject, $oChange = null)
+	public function OnDBAfterDelete(EventData $oEventData)
 	{
-		if ($this->IsTargetObject($oObject))
-		{
-			self::UpdateAttachments($oObject, $oChange);
-		}
-	}
+		$oObject = $oEventData->Get('object');
 
-	public function OnDBDelete($oObject, $oChange = null)
-	{
 		if ($this->IsTargetObject($oObject))
 		{
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
@@ -291,7 +286,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 	 * @see ObjectFormManager::FinalizeAttachments() for the portal version
 	 *
 	 * @param $oObject
-	 * @param $oChange
+	 * @param $oCMDBChange
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
@@ -303,10 +298,8 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	protected static function UpdateAttachments($oObject, $oChange = null)
+	protected static function UpdateAttachments($oObject, $oCMDBChange = null)
 	{
-		self::$m_bIsModified = false;
-
 		if (utils::ReadParam('attachment_plugin', 'not-in-form') == 'not-in-form')
 		{
 			// Workaround to an issue in iTop < 2.0
@@ -363,9 +356,10 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 			{
 				foreach ($aActions as $oChangeOp)
 				{
-					self::RecordHistory($oChange, $oObject, $oChangeOp);
+					self::RecordHistory($oCMDBChange, $oObject, $oChangeOp);
 				}
-				self::$m_bIsModified = true;
+
+				$oObject->MarkObjectAsModified();
 			}
 		}
 	}
@@ -556,11 +550,11 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 	}
 
 	/////////////////////////////////////////////////////////////////////////
-	private static function RecordHistory($oChange, $oTargetObject, $oMyChangeOp)
+	private static function RecordHistory($oCMDBChange, $oTargetObject, $oMyChangeOp)
 	{
-		if (!is_null($oChange))
+		if (!is_null($oCMDBChange))
 		{
-			$oMyChangeOp->Set("change", $oChange->GetKey());
+			$oMyChangeOp->Set("change", $oCMDBChange->GetKey());
 		}
 		$oMyChangeOp->Set("objclass", get_class($oTargetObject));
 		$oMyChangeOp->Set("objkey", $oTargetObject->GetKey());
@@ -648,6 +642,8 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 
 		return $bReadonly;
 	}
+
+
 }
 
 /**

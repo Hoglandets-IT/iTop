@@ -214,6 +214,15 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 */
 	protected static bool $bBlockEventDBLinksChanged = false;
 
+	/**
+	 * If set to true, the object is considered as modified, whatever the actual state is.
+	 * This is used when an object is modified indirectly (eg. through a linked set)
+	 *
+	 * @var bool
+	 *
+	 * @since 3.3.0 N°8210 - Remove iApplicationObjectExtension
+	 */
+	private bool $bIsMarkedAsModified = false;
 
 	/**
 	 * Constructor from a row of data (as a hash 'attcode' => value)
@@ -4542,21 +4551,6 @@ HTML;
 		return $res;
 	}
 
-	protected function PostInsertActions(): void
-	{
-		parent::PostInsertActions();
-
-		// Invoke extensions after insertion (the object must exist, have an id, etc.)
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins(iApplicationObjectExtension::class) as $oExtensionInstance) {
-			$sExtensionClass = get_class($oExtensionInstance);
-			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBInsert()");
-			$oKPI = new ExecutionKPI();
-			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
-			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBInsert');
-		}
-	}
-
 	/**
 	 * @inheritdoc
 	 * Attaches InlineImages to the current object
@@ -4587,21 +4581,6 @@ HTML;
 		$this->LogCRUDExit(__METHOD__);
 
 		return $res;
-	}
-
-	protected function PostUpdateActions(array $aChanges): void
-	{
-		parent::PostUpdateActions($aChanges);
-
-		// Invoke extensions after the update (could be before)
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins(iApplicationObjectExtension::class) as $oExtensionInstance) {
-			$sExtensionClass = get_class($oExtensionInstance);
-			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBUpdate()");
-			$oKPI = new ExecutionKPI();
-			$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
-			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBUpdate');
-		}
 	}
 
 	/**
@@ -4639,21 +4618,6 @@ HTML;
 		return $oDeletionPlan;
 	}
 
-	final protected function PreDeleteActions(): void
-	{
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$sExtensionClass = get_class($oExtensionInstance);
-			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnDBDelete()");
-			$oKPI = new ExecutionKPI();
-			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
-			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnDBDelete');
-		}
-
-		parent::PreDeleteActions();
-	}
-
 	final protected function PostDeleteActions(): void
 	{
 		parent::PostDeleteActions();
@@ -4666,25 +4630,20 @@ HTML;
 			return true;
 		}
 
-		// Plugins
-		//
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$sExtensionClass = get_class($oExtensionInstance);
-			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified()");
-			$oKPI = new ExecutionKPI();
-			$bIsModified = $oExtensionInstance->OnIsModified($this);
-			$oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnIsModified');
-			if ($bIsModified) {
-				$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified() -> true");
-				return true;
-			} else {
-				$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnIsModified() -> false");
-			}
-		}
+		return $this->bIsMarkedAsModified;
+	}
 
-		return false;
+	/**
+	 * Override the default modification state of the object.
+	 *
+	 * The object is considered as modified, whatever the actual state is.
+	 * This is used when an object is modified indirectly (eg. through a linked set)
+	 *
+	 * @return void
+	 */
+	public function MarkObjectAsModified(): void
+	{
+		$this->bIsMarkedAsModified = true;
 	}
 
 	/**
@@ -4698,7 +4657,7 @@ HTML;
 	}
 
 	/**
-	 * Whether to bypass the checks of user rights when writing this object, could be used in {@link \iApplicationObjectExtension::OnCheckToWrite()}
+	 * Whether to bypass the checks of user rights when writing this object
 	 *
 	 * @return bool
 	 */
@@ -4726,22 +4685,6 @@ HTML;
 	public function DoCheckToWrite()
 	{
 		parent::DoCheckToWrite();
-
-		// Plugins
-		//
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$sExtensionClass = get_class($oExtensionInstance);
-			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnCheckToWrite()");
-            $oKPI = new ExecutionKPI();
-			$aNewIssues = $oExtensionInstance->OnCheckToWrite($this);
-            $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnCheckToWrite');
-			if (is_array($aNewIssues) && (count($aNewIssues) > 0)) // Some extensions return null instead of an empty array
-			{
-				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues, $aNewIssues);
-			}
-		}
 
 		// User rights
 		//
@@ -4778,22 +4721,6 @@ HTML;
 	protected function DoCheckToDelete(&$oDeletionPlan)
 	{
 		parent::DoCheckToDelete($oDeletionPlan);
-
-		// Plugins
-		//
-		/** @var \iApplicationObjectExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-		{
-			$sExtensionClass = get_class($oExtensionInstance);
-			$this->LogCRUDDebug(__METHOD__, "Calling $sExtensionClass::OnCheckToDelete()");
-            $oKPI = new ExecutionKPI();
-			$aNewIssues = $oExtensionInstance->OnCheckToDelete($this);
-            $oKPI->ComputeStatsForExtension($oExtensionInstance, 'OnCheckToDelete');
-			if (is_array($aNewIssues) && count($aNewIssues) > 0)
-			{
-				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues, $aNewIssues);
-			}
-		}
 
 		// User rights
 		//
@@ -5809,7 +5736,7 @@ JS
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
 		$this->RemoveObjectAwaitingEventDbLinksChanged(get_class($this), $this->GetKey());
-		$this->FireEvent(EVENT_DB_AFTER_WRITE, ['is_new' => $bIsNew, 'changes' => $aChanges, 'stimulus_applied' => $sStimulusBeingApplied]);
+		$this->FireEvent(EVENT_DB_AFTER_WRITE, ['is_new' => $bIsNew, 'changes' => $aChanges, 'stimulus_applied' => $sStimulusBeingApplied, 'cmdb_change' => self::GetCurrentChange()]);
 	}
 
 	//////////////
@@ -5847,7 +5774,7 @@ JS
 	final protected function FireEventAfterDelete(): void
 	{
 		$this->NotifyAttachedObjectsOnLinkClassModification();
-		$this->FireEvent(EVENT_DB_AFTER_DELETE);
+		$this->FireEvent(EVENT_DB_AFTER_DELETE, ['cmdb_change' => self::GetCurrentChange()]);
 	}
 
 	/**
