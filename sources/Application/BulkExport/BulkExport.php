@@ -1,5 +1,8 @@
 <?php
 
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 /**
  * Class BulkExport
  *
@@ -193,7 +196,7 @@ abstract class BulkExport
 	}
 
 
-	public function SetHttpHeaders(\Combodo\iTop\Application\WebPage\WebPage $oPage)
+	public function SetHttpHeaders(WebPage $oPage)
 	{
 	}
 
@@ -254,7 +257,7 @@ abstract class BulkExport
 	/**
 	 * @deprecated 3.0.0 use GetFormPart instead
 	 */
-	public function DisplayFormPart(\Combodo\iTop\Application\WebPage\WebPage $oP, $sPartId)
+	public function DisplayFormPart(WebPage $oP, $sPartId)
 	{
 		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetFormPart instead');
 		$oP->AddSubBlock($this->GetFormPart($oP, $sPartId));
@@ -267,11 +270,11 @@ abstract class BulkExport
 	 *
 	 * @return UIContentBlock
 	 */
-	public function GetFormPart(\Combodo\iTop\Application\WebPage\WebPage $oP, $sPartId)
+	public function GetFormPart(WebPage $oP, $sPartId)
 	{
 	}
 
-	public function DisplayUsage(\Combodo\iTop\Application\WebPage\Page $oP)
+	public function DisplayUsage(Page $oP)
 	{
 
 	}

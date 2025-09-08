@@ -17,7 +17,16 @@ class ValueSetObjectsTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->RequireOnceItopFile('core/valuesetdef.class.inc.php');
+
+		$this->RequireOnceItopFile('MyHelpers.class.inc.php');
+
+		$this->RequireOnceItopFile(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetDefinition.php');
+		$this->RequireOnceItopFile(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetObjects.php');
+		$this->RequireOnceItopFile(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetEnum.php');
+		$this->RequireOnceItopFile(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetEnumPadded.php');
+		$this->RequireOnceItopFile(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetRange.php');
+		$this->RequireOnceItopFile(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetEnumClasses.php');
+
 		$this->RequireOnceItopFile('application/startup.inc.php');
 		$this->RequireOnceUnitTestFile('./MockValueSetObjects.php');
 	}
