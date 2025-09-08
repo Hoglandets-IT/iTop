@@ -1397,7 +1397,10 @@ try
 			case 'swf_navigator': /** @deprecated SWF was removed in iTop */
 			case 'view_relations': // Graphical display of the relations "impact" / "depends on"
 			require_once(APPROOT.'core/simplegraph.class.inc.php');
-			//require_once(APPROOT.'core/relationgraph.class.inc.php');
+			require_once(APPROOT.'/sources/Core/RelationGraph/RelationEdge.php');
+			require_once(APPROOT.'/sources/Core/RelationGraph/RelationGraph.php');
+			require_once(APPROOT.'/sources/Core/RelationGraph/RelationObjectNode.php');
+			require_once(APPROOT.'/sources/Core/RelationGraph/RelationRedundancyNode.php');
 			require_once(APPROOT.'core/displayablegraph.class.inc.php');
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', 0);

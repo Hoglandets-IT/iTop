@@ -27,6 +27,13 @@ require_once APPROOT.'core/querymodifier.class.inc.php';
 require_once APPROOT.'core/metamodelmodifier.inc.php';
 require_once APPROOT.'core/computing.inc.php';
 //require_once APPROOT.'core/relationgraph.class.inc.php';
+require_once(APPROOT.'/sources/Core/RelationGraph/RelationEdge.php');
+require_once(APPROOT.'/sources/Core/RelationGraph/RelationGraph.php');
+require_once(APPROOT.'/sources/Core/RelationGraph/RelationObjectNode.php');
+require_once(APPROOT.'/sources/Core/RelationGraph/RelationRedundancyNode.php');
+
+
+
 require_once APPROOT.'core/apc-compat.php';
 require_once APPROOT.'core/expressioncache.class.inc.php';
 

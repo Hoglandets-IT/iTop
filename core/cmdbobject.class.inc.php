@@ -40,8 +40,14 @@ require_once('dict.class.inc.php');
 
 require_once('attributedef.class.inc.php');
 require_once('stimulus.class.inc.php');
-require_once('valuesetdef.class.inc.php');
 require_once('MyHelpers.class.inc.php');
+
+require_once(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetDefinition.php');
+require_once(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetObjects.php');
+require_once(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetEnum.php');
+require_once(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetEnumPadded.php');
+require_once(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetRange.php');
+require_once(APPROOT.'/sources/Core/ValueSetDefinition/ValueSetEnumClasses.php');
 
 require_once('oql/expression.class.inc.php');
 require_once('oql/oqlquery.class.inc.php');
@@ -59,12 +65,41 @@ require_once('dbobject.class.php');
 require_once('dbobjectset.class.php');
 
 require_once('backgroundprocess.inc.php');
-require_once('asynctask.class.inc.php');
-require_once('dbproperty.class.inc.php');
+//require_once('asynctask.class.inc.php');
+require_once(APPROOT.'/sources/Core/DataModel/AsyncTask/ExecAsyncTask.php');
+require_once(APPROOT.'/sources/Core/DataModel/AsyncTask/AsyncTask.php');
+require_once(APPROOT.'/sources/Core/DataModel/AsyncTask/AsyncSendEmail.php');
+require_once(APPROOT.'/sources/Core/DataModel/AsyncTask/ExecAsyncTask.php');
+require_once(APPROOT.'/sources/Core/DataModel/AsyncTask/AsyncSendNewsroom.php');
+
+require_once(APPROOT.'/sources/Core/DataModel/DBProperty.php');
 
 // db change tracking data model
 require_once('cmdbchange.class.inc.php');
 //require_once('cmdbchangeop.class.inc.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/iCMDBChangeOp.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOp.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpCreate.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpDelete.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpPlugin.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttribute.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeBlob.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeCaseLog.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeCustomFields.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeEncrypted.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeHTML.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeLinks.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeLinksAddRemove.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeLinksTune.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeLongText.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeOneWayPassword.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeScalar.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeTagSet.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeText.php');
+require_once(APPROOT.'/sources/Core/DataModel/CMDBChange/CMDBChangeOpSetAttributeURL.php');
+
+
+
 
 // customization data model
 // Romain: temporary moved into application.inc.php (see explanations there)

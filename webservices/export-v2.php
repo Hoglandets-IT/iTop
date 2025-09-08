@@ -26,7 +26,10 @@ use Combodo\iTop\Application\WebPage\WebPage;
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/excelexporter.class.inc.php');
-require_once(APPROOT.'/core/bulkexport.class.inc.php');
+require_once(APPROOT.'/sources/Application/BulkExport/BulkExport.php');
+require_once(APPROOT.'/sources/Application/BulkExport/BulkExportException.php');
+require_once(APPROOT.'/sources/Application/BulkExport/BulkExportMissingParameterException.php');
+require_once(APPROOT.'/sources/Application/BulkExport/BulkExportResultGC.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
