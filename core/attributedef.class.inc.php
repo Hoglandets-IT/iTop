@@ -16,17 +16,18 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Service\Links\LinkSetModel;
 
 require_once('MyHelpers.class.inc.php');
-require_once('ormdocument.class.inc.php');
-require_once('ormstopwatch.class.inc.php');
-require_once('ormpassword.class.inc.php');
-require_once('ormcaselog.class.inc.php');
-require_once('ormlinkset.class.inc.php');
-require_once('ormset.class.inc.php');
-require_once('ormtagset.class.inc.php');
 require_once('htmlsanitizer.class.inc.php');
 require_once('customfieldshandler.class.inc.php');
-require_once('ormcustomfieldsvalue.class.inc.php');
 require_once('datetimeformat.class.inc.php');
+
+require_once(APPROOT.'/sources/Core/Orm/ormDocument.php');
+require_once(APPROOT.'/sources/Core/Orm/ormStopWatch.php');
+require_once(APPROOT.'/sources/Core/Orm/ormPassword.php');
+require_once(APPROOT.'/sources/Core/Orm/ormCaseLog.php');
+require_once(APPROOT.'/sources/Core/Orm/ormLinkSet.php');
+require_once(APPROOT.'/sources/Core/Orm/ormSet.php');
+require_once(APPROOT.'/sources/Core/Orm/ormTagSet.php');
+require_once(APPROOT.'/sources/Core/Orm/ormCustomFieldsValue.php');
 
 
 require_once(APPROOT.'/sources/Core/AttributeDefinition/MissingColumnException.php');

@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-require_once('backgroundprocess.inc.php');
+require_once(APPROOT.'core/backgroundprocess.inc.php');
 
 /**
  * ormStopWatch

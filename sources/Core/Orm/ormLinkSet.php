@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once('dbobjectiterator.php');
+require_once(APPROOT.'core/dbobjectiterator.php');
 
 
 /**
