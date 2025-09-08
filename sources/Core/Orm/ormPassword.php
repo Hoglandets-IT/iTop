@@ -17,7 +17,13 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 
-//require_once(APPROOT.'/core/simplecrypt.class.inc.php');
+require_once(APPROOT.'/sources/Application/SimpleCrypt/CryptEngine.php');
+require_once(APPROOT.'/sources/Application/SimpleCrypt/SimpleCrypt.php');
+require_once(APPROOT.'/sources/Application/SimpleCrypt/SimpleCryptMcryptEngine.php');
+require_once(APPROOT.'/sources/Application/SimpleCrypt/SimpleCryptOpenSSLEngine.php');
+require_once(APPROOT.'/sources/Application/SimpleCrypt/SimpleCryptOpenSSLMcryptCompatibilityEngine.php');
+require_once(APPROOT.'/sources/Application/SimpleCrypt/SimpleCryptSimpleEngine.php');
+require_once(APPROOT.'/sources/Application/SimpleCrypt/SimpleCryptSodiumEngine.php');
 
 /**
  * ormPassword
