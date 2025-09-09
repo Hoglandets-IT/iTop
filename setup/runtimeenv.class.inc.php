@@ -24,6 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+
 require_once APPROOT."setup/modulediscovery.class.inc.php";
 require_once APPROOT.'setup/modelfactory.class.inc.php';
 require_once APPROOT.'setup/compiler.class.inc.php';
@@ -39,6 +41,10 @@ define ('DATAMODEL_MODULE', 'datamodel'); // Convention to store the version of 
 
 class RunTimeEnvironment
 {
+	const STATIC_CALL_AUTOSELECT_WHITELIST=[
+		"SetupInfo::ModuleIsSelected"
+	];
+
 	/**
 	 * The name of the environment that the caller wants to build
 	 * @var string sFinalEnv
@@ -202,10 +208,10 @@ class RunTimeEnvironment
 			if (!in_array($sModuleAppVersion, array('1.0.0', '1.0.1', '1.0.2')))
 			{
 				// This module is NOT compatible with the current version
-					$aModuleInfo['install'] = array(
-						'flag' => MODULE_ACTION_IMPOSSIBLE,
-						'message' => 'the module is not compatible with the current version of the application'
-					);
+				$aModuleInfo['install'] = array(
+					'flag' => MODULE_ACTION_IMPOSSIBLE,
+					'message' => 'the module is not compatible with the current version of the application'
+				);
 			}
 			elseif ($aModuleInfo['mandatory'])
 			{
@@ -448,6 +454,8 @@ class RunTimeEnvironment
 			}
 		}
 
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+
 		// Now process the 'AutoSelect' modules
 		do
 		{
@@ -457,20 +465,16 @@ class RunTimeEnvironment
 			{
 				if (!array_key_exists($oModule->GetName(), $aRet) && $oModule->IsAutoSelect())
 				{
-					try
-					{
-						$bSelected = false;
-						SetupInfo::SetSelectedModules($aRet);
-						eval('$bSelected = ('.$oModule->GetAutoSelect().');');
-					}
-					catch(Exception $e)
-					{
-						$bSelected = false;
-					}
-					if ($bSelected)
-					{
-						$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
-						$bModuleAdded  = true;
+					SetupInfo::SetSelectedModules($aRet);
+					try{
+						$bSelected = $oPhpExpressionEvaluator->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
+						if ($bSelected)
+						{
+							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
+							$bModuleAdded  = true;
+						}
+					} catch(ModuleFileReaderException $e){
+						//do nothing. logged already
 					}
 				}
 			}
@@ -977,8 +981,8 @@ class RunTimeEnvironment
 			$this->CommitDir(
 				APPROOT.'env-'.$this->sTargetEnv,
 				APPROOT.'env-'.$this->sFinalEnv,
-                true,
-                false
+				true,
+				false
 			);
 
 			// Move the config file
@@ -1045,7 +1049,7 @@ class RunTimeEnvironment
 	 * @param $sSource
 	 * @param $sDest
 	 * @param boolean $bSourceMustExist
-     * @param boolean $bRemoveSource If true $sSource will be removed, otherwise $sSource will just be emptied
+	 * @param boolean $bRemoveSource If true $sSource will be removed, otherwise $sSource will just be emptied
 	 * @throws Exception
 	 */
 	protected function CommitDir($sSource, $sDest, $bSourceMustExist = true, $bRemoveSource = true)
@@ -1080,41 +1084,59 @@ class RunTimeEnvironment
 		}
 	}
 
-    /**
-     * Call the given handler method for all selected modules having an installation handler
-     * @param array[] $aAvailableModules
-     * @param string[] $aSelectedModules
-     * @param string $sHandlerName
-     * @throws CoreException
-     */
+	/**
+	 * Call the given handler method for all selected modules having an installation handler
+	 * @param array[] $aAvailableModules
+	 * @param string[] $aSelectedModules
+	 * @param string $sHandlerName
+	 * @throws CoreException
+	 */
 	public function CallInstallerHandlers($aAvailableModules, $aSelectedModules, $sHandlerName)
 	{
-	    foreach($aAvailableModules as $sModuleId => $aModule)
-	    {
-	        if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
-	            isset($aAvailableModules[$sModuleId]['installer']) )
-	        {
-	            $sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-		        SetupLog::Info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
-	            $aCallSpec = array($sModuleInstallerClass, $sHandlerName);
-	            if (is_callable($aCallSpec))
-	            {
-                    try {
-                        call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));
-                    } catch (Exception $e) {
-                        $sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
-                        $aExceptionContextData = [
-                                'ModulelId' => $sModuleId,
-                                'ModuleInstallerClass' => $sModuleInstallerClass,
-                                'ModuleInstallerHandler' => $sHandlerName,
-                                'ExceptionClass' => get_class($e),
-                                'ExceptionMessage' => $e->getMessage(),
-                        ];
-                        throw new CoreException($sErrorMessage, $aExceptionContextData, '', $e);
-                    }
-                }
-	        }
-	    }
+		foreach($aAvailableModules as $sModuleId => $aModule)
+		{
+			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules))
+			{
+				$aArgs = [MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']];
+				RunTimeEnvironment::CallInstallerHandler($aAvailableModules[$sModuleId], $sHandlerName, $aArgs);
+			}
+		}
+	}
+
+	/**
+	 * Call the given handler method for all selected modules having an installation handler
+	 *
+	 * @param array $aModuleInfo
+	 * @param string $sHandlerName
+	 * @param array $aArgs
+	 *
+	 * @throws CoreException
+	 */
+	public static function CallInstallerHandler(array $aModuleInfo, $sHandlerName, array $aArgs)
+	{
+		$sModuleInstallerClass = ModuleFileReader::GetInstance()->GetAndCheckModuleInstallerClass($aModuleInfo);
+		if (is_null($sModuleInstallerClass)){
+			return;
+		}
+
+		SetupLog::Info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName", null, $aArgs);
+		$aCallSpec = [$sModuleInstallerClass, $sHandlerName];
+		if (is_callable($aCallSpec))
+		{
+			try {
+				call_user_func_array($aCallSpec, $aArgs);
+			} catch (Exception $e) {
+				$sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
+				$aExceptionContextData = [
+					'ModulelId' => $sModuleId,
+					'ModuleInstallerClass' => $sModuleInstallerClass,
+					'ModuleInstallerHandler' => $sHandlerName,
+					'ExceptionClass' => get_class($e),
+					'ExceptionMessage' => $e->getMessage(),
+				];
+				throw new CoreException($sErrorMessage, $aExceptionContextData, '', $e);
+			}
+		}
 	}
 
 	/**
@@ -1143,64 +1165,64 @@ class RunTimeEnvironment
 					if ($aModule['version_db'] != '') {
 						// Simulate the load of the previously loaded XML files to get the mapping of the keys
 						if ($bSampleData) {
-	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
-	                    }
-	                    else
-	                    {
-	                        // Load only structural data
-	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-	                    }
-	                }
-	                else
-	                {
-	                    if ($bSampleData)
-	                    {
-	                        $aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-	                        $aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
-	                    }
-	                    else
-	                    {
-	                        // Load only structural data
-	                        $aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-	                    }
-	                }
-	            }
-	        }
-	    }
+							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
+						}
+						else
+						{
+							// Load only structural data
+							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+						}
+					}
+					else
+					{
+						if ($bSampleData)
+						{
+							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
+						}
+						else
+						{
+							// Load only structural data
+							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+						}
+					}
+				}
+			}
+		}
 
-	    // Simulate the load of the previously loaded files, in order to initialize
-	    // the mapping between the identifiers in the XML and the actual identifiers
-	    // in the current database
-	    foreach($aPreviouslyLoadedFiles as $sFileRelativePath)
-	    {
-	        $sFileName = APPROOT.$sFileRelativePath;
-		    SetupLog::Info("Loading file: $sFileName (just to get the keys mapping)");
-	        if (empty($sFileName) || !file_exists($sFileName))
-	        {
-	            throw(new Exception("File $sFileName does not exist"));
-	        }
+		// Simulate the load of the previously loaded files, in order to initialize
+		// the mapping between the identifiers in the XML and the actual identifiers
+		// in the current database
+		foreach($aPreviouslyLoadedFiles as $sFileRelativePath)
+		{
+			$sFileName = APPROOT.$sFileRelativePath;
+			SetupLog::Info("Loading file: $sFileName (just to get the keys mapping)");
+			if (empty($sFileName) || !file_exists($sFileName))
+			{
+				throw(new Exception("File $sFileName does not exist"));
+			}
 
-	        $oDataLoader->LoadFile($sFileName, true);
-	        $sResult = sprintf("loading of %s done.", basename($sFileName));
-		    SetupLog::Info($sResult);
-	    }
+			$oDataLoader->LoadFile($sFileName, true);
+			$sResult = sprintf("loading of %s done.", basename($sFileName));
+			SetupLog::Info($sResult);
+		}
 
-	    foreach($aFiles as $sFileRelativePath)
-	    {
-	        $sFileName = APPROOT.$sFileRelativePath;
-		    SetupLog::Info("Loading file: $sFileName");
-	        if (empty($sFileName) || !file_exists($sFileName))
-	        {
-	            throw(new Exception("File $sFileName does not exist"));
-	        }
+		foreach($aFiles as $sFileRelativePath)
+		{
+			$sFileName = APPROOT.$sFileRelativePath;
+			SetupLog::Info("Loading file: $sFileName");
+			if (empty($sFileName) || !file_exists($sFileName))
+			{
+				throw(new Exception("File $sFileName does not exist"));
+			}
 
-	        $oDataLoader->LoadFile($sFileName);
-	        $sResult = sprintf("loading of %s done.", basename($sFileName));
-		    SetupLog::Info($sResult);
-	    }
+			$oDataLoader->LoadFile($sFileName);
+			$sResult = sprintf("loading of %s done.", basename($sFileName));
+			SetupLog::Info($sResult);
+		}
 
-	    $oDataLoader->EndSession();
+		$oDataLoader->EndSession();
 		SetupLog::Info("ending data load session");
 	}
 
@@ -1213,12 +1235,12 @@ class RunTimeEnvironment
 	 */
 	protected static function MergeWithRelativeDir($aSourceArray, $sBaseDir, $aFilesToMerge)
 	{
-	    $aToMerge = array();
-	    foreach($aFilesToMerge as $sFile)
-	    {
-	        $aToMerge[] = $sBaseDir.'/'.$sFile;
-	    }
-	    return array_merge($aSourceArray, $aToMerge);
+		$aToMerge = array();
+		foreach($aFilesToMerge as $sFile)
+		{
+			$aToMerge[] = $sBaseDir.'/'.$sFile;
+		}
+		return array_merge($aSourceArray, $aToMerge);
 	}
 
 	/**
@@ -1227,40 +1249,40 @@ class RunTimeEnvironment
 	 * @throws Exception
 	 * @return string
 	 */
-    public function CheckMetaModel()
-    {
-        $iCount = 0;
-        $fStart = microtime(true);
-        foreach(MetaModel::GetClasses() as $sClass)
-        {
-            if (false == MetaModel::HasTable($sClass) && MetaModel::IsAbstract($sClass))
-            {
-                //if a class is not persisted and is abstract, the code below would crash. Needed by the class AbstractRessource. This is tolerable to skip this because we check the setup process integrity, not the datamodel integrity.
-                continue;
-            }
+	public function CheckMetaModel()
+	{
+		$iCount = 0;
+		$fStart = microtime(true);
+		foreach(MetaModel::GetClasses() as $sClass)
+		{
+			if (false == MetaModel::HasTable($sClass) && MetaModel::IsAbstract($sClass))
+			{
+				//if a class is not persisted and is abstract, the code below would crash. Needed by the class AbstractRessource. This is tolerable to skip this because we check the setup process integrity, not the datamodel integrity.
+				continue;
+			}
 
-            $oSearch = new DBObjectSearch($sClass);
-            $oSearch->SetShowObsoleteData(false);
-            $oSQLQuery = $oSearch->GetSQLQueryStructure(null, false);
-            $sViewName = MetaModel::DBGetView($sClass);
-            if (strlen($sViewName) > 64)
-            {
-                throw new Exception("Class name too long for class: '$sClass'. The name of the corresponding view ($sViewName) would exceed MySQL's limit for the name of a table (64 characters).");
-            }
-            $sTableName = MetaModel::DBGetTable($sClass);
-            if (strlen($sTableName) > 64)
-            {
-                throw new Exception("Table name too long for class: '$sClass'. The name of the corresponding MySQL table ($sTableName) would exceed MySQL's limit for the name of a table (64 characters).");
-            }
-            $iTableCount = $oSQLQuery->CountTables();
-            if ($iTableCount > 61)
-            {
-                throw new Exception("Class requiring too many tables: '$sClass'. The structure of the class ($sClass) would require a query with more than 61 JOINS (MySQL's limitation).");
-            }
-            $iCount++;
-        }
-        $fDuration = microtime(true) - $fStart;
+			$oSearch = new DBObjectSearch($sClass);
+			$oSearch->SetShowObsoleteData(false);
+			$oSQLQuery = $oSearch->GetSQLQueryStructure(null, false);
+			$sViewName = MetaModel::DBGetView($sClass);
+			if (strlen($sViewName) > 64)
+			{
+				throw new Exception("Class name too long for class: '$sClass'. The name of the corresponding view ($sViewName) would exceed MySQL's limit for the name of a table (64 characters).");
+			}
+			$sTableName = MetaModel::DBGetTable($sClass);
+			if (strlen($sTableName) > 64)
+			{
+				throw new Exception("Table name too long for class: '$sClass'. The name of the corresponding MySQL table ($sTableName) would exceed MySQL's limit for the name of a table (64 characters).");
+			}
+			$iTableCount = $oSQLQuery->CountTables();
+			if ($iTableCount > 61)
+			{
+				throw new Exception("Class requiring too many tables: '$sClass'. The structure of the class ($sClass) would require a query with more than 61 JOINS (MySQL's limitation).");
+			}
+			$iCount++;
+		}
+		$fDuration = microtime(true) - $fStart;
 
-        return sprintf("Checked %d classes in %.1f ms. No error found.\n", $iCount, $fDuration*1000.0);
-    }
+		return sprintf("Checked %d classes in %.1f ms. No error found.\n", $iCount, $fDuration*1000.0);
+	}
 } // End of class

@@ -1,5 +1,7 @@
 <?php
 
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
 require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
@@ -266,19 +268,22 @@ class InstallationFileService {
 	}
 
 	public function ProcessAutoSelectModules() : void {
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+
 		foreach($this->GetAutoSelectModules() as $sModuleId => $aModule)
 		{
 			try {
-				$bSelected = false;
 				SetupInfo::SetSelectedModules($this->aSelectedModules);
-				eval('$bSelected = ('.$aModule['auto_select'].');');
+
+				$bSelected = $oPhpExpressionEvaluator->ParseAndEvaluateBooleanExpression($aModule['auto_select']);
 				if ($bSelected)
 				{
 					// Modules in data/production-modules/ are considered as mandatory and always installed
 					$this->aSelectedModules[$sModuleId] = true;
 				}
 			}
-			catch (Exception $e) {
+			catch (ModuleFileReaderException $e) {
+				//logged already
 			}
 		}
 	}
