@@ -87,7 +87,7 @@ class ModuleDiscovery
 	// Cache the results and the source directories
 	protected static $m_aSearchDirs = null;
 	protected static $m_aModules = array();
-	protected static $m_aModuleVersionByName = array();
+	public static $m_aModuleVersionByName = array();
 
 	// All the entries below are list of file paths relative to the module directory
 	protected static $m_aFilesList = array('datamodel', 'webservice', 'dictionary', 'data.struct', 'data.sample');
@@ -246,7 +246,7 @@ class ModuleDiscovery
 		ksort($aDependencies);
 		$aOrderedModules = [];
 		$iLoopCount = 1;
-		while(($iLoopCount < count($aModules)+1) && (count($aDependencies) > 0) )
+		while(($iLoopCount < count($aModules)) && (count($aDependencies) > 0) )
 		{
 			foreach($aDependencies as $sId => $aRemainingDeps)
 			{
