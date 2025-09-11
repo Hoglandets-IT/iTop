@@ -1,4 +1,10 @@
 <?php
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+namespace Combodo\iTop\Core\AttributeDefinition;
 
 /**
  * Attributes implementing this interface won't be accepted as `group by` field
@@ -7,5 +13,5 @@
  */
 interface iAttributeNoGroupBy
 {
-    //no method, just a contract on implement
+	//no method, just a contract on implement
 }
