@@ -70,8 +70,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	];
 	/** @inheritDoc */
 	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
-		'js/date.js',
-		'js/jquery.layout.min.js',
 	];
 	/** @inheritDoc */
 	protected const COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH = [
