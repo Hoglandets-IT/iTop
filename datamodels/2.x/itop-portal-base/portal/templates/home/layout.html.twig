@@ -30,7 +30,8 @@
                 {% if aTilesRendering[brick.GetId] is defined %}
                     {{ aTilesRendering[brick.GetId]|raw }}
                 {% else %}
-                    {% include '' ~ brick.GetTemplatePath with {brick: brick} %}
+                    {% set twigPath = brick.GetTemplatePath('tile') %}
+                    {% include '' ~ twigPath with {brick: brick} %}
                 {% endif %}
             {% endif %}
         {% endfor %}
