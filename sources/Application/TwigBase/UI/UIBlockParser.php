@@ -55,7 +55,7 @@ class UIBlockParser extends AbstractTokenParser
 
 		$sType = $oStream->expect(Token::NAME_TYPE)->getValue();
 
-		$oParams = $this->parser->getExpressionParser()->parseExpression();
+		$oParams = $this->parser->parseExpression();
 
 		$oStream->expect(Token::BLOCK_END_TYPE);
 
