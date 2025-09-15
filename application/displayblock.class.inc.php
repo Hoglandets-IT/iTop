@@ -419,7 +419,7 @@ class DisplayBlock
 		$oSet->OptimizeColumnLoad(array($oSet->GetClassAlias() => array())); // No need to load all the columns just to get the id
 		while($oObject = $oSet->Fetch())
 		{
-			$aKeys[] = $oObject->GetKey();	
+			$aKeys[] = $oObject->GetKey();
 		}
 		$oSet->Rewind();
 		if (count($aKeys) > 0)
@@ -772,10 +772,6 @@ class DisplayBlock
 				$oBlock = $this->RenderList($aExtraParams, $oPage);
 			break;
 
-			case 'links':
-				$oBlock = $this->RenderLinks($oPage, $aExtraParams);
-				break;
-
 			case static::ENUM_STYLE_ACTIONS:
 				$oBlock = $this->RenderActions($aExtraParams);
 				break;
@@ -795,11 +791,11 @@ class DisplayBlock
 			case static::ENUM_STYLE_CHART:
 				$oBlock = $this->RenderChart($sId, $aQueryParams, $aExtraParams);
 				break;
-			
+
 			case static::ENUM_STYLE_CHART_AJAX:
 				$oBlock = $this->RenderChartAjax($aExtraParams);
 				break;
-			
+
 			default:
 			// Unsupported style, do nothing.
 			$sHtml .= Dict::format('UI:Error:UnsupportedStyleOfBlock', $this->m_sStyle);
@@ -897,7 +893,7 @@ JS
 
 		$sClass = $this->m_oFilter->GetClass();
 		$bConditionAdded = false;
-		
+
 		// If the condition is an external key with a class having a hierarchy, use a "below" criteria
 		if (MetaModel::IsValidAttCode($sClass, $sFilterCode))
 		{
@@ -906,13 +902,13 @@ JS
 			if ($oAttDef->IsExternalKey())
 			{
 				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
-				
+
 				if ($sHierarchicalKeyCode !== false)
 				{
 					$oFilter = new DBObjectSearch($oAttDef->GetTargetClass());
 					if (($sOpCode == 'IN') && is_array($condition))
 					{
-						$oFilter->AddConditionExpression(self::GetConditionIN($oFilter, 'id', $condition));						
+						$oFilter->AddConditionExpression(self::GetConditionIN($oFilter, 'id', $condition));
 					}
 					else
 					{
@@ -935,21 +931,21 @@ JS
 				$bConditionAdded = true;
 			}
 		}
-		
+
 		// In all other cases, just add the condition directly
 		if (!$bConditionAdded)
 		{
 			$this->m_oFilter->AddCondition($sFilterCode, $condition, null); // Use the default 'loose' operator
 		}
 	}
-	
+
 	static protected function GetConditionIN($oFilter, $sFilterCode, $condition)
 	{
 		$oField = new FieldExpression($sFilterCode,  $oFilter->GetClassAlias());
 		$sListExpr = '('.implode(', ', CMDBSource::Quote($condition)).')';
 		$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
 		$oNewCondition = Expression::FromOQL($sOQLCondition);
-		return $oNewCondition;		
+		return $oNewCondition;
 	}
 
 	/**
@@ -1563,54 +1559,6 @@ JS
 			}
 		}
 		return $oContentBlock;
-	}
-
-	/**
-	 * @deprecated 3.1.0 N°5957
-	 *
-	 * @param WebPage $oPage
-	 * @param array $aExtraParams
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Html\Html|\Combodo\iTop\Application\UI\Base\Layout\UIContentBlock|string
-	 * @throws \ApplicationException
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 * @throws \ReflectionException
-	 */
-	protected function RenderLinks(WebPage $oPage, array $aExtraParams)
-	{
-		// Note: No deprecation ticket yet as we want to wait and see if people / code actually use this method, in which case we might keep it.
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('This method is most likely not used throughout the application and will be removed soon. If you ever see this message, please inform us.');
-
-		$oBlock = null;
-		if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
-			$oBlock = cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams);
-		} else {
-			$sClass = $this->m_oFilter->GetClass();
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $this->m_aParams['target_attr']);
-			$sTargetClass = $oAttDef->GetTargetClass();
-			$oBlock = new Html('<p>'.Dict::Format('UI:NoObject_Class_ToDisplay', MetaModel::GetName($sTargetClass)).'</p>');
-			$bDisplayMenu = isset($this->m_aParams['menu']) ? $this->m_aParams['menu'] == true : true;
-			if ($bDisplayMenu) {
-				if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
-					$sDefaults = '';
-					if (isset($this->m_aParams['default'])) {
-						foreach ($this->m_aParams['default'] as $sName => $sValue) {
-							$sDefaults .= '&'.urlencode($sName).'='.urlencode($sValue);
-						}
-					}
-					$oBlock->AddHtml("<p><a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=modify_links&class=$sClass&sParams&link_attr=".$aExtraParams['link_attr']."&id=".$aExtraParams['object_id']."&target_class=$sTargetClass&addObjects=true$sDefaults\">".Dict::Format('UI:ClickToCreateNew',
-							Metamodel::GetName($sClass))."</a></p>\n");
-				}
-			}
-		}
-		return $oBlock;
 	}
 
 	/**
