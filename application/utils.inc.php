@@ -3115,9 +3115,9 @@ TXT
 		$oXpath = new \DOMXPath($oDom);
 		$oNodes = $oXpath->query('//a[@data-object-class and @data-object-key]');
 
-		foreach ($oNodes as $oNode) {
-			$sObjClass = $oNode->getAttribute('data-object-class');
-			$sObjId = $oNode->getAttribute('data-object-key');
+		foreach ($oNodes as $oObjNode) {
+			$sObjClass = $oObjNode->getAttribute('data-object-class');
+			$sObjId = $oObjNode->getAttribute('data-object-key');
 
 			// Prepare array for matched class if not already present
 			if (!array_key_exists($sObjClass, $aMentionedObjects)) {
@@ -3131,6 +3131,7 @@ TXT
 
 		return $aMentionedObjects;
 	}
+
 	/**
 	 * Note: This method is not ideal, but other solutions seemed even less ideal:
 	 *   * Add a "$sMaxLength" param. to utils::ToAcronym(): Does not work for every use cases (see corresponding ticket) as in some parts utils::ToAcronym isn't necessarly meant to be used in a medallion.
