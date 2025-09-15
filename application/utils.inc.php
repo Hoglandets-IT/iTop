@@ -3094,7 +3094,6 @@ TXT
 	 * Note: Only works for backoffice URLs for now
 	 *
 	 * @param string $sText Text containing the mentioned objects to be found
-	 * @param string $sFormat {@uses static::ENUM_TEXT_FORMAT_HTML, ...}
 	 *
 	 * @return array Array of object classes / IDs for the ones found in $sText
 	 *
@@ -3109,27 +3108,29 @@ TXT
 	public static function GetMentionedObjectsFromText(string $sText): array
 	{
 		$aMentionedObjects = [];
-		$aMentionMatches = [];
-		$sText = html_entity_decode($sText);
+		$oDom = new \DOMDocument();
+		libxml_use_internal_errors(true); // to keep processing even in case of "invalid" HTML, cf. testGetMentionedObjectsFromText
+		$oDom->loadHTML($sText);
 
-		preg_match_all('/<a\s*([^>]*)data-object-class="([^"]*)"\s.*data-object-key="([^"]*)"/Ui', $sText, $aMentionMatches);
-		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
-			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
-			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
+		$oXpath = new \DOMXPath($oDom);
+		$oNodes = $oXpath->query('//a[@data-object-class and @data-object-key]');
+
+		foreach ($oNodes as $oNode) {
+			$sObjClass = $oNode->getAttribute('data-object-class');
+			$sObjId = $oNode->getAttribute('data-object-key');
 
 			// Prepare array for matched class if not already present
-			if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
-				$aMentionedObjects[$sMatchedClass] = array();
+			if (!array_key_exists($sObjClass, $aMentionedObjects)) {
+				$aMentionedObjects[$sObjClass] = [];
 			}
 			// Add matched ID if not already there
-			if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {
-				$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
+			if (!in_array($sObjId, $aMentionedObjects[$sObjClass])) {
+				$aMentionedObjects[$sObjClass][] = $sObjId;
 			}
 		}
 
 		return $aMentionedObjects;
 	}
-
 	/**
 	 * Note: This method is not ideal, but other solutions seemed even less ideal:
 	 *   * Add a "$sMaxLength" param. to utils::ToAcronym(): Does not work for every use cases (see corresponding ticket) as in some parts utils::ToAcronym isn't necessarly meant to be used in a medallion.
