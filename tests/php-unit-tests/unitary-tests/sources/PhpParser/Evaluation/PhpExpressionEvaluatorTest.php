@@ -3,8 +3,9 @@
 namespace Combodo\iTop\Test\UnitTest\Sources\PhpParser\Evaluation;
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use ModuleFileReader;
 
 class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 	public static $STATIC_PROPERTY = 123;

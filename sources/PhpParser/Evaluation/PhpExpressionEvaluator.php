@@ -2,12 +2,11 @@
 
 namespace Combodo\iTop\PhpParser\Evaluation;
 
-use ModuleFileParser;
-use ModuleFileReaderException;
+use \Combodo\iTop\Setup\ModuleDiscovery\ModuleFileParser;
+use \Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\Node\Expr;
 use PhpParser\ParserFactory;
-
 /**
  * Used at runtime/setup time
  */
@@ -31,7 +30,7 @@ class PhpExpressionEvaluator {
 	 * @param string $sBooleanExpr
 	 *
 	 * @return bool
-	 * @throws \ModuleFileReaderException
+	 * @throws ModuleFileReaderException
 	 */
 	public function ParseAndEvaluateBooleanExpression(string $sBooleanExpr) : bool
 	{
