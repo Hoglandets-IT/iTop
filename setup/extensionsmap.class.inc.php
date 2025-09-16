@@ -1,4 +1,8 @@
 <?php
+
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
+
 require_once(APPROOT.'/setup/parameters.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once(APPROOT.'/setup/modulediscovery.class.inc.php');

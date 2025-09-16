@@ -1,5 +1,9 @@
 <?php
 
+namespace Combodo\iTop\Setup\ModuleDiscovery;
+use Exception;
+use SetupLog;
+
 class ModuleFileReaderException extends Exception
 {
 	/**
@@ -11,7 +15,7 @@ class ModuleFileReaderException extends Exception
 	 */
 	public function __construct($sMessage, $iHttpCode = 0, Exception $oPrevious = null, $sModuleFile = null)
 	{
-		$e = new \Exception("");
+		$e = new Exception("");
 
 		$aContext = ['previous' => $oPrevious?->getMessage(), 'stack' => $e->getTraceAsString()];
 		if (!is_null($sModuleFile)) {

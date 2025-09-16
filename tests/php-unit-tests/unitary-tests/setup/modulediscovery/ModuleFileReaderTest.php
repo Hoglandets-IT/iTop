@@ -2,8 +2,9 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup\ModuleDiscovery;
 
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use ModuleFileReader;
 
 class ModuleFileReaderTest extends ItopDataTestCase
 {
@@ -59,7 +60,7 @@ class ModuleFileReaderTest extends ItopDataTestCase
 	{
 		$sModuleFilePath = __DIR__.'/resources/module.__MODULE__.php';
 
-		$this->expectException(\ModuleFileReaderException::class);
+		$this->expectException(ModuleFileReaderException::class);
 		$this->expectExceptionMessage("Syntax error, unexpected T_CONSTANT_ENCAPSED_STRING, expecting ',' or ']' or ')' on line 31");
 
 		ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);

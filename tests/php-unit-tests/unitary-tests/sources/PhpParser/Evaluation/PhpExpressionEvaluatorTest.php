@@ -162,7 +162,7 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		global $oEvaluationFakeClass;
 		$oEvaluationFakeClass = new EvaluationFakeClass();
 
-		$this->expectException(\ModuleFileReaderException::class);
+		$this->expectException(ModuleFileReaderException::class);
 		$oPhpExpressionEvaluator = new PhpExpressionEvaluator();
 		$oPhpExpressionEvaluator->ParseAndEvaluateExpression($sExpression);
 	}
@@ -172,7 +172,7 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 	 * @param string $sBooleanExpr
 	 *
 	 * @return mixed
-	 * @throws \ModuleFileReaderException
+	 * @throws ModuleFileReaderException
 	 */
 	private function UnprotectedComputeExpression(string $sExpr) : mixed
 	{
