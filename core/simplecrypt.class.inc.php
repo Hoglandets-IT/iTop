@@ -130,7 +130,15 @@ class SimpleCrypt
      */
     function Decrypt($key, $string)
     {
-        return $this->oEngine->Decrypt($key,$string);
+		try{
+			return $this->oEngine->Decrypt($key,$string);
+		} catch(\Exception $e){
+			if (strlen($string)==0){
+				IssueLog::Error("Cannot decrypt empty/null value", null, ['msg' => $e->getMessage(), 'stack' => $e->getTraceAsString()]);
+				return $string;
+			}
+			throw $e;
+		}
     }
 
     /**

@@ -7,49 +7,30 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use ormPassword;
-use Utils;
+use SodiumException;
 
 /**
  * Tests of the ormPassword class
  */
-class ormPasswordTest extends ItopDataTestCase
+class SympleCryptTest extends ItopDataTestCase
 {
-
-	/**
-	 * @param $sToHashValues
-	 * @param $sToHashSalt
-	 * @param $sHashAlgo
-	 * @param $sExpectedHash
-	 *
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @dataProvider HashProvider
-	 */
-	public function testCheckHash($sToHashValues, $sToHashSalt, $sHashAlgo, $sExpectedHash)
+	public function testDecryptWithNullValue()
 	{
-		$prevHashAlgo = utils::GetConfig()->GetPasswordHashAlgo($sHashAlgo);
-		utils::GetConfig()->SetPasswordHashAlgo($sHashAlgo);
-		$oPassword1 = new ormPassword($sExpectedHash, $sToHashSalt);
-		static::assertTrue($oPassword1->CheckPassword($sToHashValues));
-		utils::GetConfig()->SetPasswordHashAlgo($prevHashAlgo);
+		$oSimpleCrypt = new \SimpleCrypt("Sodium");
+		$this->assertEquals(null, $oSimpleCrypt->Decrypt("dd", null));
 	}
 
-	public function HashProvider()
+	public function testDecryptWithEmptyValue()
 	{
-		return array(
-			'Bcrypt' => array(
-				'admin',
-				'',
-				PASSWORD_BCRYPT,
-				'$2y$10$P6yqXv/0pT4e9kfN6d95jOKX4KR5Il.N0vRLc2DoZoycwnU9mcnia'
-			),
-			'sha256 (legacy)' => array(
-				'admin',
-				'salt',
-				'sha256',
-				'2bb7998496899acdd8137fad3a44faf96a84a03d7f230ce42e97cd17c7ae429e'
-			),
-		);
+		$oSimpleCrypt = new \SimpleCrypt("Sodium");
+		$this->assertEquals('', $oSimpleCrypt->Decrypt("dd", ""));
 	}
+
+	public function testDecrypNonDecryptableValue()
+	{
+		$this->expectException(SodiumException::class);
+		$oSimpleCrypt = new \SimpleCrypt("Sodium");
+		$this->assertEquals('', $oSimpleCrypt->Decrypt("dd", "gabuzomeu"));
+	}
+
 }
