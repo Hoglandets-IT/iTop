@@ -21,7 +21,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '344f11dc3484aaed5cbde58e23513be4' => __DIR__ . '/..' . '/apereo/phpcas/source/CAS.php',
         '6997bc0ca52a383ea79e2a4a84bb1f3e' => __DIR__ . '/../..' . '/sources/alias.php',
@@ -315,8 +314,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         ),
         'League\\OAuth2\\Client\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/oauth2-client/src',
-            1 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            0 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            1 => __DIR__ . '/..' . '/league/oauth2-client/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -359,10 +358,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
                 0 => __DIR__ . '/..' . '/pear/archive_tar',
             ),
         ),
-    );
-
-    public static $fallbackDirsPsr0 = array (
-        0 => __DIR__ . '/..' . '/pear/pear-core-minimal/src',
     );
 
     public static $classMap = array (
@@ -1308,6 +1303,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
         'PDFBulkExport' => __DIR__ . '/../..' . '/core/pdfbulkexport.class.inc.php',
         'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_Error' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
         'PEAR_ErrorStack' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
         'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
         'Pelago\\Emogrifier\\Caching\\SimpleStringCache' => __DIR__ . '/..' . '/pelago/emogrifier/src/Caching/SimpleStringCache.php',
@@ -1833,6 +1829,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Bridge\\Twig\\Node\\StopwatchNode' => __DIR__ . '/..' . '/symfony/twig-bridge/Node/StopwatchNode.php',
         'Symfony\\Bridge\\Twig\\Node\\TransDefaultDomainNode' => __DIR__ . '/..' . '/symfony/twig-bridge/Node/TransDefaultDomainNode.php',
         'Symfony\\Bridge\\Twig\\Node\\TransNode' => __DIR__ . '/..' . '/symfony/twig-bridge/Node/TransNode.php',
+        'Symfony\\Bridge\\Twig\\Test\\FormLayoutTestCase' => __DIR__ . '/..' . '/symfony/twig-bridge/Test/FormLayoutTestCase.php',
+        'Symfony\\Bridge\\Twig\\Test\\Traits\\RuntimeLoaderProvider' => __DIR__ . '/..' . '/symfony/twig-bridge/Test/Traits/RuntimeLoaderProvider.php',
         'Symfony\\Bridge\\Twig\\TokenParser\\DumpTokenParser' => __DIR__ . '/..' . '/symfony/twig-bridge/TokenParser/DumpTokenParser.php',
         'Symfony\\Bridge\\Twig\\TokenParser\\FormThemeTokenParser' => __DIR__ . '/..' . '/symfony/twig-bridge/TokenParser/FormThemeTokenParser.php',
         'Symfony\\Bridge\\Twig\\TokenParser\\StopwatchTokenParser' => __DIR__ . '/..' . '/symfony/twig-bridge/TokenParser/StopwatchTokenParser.php',
@@ -2644,6 +2642,17 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Component\\HttpFoundation\\Session\\Storage\\SessionStorageInterface' => __DIR__ . '/..' . '/symfony/http-foundation/Session/Storage/SessionStorageInterface.php',
         'Symfony\\Component\\HttpFoundation\\StreamedJsonResponse' => __DIR__ . '/..' . '/symfony/http-foundation/StreamedJsonResponse.php',
         'Symfony\\Component\\HttpFoundation\\StreamedResponse' => __DIR__ . '/..' . '/symfony/http-foundation/StreamedResponse.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\RequestAttributeValueSame' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/RequestAttributeValueSame.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseCookieValueSame' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseCookieValueSame.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseFormatSame' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseFormatSame.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseHasCookie' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseHasCookie.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseHasHeader' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseHasHeader.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseHeaderLocationSame' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseHeaderLocationSame.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseHeaderSame' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseHeaderSame.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseIsRedirected' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseIsRedirected.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseIsSuccessful' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseIsSuccessful.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseIsUnprocessable' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseIsUnprocessable.php',
+        'Symfony\\Component\\HttpFoundation\\Test\\Constraint\\ResponseStatusCodeSame' => __DIR__ . '/..' . '/symfony/http-foundation/Test/Constraint/ResponseStatusCodeSame.php',
         'Symfony\\Component\\HttpFoundation\\UriSigner' => __DIR__ . '/..' . '/symfony/http-foundation/UriSigner.php',
         'Symfony\\Component\\HttpFoundation\\UrlHelper' => __DIR__ . '/..' . '/symfony/http-foundation/UrlHelper.php',
         'Symfony\\Component\\HttpKernel\\Attribute\\AsController' => __DIR__ . '/..' . '/symfony/http-kernel/Attribute/AsController.php',
@@ -3099,6 +3108,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Component\\VarDumper\\Exception\\ThrowingCasterException' => __DIR__ . '/..' . '/symfony/var-dumper/Exception/ThrowingCasterException.php',
         'Symfony\\Component\\VarDumper\\Server\\Connection' => __DIR__ . '/..' . '/symfony/var-dumper/Server/Connection.php',
         'Symfony\\Component\\VarDumper\\Server\\DumpServer' => __DIR__ . '/..' . '/symfony/var-dumper/Server/DumpServer.php',
+        'Symfony\\Component\\VarDumper\\Test\\VarDumperTestTrait' => __DIR__ . '/..' . '/symfony/var-dumper/Test/VarDumperTestTrait.php',
         'Symfony\\Component\\VarDumper\\VarDumper' => __DIR__ . '/..' . '/symfony/var-dumper/VarDumper.php',
         'Symfony\\Component\\VarExporter\\Exception\\ClassNotFoundException' => __DIR__ . '/..' . '/symfony/var-exporter/Exception/ClassNotFoundException.php',
         'Symfony\\Component\\VarExporter\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/symfony/var-exporter/Exception/ExceptionInterface.php',
@@ -3551,7 +3561,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -3560,7 +3570,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
             $loader->prefixLengthsPsr4 = ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f::$fallbackDirsPsr0;
             $loader->classMap = ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f::$classMap;
 
         }, null, ClassLoader::class);
