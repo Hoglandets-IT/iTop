@@ -200,7 +200,7 @@ PHP;
 		        'doc.manual_setup' => '',
 		        'doc.more_information' => '',
 		        'settings' => [],
-				'module_file_path' => '/var/www/html/iTopMFA/datamodels/2.x/itop-portal-base/module.itop-portal-base.php'
+				'module_file_path' => APPROOT . 'datamodels/2.x/itop-portal-base/module.itop-portal-base.php'
 			],
 		];
 		$this->assertEquals($aExpected, ModulesDependencyValidationService::GetInstance()->GetModuleMetainfo('itop-portal-base'));
