@@ -2,6 +2,8 @@
 
 namespace Combodo\iTop\Setup\ModuleDependency\Validation;
 
+use Combodo\iTop\Setup\ModuleDependency\ModuleDependency;
+
 class XmlModule {
 	public string $sModuleName;
 	public array $aDependencyModulesNames=[];
@@ -71,7 +73,7 @@ class XmlModule {
 	public function CompleteModuleDependencies(array $aAllModules) : void
 	{
 		foreach ($this->aDependencyModulesNames as $sDirectDependency => $oXmlModules){
-			/** @var \Combodo\iTop\Test\UnitTest\XmlModule $oDirectDepXmlModule */
+			/** @var XmlModule $oDirectDepXmlModule */
 			$oDirectDepXmlModule = $aAllModules[$sDirectDependency] ?? null;
 			if (! is_null($oDirectDepXmlModule)) {
 				foreach ($oDirectDepXmlModule->aDependencyModulesNames as $sDirectDependency2 => $oXmlModules2) {
@@ -90,7 +92,7 @@ class XmlModule {
 
 		$aRes= [];
 		foreach ($this->aDependencyModulesNames as $sDependency){
-			$oiTopCoreModuleDependency = new iTopCoreModuleDependency($sDependency);
+			$oiTopCoreModuleDependency = new ModuleDependency($sDependency);
 			$aRes = array_merge($aRes, $oiTopCoreModuleDependency->GetPotentialPrerequisiteModuleNames());
 		}
 

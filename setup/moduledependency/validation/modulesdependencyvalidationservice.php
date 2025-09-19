@@ -50,7 +50,7 @@ class ModulesDependencyValidationService {
 		if (! is_dir($sDirectory)){
 			return [];
 		}
-		
+
 		$aModules=[];
 		if ($hDir = opendir($sDirectory))
 		{
