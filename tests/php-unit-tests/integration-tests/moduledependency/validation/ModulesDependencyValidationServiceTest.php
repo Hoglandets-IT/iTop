@@ -21,8 +21,6 @@ use Combodo\iTop\Setup\ModuleDependency\Validation\XmlModule;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 class ModulesDependencyValidationServiceTest extends ItopTestCase {
-	private ModulesDependencyValidationService $oModulesDependencyValidationService;
-
 	private array $aFilesToRemove = [];
 
 	protected function setUp(): void
