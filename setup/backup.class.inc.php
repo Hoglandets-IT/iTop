@@ -617,7 +617,7 @@ EOF;
 		}
 
 		if (is_null($iPort)) {
-			$iPort = CMDBSource::MYSQL_DEFAULT_PORT;
+			return '';
 		}
 		$sPortOption = self::GetMysqliCliSingleOption('port', $iPort);
 

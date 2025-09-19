@@ -42,11 +42,6 @@ class CMDBSource
 	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
 	const ENUM_DB_VENDOR_PERCONA = 'Percona';
 
-	/**
-	 * @since 2.7.10 3.0.4 3.1.2 3.0.2 N°6889 constant creation
-	 * @internal will be removed in a future version
-	 */
-	const MYSQL_DEFAULT_PORT = 3306;
 
 	/**
 	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
@@ -220,7 +215,7 @@ class CMDBSource
 	 * @param string $sServer server variable to update
 	 * @param int|null $iPort port variable to update, will return null if nothing is specified in $sDbHost
 	 *
-	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 will return null in $iPort if port isn't present in $sDbHost. Use {@see MYSQL_DEFAULT_PORT} if needed
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°6889 will return null in $iPort if port isn't present in $sDbHost.
 	 *
 	 * @link http://php.net/manual/en/mysqli.persistconns.php documentation for the "p:" prefix (persistent connexion)
 	 */

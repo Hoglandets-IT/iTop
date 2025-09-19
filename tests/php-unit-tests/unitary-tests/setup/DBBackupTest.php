@@ -130,16 +130,16 @@ class DBBackupTest extends ItopTestCase
 			'Localhost with port' => ['localhost', $iTestPort, $iTestPort, ' --protocol=tcp'],
 
 			// we want both port and protocol for 127.0.0.1, because it is an ip address so using tcp/ip stack !
-			'127.0.0.1 no port' => ['127.0.0.1', null, $iDefaultPort, ''],
+			'127.0.0.1 no port' => ['127.0.0.1', null, null, ''],
 			'127.0.0.1 with port' => ['127.0.0.1', $iTestPort, $iTestPort, ''],
 
-			'IP no port' => ['192.168.1.15', null, $iDefaultPort, ''],
+			'IP no port' => ['192.168.1.15', null, null, ''],
 			'IP with port' => ['192.168.1.15', $iTestPort, $iTestPort, ''],
 
-			'DNS no port' => ['dbserver.mycompany.com', null, $iDefaultPort, ''],
+			'DNS no port' => ['dbserver.mycompany.com', null, null, ''],
 			'DNS with port' => ['dbserver.mycompany.com', $iTestPort, $iTestPort, ''],
 
-			'Windows name no port' => ['dbserver', null, $iDefaultPort, ''],
+			'Windows name no port' => ['dbserver', null, null, ''],
 			'Windows name with port' => ['dbserver', $iTestPort, $iTestPort, ''],
 		];
 	}
