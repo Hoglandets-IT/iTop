@@ -47,6 +47,10 @@ class ModulesDependencyValidationService {
 
 	protected static function ListModuleFiles(string $sDirectory) : array
 	{
+		if (! is_dir($sDirectory)){
+			return [];
+		}
+		
 		$aModules=[];
 		if ($hDir = opendir($sDirectory))
 		{
