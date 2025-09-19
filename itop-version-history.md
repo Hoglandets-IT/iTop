@@ -86,19 +86,22 @@ gitGraph
     commit id: "2024-01-17a" tag: "2.7.10"
     checkout support/3.0
     commit id: "2024-01-17b" tag: "3.0.4"
-    checkout support/2.7
-    commit id: "2024-09-28" tag: "2.7.11"
-    checkout support/3.1
-    commit id: "2024-09-27" tag: "3.1.2"
     checkout support/3.2
     commit id: "2024-06-25" tag: "3.2.0-beta1" type: REVERSE
     commit id: "2024-08-07" tag: "3.2.0"
+    commit id: "2024-09-13" tag: "3.2.0-2"
+    checkout support/3.1
+    commit id: "2024-09-27" tag: "3.1.2"
+    checkout support/2.7
+    commit id: "2024-09-28" tag: "2.7.11"
     checkout support/2.7
     commit id: "2025-02-25" tag: "2.7.12"
     checkout support/3.1
     commit id: "2025-02-25 " tag: "3.1.3"
     checkout support/3.2
     commit id: "2025-02-25  " tag: "3.2.1"
+    commit id: "2025-04-08" tag: "3.2.1-1"
+    commit id: "2025-08-19" tag: "3.2.2-1"
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).
