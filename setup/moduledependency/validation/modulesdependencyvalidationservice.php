@@ -383,7 +383,7 @@ TXT;
 		$aModuleDepsCount = [];
 		/** @var XmlModule $oXmlModule */
 		foreach ($this->aModules as $oXmlModule) {
-			$aModuleDepsCount[$oXmlModule->sModuleName] = count($oXmlModule->GetExpandedModuleNames());
+			$aModuleDepsCount[$oXmlModule->sModuleName] = count($oXmlModule->GetExpandedModuleNames($this->aModules));
 		}
 
 		$aOrderModules=[];
@@ -410,7 +410,7 @@ TXT;
 			foreach ($aModuleDepsCount as $sStillToProcessModuleName => $c){
 				/** @var XmlModule $oXmlStillToProcessModule */
 				$oXmlStillToProcessModule = $this->aModules[$sStillToProcessModuleName];
-				if (in_array($sModuleName, $oXmlStillToProcessModule->GetExpandedModuleNames())){
+				if (in_array($sModuleName, $oXmlStillToProcessModule->GetExpandedModuleNames($this->aModules))){
 					$aModuleDepsCount[$sStillToProcessModuleName] = $c - 1 ;
 				}
 			}

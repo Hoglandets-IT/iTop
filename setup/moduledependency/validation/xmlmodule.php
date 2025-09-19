@@ -85,15 +85,22 @@ class XmlModule {
 		}
 	}
 
-	public function GetExpandedModuleNames() : array {
-		if (count($this->aExpandedDependencyModulesNames) ==0){
+	private bool $bExpandedModuleNamesComputed=false;
+	public function GetExpandedModuleNames(array $aModules) : array {
+		if ($this->bExpandedModuleNamesComputed){
 			return $this->aExpandedDependencyModulesNames;
 		}
 
+		$this->bExpandedModuleNamesComputed = true;
+
 		$aRes= [];
-		foreach ($this->aDependencyModulesNames as $sDependency){
+		foreach ($this->aDependencyModulesNames as $sDependency => $oXmlModules){
 			$oiTopCoreModuleDependency = new ModuleDependency($sDependency);
-			$aRes = array_merge($aRes, $oiTopCoreModuleDependency->GetPotentialPrerequisiteModuleNames());
+			foreach ($oiTopCoreModuleDependency->GetPotentialPrerequisiteModuleNames() as $sName){
+				$oDependencyModule = $aModules[$sName] ?? null;
+				$aRes[]=$sName;
+				$aRes = array_merge($aRes, $oDependencyModule->GetExpandedModuleNames($aModules));
+			}
 		}
 
 		$this->aExpandedDependencyModulesNames = array_unique($aRes);
