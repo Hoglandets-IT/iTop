@@ -13,12 +13,14 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
+use DBObjectSet;
 use DBSearch;
 use Exception;
 use MetaModel;
 use OqlInterpreter;
 use QueryBuilderContext;
 use SQLObjectQueryBuilder;
+use UserRights;
 use utils;
 
 class OQLTest extends ItopDataTestCase
@@ -498,5 +500,92 @@ SELECT
 ) AS _union_alderaan_",
 			],
 		];
+	}
+
+	private function GivenVMAndLicence(int $iVmOrgId, ?int $iLicenceOrgId): int
+	{
+		$iOsFamilyId = $this->GivenObjectInDB('OSFamily', [
+			'name' => 'Test OS Family',
+		]);
+
+		$iOsVersionId = $this->GivenObjectInDB('OSVersion', [
+			'name'        => 'Test OS Version',
+			'osfamily_id' => $iOsFamilyId,
+		]);
+
+		$iOSLicenceId = $this->GivenObjectInDB('OSLicence', [
+			'name'         => 'Test OS Licence',
+			'osversion_id' => $iOsVersionId,
+			'org_id'       => $iLicenceOrgId,
+		]);
+
+		$iVClusterId = $this->GivenObjectInDB('Hypervisor', [
+			'name'   => 'Test Hypervisor',
+			'org_id' => $iVmOrgId,
+		]);
+
+		return $this->GivenObjectInDB('VirtualMachine', [
+			'name'           => 'Test VM with OS Licence',
+			'org_id'         => $iVmOrgId,
+			'virtualhost_id' => $iVClusterId,
+			'oslicence_id'   => $iOSLicenceId,
+		]);
+	}
+
+	public function testMultiColumnQueryBehaviorWithOrganizationRestrictions()
+	{
+		$sAllowedOrgId = $this->GivenObjectInDB('Organization', ['name' => 'Test organization']);
+		$sForbiddenOrgId = $this->GivenObjectInDB('Organization', ['name' => 'Test organization not allowed']);
+
+		$iVmWithOsLicenceAllowed = $this->GivenVMAndLicence($sAllowedOrgId, $sAllowedOrgId);
+		$iVmWithOsLicenceForbidden = $this->GivenVMAndLicence($sAllowedOrgId, $sForbiddenOrgId);
+		$iVmWithoutOsLicence = $this->GivenVMAndLicence($sAllowedOrgId, null);
+
+		$sLoginUserWithAllowedOrg = $this->GivenUserRestrictedToAnOrganizationInDB($sAllowedOrgId, 3);
+
+		$sQuery = <<<OQL
+			SELECT VM, OSL
+			FROM VirtualMachine AS VM
+			JOIN OSLicence AS OSL ON VM.oslicence_id = OSL.id
+		OQL;
+
+		UserRights::Login($sLoginUserWithAllowedOrg);
+
+		$oDbObjectSearch = DBObjectSearch::FromOQL($sQuery);
+
+		$oSet = new DBObjectSet($oDbObjectSearch);
+
+		$aQueryResult = $oSet->ToArray();
+		$this->assertArrayHasKey($iVmWithOsLicenceAllowed, $aQueryResult, 'The VM with OS Licence in allowed org should be found');
+		$this->assertArrayNotHasKey($iVmWithOsLicenceForbidden, $aQueryResult, 'The VM with OS Licence in forbidden org should NOT be found');
+		$this->assertArrayHasKey($iVmWithoutOsLicence, $aQueryResult, 'The VM without OS Licence should be found (cf. #727)');
+		UserRights::Logoff();
+	}
+
+	public function testMultiColumnQueryBehaviorWithoutOrganizationRestrictions()
+	{
+		$sOrgId = $this->GivenObjectInDB('Organization', ['name' => 'Test organization']);
+
+		$iVmWithOsLicence = $this->GivenVMAndLicence($sOrgId, $sOrgId);
+		$iVmWithoutOsLicence = $this->GivenVMAndLicence($sOrgId, null);
+
+		$sLoginUserWithNoRestriction = $this->GivenUserInDB('azerty', ['Configuration Manager']);
+
+		$sQuery = <<<OQL
+			SELECT VM, OSL
+			FROM VirtualMachine AS VM
+			JOIN OSLicence AS OSL ON VM.oslicence_id = OSL.id
+		OQL;
+
+		UserRights::Login($sLoginUserWithNoRestriction);
+
+		$oDbObjectSearch = DBObjectSearch::FromOQL($sQuery);
+
+		$oSet = new DBObjectSet($oDbObjectSearch);
+
+		$aQueryResult = $oSet->ToArray();
+		$this->assertArrayHasKey($iVmWithOsLicence, $aQueryResult, 'The VM with OS Licence should be found');
+		$this->assertArrayHasKey($iVmWithoutOsLicence, $aQueryResult, 'The VM without OS Licence should be found');
+		UserRights::Logoff();
 	}
 }

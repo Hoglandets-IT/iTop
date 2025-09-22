@@ -142,7 +142,9 @@ abstract class UserRightsAddOnAPI
 		$oFilter  = new DBObjectSearch($sClass);
 		$oListExpr = ListExpression::FromScalars($aAllowedOrgs);
 
-		$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+		$oNullCondition = new FunctionExpression('ISNULL', [$oExpression]);
+		$oInCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+		$oCondition = $oNullCondition->LogOr($oInCondition);
 		$oFilter->AddConditionExpression($oCondition);
 
 		if ($this->HasSharing())
