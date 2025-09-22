@@ -419,6 +419,7 @@ return array(
     'Combodo\\iTop\\Core\\Email\\EmailFactory' => $baseDir . '/sources/Core/Email/EmailFactory.php',
     'Combodo\\iTop\\Core\\Email\\Transport\\SymfonyFileTransport' => $baseDir . '/sources/Core/Email/Transport/SymfonyFileTransport.php',
     'Combodo\\iTop\\Core\\Email\\Transport\\SymfonyOAuthTransport' => $baseDir . '/sources/Core/Email/Transport/SymfonyOAuthTransport.php',
+    'Combodo\\iTop\\Core\\Email\\Transport\\SymfonyPHPMailTransport' => $baseDir . '/sources/Core/Email/Transport/SymfonyPHPMailTransport.php',
     'Combodo\\iTop\\Core\\Email\\iEMail' => $baseDir . '/sources/Core/Email/iEMail.php',
     'Combodo\\iTop\\Core\\EventListener\\AttributeBlobEventListener' => $baseDir . '/sources/Core/EventListener/AttributeBlobEventListener.php',
     'Combodo\\iTop\\Core\\Kpi\\KpiLogData' => $baseDir . '/sources/Core/Kpi/KpiLogData.php',

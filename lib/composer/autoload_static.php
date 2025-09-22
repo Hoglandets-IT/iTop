@@ -784,6 +784,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Core\\Email\\EmailFactory' => __DIR__ . '/../..' . '/sources/Core/Email/EmailFactory.php',
         'Combodo\\iTop\\Core\\Email\\Transport\\SymfonyFileTransport' => __DIR__ . '/../..' . '/sources/Core/Email/Transport/SymfonyFileTransport.php',
         'Combodo\\iTop\\Core\\Email\\Transport\\SymfonyOAuthTransport' => __DIR__ . '/../..' . '/sources/Core/Email/Transport/SymfonyOAuthTransport.php',
+        'Combodo\\iTop\\Core\\Email\\Transport\\SymfonyPHPMailTransport' => __DIR__ . '/../..' . '/sources/Core/Email/Transport/SymfonyPHPMailTransport.php',
         'Combodo\\iTop\\Core\\Email\\iEMail' => __DIR__ . '/../..' . '/sources/Core/Email/iEMail.php',
         'Combodo\\iTop\\Core\\EventListener\\AttributeBlobEventListener' => __DIR__ . '/../..' . '/sources/Core/EventListener/AttributeBlobEventListener.php',
         'Combodo\\iTop\\Core\\Kpi\\KpiLogData' => __DIR__ . '/../..' . '/sources/Core/Kpi/KpiLogData.php',

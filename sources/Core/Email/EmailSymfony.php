@@ -12,6 +12,7 @@ use AsyncSendEmail;
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Combodo\iTop\Core\Email\Transport\SymfonyFileTransport;
 use Combodo\iTop\Core\Email\Transport\SymfonyOAuthTransport;
+use Combodo\iTop\Core\Email\Transport\SymfonyPHPMailTransport;
 use DOMDocument;
 use DOMXPath;
 use EMail;
@@ -232,7 +233,7 @@ class EMailSymfony extends Email
 			case 'PHPMail':
 			default:
 				// Use sendmail transport
-				$oTransport = Transport::fromDsn('sendmail://default');
+				$oTransport = new SymfonyPHPMailTransport();
 				$oMailer = new Mailer($oTransport);
 		}
 
