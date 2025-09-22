@@ -521,7 +521,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			* $oCISet->RemoveItem(123456);
 			* $oTicket->Set(‘functionalcis_list’, $oCISet);
 			 */
-			DeprecatedCallsLog::NotifyDeprecatedPhpMethod('old pattern - please get previous value of the linked set, modify it and set it back to the host object');
+			if (!ContextTag::Check(ContextTag::TAG_SETUP)) {
+				DeprecatedCallsLog::NotifyDeprecatedPhpMethod('old pattern - please get previous value of the linked set, modify it and set it back to the host object');
+			}
 		}
 
 		if ($bUpdateFromDelta)
