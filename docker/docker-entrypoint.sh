@@ -88,4 +88,6 @@ if [ "$1" = "unitd" ] || [ "$1" = "unitd-debug" ]; then
     fi
 fi
 
+tail -n0 -F /app/log/setup.log /app/log/error.log /app/log/deadlocks.log /app/log/deprecated-calls.log /app/log/tools.log > /dev/stderr &
+
 exec "$@"

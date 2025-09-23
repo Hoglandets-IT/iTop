@@ -1,0 +1,22 @@
+services:
+  itop:
+    image: ghcr.io/hoglandets-it/itop:3.2.2
+    container_name: itop
+    ports:
+      - "8123:80"
+    environment:
+      ITOP_URL: "http://localhost:8123"
+      BEHIND_REVERSE_PROXY: "false"
+      DB_HOST: db
+      DB_NAME: itop
+      DB_USERNAME: itopuser
+      DB_PASSWORD: itoppass
+
+  db:
+    image: mysql:5.7
+    container_name: itop_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: itop
+      MYSQL_USER: itopuser
+      MYSQL_PASSWORD: itoppass

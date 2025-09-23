@@ -35,7 +35,6 @@ jobs:
             ITOP_VERSION=${{ github.event.inputs.itop_version }}
             PHP_VERSION=${{ github.event.inputs.php_version }}
 
-
       - name: Build and push Devcontainer Docker image
         uses: docker/build-push-action@v6
         with:
