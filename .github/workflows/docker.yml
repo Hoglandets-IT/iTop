@@ -1,0 +1,36 @@
+on:
+  workflow_dispatch:
+    inputs:
+      php_version:
+        default: "8.3"
+        description: The PHP version to use
+      itop_version:
+        default: "3.2.2"
+        description: The version of iTop to upload
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v5
+    
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+    
+      - name: Log in to ghcr
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./docker
+          file: ./docker/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.actor }}/itop:${{ github.event.inputs.itop_version }}
+          build-args: |
+            ITOP_VERSION=${{ github.event.inputs.itop_version }}
+            PHP_VERSION=${{ github.event.inputs.php_version }}
