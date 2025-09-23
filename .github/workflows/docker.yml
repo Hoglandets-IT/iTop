@@ -34,3 +34,15 @@ jobs:
           build-args: |
             ITOP_VERSION=${{ github.event.inputs.itop_version }}
             PHP_VERSION=${{ github.event.inputs.php_version }}
+
+
+      - name: Build and push Devcontainer Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./docker
+          file: ./docker/Dockerfile.devcontainer
+          push: true
+          tags: ghcr.io/${{ github.actor }}/itop:${{ github.event.inputs.itop_version }}-devcontainer
+          build-args: |
+            ITOP_VERSION=${{ github.event.inputs.itop_version }}
+            PHP_VERSION=${{ github.event.inputs.php_version }}

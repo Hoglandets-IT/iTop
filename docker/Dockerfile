@@ -1,11 +1,11 @@
-ARG PHP_VERSION
-FROM cycr.io/alpine/unit:${PHP_VERSION}-alpine3.22
+ARG PHP_VERSION=8.3
+FROM ghcr.io/clysec/alpine-unit:${PHP_VERSION}-alpine3.22
 
 WORKDIR /app
 
 USER root
 
-COPY --chown=unit:unit ./unit.config.json /docker-entrypoint.d/unit.json
+COPY --chown=unit:unit ./unit.json /docker-entrypoint.d/unit.json
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN apk update \
@@ -14,21 +14,18 @@ RUN apk update \
     && docker-php-ext-install ldap \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
-    && chmod +x /usr/local/bin/docker-entrypoint.sh
+    && chmod +x /usr/local/bin/docker-entrypoint.sh \
+    && rm -rf /app/*
+
+RUN rm -rf /app
 
 USER unit
-
-RUN rm -rf /app/* \
-    && composer create-project combodo/itop /app --repository="" --stability=dev --remove-vcs \
-    && composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-progress \
-    && chmod ug+w -R /app/conf /app/data \
-    && rm -rf /app/.git \
-    && mkdir -p /app/log \
-    && ln -sf /dev/stdout /app/log/itop.log \
-    && sed -i 's/GLOB_BRACE/0/' /app/setup/setuputils.class.inc.php
-
-
 WORKDIR /app
 
-
-
+ARG ITOP_VERSION=3.2.2
+RUN composer create-project combodo/itop:$ITOP_VERSION /app/web --repository="https://git-registry.hoglandet.se/api/packages/composer/composer" --remove-vcs \
+    && chmod ug+w -R /app/web/conf /app/web/data \
+    && rm -rf /app/web/.git \
+    && mkdir -p /app/web/log \
+    && ln -sf /dev/stdout /app/web/log/itop.log \
+    && sed -i 's/GLOB_BRACE/0/' /app/web/setup/setuputils.class.inc.php
