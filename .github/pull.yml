@@ -1,0 +1,6 @@
+version: "1"
+rules:
+  - base: develop # Target branch
+    upstream: combodo:develop # Source owner/branch
+    mergeMethod: hardreset
+    mergeUnstable: true
