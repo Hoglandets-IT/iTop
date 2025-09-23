@@ -1,0 +1,14 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        default: "3.2.2"
+        description: The version of iTop to upload
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload to composer repository
+        run: |
+          wget https://github.com/Combodo/iTop/archive/refs/tags/${{ inputs.version }}.zip -O combodo-itop-${{ inputs.version }}.zip
+          curl --upload-file combodo-itop-${{ inputs.version }}.zip --user "${{ secrets.HOGLANDET_PACKAGIST_USER }}:${{ secrets.HOGLANDET_PACKAGIST_KEY }}" ${{ secrets.HOGLANDET_PACKAGIST_REPO }}?version=${{ inputs.version }}
