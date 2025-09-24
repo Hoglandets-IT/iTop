@@ -9,11 +9,10 @@ COPY --chown=unit:unit ./unit.json /docker-entrypoint.d/unit.json
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN apk update \
-    && apk add --no-cache git unzip libxml2-dev openldap-dev \
+    && apk add --no-cache git unzip libxml2-dev openldap-dev graphviz \
     && docker-php-ext-install soap \
     && docker-php-ext-install ldap \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && chmod +x /usr/local/bin/docker-entrypoint.sh \
     && rm -rf /app/* \
     && composer create-project combodo/itop:$ITOP_VERSION /app --repository="https://git-registry.hoglandet.se/api/packages/composer/composer" --remove-vcs \

@@ -9,7 +9,7 @@ COPY --chown=unit:unit ./unit.json /docker-entrypoint.d/unit.json
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN apk update \
-    && apk add --no-cache git unzip libxml2-dev openldap-dev \
+    && apk add --no-cache git unzip libxml2-dev openldap-dev graphviz \
     && docker-php-ext-install soap \
     && docker-php-ext-install ldap \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
@@ -18,12 +18,8 @@ RUN apk update \
     && composer create-project combodo/itop:$ITOP_VERSION /app --repository="https://git-registry.hoglandet.se/api/packages/composer/composer" --remove-vcs \
     && chown -R unit:unit /app /docker-entrypoint.d/unit.json
 
-    #    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
-
 USER unit
 WORKDIR /app
-
-COPY --chown=unit:unit ./config.php /app/conf/production/config-itop.php
 
 ARG ITOP_VERSION=3.2.2
 RUN chmod ug+w -R /app/conf /app/data \

@@ -52,8 +52,17 @@ if [ "$1" = "unitd" ] || [ "$1" = "unitd-debug" ]; then
                 "$f"
             done
 
+            echo "$0: Looking for xml files in /docker-entrypoint.d/..."
+            for f in $(/usr/bin/find /docker-entrypoint.d/ -type f -name "*.xml"); do
+                echo "$0: Installing iTop with $f";
+
+                touch /tmp/mysqldump && chmod +x /tmp/mysqldump
+
+                PATH=$PATH:/tmp php setup/unattended-install/unattended-install.php --param-file="$f"
+            done
+
             # warn on filetypes we don't know what to do with
-            for f in $(/usr/bin/find /docker-entrypoint.d/ -type f -not -name "*.sh" -not -name "*.json" -not -name "*.pem"); do
+            for f in $(/usr/bin/find /docker-entrypoint.d/ -type f -not -name "*.sh" -not -name "*.json" -not -name "*.pem" -not -name "*.xml"); do
                 echo "$0: Ignoring $f";
             done
 

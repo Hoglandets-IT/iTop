@@ -1,16 +1,23 @@
 services:
   itop:
     image: ghcr.io/hoglandets-it/itop:3.2.2
+    build:
+      context: .
+      # dockerfile: Dockerfile.devcontainer
+      dockerfile: Dockerfile
     container_name: itop
     ports:
       - "8123:80"
     environment:
-      ITOP_URL: "http://localhost:8123"
-      BEHIND_REVERSE_PROXY: "false"
-      DB_HOST: db
-      DB_NAME: itop
-      DB_USERNAME: itopuser
-      DB_PASSWORD: itoppass
+      ITOP__APP_ROOT_URL: "http://localhost:8123/"
+      ITOP__DB_HOST: db
+      ITOP__DB_NAME: itop
+      ITOP__DB_USER: itopuser
+      ITOP__DB_PWD: itoppass
+    volumes:
+      - ./config.php:/app/conf/production/config-itop.php:rw
+      - ./docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:ro
+      - ./install.xml:/docker-entrypoint.d/install.xml:ro
 
   db:
     image: mysql:5.7
