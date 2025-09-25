@@ -8,6 +8,7 @@ USER root
 COPY --chown=unit:unit ./unit.json /docker-entrypoint.d/unit.json
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
+ARG ITOP_VERSION=3.0.4
 RUN apk update \
     && apk add --no-cache git unzip libxml2-dev openldap-dev graphviz \
     && docker-php-ext-install soap \
@@ -21,7 +22,7 @@ RUN apk update \
 USER unit
 WORKDIR /app
 
-ARG ITOP_VERSION=3.2.2
+ARG ITOP_VERSION=3.0.4
 RUN chmod ug+w -R /app/conf /app/data \
     && rm -rf /app/.git \
     && mkdir -p /app/log \
