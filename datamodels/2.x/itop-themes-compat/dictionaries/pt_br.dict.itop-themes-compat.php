@@ -10,5 +10,5 @@
  *
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'theme:light-grey' => 'Light Grey (deprecated)~~',
+	'theme:light-grey' => 'Light Grey (depreciado)',
 ));
