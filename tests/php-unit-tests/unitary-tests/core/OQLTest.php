@@ -25,7 +25,6 @@ use utils;
 
 class OQLTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = false;
 
 	/**
 	 * @doesNotPerformAssertions
