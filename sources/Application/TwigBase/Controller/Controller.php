@@ -19,25 +19,38 @@
 
 namespace Combodo\iTop\Application\TwigBase\Controller;
 
-use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
 use Dict;
-use Combodo\iTop\Application\WebPage\ErrorPage;
 use Exception;
 use ExecutionKPI;
 use IssueLog;
-use Combodo\iTop\Application\WebPage\iTopWebPage;
 use LoginWebPage;
 use MetaModel;
 use ReflectionClass;
 use SetupPage;
 use SetupUtils;
+use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormFactoryBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Twig\Error\Error;
 use Twig\Error\SyntaxError;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use utils;
-use Combodo\iTop\Application\WebPage\WebPage;
 use ZipArchive;
 
 abstract class Controller extends AbstractController
@@ -81,6 +94,15 @@ abstract class Controller extends AbstractController
 	/** @var array contains same parameters as {@see iTopWebPage::SetBreadCrumbEntry()} */
 	private $m_aBreadCrumbEntry = [];
 
+	/** @var Request Request (from Symfony http_foundation component @link https://symfony.com/doc/current/components/http_foundation.html) */
+	private Request $oRequest;
+
+	/** @var FormFactoryBuilderInterface Factory form builder (from Symfony form component @link https://symfony.com/doc/current/components/form.html) */
+	private FormFactoryBuilderInterface $oFormFactoryBuilder;
+
+	/** @var CsrfTokenManager Csrf manager (from Symfony form component @link https://symfony.com/doc/current/security/csrf.html) */
+	private CsrfTokenManager $oCsrfTokenManager;
+
 	/**
 	 * Controller constructor.
 	 *
@@ -96,6 +118,24 @@ abstract class Controller extends AbstractController
 		$this->m_aDefaultParams = [];
 		$this->m_aBlockParams = [];
 		$this->SetModuleName($sModuleName);
+
+		// Initialize Symfony components
+		$this->InitSymfonyComponents($sViewPath, $sModuleName);
+	}
+
+	/**
+	 * Init Symfony components.
+	 *
+	 * @param string $sViewPath
+	 * @param string $sModuleName
+	 *
+	 * @return void
+	 */
+	private function InitSymfonyComponents(string $sViewPath, string $sModuleName): void
+	{
+		// Twig environment
+		$aAdditionalPaths[] = APPROOT.'lib/symfony/twig-bridge/Resources/views/Form';
+		$aAdditionalPaths[] = APPROOT.'templates';
 		if (strlen($sViewPath) > 0) {
 			$this->SetViewPath($sViewPath, $aAdditionalPaths);
 			if ($sModuleName != 'core') {
@@ -107,6 +147,17 @@ abstract class Controller extends AbstractController
 				}
 			}
 		}
+
+		// PHP Request object representation from PHP request globals
+		$this->oRequest = Request::createFromGlobals();
+
+		// Initialize the CSRF token manager
+		$this->oCsrfTokenManager = new CsrfTokenManager();
+
+		// Initialize the form factory builder to handle Request objects
+		$this->oFormFactoryBuilder = Forms::createFormFactoryBuilder()
+			->addExtension(new HttpFoundationExtension())
+			->addExtension(new CsrfExtension($this->oCsrfTokenManager));
 	}
 
 	/**
@@ -135,6 +186,14 @@ abstract class Controller extends AbstractController
 	public function SetViewPath($sViewPath, $aAdditionalPaths = [])
 	{
 		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
+		/** @link https://github.com/symfony/twig-bridge/blob/6.4/CHANGELOG.md#320 */
+		$formEngine = new TwigRendererEngine(['application/forms/itop_console_layout.html.twig'], $oTwig);
+		$oTwig->addRuntimeLoader(new FactoryRuntimeLoader([
+			FormRenderer::class => function () use ($formEngine): FormRenderer {
+				return new FormRenderer($formEngine, $this->oCsrfTokenManager);
+			},
+		]));
+		$oTwig->addExtension(new FormExtension());
 		$this->m_oTwig = $oTwig;
 	}
 
@@ -657,6 +716,44 @@ abstract class Controller extends AbstractController
 	 */
 	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '') {
 		$this->m_aBreadCrumbEntry = [$sId, $sLabel, $sDescription, $sUrl, $sIcon];
+	}
+
+	public function GetRequest(): Request
+	{
+		return $this->oRequest;
+	}
+
+	/**
+	 * Get a form builder.
+	 * This form builder can be used to create a form or to add fields to an existing form.
+	 *
+	 * @param string $type
+	 * @param mixed|null $data
+	 * @param array $options
+	 *
+	 * @return FormBuilderInterface
+	 */
+	public function GetFormBuilder(string $type = FormType::class, mixed $data = null, array $options = []): FormBuilderInterface
+	{
+		return $this->oFormFactoryBuilder->getFormFactory()->createBuilder($type, $data,$options);
+	}
+
+	/**
+	 * Get a form.
+	 * This form can be directly used in a twig template.
+	 *
+	 * @param string $type
+	 * @param mixed|null $data
+	 * @param array $options
+	 *
+	 * @return FormInterface
+	 */
+	public function GetForm(string $type = FormType::class, mixed $data = null, array $options = []): FormInterface
+	{
+		if (is_null($data)) {
+			$data = $type::GetDefaultData();
+		}
+		return $this->GetFormBuilder($type, $data,$options)->getForm();
 	}
 
 	/**
