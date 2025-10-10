@@ -9,6 +9,7 @@ namespace Combodo\iTop\Core\AttributeDefinition;
 use CMDBSource;
 use CoreException;
 use Exception;
+use Str;
 
 class AttributeTable extends AttributeDBField
 {
