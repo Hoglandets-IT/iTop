@@ -14,7 +14,6 @@ use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
@@ -3447,7 +3446,15 @@ EOF
 			} catch (Exception $oException) {
 				// Catch any exception happening during the stimulus
 				$sExceptionMessage =   ($oException instanceof CoreCannotSaveObjectException) ? $oException->getHtmlMessage() : $oException->getMessage();
-			} finally {
+				\IssueLog::Error(__METHOD__, null, [$oException->getTraceAsString(), $oException->getMessage()]);
+			}
+			catch (\Throwable $e) {
+				//N°4720 : with deprecation removals: ease maintenance via additional logs
+				// Catch any Throwable happening during the stimulus
+				$sExceptionMessage = $e->getMessage();
+				\IssueLog::Error(__METHOD__, null, [$e->getTraceAsString(), $e->getMessage()]);
+			}
+			finally {
 				if ($sOwnershipToken !== null) {
 					// Release the concurrent lock, if any
 					iTopOwnershipLock::ReleaseLock($sClass, $iKey, $sOwnershipToken);
