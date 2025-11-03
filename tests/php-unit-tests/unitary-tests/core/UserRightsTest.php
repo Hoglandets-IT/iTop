@@ -33,7 +33,7 @@ use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use DeleteException;
-use URP_UserProfile;
+use MetaModel;
 use UserRights;
 use utils;
 
@@ -421,10 +421,8 @@ class UserRightsTest extends ItopDataTestCase
 		$this->AddProfileToUser($oUser, 3);
 
 		// Keep only the profile 3 (remove profile 1)
-		$oUserProfile = new URP_UserProfile();
-		$oUserProfile->Set('profileid', 3);
-		$oUserProfile->Set('reason', 'UNIT Tests');
-		$oSet = DBObjectSet::FromObject($oUserProfile);
+		$oSet = new \ormLinkSet(\UserLocal::class, 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));
+		$oSet->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => 3, 'reason' => 'UNIT Tests']));
 		$oUser->Set('profile_list', $oSet);
 
 		try {

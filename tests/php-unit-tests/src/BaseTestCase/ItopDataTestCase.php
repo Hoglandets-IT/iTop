@@ -616,10 +616,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 			$sPassword = $sLogin;
 		}
 
-		$oUserProfile = new URP_UserProfile();
-		$oUserProfile->Set('profileid', $iProfileId);
-		$oUserProfile->Set('reason', 'UNIT Tests');
-		$oSet = DBObjectSet::FromObject($oUserProfile);
+		$oSet = new \ormLinkSet(\UserLocal::class, 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));
+		$oSet->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => $iProfileId, 'reason' => 'UNIT Tests']));
+
 		/** @var \UserLocal $oUser */
 		$oUser = $this->createObject('UserLocal', array(
 			'login' => $sLogin,

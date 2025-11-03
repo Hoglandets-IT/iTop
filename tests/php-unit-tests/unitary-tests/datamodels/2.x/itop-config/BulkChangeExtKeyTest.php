@@ -69,10 +69,8 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 
 		$sUid = $this->GetUid();
 
-		$oUserProfile = new \URP_UserProfile();
-		$oUserProfile->Set('profileid', $oProfile->GetKey());
-		$oUserProfile->Set('reason', 'UNIT Tests');
-		$oSet = \DBObjectSet::FromObject($oUserProfile);
+		$oSet = new \ormLinkSet(\UserLocal::class, 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));
+		$oSet->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => $oProfile->GetKey(), 'reason' => 'UNIT Tests']));
 
 		$oPerson = $this->CreatePerson('666', $oOrg2->GetKey());
 		$oUser = $this->createObject('UserLocal', array(

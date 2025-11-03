@@ -353,7 +353,11 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 		{
 			throw new SecurityException(Dict::Format('UI:Login:Error:AccessRestricted'));
 		}
-		if (!UserRights::IsActionAllowed(get_class($this), $iActionCode, DBObjectSet::FromObject($this)))
+
+		$oSet = new \ormLinkSet(get_class($oUser), 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));
+		$oSet->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => $this->GetKey(), 'reason' => 'CheckIfProfileIsAllowed']));
+
+		if (!UserRights::IsActionAllowed(get_class($this), $iActionCode, $oSet))
 		{
 			throw new SecurityException(Dict::Format('UI:Error:ObjectCannotBeUpdated'));
 		}
@@ -495,10 +499,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => ADMIN_PROFILE_NAME), true /*all data*/);
 		if (is_object($oAdminProfile))
 		{
-			$oUserProfile = new URP_UserProfile();
-			$oUserProfile->Set('profileid', $oAdminProfile->GetKey());
-			$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-			$oSet = DBObjectSet::FromObject($oUserProfile);
+			$oSet = new \ormLinkSet(UserLocal::class, 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));
+			$oSet->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => $oAdminProfile->GetKey(), 'reason' => 'CreateAdministrator']));
 			$oUser->Set('profile_list', $oSet);
 		}
 		$iUserId = $oUser->DBInsertNoReload();
