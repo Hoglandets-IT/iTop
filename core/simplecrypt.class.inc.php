@@ -118,6 +118,7 @@ class SimpleCrypt
      */
     function Encrypt($key, $sString)
     {
+
         return $this->oEngine->Encrypt($key,$sString);
     }
 
@@ -130,13 +131,11 @@ class SimpleCrypt
      */
     function Decrypt($key, $string)
     {
-	    if (is_null($string) || strlen($string) == 0) {
-		    IssueLog::Warning("Cannot decrypt empty/null value");
-
-		    return $string;
-	    }
-
-	    return $this->oEngine->Decrypt($key, $string);
+        if (is_null($string) || strlen($string) == 0) {
+            IssueLog::Warning("Cannot decrypt empty/null value");
+            return $string;
+        }
+        return $this->oEngine->Decrypt($key,$string);
     }
 
     /**
@@ -240,6 +239,10 @@ class SimpleCryptSimpleEngine implements CryptEngine
 
     public function Decrypt($key, $encrypted_data)
     {
+        if (is_null($encrypted_data) || strlen($encrypted_data) == 0) {
+            IssueLog::Warning("Cannot decrypt empty/null value");
+            return $encrypted_data;
+        }
         $result = '';
         for($i=1; $i<=strlen($encrypted_data); $i++)
         {
@@ -336,6 +339,10 @@ class SimpleCryptSodiumEngine implements CryptEngine
 
 	public function Decrypt($key, $encrypted_data)
 	{
+        if (is_null($encrypted_data) || strlen($encrypted_data) == 0) {
+            IssueLog::Warning("Cannot decrypt empty/null value");
+            return $encrypted_data;
+        }
 		$key = hex2bin($key);
 		$encrypted_data = base64_decode($encrypted_data);
 		$nonce = mb_substr($encrypted_data, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
@@ -368,6 +375,10 @@ class SimpleCryptOpenSSLEngine implements CryptEngine
 
 	public function Decrypt($key, $encrypted_data)
 	{
+        if (is_null($encrypted_data) || strlen($encrypted_data) == 0) {
+            IssueLog::Warning("Cannot decrypt empty/null value");
+            return $encrypted_data;
+        }
 		$key = hex2bin($key);
 		$iv = mb_substr($encrypted_data, 0, openssl_cipher_iv_length("AES-256-CBC"), '8bit');
 		$encrypted_data = mb_substr($encrypted_data, openssl_cipher_iv_length("AES-256-CBC"), null, '8bit');
@@ -417,6 +428,10 @@ class SimpleCryptOpenSSLMcryptCompatibilityEngine implements CryptEngine
 
 	public function Decrypt($key, $encrypted_data)
 	{
+        if (is_null($encrypted_data) || strlen($encrypted_data) == 0) {
+            IssueLog::Warning("Cannot decrypt empty/null value");
+            return $encrypted_data;
+        }
 		$key = SimpleCryptOpenSSLMcryptCompatibilityEngine::MakeOpenSSLBlowfishKey($key);
 		$iv = mb_substr($encrypted_data, 0, openssl_cipher_iv_length("BF-CBC"), '8bit');
 		$encrypted_data = mb_substr($encrypted_data, openssl_cipher_iv_length("BF-CBC"), null, '8bit');
