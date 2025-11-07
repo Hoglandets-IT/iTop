@@ -14,8 +14,10 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
  *
  * @package UI\Base\Layout
  */
-class NavigationMenuTest extends ItopDataTestCase {
-	public function IsAllowedProvider(){
+class NavigationMenuTest extends ItopDataTestCase
+{
+	public function IsAllowedProvider()
+	{
 		return [
 			'show menu' => [ true ],
 			'hide menu' => [ false ],
@@ -26,17 +28,20 @@ class NavigationMenuTest extends ItopDataTestCase {
 	 * @dataProvider IsAllowedProvider
 	 * test used to make sure backward compatibility is ensured
 	 */
-	public function testIsAllowed($bExpectedIsAllowed=true){
+	public function testIsAllowed($bExpectedIsAllowed = true)
+	{
 		\MetaModel::GetConfig()->Set('navigation_menu.show_organization_filter', $bExpectedIsAllowed);
 		$oNavigationMenu = new NavigationMenu(
 			$this->createMock(ApplicationContext::class),
-			$this->createMock(PopoverMenu::class));
+			$this->createMock(PopoverMenu::class)
+		);
 
 		$isAllowed = $oNavigationMenu->IsSiloSelectionEnabled();
 		$this->assertEquals($bExpectedIsAllowed, $isAllowed);
 	}
 
-	public function testIsAllowed_BackwardCompatibility_NoVariableInConfFile(){
+	public function testIsAllowed_BackwardCompatibility_NoVariableInConfFile()
+	{
 		\MetaModel::GetConfig()->Set('navigation_menu.show_organization_filter', false);
 
 		$sTmpFilePath = tempnam(sys_get_temp_dir(), 'test_');
@@ -46,7 +51,7 @@ class NavigationMenuTest extends ItopDataTestCase {
 		//remove variable for the test
 		$aLines = file($sTmpFilePath);
 
-		$aRows = array();
+		$aRows = [];
 
 		foreach ($aLines as $key => $sLine) {
 			if (!preg_match('/navigation_menu.show_organization_filter/', $sLine)) {

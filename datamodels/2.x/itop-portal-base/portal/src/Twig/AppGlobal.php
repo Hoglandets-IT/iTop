@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -55,7 +56,7 @@ class AppGlobal extends AbstractExtension implements GlobalsInterface
 	 */
 	public function getGlobals(): array
 	{
-		$data = array();
+		$data = [];
 		$data['allowed_portals'] = $this->userProvider->getAllowedPortals();
 		$data['user_preferences'] = json_decode(appUserPreferences::GetAsJSON(), true);
 
