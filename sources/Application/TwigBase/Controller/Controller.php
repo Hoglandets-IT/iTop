@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -55,10 +56,10 @@ use ZipArchive;
 
 abstract class Controller extends AbstractController
 {
-	const ENUM_PAGE_TYPE_HTML = 'html';
-	const ENUM_PAGE_TYPE_BASIC_HTML = 'basic_html';
-	const ENUM_PAGE_TYPE_AJAX = 'ajax';
-	const ENUM_PAGE_TYPE_SETUP = 'setup';
+	public const ENUM_PAGE_TYPE_HTML = 'html';
+	public const ENUM_PAGE_TYPE_BASIC_HTML = 'basic_html';
+	public const ENUM_PAGE_TYPE_AJAX = 'ajax';
+	public const ENUM_PAGE_TYPE_SETUP = 'setup';
 
 	/** @var \Twig\Environment */
 	private $oTwig;
@@ -147,7 +148,7 @@ abstract class Controller extends AbstractController
 				if (!in_array($path, $aAdditionalPaths)) {
 					$aAdditionalPaths[] = $path;
 				}
-			} else if (is_array($path)) {
+			} elseif (is_array($path)) {
 				foreach ($path as $sPath) {
 					if (!in_array($sPath, $aAdditionalPaths)) {
 						$aAdditionalPaths[] = $sPath;
@@ -160,8 +161,7 @@ abstract class Controller extends AbstractController
 			if ($sModuleName != 'core') {
 				try {
 					$this->aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					IssueLog::Error($e->getMessage());
 				}
 			}
@@ -187,12 +187,9 @@ abstract class Controller extends AbstractController
 		$sModulePath = dirname(dirname($this->GetDir()));
 		$this->SetModuleName(basename($sModulePath));
 		$this->SetViewPath($sModulePath.'/view');
-		try
-		{
-			$this->aDefaultParams = array('sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php'));
-		}
-		catch (Exception $e)
-		{
+		try {
+			$this->aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
+		} catch (Exception $e) {
 			IssueLog::Error($e->getMessage());
 		}
 	}
@@ -242,8 +239,7 @@ abstract class Controller extends AbstractController
 	 */
 	public function HandleOperation()
 	{
-		try
-		{
+		try {
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->sDefaultOperation);
 
@@ -257,9 +253,7 @@ abstract class Controller extends AbstractController
 			}
 
 			$this->DisplayBadRequest();
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			http_response_code(500);
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
@@ -277,8 +271,7 @@ abstract class Controller extends AbstractController
 	 */
 	public function HandleAjaxOperation()
 	{
-		try
-		{
+		try {
 			$this->CheckAccess();
 			$this->m_sOperation = utils::ReadParam('operation', $this->sDefaultOperation);
 
@@ -292,11 +285,9 @@ abstract class Controller extends AbstractController
 			}
 
 			$this->DisplayPageNotFound();
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			http_response_code(500);
-			$aResponse = array('sError' => $e->getMessage());
+			$aResponse = ['sError' => $e->getMessage()];
 			echo json_encode($aResponse);
 		}
 	}
@@ -336,8 +327,7 @@ abstract class Controller extends AbstractController
 	 */
 	protected function CheckAccess()
 	{
-		if ($this->bCheckDemoMode && MetaModel::GetConfig()->Get('demo_mode'))
-		{
+		if ($this->bCheckDemoMode && MetaModel::GetConfig()->Get('demo_mode')) {
 			throw new Exception("Sorry, iTop is in <b>demonstration mode</b>: this feature is disabled.");
 		}
 
@@ -345,31 +335,32 @@ abstract class Controller extends AbstractController
 
 		$sConfiguredAccessTokenValue = empty($this->sAccessTokenConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->sAccessTokenConfigParamId));
 
-		if (empty($sExecModule) || empty($sConfiguredAccessTokenValue)){
+		if (empty($sExecModule) || empty($sConfiguredAccessTokenValue)) {
 			LoginWebPage::DoLogin($this->bMustBeAdmin);
 		} else {
 			//token mode without login required
 			//N°7147 - Error HTTP 500 due to access_token not URL decoded
 			$sPassedToken = utils::ReadPostedParam($this->sAccessTokenConfigParamId, null, false, 'raw_data');
-			if (is_null($sPassedToken)){
+			if (is_null($sPassedToken)) {
 				$sPassedToken = utils::ReadParam($this->sAccessTokenConfigParamId, null, false, 'raw_data');
 			}
 
 			$sDecodedPassedToken = urldecode($sPassedToken);
-			if ($sDecodedPassedToken !== $sConfiguredAccessTokenValue){
+			if ($sDecodedPassedToken !== $sConfiguredAccessTokenValue) {
 				$sMsg = "Invalid token passed under '$this->sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
-				IssueLog::Error($sMsg, null,
+				IssueLog::Error(
+					$sMsg,
+					null,
 					[
 						'sHtmlDecodedToken' => $sDecodedPassedToken,
-						'conf param ID' => $this->sAccessTokenConfigParamId
+						'conf param ID' => $this->sAccessTokenConfigParamId,
 					]
 				);
 				throw new Exception("Invalid token");
 			}
 		}
 
-		if (!empty($this->sMenuId))
-		{
+		if (!empty($this->sMenuId)) {
 			ApplicationMenu::CheckMenuIdEnabled($this->sMenuId);
 		}
 	}
@@ -459,7 +450,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @throws \Exception
 	 */
-	public function DisplayAjaxPage($aParams = array(), $sTemplateName = null)
+	public function DisplayAjaxPage($aParams = [], $sTemplateName = null)
 	{
 		$this->DisplayPage($aParams, $sTemplateName, 'ajax');
 	}
@@ -474,7 +465,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @throws \Exception
 	 */
-	public function DisplaySetupPage($aParams = array(), $sTemplateName = null)
+	public function DisplaySetupPage($aParams = [], $sTemplateName = null)
 	{
 		$this->DisplayPage($aParams, $sTemplateName, 'setup');
 	}
@@ -490,7 +481,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @throws \Exception
 	 */
-	public function DisplayPage($aParams = array(), $sTemplateName = null, $sPageType = 'html')
+	public function DisplayPage($aParams = [], $sTemplateName = null, $sPageType = 'html')
 	{
 		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
@@ -554,13 +545,12 @@ abstract class Controller extends AbstractController
 	 * @param int $iResponseCode HTTP response code
 	 * @param array $aHeaders additional HTTP headers
 	 */
-	public function DisplayJSONPage($aParams = array(), $iResponseCode = 200, $aHeaders = array())
+	public function DisplayJSONPage($aParams = [], $iResponseCode = 200, $aHeaders = [])
 	{
 		$oKpi = new ExecutionKPI();
 		http_response_code($iResponseCode);
 		header('Content-Type: application/json');
-		foreach ($aHeaders as $sHeader)
-		{
+		foreach ($aHeaders as $sHeader) {
 			header($sHeader);
 		}
 		$sJSON = json_encode($aParams);
@@ -583,7 +573,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @since 3.0.1 3.1.0 Add $sReportFileName parameter
 	 */
-	public function DownloadZippedPage($aParams = array(), $sTemplateName = null, $sReportFileName = 'itop-system-information-report')
+	public function DownloadZippedPage($aParams = [], $sTemplateName = null, $sReportFileName = 'itop-system-information-report')
 	{
 		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
@@ -598,7 +588,7 @@ abstract class Controller extends AbstractController
 		file_put_contents($sHTMLReport, ob_get_contents());
 		ob_end_clean();
 
-		$this->ZipDownloadRemoveFile(array($sHTMLReport), $sZIPReportFile, true);
+		$this->ZipDownloadRemoveFile([$sHTMLReport], $sZIPReportFile, true);
 	}
 
 	/**
@@ -613,16 +603,13 @@ abstract class Controller extends AbstractController
 		$sArchiveFileFullPath = tempnam(SetupUtils::GetTmpDir(), 'itop_download-').'.zip';
 		$oArchive = new ZipArchive();
 		$oArchive->open($sArchiveFileFullPath, ZipArchive::CREATE);
-		foreach ($aFiles as $sFile)
-		{
+		foreach ($aFiles as $sFile) {
 			$oArchive->addFile($sFile, basename($sFile));
 		}
 		$oArchive->close();
 
-		if ($bUnlinkFiles)
-		{
-			foreach ($aFiles as $sFile)
-			{
+		if ($bUnlinkFiles) {
+			foreach ($aFiles as $sFile) {
 				unlink($sFile);
 			}
 		}
@@ -630,13 +617,12 @@ abstract class Controller extends AbstractController
 		$this->SendFileContent($sArchiveFileFullPath, $sDownloadArchiveName.'.zip', true, true);
 	}
 
-	final protected function SendFileContent($sFilePath, $sDownloadArchiveName = null, $bFileTransfer = true, $bRemoveFile = false, $aHeaders = array())
+	final protected function SendFileContent($sFilePath, $sDownloadArchiveName = null, $bFileTransfer = true, $bRemoveFile = false, $aHeaders = [])
 	{
 		$sFileMimeType = utils::GetFileMimeType($sFilePath);
 		header('Content-Type: '.$sFileMimeType);
 
-		if ($bFileTransfer)
-		{
+		if ($bFileTransfer) {
 			header('Content-Disposition: attachment; filename="'.$sDownloadArchiveName.'"');
 		}
 
@@ -652,8 +638,7 @@ abstract class Controller extends AbstractController
 
 		readfile($sFilePath);
 
-		if ($bRemoveFile)
-		{
+		if ($bRemoveFile) {
 			unlink($sFilePath);
 		}
 		exit(0);
@@ -713,7 +698,7 @@ abstract class Controller extends AbstractController
 		if (is_null($sLabel)) {
 			$sLabel = Dict::S($sCode);
 		}
-		$this->aAjaxTabs[$sCode] = array('label' => $sLabel, 'url' => $sURL, 'cache' => $bCache);
+		$this->aAjaxTabs[$sCode] = ['label' => $sLabel, 'url' => $sURL, 'cache' => $bCache];
 	}
 
 	/**
@@ -729,7 +714,8 @@ abstract class Controller extends AbstractController
 	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
 	 * @see Controller::SetBreadCrumbEntry() to set breadcrumb content (by default will be title)
 	 */
-	public function DisableBreadCrumb() {
+	public function DisableBreadCrumb()
+	{
 		$this->bIsBreadCrumbEnabled = false;
 	}
 
@@ -737,7 +723,8 @@ abstract class Controller extends AbstractController
 	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
 	 * @see iTopWebPage::SetBreadCrumbEntry()
 	 */
-	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '') {
+	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '')
+	{
 		$this->aBreadCrumbEntry = [$sId, $sLabel, $sDescription, $sUrl, $sIcon];
 	}
 
@@ -758,7 +745,7 @@ abstract class Controller extends AbstractController
 	 */
 	public function GetFormBuilder(string $type = FormType::class, mixed $data = null, array $options = []): FormBuilderInterface
 	{
-		return $this->oFormFactoryBuilder->getFormFactory()->createBuilder($type, $data,$options);
+		return $this->oFormFactoryBuilder->getFormFactory()->createBuilder($type, $data, $options);
 	}
 
 	/**
@@ -776,7 +763,7 @@ abstract class Controller extends AbstractController
 		if (is_null($data)) {
 			$data = $type::GetDefaultData();
 		}
-		return $this->GetFormBuilder($type, $data,$options)->getForm();
+		return $this->GetFormBuilder($type, $data, $options)->getForm();
 	}
 
 	/**
@@ -790,26 +777,21 @@ abstract class Controller extends AbstractController
 	private function RenderTemplate(array $aParams, string $sName, string $sTemplateFileExtension, string &$sErrorMsg = null): string|false
 	{
 		$sTemplateFile = $sName.'.'.$sTemplateFileExtension.'.twig';
-		if (empty($this->oTwig))
-		{
+		if (empty($this->oTwig)) {
 			throw new Exception('Not initialized. Call Controller::InitFromModule() or Controller::SetViewPath() before any display');
 		}
-		try
-		{
+		try {
 			return $this->oTwig->render($sTemplateFile, $aParams);
-		}
-		catch (SyntaxError $e) {
+		} catch (SyntaxError $e) {
 			IssueLog::Error($e->getMessage().' - file: '.$e->getFile().'('.$e->getLine().')');
 			return $this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $e->getMessage()]);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sExceptionMessage = $e->getMessage();
 			if (str_contains($sExceptionMessage, 'at line')) {
 				IssueLog::Error($sExceptionMessage);
 				return $this->oTwig->render('application/forms/itop_error.html.twig', ['sControllerError' => $sExceptionMessage]);
 			}
-			if (!str_contains($sExceptionMessage, 'Unable to find template'))
-			{
+			if (!str_contains($sExceptionMessage, 'Unable to find template')) {
 				IssueLog::Error($sExceptionMessage);
 			}
 			if (is_null($sErrorMsg)) {
@@ -828,8 +810,7 @@ abstract class Controller extends AbstractController
 	 */
 	private function CreatePage(string $sPageType): void
 	{
-		switch ($sPageType)
-		{
+		switch ($sPageType) {
 			case self::ENUM_PAGE_TYPE_HTML:
 				$this->oPage = new iTopWebPage($this->GetOperationTitle(), false);
 				$this->oPage->add_http_headers();

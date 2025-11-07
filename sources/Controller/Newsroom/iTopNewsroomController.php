@@ -51,7 +51,6 @@ class iTopNewsroomController extends Controller
 	public const DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE = 1;
 	public const DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE = 20;
 
-
 	/**
 	 * @return iTopWebPage
 	 * @throws \ApplicationException

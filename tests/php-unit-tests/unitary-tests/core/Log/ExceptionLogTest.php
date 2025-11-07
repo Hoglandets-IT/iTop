@@ -68,7 +68,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			$sExpectedFile = __FILE__;
 			// @formatter:off
 			$oException = new $aExceptions[$i]("Iteration number $i");
-			$sExpectedLine = __LINE__-1; //Both should remain on the same line
+			$sExpectedLine = __LINE__ - 1; //Both should remain on the same line
 			// @formatter:on
 
 			$iExpectedWriteNumber = $aExpectedWriteNumber[$i];

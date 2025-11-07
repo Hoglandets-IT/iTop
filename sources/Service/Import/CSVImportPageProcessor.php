@@ -193,7 +193,7 @@ class CSVImportPageProcessor
 			$aSynchroUpdate,
 			$sChosenDateFormat, // date format
 			true, // localize
-			$iNbSkippedLines+count($aFieldsMapping) // advanced mode
+			$iNbSkippedLines + count($aFieldsMapping) // advanced mode
 		);
 
 		$oPage->AddSubBlock(InputUIBlockFactory::MakeForHidden("csvdata_truncated", $sCSVDataTruncated, "csvdata_truncated"));

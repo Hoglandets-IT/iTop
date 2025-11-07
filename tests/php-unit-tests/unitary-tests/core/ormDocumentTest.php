@@ -140,8 +140,6 @@ class ormDocumentTest extends ItopDataTestCase
 		];
 	}
 
-
-
 	public function testResizeImageToFitShouldResizeImageWhenImageIsTooBig()
 	{
 		$sImageData = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAIAAABPmPnhAAAAe0lEQVQI132OMQoCMRRE3/9Z3M126V0kB9BCvICnziXs7QIWlttqpWMRFQT1VcMbGMb4xPoQ18uWL4eTxxglSaq1Au8OwM1TSi3nnLGnzxKA4fM8N1VKQVyPZ6Br6s4Xhj7st9OwcNy61yUsGEK3Nmu+mUawcbfiN85fHsBoHdXt5HATAAAAAElFTkSuQmCC');
@@ -159,9 +157,9 @@ class ormDocumentTest extends ItopDataTestCase
 			'height' => $aRealDimensions[1],
 		];
 
-		$this->assertNotSame( $oDoc, $oResult, 'ResizeImageToFit should return a new object when there have been some modifications');
-		$this->assertIsArray( $aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the new image when there are no issues');
-		$this->assertEquals( $aDimensions, $aActualDimensions, 'The returned dimensions should match the real dimensions of the image');
+		$this->assertNotSame($oDoc, $oResult, 'ResizeImageToFit should return a new object when there have been some modifications');
+		$this->assertIsArray($aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the new image when there are no issues');
+		$this->assertEquals($aDimensions, $aActualDimensions, 'The returned dimensions should match the real dimensions of the image');
 		$this->assertLessThanOrEqual($iMawWidth, $aActualDimensions['width'], 'The new width should be less than or equal to max width');
 		$this->assertLessThanOrEqual($iMaxHeight, $aActualDimensions['height'], 'The new height should be less than or equal to max height');
 	}
@@ -177,8 +175,8 @@ class ormDocumentTest extends ItopDataTestCase
 
 		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
 
-		$this->assertSame( $oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
-		$this->assertIsArray( $aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the image when there are no issues');
+		$this->assertSame($oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
+		$this->assertIsArray($aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the image when there are no issues');
 	}
 
 	public function testResizeImageToFitShouldDoNothingWhenItCannotReadTheImage()
@@ -192,8 +190,8 @@ class ormDocumentTest extends ItopDataTestCase
 
 		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
 
-		$this->assertSame( $oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
-		$this->assertNull( $aDimensions, 'ResizeImageToFit should fill aDimension with null when there are issues');
+		$this->assertSame($oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
+		$this->assertNull($aDimensions, 'ResizeImageToFit should fill aDimension with null when there are issues');
 	}
 
 	public function testResizeImageToFitShouldDoNothingWhenItDoesNotHandleTheMimeType()
@@ -207,8 +205,8 @@ class ormDocumentTest extends ItopDataTestCase
 
 		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
 
-		$this->assertSame( $oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
-		$this->assertNull( $aDimensions, 'ResizeImageToFit should fill aDimension with null when there are issues');
+		$this->assertSame($oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
+		$this->assertNull($aDimensions, 'ResizeImageToFit should fill aDimension with null when there are issues');
 	}
 
 	public function testResizeImageToFitShouldNotResizeWhenMaximumIs0()
@@ -222,8 +220,8 @@ class ormDocumentTest extends ItopDataTestCase
 
 		$oResult = $oDoc->ResizeImageToFit($iMawWidth, $iMaxHeight, $aDimensions);
 
-		$this->assertSame( $oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
-		$this->assertIsArray( $aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the image when there are no issues');
+		$this->assertSame($oDoc, $oResult, 'ResizeImageToFit should return the same object when there have been no modifications');
+		$this->assertIsArray($aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the image when there are no issues');
 	}
 
 	public function testResizeImageToFitShouldIgnoreMaximum0Axis()
@@ -243,9 +241,9 @@ class ormDocumentTest extends ItopDataTestCase
 			'height' => $aRealDimensions[1],
 		];
 
-		$this->assertNotSame( $oDoc, $oResult, 'ResizeImageToFit should return a new object when there have been some modifications');
-		$this->assertIsArray( $aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the new image when there are no issues');
-		$this->assertEquals( $aDimensions, $aActualDimensions, 'The returned dimensions should match the real dimensions of the image');
+		$this->assertNotSame($oDoc, $oResult, 'ResizeImageToFit should return a new object when there have been some modifications');
+		$this->assertIsArray($aDimensions, 'ResizeImageToFit should fill aDimension with the dimensions of the new image when there are no issues');
+		$this->assertEquals($aDimensions, $aActualDimensions, 'The returned dimensions should match the real dimensions of the image');
 		$this->assertEquals($iMawWidth, $aActualDimensions['width'], 'The new width should be exactly the max width');
 		$this->assertGreaterThanOrEqual($iMaxHeight, $aActualDimensions['height'], 'The new height should not be 0');
 	}

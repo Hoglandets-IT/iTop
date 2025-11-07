@@ -242,8 +242,7 @@ abstract class ModuleInstallerAPI
 		}
 
 		// Simple rename
-		if ($sOrigTable === $sDstTable && !$bDstTableFieldExists)
-		{
+		if ($sOrigTable === $sDstTable && !$bDstTableFieldExists) {
 			$sFieldSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
 			$sQueryRename = /** @lang MariaDB */ "ALTER TABLE `{$sOrigTable}` CHANGE `{$sOrigColumn}` `{$sDstColumn}` {$sFieldSpec};";
 			CMDBSource::Query($sQueryRename);

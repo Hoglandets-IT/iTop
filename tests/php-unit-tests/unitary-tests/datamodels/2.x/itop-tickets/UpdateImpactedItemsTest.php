@@ -75,8 +75,6 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		]);
 	}
 
-
-
 	public function testImpactShouldBePropagatedInOneWayOnly()
 	{
 		/**
@@ -140,7 +138,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			ApplicationSolution_12 <-> ApplicationSolution_13
 		EOF);
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
-			'ApplicationSolution_0' => 'manual'
+			'ApplicationSolution_0' => 'manual',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
@@ -487,8 +485,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			list($sCI, $sPerson) = explode('<->', $sLine);
 			$sPersonId = $this->GivenCIOrPersonInDB(trim($sPerson));
 			$sCIId = $this->GivenCIOrPersonInDB(trim($sCI));
-			if (str_starts_with(trim($sPerson),'ApplicationSolution'))
-			{
+			if (str_starts_with(trim($sPerson), 'ApplicationSolution')) {
 				$this->GivenLnkApplicationSolutionToFunctionalCIInDB($sPersonId, $sCIId);
 			} else {
 				$this->GivenLnkContactToFunctionalCIInDB($sPersonId, $sCIId);
@@ -575,4 +572,3 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		$this->ResetMetaModelQueyCacheGetObject();
 	}
 }
-

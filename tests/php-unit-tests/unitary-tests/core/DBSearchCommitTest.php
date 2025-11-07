@@ -90,8 +90,9 @@ class DBSearchCommitTest extends ItopDataTestCase
 	/**
 	 * @covers N°8511 - Enhance DBObjectSet to be able to order by id
  */
-	public function testDbObjectSetFetchMethodWorksWithOptimizeColumnLoadOrderedById(){
-		$sUID=uniqid();
+	public function testDbObjectSetFetchMethodWorksWithOptimizeColumnLoadOrderedById()
+	{
+		$sUID = uniqid();
 		$oOrg1 = $this->CreateOrganization($sUID);
 		$oOrg2 = $this->CreateOrganization($sUID);
 

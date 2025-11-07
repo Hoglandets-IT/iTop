@@ -407,16 +407,16 @@ class ormDocument
 	 * @return ormDocument The resampled image
 	 *
 	 */
-	public function ResizeImageToFit(int $iMaxWidth, int $iMaxHeight, array|null &$aFinalDimensions = null) : static
+	public function ResizeImageToFit(int $iMaxWidth, int $iMaxHeight, array|null &$aFinalDimensions = null): static
 	{
 		$aFinalDimensions = null;
 		// If gd extension is not loaded, we put a warning in the log and return the image as is
 		if (extension_loaded('gd') === false) {
-			IssueLog::Warning('Image could not be resized as the "gd" extension does not seem to be loaded. Its dimensions will remain the same instead of ' . $iMaxWidth . 'x' . $iMaxHeight);
+			IssueLog::Warning('Image could not be resized as the "gd" extension does not seem to be loaded. Its dimensions will remain the same instead of '.$iMaxWidth.'x'.$iMaxHeight);
 			return $this;
 		}
 		$oGdImage = false;
-		switch($this->GetMimeType()) {
+		switch ($this->GetMimeType()) {
 			case 'image/gif':
 			case 'image/jpeg':
 			case 'image/png':
@@ -428,18 +428,18 @@ class ormDocument
 		}
 
 		if ($oGdImage === false) {
-			IssueLog::Warning('Image could not be resized as . It will remain as imagecreatefromstring could not read its data.Its dimensions will remain the same instead of ' . $iMaxWidth . 'x' . $iMaxHeight);
+			IssueLog::Warning('Image could not be resized as . It will remain as imagecreatefromstring could not read its data.Its dimensions will remain the same instead of '.$iMaxWidth.'x'.$iMaxHeight);
 			return $this;
 		}
 
 		$iWidth = imagesx($oGdImage);
 		$iHeight = imagesy($oGdImage);
 
-		if ( ($iMaxWidth === 0 || $iWidth <= $iMaxWidth) && ($iMaxHeight === 0 || $iHeight <= $iMaxHeight)) {
+		if (($iMaxWidth === 0 || $iWidth <= $iMaxWidth) && ($iMaxHeight === 0 || $iHeight <= $iMaxHeight)) {
 			// No need to resize
 			$aFinalDimensions = [
 				'width' => $iWidth,
-				'height' =>$iHeight
+				'height' => $iHeight,
 			];
 			return $this;
 		}
@@ -456,14 +456,13 @@ class ormDocument
 
 		$oNewGdImage = imagecreatetruecolor($iNewWidth, $iNewHeight);
 
-
 		$aFinalDimensions = [
 			'width' => $iNewWidth,
-			'height' =>$iNewHeight
+			'height' => $iNewHeight,
 		];
 
 		// Preserve transparency
-		if($this->GetMimeType() == "image/gif" || $this->GetMimeType() == "image/png") {
+		if ($this->GetMimeType() == "image/gif" || $this->GetMimeType() == "image/png") {
 			imagecolortransparent($oNewGdImage, imagecolorallocatealpha($oNewGdImage, 0, 0, 0, 127));
 			imagealphablending($oNewGdImage, false);
 			imagesavealpha($oNewGdImage, true);
@@ -473,16 +472,16 @@ class ormDocument
 		ob_start();
 		switch ($this->GetMimeType()) {
 			case 'image/gif':
-			imagegif($oNewGdImage); // send image to output buffer
-			break;
+				imagegif($oNewGdImage); // send image to output buffer
+				break;
 
 			case 'image/jpeg':
-			imagejpeg($oNewGdImage, null, 80); // null = send image to output buffer, 80 = good quality
-			break;
+				imagejpeg($oNewGdImage, null, 80); // null = send image to output buffer, 80 = good quality
+				break;
 
 			case 'image/png':
-			imagepng($oNewGdImage, null, 5); // null = send image to output buffer, 5 = medium compression
-			break;
+				imagepng($oNewGdImage, null, 5); // null = send image to output buffer, 5 = medium compression
+				break;
 		}
 		$oResampledImage = new ormDocument(ob_get_contents(), $this->GetMimeType(), $this->GetFileName());
 		@ob_end_clean();
@@ -501,6 +500,5 @@ class ormDocument
 	{
 		return md5($this->GetData() ?? '');
 	}
-
 
 }

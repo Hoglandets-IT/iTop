@@ -37,7 +37,6 @@ use Twig\Extension\GlobalsInterface;
  */
 class AppGlobal extends AbstractExtension implements GlobalsInterface
 {
-
 	/**
 	 * Constructor.
 	 *

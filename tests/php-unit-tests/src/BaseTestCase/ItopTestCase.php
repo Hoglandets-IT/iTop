@@ -524,8 +524,8 @@ abstract class ItopTestCase extends KernelTestCase
 		sort($aActual);
 		sort($aExpected);
 
-        $sExpected = var_export($aExpected, true);
-        $sActual = var_export($aActual, true);
+		$sExpected = var_export($aExpected, true);
+		$sActual = var_export($aActual, true);
 		if ($sExpected === $sActual) {
 			$this->assertTrue(true);
 			return;

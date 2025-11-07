@@ -71,14 +71,15 @@ class NavigationMenuTest extends ItopDataTestCase
 	/**
 	 * test GetHyperlink return empty for TemplateMenuNode and ShortcutContainerMenuNode only
 	 */
-	public function testGetHyperlink(){
+	public function testGetHyperlink()
+	{
 		ApplicationMenu::LoadAdditionalMenus();
 		foreach (ApplicationMenu::$aMenusIndex as $sMenuId => $aMenu) {
 			//echo ' **** '. get_class($aMenu['node']);
-			if(in_array(get_class($aMenu['node']), ['TemplateMenuNode','ShortcutContainerMenuNode']) ){
+			if (in_array(get_class($aMenu['node']), ['TemplateMenuNode','ShortcutContainerMenuNode'])) {
 				$this->assertEquals('', $aMenu['node']->GetHyperlink([]), 'Menu node '.$sMenuId.' is a TemplateMenuNode. It should have empty hyperlink');
 			} else {
-				$this->assertNotEquals('', $aMenu['node']->GetHyperlink([]),'Menu node '.$sMenuId.' is a '.get_class($aMenu['node']).'. It should have not empty hyperlink');
+				$this->assertNotEquals('', $aMenu['node']->GetHyperlink([]), 'Menu node '.$sMenuId.' is a '.get_class($aMenu['node']).'. It should have not empty hyperlink');
 			}
 		}
 	}

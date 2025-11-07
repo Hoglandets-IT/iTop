@@ -1424,7 +1424,7 @@ class DBObjectTest extends ItopDataTestCase
 		$iUserRequest = $this->GivenObjectInDB('UserRequest', [
 			'ref' => 'UR1', 'title' => 'UR1', 'description' => 'UR1', 'caller_id' => 3, 'org_id' => 3, 'service_id' => 1,
 			'functionalcis_list' => [
-				"functionalci_id:$iServer"
+				"functionalci_id:$iServer",
 			],
 		]);
 		$oUserRequest = MetaModel::GetObject('UserRequest', $iUserRequest);
