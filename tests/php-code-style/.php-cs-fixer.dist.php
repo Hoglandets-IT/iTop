@@ -6,7 +6,7 @@ echo $APPROOT;
 $finder = PhpCsFixer\Finder::create()
 	->in($APPROOT)
 	->exclude(['oql', 'data', 'extensions'])
-	->notPath(['/env-*/', '/cache-*/', 'lib', 'vendor', 'node_modules'])
+	->notPath(['/env-*/', '/cache-*/', 'lib', 'vendor', 'node_modules', 'config-itop', 'php-static-analysis'])
 ;
 
 $config = new PhpCsFixer\Config();
