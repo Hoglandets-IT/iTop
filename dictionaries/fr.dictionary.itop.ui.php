@@ -941,7 +941,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => '%1$s pour %2$s de l\'état %3$s vers l\'état %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'L\'objet ne peut pas être enregistré: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Erreur Fatale',
-	'UI:SystemIntrusion' => 'Accès non autorisé. Vous êtes en train de d\'effectuer une opération qui ne vous est pas permise.',
+	'UI:SystemIntrusion' => 'Accès non autorisé. Vous êtes en train d\'effectuer une opération qui ne vous est pas permise.',
 	'UI:FatalErrorMessage' => 'Erreur fatale, iTop ne peut pas continuer.',
 	'UI:Error_Details' => 'Erreur: %1$s.',
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' gestion des utilisateurs - projections des profils',
