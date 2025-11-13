@@ -503,7 +503,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ActionNotification/Attribute:language+' => 'Lingua da utilizzare per i segnaposto ($xxx$) all\'interno del messaggio (stato, importanza, priorità, ecc.)',
 ]);
 
-
 //
 // Class: lnkActionNotificationToContact
 //

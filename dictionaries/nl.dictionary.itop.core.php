@@ -501,8 +501,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ActionNotification' => 'Melding',
 	'Class:ActionNotification+' => 'Melding (abstract)',
-	'Class:ActionEmail/Attribute:language' => 'Language~~',
-	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:ActionNotification/Attribute:language' => 'Language~~',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
 ]);
 
 //
