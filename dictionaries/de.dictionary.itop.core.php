@@ -520,7 +520,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 ]);
 
-
 //
 // Class: ActionEmail
 //
