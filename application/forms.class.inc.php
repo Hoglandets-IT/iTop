@@ -319,6 +319,7 @@ EOF
 		if ($sIntroduction != null) {
 			$oPage->add('<div class="ui-dialog-header">'.$sIntroduction.'</div>');
 		}
+		$oPage->add('<div class="designer-dialog-error"></div>');
 		$this->Render($oPage);
 		$oPage->add('</div>');
 

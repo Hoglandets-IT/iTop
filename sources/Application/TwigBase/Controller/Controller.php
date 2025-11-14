@@ -754,7 +754,7 @@ abstract class Controller extends AbstractController
 	{
 		// iTop 3.1 and older compatibility, if not an URI we don't know if its relative to app root or module root
 		if (strpos($sLinkedScript, "://") === false) {
-			$this->m_oPage->add_linked_script($sLinkedScript);
+			$this->m_oPage->LinkScriptFromAppRoot(utils::LocalPath($sLinkedScript, APPROOT));
 			return;
 		}
 

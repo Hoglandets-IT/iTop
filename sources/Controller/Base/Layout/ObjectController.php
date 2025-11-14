@@ -632,6 +632,7 @@ JS;
 						$aResult['data'] = ['error_message' => $e->getHtmlMessage()];
 					} else {
 						$oPage->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
+						$oObj->Reload();
 						$oObj->DisplayModifyForm(
 							$oPage,
 							['wizard_container' => true]

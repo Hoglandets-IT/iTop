@@ -6193,12 +6193,14 @@ abstract class MetaModel
 
 		if ($bMustBeFound && empty($aRow)) {
 			$sNotFoundErrorMessage = "No result for the single row query";
-			IssueLog::Info($sNotFoundErrorMessage, LogChannels::CMDB_SOURCE, [
+			$e = new CoreException($sNotFoundErrorMessage);
+			IssueLog::Error($sNotFoundErrorMessage, LogChannels::CMDB_SOURCE, [
 				'class' => $sClass,
 				'key' => $iKey,
 				'sql_query' => $sSQL,
+				'stack' => $e->getTraceAsString(),
 				]);
-			throw new CoreException($sNotFoundErrorMessage);
+			throw $e;
 		}
 
 		return $aRow;
