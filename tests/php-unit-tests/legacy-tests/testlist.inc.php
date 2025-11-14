@@ -397,7 +397,7 @@ class TestMyBizModel extends TestBizModel
 
 	protected function DoExecute()
 	{
-//				$this->ReportError("Found two different OQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
+//				$this->ReportErrors("Found two different OQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
 //			$this->ReportSuccess('Found '.$oSet->Count()." objects of class $sClassName");
 		//$this->test_linksinfo();
 		//$this->test_list_attributes();

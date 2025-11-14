@@ -611,12 +611,12 @@ class CMDBSource
 		catch (mysqli_sql_exception $e)
 		{
 			self::LogDeadLock($e, true);
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql, $e, 'stack' => $e->getTraceAsString()]);
 		} finally {
             $oKPI->ComputeStats('Query exec (mySQL)', $sSql);
         }
 		if ($oResult === false) {
-			$aContext = array('query' => $sSql);
+			$aContext = ["\nstack" => (new Exception(''))->getTraceAsString(), "\nquery" => $sSql];
 
 			$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection(true)->errno;
 			$aMySqlHasGoneAwayErrorCodes = MySQLHasGoneAwayException::getErrorCodes();

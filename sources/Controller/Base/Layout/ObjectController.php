@@ -664,6 +664,7 @@ JS;
 						$aResult['data'] = ['error_message' => $e->getHtmlMessage()];
 					} else {
 						$oPage->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
+						$oObj->Reload();
 						$oObj->DisplayModifyForm($oPage,
 							array('wizard_container' => true)); // wizard_container: display the wizard border and the title
 					}
