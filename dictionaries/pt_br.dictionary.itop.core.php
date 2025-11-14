@@ -502,9 +502,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ActionNotification/Attribute:language' => 'Language~~',
 	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
 ]);
-	//
-	// Class: lnkActionNotificationToContact
-	//
+
+//
+// Class: lnkActionNotificationToContact
+//
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',

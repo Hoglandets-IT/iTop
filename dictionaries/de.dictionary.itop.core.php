@@ -518,7 +518,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
 	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
 	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
-]);;
+]);
+
 
 //
 // Class: ActionEmail
