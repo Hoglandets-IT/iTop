@@ -920,15 +920,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <presentation>
-        <details>
-          <items>
-            <item id="tickets_list" _delta="define">
-              <rank>90</rank>
-            </item>
-          </items>
-        </details>
-      </presentation>
     </class>
   </classes>
   <meta>
