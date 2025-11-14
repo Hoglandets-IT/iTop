@@ -40,6 +40,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditRule/Attribute:name+' => '',
 	'Class:AuditRule/Attribute:description' => 'Leírás',
 	'Class:AuditRule/Attribute:description+' => '',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Lekérdezés',
 	'Class:AuditRule/Attribute:query+' => '',
 	'Class:AuditRule/Attribute:valid_flag' => 'Érvényes objektum?',
@@ -52,6 +54,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditRule/Attribute:category_id+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Kategórianév',
 	'Class:AuditRule/Attribute:category_name+' => '',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

@@ -38,6 +38,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditRule/Attribute:name+' => 'Nombre corto para esta regla',
 	'Class:AuditRule/Attribute:description' => 'Descripción de regla de auditoría',
 	'Class:AuditRule/Attribute:description+' => 'Descripción larga para esta regla de auditoría',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Consulta a Ejecutar',
 	'Class:AuditRule/Attribute:query+' => 'Expresión OQL a ejecutar',
 	'Class:AuditRule/Attribute:valid_flag' => '¿Objetos Válidos?',
@@ -50,6 +52,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditRule/Attribute:category_id+' => 'La categoría para esta regla',
 	'Class:AuditRule/Attribute:category_name' => 'Categoría',
 	'Class:AuditRule/Attribute:category_name+' => 'Nombre de la categoría para esta regla',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

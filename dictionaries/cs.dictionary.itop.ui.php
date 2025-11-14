@@ -40,6 +40,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AuditRule/Attribute:name+' => 'Krátký název pro toto pravidlo',
 	'Class:AuditRule/Attribute:description' => 'Popis pravidla',
 	'Class:AuditRule/Attribute:description+' => 'Dlouhý popis tohoto pravidla auditu',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Dotaz ke spuštění',
 	'Class:AuditRule/Attribute:query+' => 'OQL výraz ke spuštění',
 	'Class:AuditRule/Attribute:valid_flag' => 'Interpretace',
@@ -52,7 +54,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AuditRule/Attribute:category_id+' => 'Kategorie pro toto pravidlo',
 	'Class:AuditRule/Attribute:category_name' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Název kategorie pro toto pravidlo',
-]);
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+	]);
 
 //
 // Class: AuditDomain

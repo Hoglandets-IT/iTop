@@ -40,6 +40,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:AuditRule/Attribute:name+' => 'Naam van de regel',
 	'Class:AuditRule/Attribute:description' => 'Beschrijving',
 	'Class:AuditRule/Attribute:description+' => 'Uitgebreide beschrijving van deze Auditregel',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Query om uit te voeren',
 	'Class:AuditRule/Attribute:query+' => 'De OQL-expressie voor het uitvoeren',
 	'Class:AuditRule/Attribute:valid_flag' => 'Geldige objecten?',
@@ -52,6 +54,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:AuditRule/Attribute:category_id+' => 'De categorie voor deze regel',
 	'Class:AuditRule/Attribute:category_name' => 'Categorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Naam van de categorie voor deze regel',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //

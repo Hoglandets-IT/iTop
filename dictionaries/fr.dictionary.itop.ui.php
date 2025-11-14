@@ -41,7 +41,9 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'Class:AuditRule/Attribute:name' => 'Nom',
 	'Class:AuditRule/Attribute:name+' => 'Une vérification particulière',
 	'Class:AuditRule/Attribute:description' => 'Description',
-	'Class:AuditRule/Attribute:description+' => 'Qu\'est ce qu\'on vérifie ? Comment le corriger ? Qui doit le faire ? ...',
+	'Class:AuditRule/Attribute:description+' => 'Qu\'est ce qu\'on vérifie ?',
+	'Class:AuditRule/Attribute:process' => 'Processus de correction',
+	'Class:AuditRule/Attribute:process+' => 'Comment le corriger ? Qui doit le faire ? ...',
 	'Class:AuditRule/Attribute:query' => 'Requête',
 	'Class:AuditRule/Attribute:query+' => 'Requête OQL à executer. Les classes retournées doivent être cohérentes avec celles définies dans le périmètre de la catégorie',
 	'Class:AuditRule/Attribute:valid_flag' => 'Objets retournés :',
@@ -56,6 +58,8 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'Class:AuditRule/Attribute:category_id+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Nom de la catégorie',
 	'Class:AuditRule/Attribute:category_name+' => '',
+	'Class:AuditRule/Attribute:contact_id' => 'Responsable',
+	'Class:AuditRule/Attribute:contact_id+' => 'Personne ou équipe responsable de la correction des erreurs détectées par cette règle',
 ]);
 
 //

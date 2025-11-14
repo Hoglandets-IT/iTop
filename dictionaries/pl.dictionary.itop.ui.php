@@ -40,6 +40,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:AuditRule/Attribute:name+' => 'Krótka nazwa reguły',
 	'Class:AuditRule/Attribute:description' => 'Opis reguły audytu',
 	'Class:AuditRule/Attribute:description+' => 'Długi opis reguły inspekcji',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Zapytanie do wykonania',
 	'Class:AuditRule/Attribute:query+' => 'Wyrażenie OQL do wykonania',
 	'Class:AuditRule/Attribute:valid_flag' => 'Prawidłowe obiekty?',
@@ -52,6 +54,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:AuditRule/Attribute:category_id+' => 'Kategoria dla reguły',
 	'Class:AuditRule/Attribute:category_name' => 'Kategoria',
 	'Class:AuditRule/Attribute:category_name+' => 'Nazwa kategorii dla reguły',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //
