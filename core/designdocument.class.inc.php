@@ -70,7 +70,13 @@ class DesignDocument extends DOMDocument
 		$this->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
 	}
 
-	public function loadXML(string $source, int $options = 0)
+	/**
+	 * @param string $source
+	 * @param int $options
+	 *
+	 * @return bool|\DOMDocument
+	 */
+	public function loadXML(string $source, int $options = 0): bool|DOMDocument
 	{
 		return parent::loadXML($source, $options | LIBXML_BIGLINES);
 	}
