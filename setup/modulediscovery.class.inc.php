@@ -130,9 +130,6 @@ class ModuleDiscovery
 		$aArgs['module_file'] = $sFilePath;
 
 		list($sModuleName, $sModuleVersion) = static::GetModuleName($sId);
-		if ($sModuleVersion == '') {
-			$sModuleVersion = '1.0.0';
-		}
 
 		if (array_key_exists($sModuleName, self::$m_aModuleVersionByName)) {
 			if (version_compare($sModuleVersion, self::$m_aModuleVersionByName[$sModuleName]['version'], '>')) {
@@ -229,7 +226,7 @@ class ModuleDiscovery
 		}
 		ksort($aDependencies);
 		$aOrderedModules = [];
-		$iLoopCount = 1;
+		$iLoopCount = 0;
 		while (($iLoopCount < count($aModules)) && (count($aDependencies) > 0)) {
 			foreach ($aDependencies as $sId => $aRemainingDeps) {
 				$bDependenciesSolved = true;
@@ -301,13 +298,8 @@ class ModuleDiscovery
 		$aModuleVersions = [];
 		// Separate the module names from their version for an easier comparison later
 		foreach ($aOrderedModules as $sModuleId) {
-			$aMatches = [];
-			if (preg_match('|^([^/]+)/(.*)$|', $sModuleId, $aMatches)) {
-				$aModuleVersions[$aMatches[1]] = $aMatches[2];
-			} else {
-				// No version number found, assume 1.0.0
-				$aModuleVersions[$sModuleId] = '1.0.0';
-			}
+			list($sModuleName, $sVersion) = self::GetModuleName($sModuleId);
+			$aModuleVersions[$sModuleName] = $sVersion;
 		}
 		if (preg_match_all('/([^\(\)&| ]+)/', $sDepString, $aMatches)) {
 			$aReplacements = [];
@@ -422,10 +414,14 @@ class ModuleDiscovery
 		if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches)) {
 			$sName = $aMatches[1];
 			$sVersion = $aMatches[2];
+			if ($sVersion === "") {
+				$sVersion = "1.0.0";
+			}
 		} else {
 			$sName = $sModuleId;
-			$sVersion = "";
+			$sVersion = "1.0.0";
 		}
+
 		return [$sName, $sVersion];
 	}
 
