@@ -2397,9 +2397,8 @@ class SynchroReplica extends DBObject implements iDisplay
 				}
 			}
 			// Really modified ?
-			if ($oDestObj->IsModified())
-			{
-				if(method_exists(get_class($oDestObj), "SetCurrentChange")){
+			if ($oDestObj->IsModified()) {
+				if (method_exists(get_class($oDestObj), "SetCurrentChange")) {
 					$oDestObj::SetCurrentChange($oChange);
 				}
 				$oDestObj->DBUpdate();
@@ -2452,7 +2451,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				}
 			}
 
-			if(method_exists(get_class($oDestObj), "SetCurrentChange")){
+			if (method_exists(get_class($oDestObj), "SetCurrentChange")) {
 				$oDestObj::SetCurrentChange($oChange);
 			}
 			$iNew = $oDestObj->DBInsert();

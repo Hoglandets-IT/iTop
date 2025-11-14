@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;

@@ -1268,9 +1268,8 @@ JS;
 	 */
 	protected function AddCompatibilityFiles(string $sFileType, string $sMode): void
 	{
-		$sConstantName = 'COMPATIBILITY_'.strtoupper($sMode).'_LINKED_'. ($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'STYLESHEETS' : 'SCRIPTS') .'_REL_PATH';
+		$sConstantName = 'COMPATIBILITY_'.strtoupper($sMode).'_LINKED_'.($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'STYLESHEETS' : 'SCRIPTS').'_REL_PATH';
 		$sMethodName = 'Link'.($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'Resource' : 'Script').'FromAppRoot';
-
 
 		// Add ancestors files
 		foreach (array_reverse(class_parents(static::class)) as $sParentClass) {

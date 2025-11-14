@@ -81,11 +81,11 @@ class MFException extends Exception
 	public function __construct($message = null, $code = 0, $oNode, $sXPath = null, $sExtraInfo = '', $oParentFallbackNode = null)
 	{
 		$iSourceLineNumber = ModelFactory::GetXMLLineNumber($oNode);
-		if ($iSourceLineNumber==0 && ! is_null($oParentFallbackNode)){
+		if ($iSourceLineNumber == 0 && ! is_null($oParentFallbackNode)) {
 			$iSourceLineNumber = ModelFactory::GetXMLLineNumber($oParentFallbackNode);
 		}
 
-		if (is_null($sXPath)){
+		if (is_null($sXPath)) {
 			$sXPath = DesignDocument::GetItopNodePath($oNode);
 		}
 
@@ -2139,7 +2139,7 @@ EOF;
 	 * @throws MFException
 	 * @throws \Exception
 	 */
-	public function RedefineChildNode(MFElement $oNode, $sSearchId = null, $oParentFallbackNode=null)
+	public function RedefineChildNode(MFElement $oNode, $sSearchId = null, $oParentFallbackNode = null)
 	{
 		// First: cleanup any flag behind the new node, and eventually add trace data
 		$oNode->ApplyChanges();

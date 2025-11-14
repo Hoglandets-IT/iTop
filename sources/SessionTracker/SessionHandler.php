@@ -139,15 +139,15 @@ class SessionHandler extends \SessionHandler
 			// - Data corruption (not a json / not an array / no previous creation_time key)
 			$iCreationTime = time();
 
-			$aJson=[];
+			$aJson = [];
 			if (! is_null($sPreviousFileVersionContent)) {
 				$aJson = json_decode($sPreviousFileVersionContent, true);
-				if (is_array($aJson)){
+				if (is_array($aJson)) {
 					if (array_key_exists('creation_time', $aJson)) {
 						$iCreationTime = $aJson['creation_time'];
 					}
-			    } else {
-					$aJson=[];
+				} else {
+					$aJson = [];
 				}
 			}
 
@@ -155,42 +155,42 @@ class SessionHandler extends \SessionHandler
 				'login_mode'    => Session::Get('login_mode'),
 				'user_id'       => $sUserId,
 				'creation_time' => $iCreationTime,
-				'context'       => implode('|', ContextTag::GetStack())
+				'context'       => implode('|', ContextTag::GetStack()),
 			];
 
 			$oiSessionHandlerExtension = $this->GetSessionHandlerExtension();
-			if (! is_null($oiSessionHandlerExtension)){
+			if (! is_null($oiSessionHandlerExtension)) {
 				$oiSessionHandlerExtension->CompleteSessionData($aJson, $aData);
 			}
 
-			return json_encode (
+			return json_encode(
 				$aData
 			);
-		} catch(Exception $e) {
+		} catch (Exception $e) {
 			IssueLog::Error(__METHOD__, null, [ 'error' => $e->getMessage() ]);
 		}
 
 		return null;
 	}
 
-	private function GetSessionHandlerExtension() : ?iSessionHandlerExtension
+	private function GetSessionHandlerExtension(): ?iSessionHandlerExtension
 	{
 		$sSessionHandlerExtensionClass = utils::GetConfig()->Get('sessions_tracking.session_handler_extension');
-		if (strlen($sSessionHandlerExtensionClass) !=0){
-			try{
-				if (! class_exists($sSessionHandlerExtensionClass)){
+		if (strlen($sSessionHandlerExtensionClass) != 0) {
+			try {
+				if (! class_exists($sSessionHandlerExtensionClass)) {
 					throw new \Exception("Cannot find class");
 				}
 
 				/** @var iSessionHandlerExtension $oSessionHandlerExtension */
-				$oSessionHandlerExtension = new $sSessionHandlerExtensionClass;
-				if ($oSessionHandlerExtension instanceof iSessionHandlerExtension){
+				$oSessionHandlerExtension = new $sSessionHandlerExtensionClass();
+				if ($oSessionHandlerExtension instanceof iSessionHandlerExtension) {
 					return $oSessionHandlerExtension;
 				}
 
 				throw new \Exception("Not an instance of iSessionHandlerExtension");
-			} catch(\Exception $e) {
-				IssueLog::Error(__METHOD__ . ': cannot instanciate iSessionHandlerExtension', null, ['sessions_tracking.session_handler_extension' => $sSessionHandlerExtensionClass]);
+			} catch (\Exception $e) {
+				IssueLog::Error(__METHOD__.': cannot instanciate iSessionHandlerExtension', null, ['sessions_tracking.session_handler_extension' => $sSessionHandlerExtensionClass]);
 			}
 		}
 

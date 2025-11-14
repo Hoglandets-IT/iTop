@@ -215,10 +215,8 @@ class ModuleDiscovery
 		ksort($aDependencies);
 		$aOrderedModules = [];
 		$iLoopCount = 0;
-		while(($iLoopCount < count($aModules)) && (count($aDependencies) > 0) )
-		{
-			foreach($aDependencies as $sId => $aRemainingDeps)
-			{
+		while (($iLoopCount < count($aModules)) && (count($aDependencies) > 0)) {
+			foreach ($aDependencies as $sId => $aRemainingDeps) {
 				$bDependenciesSolved = true;
 				foreach ($aRemainingDeps as $sDepId) {
 					if (!self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules)) {
@@ -278,8 +276,7 @@ class ModuleDiscovery
 		$bResult = false;
 		$aModuleVersions = [];
 		// Separate the module names from their version for an easier comparison later
-		foreach($aOrderedModules as $sModuleId)
-		{
+		foreach ($aOrderedModules as $sModuleId) {
 			list($sModuleName, $sVersion) = self::GetModuleName($sModuleId);
 			$aModuleVersions[$sModuleName] = $sVersion;
 		}
@@ -395,12 +392,10 @@ class ModuleDiscovery
 		if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches)) {
 			$sName = $aMatches[1];
 			$sVersion = $aMatches[2];
-			if ($sVersion === ""){
+			if ($sVersion === "") {
 				$sVersion = "1.0.0";
 			}
-		}
-		else
-		{
+		} else {
 			$sName = $sModuleId;
 			$sVersion = "1.0.0";
 		}
