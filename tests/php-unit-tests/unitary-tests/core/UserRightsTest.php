@@ -87,12 +87,12 @@ class UserRightsTest extends ItopDataTestCase
 		foreach ($aProfileIds as $iProfileId) {
 			$oProfiles->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => $iProfileId, 'reason' => 'UNIT Tests']));
 		}
-		$oUser = MetaModel::NewObject('UserLocal',  array(
+		$oUser = MetaModel::NewObject('UserLocal', [
 			'login' => $sLogin,
 			'password' => 'Password1!',
 			'expiration' => UserLocal::EXPIRE_NEVER,
 			'profile_list' => $oProfiles,
-		));
+		]);
 		return $oUser;
 	}
 
@@ -336,9 +336,9 @@ class UserRightsTest extends ItopDataTestCase
 	public function UserCannotElevateTheirOwnRightsProvider(): array
 	{
 		return [
-			'Configuration manager to SuperUser' => ['current'=> 3, 'added' => 117],
-			'Configuration manager to Administrator'         => ['current'=> 3, 'added' => 1],
-			'SuperUser to Administrator'         => ['current'=> 117, 'added' => 1],
+			'Configuration manager to SuperUser' => ['current' => 3, 'added' => 117],
+			'Configuration manager to Administrator'         => ['current' => 3, 'added' => 1],
+			'SuperUser to Administrator'         => ['current' => 117, 'added' => 1],
 		];
 	}
 
@@ -416,7 +416,6 @@ class UserRightsTest extends ItopDataTestCase
 		$this->expectExceptionMessage('You cannot remove your own rights to edit Users');
 		$this->RemoveProfileFromUser($oUser, $iProfileId);
 	}
-
 
 	public function UserCannotLoseUserEditionRightsProvider(): array
 	{

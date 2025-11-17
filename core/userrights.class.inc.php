@@ -427,8 +427,7 @@ abstract class User extends cmdbAbstractObject
 						$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AdminProfileCannotBeRemovedBySelf');
 					}
 				}
-			}
-			elseif ($this->IsPrivilegedUser()) {
+			} elseif ($this->IsPrivilegedUser()) {
 				// Prevent Privileged User to be saved with profiles denying the access to the backoffice
 				$oSet->Rewind();
 				while ($oUserProfile = $oSet->Fetch()) {

@@ -661,17 +661,15 @@ abstract class ItopDataTestCase extends ItopTestCase
 	{
 		/** @var \ormLinkSet $oSet */
 		$oSet = $oUser->Get('profile_list');
-		foreach ($oSet as $oUserProfile)
-		{
-			if ($oUserProfile->Get('profileid') == $iProfileId)
-			{
+		foreach ($oSet as $oUserProfile) {
+			if ($oUserProfile->Get('profileid') == $iProfileId) {
 				$oSet->RemoveItem($oUserProfile->GetKey());
 				break;
 			}
 		}
-		$oUser = $this->updateObject(User::class, $oUser->GetKey(), array(
+		$oUser = $this->updateObject(User::class, $oUser->GetKey(), [
 			'profile_list' => $oSet,
-		));
+		]);
 		return $oUser;
 	}
 
