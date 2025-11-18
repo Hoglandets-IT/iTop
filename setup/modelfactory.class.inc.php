@@ -70,14 +70,14 @@ class MFException extends Exception
 	 *
 	 * @inheritDoc
 	 *
-	 * @param $message
-	 * @param $code: error code
-	 * @param $oNode: dom node
-	 * @param $sXPath: XML xpath: if provided used in exception message. otherwise computed via $oNode
-	 * @param $sExtraInfo: additional information stored in exception
-	 * @param $oParentFallbackNode: fallback dom node (usually parent). in case $oNode XML line is wrong (set to 0), line number computed/displayed in error message comes from $oParentFallbackNode
+	 * @param string $message
+	 * @param int $code: error code
+	 * @param DesignElement $oNode: dom node
+	 * @param string|null $sXPath: XML xpath: if provided used in exception message. otherwise computed via $oNode
+	 * @param string $sExtraInfo: additional information stored in exception
+	 * @param DesignElement|null $oParentFallbackNode: fallback dom node (usually parent). in case $oNode XML line is wrong (set to 0), line number computed/displayed in error message comes from $oParentFallbackNode
 	 */
-	public function __construct($message, $code, $oNode, $sXPath = null, $sExtraInfo = '', $oParentFallbackNode=null)
+	public function __construct(string $message, int $code, DesignElement $oNode, ?string $sXPath = null, string $sExtraInfo = '', ?DesignElement $oParentFallbackNode = null)
 	{
 		$iSourceLineNumber = ModelFactory::GetXMLLineNumber($oNode);
 		if ($iSourceLineNumber==0 && ! is_null($oParentFallbackNode)){
@@ -2249,13 +2249,13 @@ EOF;
 		if (!$oExisting)
 		{
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
-			throw new MFException('could not be modified (not found)', MFException::COULD_NOT_BE_MODIFIED_NOT_FOUND, $oNode, $sPath, $oParentFallbackNode);
+			throw new MFException('could not be modified (not found)', MFException::COULD_NOT_BE_MODIFIED_NOT_FOUND, $oNode, $sPath, '', $oParentFallbackNode);
 		}
 		$sPrevFlag = $oExisting->GetAlteration();
 		$sOldId = $oExisting->getAttribute('_old_id');
 		if ($oExisting->IsRemoved()) {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
-			throw new MFException('could not be modified (marked as deleted)', MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $oNode, $sPath, $oParentFallbackNode);
+			throw new MFException('could not be modified (marked as deleted)', MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $oNode, $sPath, '', $oParentFallbackNode);
 		}
 		$oExisting->ReplaceWithSingleNode($oNode);
 		if (!$this->IsInDefinition()) {
