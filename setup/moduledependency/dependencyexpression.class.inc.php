@@ -3,6 +3,7 @@
 namespace Combodo\iTop\Setup\ModuleDependency;
 
 require_once(APPROOT.'/setup/runtimeenv.class.inc.php');
+
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use ModuleFileReaderException;
 use RunTimeEnvironment;
@@ -38,7 +39,7 @@ class DependencyExpression
 		if (preg_match_all('/([^\(\)&| ]+)/', $sDependencyExpression, $aMatches)) {
 			foreach ($aMatches as $aMatch) {
 				foreach ($aMatch as $sModuleId) {
-					if (! array_key_exists($sModuleId, $this->aParamsPerModuleId)) {
+					if (!array_key_exists($sModuleId, $this->aParamsPerModuleId)) {
 						// $sModuleId in the dependency string is made of a <name>/<optional_operator><version>
 						// where the operator is < <= = > >= (by default >=)
 						$aModuleMatches = [];
@@ -71,6 +72,7 @@ class DependencyExpression
 
 	/**
 	 * Return module names potentially required by current dependency
+	 *
 	 * @return array
 	 */
 	public function GetRemainingModuleNamesToResolve(): array
@@ -85,22 +87,25 @@ class DependencyExpression
 
 	/**
 	 * Check if dependency is resolved with current list of module versions
-	 * @param array $aModuleVersions: versions by module names dict
-	 * @param array $aSelectedModules: modules names dict
+	 *
+	 * @param array $aResolvedModuleVersions : versions by module names dict
+	 * @param array $aAllModuleNames : modules names dict
 	 *
 	 * @return void
 	 */
-	public function UpdateModuleResolutionState(array $aModuleVersions, array $aSelectedModules): void
+	public function UpdateModuleResolutionState(array $aResolvedModuleVersions, array $aAllModuleNames): void
 	{
 		if (!$this->bValid) {
 			return;
 		}
 
 		$aReplacements = [];
+
+		$bDelayEvaluation = false;
 		foreach ($this->aParamsPerModuleId as $sModuleId => list($sModuleName, $sOperator, $sExpectedVersion)) {
-			if (array_key_exists($sModuleName, $aModuleVersions)) {
-				// module is present, check the version
-				$sCurrentVersion = $aModuleVersions[$sModuleName];
+			if (array_key_exists($sModuleName, $aResolvedModuleVersions)) {
+				// module is resolved, check the version
+				$sCurrentVersion = $aResolvedModuleVersions[$sModuleName];
 				if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator)) {
 					if (array_key_exists($sModuleName, $this->aRemainingModuleNamesToResolve)) {
 						unset($this->aRemainingModuleNamesToResolve[$sModuleName]);
@@ -112,19 +117,23 @@ class DependencyExpression
 					// a function call that results in a runtime fatal error
 				}
 			} else {
-				// module is not present
-				$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
-				// a function call that results in a runtime fatal error
+				// module is not resolved yet
+
+				if (array_key_exists($sModuleName, $aAllModuleNames)) {
+					//Weird piece of code that covers below usecase:
+					//module B dependency: 'moduleA || true'
+					// if moduleA not present on disk, whole expression can be evaluated and may be resolved
+					// if moduleA present on disk, we need to sort moduleB after moduleA. expression cannot be resolved	yet
+					$bDelayEvaluation = true;
+				} else {
+					$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
+				}
+
 			}
 		}
 
-		foreach ($this->aRemainingModuleNamesToResolve as $sModuleName => $c) {
-			if (array_key_exists($sModuleName, $aSelectedModules)) {
-				// This module is actually a prerequisite
-				if (!array_key_exists($sModuleName, $aModuleVersions)) {
-					return;
-				}
-			}
+		if ($bDelayEvaluation) {
+			return;
 		}
 
 		$bResult = false;

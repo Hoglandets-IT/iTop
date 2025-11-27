@@ -33,8 +33,10 @@ class ModuleDependencySort
 
 	/**
 	 * Sort a list of modules, based on their (inter) dependencies
+	 *
 	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
 	 * @param bool $bAbortOnMissingDependency ...
+	 *
 	 * @return array
 	 * @throws \MissingDependencyException
 	 */
@@ -42,13 +44,13 @@ class ModuleDependencySort
 	{
 		// Filter modules to compute
 		$aUnresolvedDependencyModules = [];
-		$aModuleNames = [];
+		$aAllModuleNames = [];
 		foreach ($aModules as $sModuleId => $aModule) {
 			$oModule = new Module($sModuleId);
 			$sModuleName = $oModule->GetModuleName();
 			$oModule->SetDependencies($aModule['dependencies']);
 			$aUnresolvedDependencyModules[$sModuleId] = $oModule;
-			$aModuleNames[$sModuleName] = true;
+			$aAllModuleNames[$sModuleName] = true;
 		}
 
 		// Make sure order is deterministic (alphabtical order)
@@ -56,7 +58,7 @@ class ModuleDependencySort
 
 		//Attempt to resolve module dependencies
 		$aOrderedModules = [];
-		$aModuleVersions = [];
+		$aResolvedModuleVersions = [];
 		$iPreviousUnresolvedCount = -1;
 		//loop until no dependency is resolved
 		while ($iPreviousUnresolvedCount !== count($aUnresolvedDependencyModules)) {
@@ -67,10 +69,10 @@ class ModuleDependencySort
 
 			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 				/** @var Module $oModule */
-				$oModule->UpdateModuleResolutionState($aModuleVersions, $aModuleNames);
+				$oModule->UpdateModuleResolutionState($aResolvedModuleVersions, $aAllModuleNames);
 				if ($oModule->IsResolved()) {
 					$aOrderedModules[] = $sModuleId;
-					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
+					$aResolvedModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
 					unset($aUnresolvedDependencyModules[$sModuleId]);
 				}
 			}
@@ -100,6 +102,7 @@ class ModuleDependencySort
 		foreach ($aOrderedModules as $sId) {
 			$aResult[$sId] = $aModules[$sId];
 		}
+
 		return $aResult;
 	}
 
@@ -111,7 +114,7 @@ class ModuleDependencySort
 	 *      - cyclic dependencies
 	 *      - further versions of same module (name)
 	 *
-	 * @param array $aUnresolvedDependencyModules: dict of Module objects by moduleId key
+	 * @param array $aUnresolvedDependencyModules : dict of Module objects by moduleId key
 	 *
 	 * @return void
 	 */
@@ -146,7 +149,7 @@ class ModuleDependencySort
 
 			uasort($aCountDepsByModuleId, function (array $aDeps1, array $aDeps2) {
 				//compare $iInDegreeCounter
-				$res  = $aDeps1[0] - $aDeps2[0];
+				$res = $aDeps1[0] - $aDeps2[0];
 				if ($res != 0) {
 					return $res;
 				}
@@ -177,7 +180,7 @@ class ModuleDependencySort
 				//when 2 versions of the same module (name) below array has been removed already
 				if (array_key_exists($oModule->GetModuleName(), $aDependsOnModuleName)) {
 					foreach ($aDependsOnModuleName[$oModule->GetModuleName()] as $sModuleId2) {
-						if (! array_key_exists($sModuleId2, $aCountDepsByModuleId)) {
+						if (!array_key_exists($sModuleId2, $aCountDepsByModuleId)) {
 							continue;
 						}
 						$aDepCount = $aCountDepsByModuleId[$sModuleId2];

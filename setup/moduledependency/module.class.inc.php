@@ -93,18 +93,18 @@ class Module
 
 	/**
 	 * Check if module dependencies are resolved with current list of module versions
-	 * @param array $aModuleVersions : versions by module names dict
-	 * @param array $aSelectedModules : modules names dict
+	 * @param array<string, string> $aResolvedModuleVersions : versions by module names dict
+	 * @param array<string> $aAllModuleNames : resolved modules names
 	 *
 	 * @return void
 	 */
-	public function UpdateModuleResolutionState(array $aModuleVersions, array $aSelectedModules): void
+	public function UpdateModuleResolutionState(array $aResolvedModuleVersions, array $aAllModuleNames): void
 	{
 		$aNextDependencies = [];
 
 		foreach ($this->aRemainingDependenciesToResolve as $sDependencyExpression => $oModuleDependency) {
 			/** @var DependencyExpression $oModuleDependency*/
-			$oModuleDependency->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules);
+			$oModuleDependency->UpdateModuleResolutionState($aResolvedModuleVersions, $aAllModuleNames);
 			if (!$oModuleDependency->IsResolved()) {
 				$aNextDependencies[$sDependencyExpression] = $oModuleDependency;
 			}

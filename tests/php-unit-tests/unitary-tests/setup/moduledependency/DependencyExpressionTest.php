@@ -24,23 +24,23 @@ class DependencyExpressionTest extends ItopTestCase
 	{
 		return [
 			"nominal case" => [
-				"dep" => "itop-config-mgmt/2.4.0",
+				"dep"               => "itop-config-mgmt/2.4.0",
 				'expected_operator' => '>=',
 			],
-			">" => [
-				"dep" => "itop-config-mgmt/>2.4.0",
+			">"            => [
+				"dep"               => "itop-config-mgmt/>2.4.0",
 				'expected_operator' => '>',
 			],
-			">=" => [
-				"dep" => "itop-config-mgmt/>=2.4.0",
+			">="           => [
+				"dep"               => "itop-config-mgmt/>=2.4.0",
 				'expected_operator' => '>=',
 			],
-			"<" => [
-				"dep" => "itop-config-mgmt/<2.4.0",
+			"<"            => [
+				"dep"               => "itop-config-mgmt/<2.4.0",
 				'expected_operator' => '<',
 			],
-			"<=" => [
-				"dep" => "itop-config-mgmt/<=2.4.0",
+			"<="           => [
+				"dep"               => "itop-config-mgmt/<=2.4.0",
 				'expected_operator' => '<=',
 			],
 		];
@@ -59,31 +59,32 @@ class DependencyExpressionTest extends ItopTestCase
 		$this->assertEquals(['itop-config-mgmt'], $oModuleDependency->GetRemainingModuleNamesToResolve());
 	}
 
-	public static function WithOperatorOperandProvider()
+	public static function WithVariousOperatorProvider()
 	{
-		$aInternalStructure = ['itop-structure/3.0.0' => [ 'itop-structure',  ">=", '3.0.0'], 'itop-portal/<3.2.1' => [ 'itop-portal',  "<", '3.2.1']];
+		$aInternalStructure = ['itop-structure/3.0.0' => ['itop-structure', ">=", '3.0.0'], 'itop-portal/<3.2.1' => ['itop-portal', "<", '3.2.1']];
+
 		return [
-			'&&' => [
-				'sDepId' => 'itop-structure/3.0.0 && itop-portal/<3.2.1',
+			'&&'                  => [
+				'sDepId'             => 'itop-structure/3.0.0 && itop-portal/<3.2.1',
 				'expected_structure' => $aInternalStructure,
 			],
 			'&& with parenthesis' => [
-				'sDepId' => '(itop-structure/3.0.0) && (itop-portal/<3.2.1)',
+				'sDepId'             => '(itop-structure/3.0.0) && (itop-portal/<3.2.1)',
 				'expected_structure' => $aInternalStructure,
 			],
-			'||' => [
-				'sDepId' => 'itop-structure/3.0.0 || itop-portal/<3.2.1',
+			'||'                  => [
+				'sDepId'             => 'itop-structure/3.0.0 || itop-portal/<3.2.1',
 				'expected_structure' => $aInternalStructure,
 			],
 			'|| with parenthesis' => [
-				'sDepId' => '(itop-structure/3.0.0) || (itop-portal/<3.2.1)',
+				'sDepId'             => '(itop-structure/3.0.0) || (itop-portal/<3.2.1)',
 				'expected_structure' => $aInternalStructure,
 			],
 		];
 	}
 
 	/**
-	 * @dataProvider WithOperatorOperandProvider
+	 * @dataProvider WithVariousOperatorProvider
 	 */
 	public function testModuleDependencyInit_WithOperand($sDepId, $sExpected)
 	{
@@ -97,30 +98,30 @@ class DependencyExpressionTest extends ItopTestCase
 	public static function SimpleDependencyExpressionIsResolvedProvider()
 	{
 		return [
-			'unresolved with major version' => [
-				'expr' => 'itop-config-mgmt/2.4.0',
-				'module_versions' => ['itop-config-mgmt' => '1.2.3'],
-				'expected_is_resolved' => false,
+			'unresolved with major version'    => [
+				'expr'                     => 'itop-config-mgmt/2.4.0',
+				'resolved_module_versions' => ['itop-config-mgmt' => '1.2.3'],
+				'expected_is_resolved'     => false,
 			],
-			'unresolved with minor version' => [
-				'expr' => 'itop-config-mgmt/2.4.1',
-				'module_versions' => ['itop-config-mgmt' => '2.4.0-1'],
-				'expected_is_resolved' => false,
+			'unresolved with minor version'    => [
+				'expr'                     => 'itop-config-mgmt/2.4.1',
+				'resolved_module_versions' => ['itop-config-mgmt' => '2.4.0-1'],
+				'expected_is_resolved'     => false,
 			],
 			'resolution OK with major version' => [
-				'expr' => 'itop-config-mgmt/2.4.0',
-				'module_versions' => ['itop-config-mgmt' => '2.4.2'],
-				'expected_is_resolved' => true,
+				'expr'                     => 'itop-config-mgmt/2.4.0',
+				'resolved_module_versions' => ['itop-config-mgmt' => '2.4.2'],
+				'expected_is_resolved'     => true,
 			],
 			'resolution OK with minor version' => [
-				'expr' => 'itop-config-mgmt/2.4.0',
-				'module_versions' => ['itop-config-mgmt' => '2.4.0-1'],
-				'expected_is_resolved' => true,
+				'expr'                     => 'itop-config-mgmt/2.4.0',
+				'resolved_module_versions' => ['itop-config-mgmt' => '2.4.0-1'],
+				'expected_is_resolved'     => true,
 			],
-			'unproper use of api' => [
-				'expr' => 'itop-config-mgmt/2.4.0',
-				'module_versions' => [],
-				'expected_is_resolved' => false,
+			'unproper use of api'              => [
+				'expr'                     => 'itop-config-mgmt/2.4.0',
+				'resolved_module_versions' => [],
+				'expected_is_resolved'     => false,
 			],
 		];
 	}
@@ -140,37 +141,64 @@ class DependencyExpressionTest extends ItopTestCase
 
 	public static function ComplexDependencyExpressionIsResolvedProvider()
 	{
+		$aAllModules = ['itop-structure' => true, 'itop-portal' => true];
+
 		return [
-			'and + unresolved due to missing itop-portal' => [
-				'expr' => 'itop-structure/3.0.0 && itop-portal/3.2.1',
-				'module_versions' => ['itop-structure' => '3.0.0'],
-				'expected_is_resolved' => false,
-				'remaining_module_names' => ['itop-portal'],
+			'and + unresolved due to missing itop-portal'                                         => [
+				'expr'                     => 'itop-structure/3.0.0 && itop-portal/3.2.1',
+				'resolved_module_versions' => ['itop-structure' => '3.0.0'],
+				'all_modules'              => $aAllModules,
+				'expected_is_resolved'     => false,
+				'remaining_module_names'   => ['itop-portal'],
 			],
-			'and + unresolved due to unsifficient itop-portal version' => [
-				'expr' => 'itop-structure/3.0.0 && itop-portal/3.2.1',
-				'module_versions' => ['itop-structure' => '3.0.0', 'itop-portal' => '1.0.0'],
-				'expected_is_resolved' => false,
-				'remaining_module_names' => ['itop-portal'],
+			'and + unresolved due to unsifficient itop-portal version'                            => [
+				'expr'                     => 'itop-structure/3.0.0 && itop-portal/3.2.1',
+				'resolved_module_versions' => ['itop-structure' => '3.0.0', 'itop-portal' => '1.0.0'],
+				'all_modules'              => $aAllModules,
+				'expected_is_resolved'     => false,
+				'remaining_module_names'   => ['itop-portal'],
 			],
-			'and + resolved' => [
-				'expr' => 'itop-structure/3.0.0 && itop-portal/3.2.1',
-				'module_versions' => ['itop-structure' => '3.0.0', 'itop-portal' => '3.3.3'],
-				'expected_is_resolved' => true,
-				'remaining_module_names' => [],
+			'and + resolved'                                                                      => [
+				'expr'                     => 'itop-structure/3.0.0 && itop-portal/3.2.1',
+				'resolved_module_versions' => ['itop-structure' => '3.0.0', 'itop-portal' => '3.3.3'],
+				'all_modules'              => $aAllModules,
+				'expected_is_resolved'     => true,
+				'remaining_module_names'   => [],
 			],
-			'or + resolved' => [
-				'expr' => 'itop-structure/3.0.0 || itop-portal/3.2.1',
-				'module_versions' => ['itop-structure' => '3.0.0'],
-				'expected_is_resolved' => false,
-				'remaining_module_names' => ['itop-portal'],
+			'or||true (step1) + dependency expression evaluation is delayed for sorting purpose'  => [
+				'expr'                     => 'itop-structure/3.0.0||true',
+				'resolved_module_versions' => [],
+				'all_modules'              => $aAllModules,
+				'expected_is_resolved'     => false,
+				'remaining_module_names'   => ['itop-structure'],
 			],
-			'or + resolved with less prerequisites' => [
-				'expr' => 'itop-structure/3.0.0 || itop-portal/3.2.1',
-				'module_versions' => ['itop-structure' => '3.0.0'],
-				'expected_is_resolved' => true,
-				'remaining_module_names' => ['itop-portal'],
-				'prerequisites' => ['itop-structure' => true],
+			'or||true (step2) + expression is evaluated because itop-structure has been resolved' => [
+				'expr'                     => 'itop-structure/3.0.0||true',
+				'resolved_module_versions' => ['itop-structure' => '3.0.0'],
+				'all_modules'              => $aAllModules,
+				'expected_is_resolved'     => true,
+				'remaining_module_names'   => [],
+			],
+			'or||true + resolved DIRECTLY as itop-structure is not on disk (all_modules)'         => [
+				'expr'                     => 'itop-structure/3.0.0||true',
+				'resolved_module_versions' => [],
+				'all_modules'              => [],
+				'expected_is_resolved'     => true,
+				'remaining_module_names'   => ['itop-structure'],
+			],
+			'or + unresolved because dependency trick used to sort as well'                       => [
+				'expr'                     => 'itop-structure/3.0.0 || itop-portal/3.2.1',
+				'resolved_module_versions' => ['itop-structure' => '3.0.0'],
+				'all_modules'              => $aAllModules,
+				'expected_is_resolved'     => false,
+				'remaining_module_names'   => ['itop-portal'],
+			],
+			'1 can be used as a boolean'                                                          => [
+				'expr'                     => 'true||1',
+				'resolved_module_versions' => [],
+				'all_modules'              => [],
+				'expected_is_resolved'     => true,
+				'remaining_module_names'   => [],
 			],
 		];
 	}
@@ -178,11 +206,11 @@ class DependencyExpressionTest extends ItopTestCase
 	/**
 	 * @dataProvider ComplexDependencyExpressionIsResolvedProvider
 	 */
-	public function testComplexDependencyExpressionIsResolved($sExpression, $aModuleVersions, $bExpectedResolved, $aRemainingModuleNames, $aPrerequisites = ['itop-structure' => true, 'itop-portal' => true])
+	public function testComplexDependencyExpressionIsResolved($sExpression, $aModuleVersions, $aAllModules, $bExpectedResolved, $aRemainingModuleNames)
 	{
 		$oModuleDependency = new DependencyExpression($sExpression);
 
-		$oModuleDependency->UpdateModuleResolutionState($aModuleVersions, $aPrerequisites);
+		$oModuleDependency->UpdateModuleResolutionState($aModuleVersions, $aAllModules);
 		$this->assertEquals($aRemainingModuleNames, $oModuleDependency->GetRemainingModuleNamesToResolve());
 		$this->assertEquals($bExpectedResolved, $oModuleDependency->IsResolved());
 	}
