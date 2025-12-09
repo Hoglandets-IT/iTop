@@ -214,7 +214,7 @@ class Config
 		'allowed_login_types'                       => [
 			'type'                => 'string',
 			'description'         => 'List of login types allowed (separated by | ): form, external, basic, token',
-			'default'             => '',
+			'default'             => DEFAULT_ALLOWED_LOGIN_TYPES,
 			'value'               => '',
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
