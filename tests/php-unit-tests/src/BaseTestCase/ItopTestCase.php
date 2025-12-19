@@ -657,20 +657,14 @@ abstract class ItopTestCase extends KernelTestCase
 
 		curl_setopt($ch, CURLOPT_URL, $sUrl);
 		curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
-		if (!is_array($aPostFields)) {
-			var_dump($aPostFields);
-		}
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		// Force disable of certificate check as most of dev / test env have a self-signed certificate
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-
-		var_dump($aCurlOptions);
 		curl_setopt_array($ch, $aCurlOptions);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
 
 		$sOutput = curl_exec($ch);
-		//\IssueLog::Info("$sUrl error code:", null, ['error' => curl_error($ch)]);
 
 		$info = curl_getinfo($ch);
 		$this->aLastCurlGetInfo = $info;
