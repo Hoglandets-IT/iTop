@@ -8,14 +8,12 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
-use DateTime;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
 use ReflectionMethod;
 use SetupUtils;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
-
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
@@ -649,7 +647,7 @@ abstract class ItopTestCase extends KernelTestCase
 	* @param $bXDebugEnabled
 	* @return string
 	 */
-	protected function CallItopUrl($sUrl, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
+	protected function CallUrl($sUrl, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
 	{
 		$ch = curl_init();
 		if ($bXDebugEnabled) {
@@ -687,6 +685,7 @@ abstract class ItopTestCase extends KernelTestCase
 	protected function CallItopUri(string $sUri, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
 	{
 		$sUrl = \MetaModel::GetConfig()->Get('app_root_url')."/$sUri";
-		return $this->CallItopUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
+
+		return $this->CallUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
 	}
 }
