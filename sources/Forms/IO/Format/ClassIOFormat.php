@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Forms\IO\Format;
 
-use Combodo\iTop\Service\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 
 /**
@@ -23,7 +23,7 @@ class ClassIOFormat extends AbstractIOFormat
 	{
 		// Check class validity
 		/** @var \ModelReflection $oModelReflection */
-		$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
+		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
 		if (!$oModelReflection->IsValidClass($sClassName)) {
 			throw new FormBlockIOException("Class ".json_encode($sClassName)." is not valid");
 		}

@@ -12,7 +12,7 @@ use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\Base\TextFormBlock;
 use Combodo\iTop\PropertyTree\AbstractProperty;
 use Combodo\iTop\PropertyTree\ValueType\AbstractValueType;
-use Combodo\iTop\Service\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use utils;
 
 class ValueTypeClass extends AbstractValueType
@@ -30,7 +30,7 @@ class ValueTypeClass extends AbstractValueType
 
 		$sCategories = $oDomNode->GetChildText('categories-csv');
 		/** @var \ModelReflection $oModelReflection */
-		$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
+		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
 
 		$sChoices = "[\n";
 		$aClasses = $oModelReflection->GetClasses($sCategories, true);

@@ -10,7 +10,7 @@ namespace Combodo\iTop\Forms\Block\DataModel\Dashlet;
 use Combodo\iTop\Forms\Block\DataModel\AttributeChoiceFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Register\OptionsRegister;
-use Combodo\iTop\Service\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use Dict;
 use Exception;
 
@@ -32,7 +32,7 @@ class ClassAttributeGroupByFormBlock extends AttributeChoiceFormBlock
 	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
 	{
 		parent::UpdateOptions($oOptionsRegister);
-		$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
+		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
 
 		$aGroupBy = [];
 		try {

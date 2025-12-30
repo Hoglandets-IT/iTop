@@ -7,19 +7,21 @@
 
 namespace Combodo\iTop\Service\DependencyInjection;
 
-class DIService
+use Psr\Container\ContainerInterface;
+
+class ServiceLocator implements ContainerInterface
 {
-	private static DIService $oInstance;
+	private static ServiceLocator $oInstance;
 	private array $aServices = [];
 
 	protected function __construct()
 	{
 	}
 
-	final public static function GetInstance(): DIService
+	final public static function GetInstance(): ServiceLocator
 	{
 		if (!isset(static::$oInstance)) {
-			static::$oInstance = new DIService();
+			static::$oInstance = new ServiceLocator();
 		}
 
 		return static::$oInstance;
@@ -27,8 +29,6 @@ class DIService
 
 	/**
 	 * Register a service by name
-	 *
-	 * @api
 	 *
 	 * @param string $sName Name of the service to register
 	 * @param mixed $oService Service to register
@@ -43,24 +43,22 @@ class DIService
 	/**
 	 * Get a previously registered service
 	 *
-	 * @api
-	 *
-	 * @param string $sName name of the service to get
-	 * @param bool $bMustBeFound if true a DIException is thrown when the service is not found
+	 * @param string $id Service id to search for
 	 *
 	 * @return mixed The service or null when the service is not found and $bMustBeFound is false
 	 * @throws \Combodo\iTop\Service\DependencyInjection\DIException
 	 */
-	final public function GetService(string $sName, bool $bMustBeFound = true): mixed
+	public function get(string $id): mixed
 	{
-		if (!isset($this->aServices[$sName])) {
-			if ($bMustBeFound) {
-				throw new DIException("Service ".json_encode($sName)." not found");
-			}
-
-			return null;
+		if (!isset($this->aServices[$id])) {
+			throw new DIException("Service ".json_encode($id)." not found");
 		}
 
-		return $this->aServices[$sName];
+		return $this->aServices[$id];
+	}
+
+	public function has(string $id): bool
+	{
+		return isset($this->aServices[$id]);
 	}
 }

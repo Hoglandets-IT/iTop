@@ -999,14 +999,12 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
           </node>
           <node id="values">
             <label>UI:DashletHeaderDynamic:Prop-Values</label>
-            <value-type xsi:type="Combodo-ValueType-CollectionOfValues">
+            <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
               <data-transform>
                 <xml-format xsi:type="xml-format-csv"/>
               </data-transform>
-              <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
                 <class>{{query.selected_class}}</class>
-                <attribute>{{group_by.value}}</attribute>
-              </value-type>
+                <attribute>{{group_by.attribute}}</attribute>
             </value-type>
           </node>
         </nodes>

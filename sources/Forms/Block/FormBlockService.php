@@ -10,7 +10,7 @@ namespace Combodo\iTop\Forms\Block;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\Compiler\FormsCompiler;
 use Combodo\iTop\Service\Cache\DataModelDependantCache;
-use Combodo\iTop\Service\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use ModelReflection;
 use ModelReflectionRuntime;
 use utils;
@@ -23,7 +23,7 @@ class FormBlockService
 
 	protected function __construct(ModelReflection $oModelReflection = null)
 	{
-		DIService::GetInstance()->RegisterService('ModelReflection', $oModelReflection ?? new ModelReflectionRuntime());
+		ServiceLocator::GetInstance()->RegisterService('ModelReflection', $oModelReflection ?? new ModelReflectionRuntime());
 		$this->oCacheService = DataModelDependantCache::GetInstance();
 	}
 

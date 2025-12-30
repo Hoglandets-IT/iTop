@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Forms\IO\Format;
 
-use Combodo\iTop\Service\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 
 /**

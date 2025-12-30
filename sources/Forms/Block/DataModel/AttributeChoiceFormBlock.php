@@ -16,7 +16,7 @@ use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\Register\RegisterException;
 use Combodo\iTop\Service\DependencyInjection\DIException;
-use Combodo\iTop\Service\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use utils;
 
 /**
@@ -93,7 +93,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	 */
 	public static function ListAttributeCodesByCategory(string $sClass, string $sCategory = ''): array
 	{
-		$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
+		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
 		$aAttributeCodes = [];
 
 		switch ($sCategory) {
