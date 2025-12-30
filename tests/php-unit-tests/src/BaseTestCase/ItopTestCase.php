@@ -10,9 +10,11 @@ namespace Combodo\iTop\Test\UnitTest;
 use CMDBSource;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
+use ParseError;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use ReflectionMethod;
 use SetupUtils;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\ErrorHandler\Error\FatalError;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
@@ -581,6 +583,23 @@ abstract class ItopTestCase extends KernelTestCase
 		$oNow = new \DateTime();
 		$iTimeInterval = $oNow->diff($oActualDateTime)->s;
 		self::assertLessThan(2, $iTimeInterval, $sMessage);
+	}
+
+	/**
+	 * @since 3.3.0
+	 */
+	protected static function AssertPHPCodeIsValid(string $sPHPCode, $sMessage = ''): void
+	{
+		try {
+			eval($sPHPCode);
+		} catch (ParseError $e) {
+			$aLines = explode("\n", $sPHPCode);
+			foreach ($aLines as $iLine => $sLine) {
+				echo sprintf("%02d: %s\n", $iLine + 1, $sLine);
+			}
+			echo 'Parse Error: '.$e->getMessage().' at line: '.$e->getLine()."\n";
+			self::fail($sMessage);
+		}
 	}
 
 	/**

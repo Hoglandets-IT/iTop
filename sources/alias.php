@@ -6,6 +6,7 @@
  * All classes in sources directory needs to be PSR-4 compatible, this alias covers the namespaces corrections.
  * PSR-4 Exception with directory sources/Application/WebPage configured in \symfony\config\services.yaml
  */
+
 class_alias(\Combodo\iTop\Application\UI\Hook\iKeyboardShortcut::class, 'iKeyboardShortcut');
 class_alias(\Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableConfig\DataTableConfig::class, 'DataTableConfig');
 class_alias(\Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory::class, 'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\SelectUIBlockFactory');
@@ -95,3 +96,22 @@ class_alias(\Combodo\iTop\Core\AttributeDefinition\AttributeText::class, 'Attrib
 class_alias(\Combodo\iTop\Core\AttributeDefinition\AttributeURL::class, 'AttributeURL');
 class_alias(\Combodo\iTop\Core\AttributeDefinition\iAttributeNoGroupBy::class, 'iAttributeNoGroupBy');
 class_alias(\Combodo\iTop\Core\AttributeDefinition\MissingColumnException::class, 'MissingColumnException');
+
+class_alias(\Combodo\iTop\PropertyTree\PropertyTree::class, 'Combodo-PropertyTree');
+class_alias(\Combodo\iTop\PropertyTree\Property::class, 'Combodo-Property');
+
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeAggregateFunction::class, 'Combodo-ValueType-AggregateFunction');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeBoolean::class, 'Combodo-ValueType-Boolean');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeChoice::class, 'Combodo-ValueType-Choice');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeChoiceFromInput::class, 'Combodo-ValueType-ChoiceFromInput');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClass::class, 'Combodo-ValueType-Class');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttribute::class, 'Combodo-ValueType-ClassAttribute');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeGroupBy::class, 'Combodo-ValueType-ClassAttributeGroupBy');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeValue::class, 'Combodo-ValueType-ClassAttributeValue');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeCollection::class, 'Combodo-ValueType-Collection');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeIcon::class, 'Combodo-ValueType-Icon');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeInteger::class, 'Combodo-ValueType-Integer');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeLabel::class, 'Combodo-ValueType-Label');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeOQL::class, 'Combodo-ValueType-OQL');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeString::class, 'Combodo-ValueType-String');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeText::class, 'Combodo-ValueType-Text');
