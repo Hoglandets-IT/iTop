@@ -29,7 +29,7 @@ class FormBinding
 		// Check IOFormat validity
 		$sSourceDataType = $oSourceIO->GetDataType();
 		$sDestinationDataType = $oDestinationIO->GetDataType();
-		if ($sSourceDataType !== $sDestinationDataType) {
+		if (!$oDestinationIO->IsCompatibleWith($oSourceIO)) {
 			throw new FormBlockIOException('binding '.json_encode($sSourceDataType).' to '.json_encode($sDestinationDataType).' is not supported');
 		}
 		$this->oDestinationIO = $oDestinationIO;

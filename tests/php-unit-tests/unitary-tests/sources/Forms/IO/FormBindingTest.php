@@ -182,7 +182,6 @@ class FormBindingTest extends AbstractFormsTest
 			'Attribute -> Boolean' => [AttributeIOFormat::class, BooleanIOFormat::class],
 			'Attribute -> Class' => [AttributeIOFormat::class, ClassIOFormat::class],
 			'Attribute -> Number' => [AttributeIOFormat::class, NumberIOFormat::class],
-			'Attribute -> String' => [AttributeIOFormat::class, StringIOFormat::class],
 
 			'Boolean => Attribute' => [BooleanIOFormat::class, AttributeIOFormat::class],
 			'Boolean => Class' => [BooleanIOFormat::class, ClassIOFormat::class],
@@ -192,7 +191,6 @@ class FormBindingTest extends AbstractFormsTest
 			'Class => Attribute' => [ClassIOFormat::class, AttributeIOFormat::class],
 			'Class => Boolean' => [ClassIOFormat::class, BooleanIOFormat::class],
 			'Class => Number' => [ClassIOFormat::class, NumberIOFormat::class],
-			'Class -> String' => [ClassIOFormat::class, StringIOFormat::class],
 
 			'Number => Attribute' => [NumberIOFormat::class, AttributeIOFormat::class],
 			'Number => Class' => [NumberIOFormat::class, ClassIOFormat::class],
@@ -227,8 +225,10 @@ class FormBindingTest extends AbstractFormsTest
 	{
 		return [
 			'Attribute -> Attribute' => [AttributeIOFormat::class, AttributeIOFormat::class],
+			'Attribute -> String' => [AttributeIOFormat::class, StringIOFormat::class],
 			'Boolean => Boolean' => [BooleanIOFormat::class, BooleanIOFormat::class],
 			'Class => Class' => [ClassIOFormat::class, ClassIOFormat::class],
+			'Class -> String' => [ClassIOFormat::class, StringIOFormat::class],
 			'Number => Number' => [NumberIOFormat::class, NumberIOFormat::class],
 			'String => String' => [StringIOFormat::class, StringIOFormat::class],
 		];

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="https://www.combodo.com/itop-schema/3.3"
+             version="3.3">
   <classes>
     <class id="AbstractResource" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
-        <comment>/* Resource access control abstraction. Can be herited by abstract resource access control classes. Generaly controlled using UR_ACTION_MODIFY access right. */</comment>
+        <comment>/* Resource access control abstraction. Can be herited by abstract resource access control classes. Generally controlled using UR_ACTION_MODIFY access right. */</comment>
         <abstract>true</abstract>
       </properties>
       <presentation/>
@@ -552,7 +554,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
       <description><![CDATA[Inform the listeners about the connection states]]></description>
       <event_data>
         <event_datum id="code">
-          <description>The login step result code (LoginWebPage::EXIT_CODE_...) </description>
+          <description>The login step result code (LoginWebPage::EXIT_CODE_...)</description>
           <type>integer</type>
         </event_datum>
         <event_datum id="state">
@@ -849,34 +851,31 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         </methods>
       </class>
     </classes>
-    <property_trees _delta="define" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://www.combodo.com/itop-schema/3.3">
-      <property_tree id="DashletGroupBy" xsi:type="Combodo-PropertyTree">
+    <property_types _delta="define">
+      <property_type id="Dashlet" xsi:type="Combodo-AbstractPropertyType"/>
+      <property_type id="DashletGroupBy" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>
-        <nodes>
-          <node id="title">
-            <label>UI:DashletGroupBy:Prop-Title</label>
-            <value-type xsi:type="Combodo-ValueType-Label"/><!-- LabelFormBlock -->
-          </node>
-          <node id="query">
-            <label>UI:DashletGroupBy:Prop-Query</label>
-            <value-type xsi:type="Combodo-ValueType-OQL">
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
+          <label>UI:DashletGroupBy:Title</label>
+          <nodes>
+            <node id="title" xsi:type="Combodo-ValueType-Label">
+              <label>UI:DashletGroupBy:Prop-Title</label>
+            </node>
+            <node id="query" xsi:type="Combodo-ValueType-OQL">
+              <label>UI:DashletGroupBy:Prop-Query</label>
               <data-transform>
                 <xml-node-empty-not-allowed/> <!-- mandatory quoi ! -->
               </data-transform>
-            </value-type>
-          </node>
-          <node id="group_by">
-            <label>UI:DashletGroupBy:Prop-GroupBy</label>
-            <value-type xsi:type="Combodo-ValueType-ClassAttributeGroupBy"> <!-- par défaut, il proposera le state attribute de la classe -->
-              <class>{{query.selected_class}}</class>
+            </node>
+            <node id="group_by" xsi:type="Combodo-ValueType-ClassAttributeGroupBy">
+              <label>UI:DashletGroupBy:Prop-GroupBy</label>
               <data-transform>
                 <xml-node-empty-not-allowed/>
               </data-transform>
-            </value-type>
-          </node>
-          <node id="style"> <!-- possible de le cacher, etc.... celui-ci nous met dedans -->
-            <label>UI:DashletGroupBy:Prop-Style</label>
-            <value-type xsi:type="Combodo-ValueType-Choice">
+              <class>{{query.selected_class}}</class>
+            </node>
+            <node id="style" xsi:type="Combodo-ValueType-Choice"> <!-- Possible de le cacher, etc celui-ci nous met dedans -->
+              <label>UI:DashletGroupBy:Prop-Style</label>
               <data-transform>
                 <xml-node-empty-defaults-to>bars</xml-node-empty-defaults-to>
               </data-transform>
@@ -891,31 +890,25 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
                   <label>UI:DashletGroupByTable:Label</label>
                 </value>
               </values>
-            </value-type>
-          </node>
-          <node id="aggregation_function">
-            <label>UI:DashletGroupBy:Prop-Function</label>
-            <value-type xsi:type="Combodo-ValueType-AggregateFunction"> <!-- par défaut : count -->
+            </node>
+            <node id="aggregation_function" xsi:type="Combodo-ValueType-AggregateFunction">
+              <label>UI:DashletGroupBy:Prop-Function</label>
               <data-transform>
                 <xml-node-empty-not-allowed/> <!-- mandatory quoi ! -->
               </data-transform>
               <class>{{query.selected_class}}</class> <!-- pour savoir si il y a des attributs additionnables -->
-            </value-type>
-          </node>
-          <node id="aggregation_attribute">
-            <label>UI:DashletGroupBy:Prop-FunctionAttribute</label>
-            <relevance-condition>{{aggregation_function.value != 'count'}}</relevance-condition>
-            <value-type xsi:type="Combodo-ValueType-ClassAttribute">
+            </node>
+            <node id="aggregation_attribute" xsi:type="Combodo-ValueType-ClassAttribute">
+              <label>UI:DashletGroupBy:Prop-FunctionAttribute</label>
+              <relevance-condition>{{aggregation_function.value != 'count'}}</relevance-condition>
               <data-transform>
                 <xml-node-empty-not-allowed/> <!-- mandatory quoi ! -->
               </data-transform>
               <class>{{query.selected_class}}</class>
               <category>numeric</category>
-            </value-type>
-          </node>
-          <node id="order_by">
-            <label>UI:DashletGroupBy:Prop-OrderField</label>
-            <value-type xsi:type="Combodo-ValueType-ChoiceFromInput">
+            </node>
+            <node id="order_by" xsi:type="Combodo-ValueType-ChoiceFromInput">
+              <label>UI:DashletGroupBy:Prop-OrderField</label>
               <values>
                 <value id="attribute">
                   <label>{{aggregation_attribute.label}}</label>
@@ -924,16 +917,13 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
                   <label>{{aggregation_function.label}}</label>
                 </value>
               </values>
-            </value-type>
-          </node>
-          <node id="limit">
-            <label>UI:DashletGroupBy:Prop-Limit</label>
-            <relevance-condition>{{order_by.value = 'function'}}</relevance-condition>
-            <value-type xsi:type="Combodo-ValueType-Integer"/>
-          </node>
-          <node id="order_direction">
-            <label>UI:DashletGroupBy:Prop-OrderDirection</label>
-            <value-type xsi:type="Combodo-ValueType-Choice">
+            </node>
+            <node id="limit" xsi:type="Combodo-ValueType-Integer">
+              <label>UI:DashletGroupBy:Prop-Limit</label>
+              <relevance-condition>{{order_by.value = 'function'}}</relevance-condition>
+            </node>
+            <node id="order_direction" xsi:type="Combodo-ValueType-Choice">
+              <label>UI:DashletGroupBy:Prop-OrderDirection</label>
               <data-transform>
                 <xml-node-empty-not-allowed/>
               </data-transform>
@@ -945,98 +935,87 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
                   <label>UI:DashletGroupBy:Order:desc</label>
                 </value>
               </values>
-            </value-type>
-            <display-default>desc</display-default>
-          </node>
-        </nodes>
-      </property_tree>
-      <property_tree id="DashletBadge" xsi:type="Combodo-PropertyTree">
+            </node>
+          </nodes>
+        </definition>
+      </property_type>
+      <property_type id="DashletBadge" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>
-        <nodes>
-          <node id="class">
-            <label>UI:DashletBadge:Prop-Class</label>
-            <value-type xsi:type="Combodo-ValueType-Class">
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
+          <nodes>
+            <node id="class" xsi:type="Combodo-ValueType-Class">
+              <label>UI:DashletBadge:Prop-Class</label>
               <categories-csv>bizmodel</categories-csv>
-            </value-type>
-          </node>
-        </nodes>
-      </property_tree>
-      <property_tree id="DashletHeaderDynamic" xsi:type="Combodo-PropertyTree">
+            </node>
+          </nodes>
+        </definition>
+      </property_type>
+      <property_type id="DashletHeaderDynamic" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>
-        <nodes>
-          <node id="title">
-            <label>UI:DashletHeaderDynamic:Prop-Title</label>
-            <value-type xsi:type="Combodo-ValueType-Label">
-              <not-blank/>
-            </value-type>
-          </node>
-          <node id="icon">
-            <label>UI:DashletHeaderDynamic:Prop-Icon</label>
-            <value-type xsi:type="Combodo-ValueType-Icon">
-            </value-type>
-          </node>
-          <node id="subtitle">
-            <label>UI:DashletHeaderDynamic:Prop-Subtitle</label>
-            <value-type xsi:type="Combodo-ValueType-Label"/>
-          </node>
-          <node id="query">
-            <label>UI:DashletHeaderDynamic:Prop-Query</label>
-            <value-type xsi:type="Combodo-ValueType-OQL">
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
+          <label>UI:DashletHeaderDynamic:Title</label>
+          <nodes>
+            <node id="title" xsi:type="Combodo-ValueType-Label">
+              <label>UI:DashletHeaderDynamic:Prop-Title</label>
+            </node>
+            <node id="icon" xsi:type="Combodo-ValueType-Icon">
+              <label>UI:DashletHeaderDynamic:Prop-Icon</label>
+            </node>
+            <node id="subtitle" xsi:type="Combodo-ValueType-Label">
+              <label>UI:DashletHeaderDynamic:Prop-Subtitle</label>
+            </node>
+            <node id="query" xsi:type="Combodo-ValueType-OQL">
+              <label>UI:DashletHeaderDynamic:Prop-Query</label>
               <data-transform>
                 <xml-node-empty-not-allowed/>
               </data-transform>
-            </value-type>
-          </node>
-          <node id="group_by">
-            <label>UI:DashletHeaderDynamic:Prop-GroupBy</label>
-            <value-type xsi:type="Combodo-ValueType-ClassAttribute">
+            </node>
+            <node id="group_by" xsi:type="Combodo-ValueType-ClassAttribute">
+              <label>UI:DashletHeaderDynamic:Prop-GroupBy</label>
               <data-transform>
                 <xml-node-empty-not-allowed/>
               </data-transform>
               <class>{{query.selected_class}}</class>
               <category>enum</category>
-            </value-type>
-          </node>
-          <node id="values">
-            <label>UI:DashletHeaderDynamic:Prop-Values</label>
-            <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
+            </node>
+            <node id="values" xsi:type="Combodo-ValueType-CollectionOfValues">
+              <label>UI:DashletHeaderDynamic:Prop-Values</label>
               <data-transform>
                 <xml-format xsi:type="xml-format-csv"/>
               </data-transform>
+              <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
                 <class>{{query.selected_class}}</class>
                 <attribute>{{group_by.attribute}}</attribute>
-            </value-type>
-          </node>
-        </nodes>
-      </property_tree>
-      <property_tree id="DashletHeaderStatic" xsi:type="Combodo-PropertyTree">
+              </value-type>
+            </node>
+          </nodes>
+        </definition>
+      </property_type>
+      <property_type id="DashletHeaderStatic" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>
-        <nodes>
-          <node id="title">
-            <label>UI:DashletHeaderStatic:Prop-Title</label>
-            <value-type xsi:type="Combodo-ValueType-Label"/>
-          </node>
-          <node id="icon">
-            <label>UI:DashletHeaderStatic:Prop-Icon</label>
-            <value-type xsi:type="Combodo-ValueType-Icon"/>
-          </node>
-        </nodes>
-      </property_tree>
-      <property_tree id="DashletObjectList" xsi:type="Combodo-PropertyTree">
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
+          <nodes>
+            <node id="title" xsi:type="Combodo-ValueType-Label">
+              <label>UI:DashletHeaderStatic:Prop-Title</label>
+            </node>
+            <node id="icon" xsi:type="Combodo-ValueType-Icon">
+              <label>UI:DashletHeaderStatic:Prop-Icon</label>
+            </node>
+          </nodes>
+        </definition>
+      </property_type>
+      <property_type id="DashletObjectList" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>
-        <nodes>
-          <node id="title">
-            <label>UI:DashletObjectList:Prop-Title</label>
-            <value-type xsi:type="Combodo-ValueType-Label">
-            </value-type>
-          </node>
-          <node id="query">
-            <label>UI:DashletObjectList:Prop-Query</label>
-            <value-type xsi:type="Combodo-ValueType-OQL"/>
-          </node>
-          <node id="menu">
-            <label>UI:DashletObjectList:Prop-Menu</label>
-            <value-type xsi:type="Combodo-ValueType-Boolean">
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
+          <nodes>
+            <node id="title" xsi:type="Combodo-ValueType-Label">
+              <label>UI:DashletObjectList:Prop-Title</label>
+            </node>
+            <node id="query" xsi:type="Combodo-ValueType-OQL">
+              <label>UI:DashletObjectList:Prop-Query</label>
+            </node>
+            <node id="menu" xsi:type="Combodo-ValueType-Boolean">
+              <label>UI:DashletObjectList:Prop-Menu</label>
               <on>
                 <!-- not so cute, but matches exactly 3.2 implementation of boolean fields -->
                 <label>UI:UserManagement:ActionAllowed:Yes</label>
@@ -1046,22 +1025,20 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
                 <label>UI:UserManagement:ActionAllowed:No</label>
                 <value>false</value>
               </off>
-            </value-type>
-          </node>
-        </nodes>
-      </property_tree>
-      <property_tree id="DashletPlainText" xsi:type="Combodo-PropertyTree">
+            </node>
+          </nodes>
+        </definition>
+      </property_type>
+      <property_type id="DashletPlainText" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>
-        <nodes>
-          <node id="text">
-            <label>UI:DashletPlainText:Prop-Text</label>
-            <constraints>
-              <not_blank/>
-            </constraints>
-            <value-type xsi:type="Combodo-ValueType-Text"/>
-          </node>
-        </nodes>
-      </property_tree>
-    </property_trees>
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
+          <nodes>
+            <node id="text" xsi:type="Combodo-ValueType-Text">
+              <label>UI:DashletPlainText:Prop-Text</label>
+            </node>
+          </nodes>
+        </definition>
+      </property_type>
+    </property_types>
   </meta>
 </itop_design>

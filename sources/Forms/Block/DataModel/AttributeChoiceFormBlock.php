@@ -94,60 +94,83 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	public static function ListAttributeCodesByCategory(string $sClass, string $sCategory = ''): array
 	{
 		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
+		$aNonGroupableAttributes = [
+			'AttributeLinkedSet',
+			'AttributeFriendlyName',
+			'iAttributeNoGroupBy', //we cannot only use iAttributeNoGroupBy since this method is also used by the designer who do not have access to the classes' PHP reflection API. So the known classes has to be listed altogether
+			'AttributeOneWayPassword',
+			'AttributeEncryptedString',
+			'AttributePassword',
+		];
 		$aAttributeCodes = [];
 
-		switch ($sCategory) {
-			case 'numeric':
-				foreach ($oModelReflection->ListAttributes($sClass, 'AttributeDecimal,AttributeDuration,AttributeInteger,AttributePercentage,AttributeSubItem') as $sAttCode => $sAttType) {
-					$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
-					$aAttributeCodes[$sLabel] = $sAttCode;
-				}
-				break;
+		foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
+			$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
 
-			case 'groupable':
-				$aForbiddenAttType = [
-					'AttributeLinkedSet',
-					'AttributeFriendlyName',
-					'iAttributeNoGroupBy', //we cannot only use iAttributeNoGroupBy since this method is also used by the designer who do not have access to the classes' PHP reflection API. So the known classes has to be listed altogether
-					'AttributeOneWayPassword',
-					'AttributeEncryptedString',
-					'AttributePassword',
-				];
-				foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
-					foreach ($aForbiddenAttType as $sForbiddenAttType) {
-						if (is_a($sAttType, $sForbiddenAttType, true)) {
-							continue 2;
+			// For external fields, find the real type of the target
+			$sExtFieldAttCode = $sAttCode;
+			$sTargetClass = $sClass;
+			while (is_a($sAttType, 'AttributeExternalField', true)) {
+				$sExtKeyAttCode = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'extkey_attcode');
+				$sTargetAttCode = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'target_attcode');
+				$sTargetClass = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtKeyAttCode, 'targetclass');
+				$aTargetAttCodes = $oModelReflection->ListAttributes($sTargetClass);
+				$sAttType = $aTargetAttCodes[$sTargetAttCode];
+				$sExtFieldAttCode = $sTargetAttCode;
+			}
+
+			switch ($sCategory) {
+				case 'numeric':
+					if (is_a($sAttType, 'AttributeDecimal', true) ||
+						is_a($sAttType, 'AttributeDuration', true) ||
+						is_a($sAttType, 'AttributeInteger', true) ||
+						is_a($sAttType, 'AttributePercentage', true) ||
+						is_a($sAttType, 'AttributeSubItem', true)) {
+						$aAttributeCodes[$sLabel] = $sAttCode;
+					}
+					break;
+
+				case 'groupable':
+					foreach ($aNonGroupableAttributes as $sNonGroupableAttribute) {
+						if (is_a($sAttType, $sNonGroupableAttribute, true)) {
+							break;
 						}
 					}
-					$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
 					$aAttributeCodes[$sLabel] = $sAttCode;
-				}
-				break;
+					break;
 
-			case 'enum':
-				foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
+				case 'enum':
 					if (is_a($sAttType, 'AttributeEnum', true)) {
-						$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
 						$aAttributeCodes[$sLabel] = $sAttCode;
 					}
-				}
-				break;
+					break;
 
-			case 'date':
-				foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
+				case 'date':
 					if (is_a($sAttType, 'AttributeDateTime', true)) {
-						$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
 						$aAttributeCodes[$sLabel] = $sAttCode;
 					}
-				}
-				break;
+					break;
 
-			case '':
-				foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
-					$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
+				case 'link':
+					if (is_a($sAttType, 'AttributeLinkedSet', true) ||
+						is_a($sAttType, 'AttributeLinkedSetIndirect', true) ||
+						is_a($sAttType, 'AttributeExternalKey', true) ||
+						is_a($sAttType, 'AttributeHierarchicalKey', true)) {
+						$aAttributeCodes[$sLabel] = $sAttCode;
+					}
+					break;
+
+				case 'string':
+					if (is_a($sAttType, 'AttributeString', true)) {
+						$aAttributeCodes[$sLabel] = $sAttCode;
+					}
+					break;
+
+				case 'all':
+				case '':
 					$aAttributeCodes[$sLabel] = $sAttCode;
-				}
-				break;
+					break;
+			}
 		}
 
 		return $aAttributeCodes;
