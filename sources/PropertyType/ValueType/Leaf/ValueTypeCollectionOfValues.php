@@ -10,6 +10,8 @@ namespace Combodo\iTop\PropertyType\ValueType\Leaf;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Combodo\iTop\PropertyType\Serializer\XMLFormat\AbstractXMLFormat;
+use Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatFactory;
 use Combodo\iTop\PropertyType\ValueType\Branch\AbstractBranchValueType;
 use Combodo\iTop\PropertyType\ValueType\Leaf\AbstractLeafValueType;
 use Combodo\iTop\PropertyType\ValueType\ValueTypeFactory;
@@ -17,6 +19,7 @@ use Combodo\iTop\PropertyType\ValueType\ValueTypeFactory;
 class ValueTypeCollectionOfValues extends AbstractLeafValueType
 {
 	private string $sFormBlockClass;
+	private AbstractXMLFormat $oXMLFormat;
 
 	public function GetFormBlockClass(): string
 	{
@@ -33,6 +36,19 @@ class ValueTypeCollectionOfValues extends AbstractLeafValueType
 			$this->aFormBlockOptionsForPHP['multiple'] = 'true';
 		}
 
+		$oNode = $oDomNode->GetUniqueElement('xml-format');
+		$this->oXMLFormat = XMLFormatFactory::GetInstance()->CreateXMLFormatFromDomNode($oNode);
+
 		parent::InitFromDomNode($oDomNode, $oParent);
+	}
+
+	public function SerializeToDOMNode(mixed $value, DesignElement $oDOMNode): void
+	{
+		$this->oXMLFormat->SerializeToDOMNode($value, $oDOMNode, $this);
+	}
+
+	public function UnserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	{
+		return $this->oXMLFormat->UnserializeFromDOMNode($oDOMNode, $this);
 	}
 }

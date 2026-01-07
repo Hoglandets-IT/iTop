@@ -9,6 +9,8 @@ namespace Combodo\iTop\PropertyType\ValueType\Branch;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\CollectionBlock;
+use Combodo\iTop\PropertyType\Serializer\XMLFormat\AbstractXMLFormat;
+use Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatFactory;
 use Combodo\iTop\PropertyType\ValueType\AbstractValueType;
 use Combodo\iTop\PropertyType\ValueType\ValueTypeFactory;
 use utils;
@@ -18,6 +20,8 @@ use utils;
  */
 class ValueTypeCollection extends ValueTypePropertyTree
 {
+	private AbstractXMLFormat $oXMLFormat;
+
 	/**
 	 * @param \Combodo\iTop\DesignElement $oDomNode
 	 * @param \Combodo\iTop\PropertyType\ValueType\Branch\AbstractBranchValueType|null $oParent
@@ -32,6 +36,9 @@ class ValueTypeCollection extends ValueTypePropertyTree
 		$this->aFormBlockOptionsForPHP['button_label'] = utils::QuoteForPHP('UI:AddSubTree');
 		$this->sSubTreeClass = 'SubFormFor__'.$this->sIdWithPath;
 		$this->aFormBlockOptionsForPHP['block_entry_type'] = utils::QuoteForPHP($this->sSubTreeClass);
+
+		$oNode = $oDomNode->GetUniqueElement('xml-format');
+		$this->oXMLFormat = XMLFormatFactory::GetInstance()->CreateXMLFormatFromDomNode($oNode);
 
 		// read child properties
 		foreach ($oDomNode->GetUniqueElement('prototype')->childNodes as $oNode) {
@@ -73,5 +80,15 @@ class ValueTypeCollection extends ValueTypePropertyTree
 		$aPHPFragments[] = $sSubClassPHP;
 
 		return $this->GetLocalPHPForValueType();
+	}
+
+	public function SerializeToDOMNode(mixed $value, DesignElement $oDOMNode): void
+	{
+		$this->oXMLFormat->SerializeToDOMNode($value, $oDOMNode, $this);
+	}
+
+	public function UnserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	{
+		return $this->oXMLFormat->UnserializeFromDOMNode($oDOMNode, $this);
 	}
 }

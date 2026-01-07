@@ -37,7 +37,7 @@ class PropertyType
 		$sDefinitionNodeType = $oDefinitionNode->getAttribute('xsi:type');
 
 		if (!is_a($sDefinitionNodeType, AbstractValueType::class, true)) {
-			throw new PropertyTypeException('Unsupported type '.json_encode($sDefinitionNodeType).' in ');
+			throw new PropertyTypeException('Unsupported xsi:type '.json_encode($sDefinitionNodeType), $oDomNode);
 		}
 
 		$this->oValueType = new $sDefinitionNodeType();
@@ -50,18 +50,11 @@ class PropertyType
 		$aPHPFragments = [];
 
 		if ($this->oValueType->IsLeaf()) {
+			$sFormBlockClass = $this->oValueType->GetFormBlockClass();
 
 			$sLocalPHP = <<<PHP
-class FormFor__$this->sId extends Combodo\iTop\Forms\Block\Base\FormBlock
+class FormFor__$this->sId extends $sFormBlockClass
 {
-	protected function BuildForm(): void
-	{
-PHP;
-
-			$sLocalPHP .= "\n".$this->oValueType->ToPHPFormBlock($aPHPFragments);
-
-			$sLocalPHP .= <<<PHP
-	}
 }
 PHP;
 			$aPHPFragments[] = $sLocalPHP;
@@ -75,5 +68,15 @@ PHP;
 	public function GetParentType(): string
 	{
 		return $this->sParentType;
+	}
+
+	public function SerializeToDOMNode(mixed $value, DesignElement$oDOMNode): void
+	{
+		$this->oValueType->SerializeToDOMNode($value, $oDOMNode);
+	}
+
+	public function UnserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	{
+		return $this->oValueType->UnserializeFromDOMNode($oDOMNode);
 	}
 }

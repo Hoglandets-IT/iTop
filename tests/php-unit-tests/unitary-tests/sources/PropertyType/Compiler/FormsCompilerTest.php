@@ -136,7 +136,7 @@ PHP,
 	        </node>
 			<node id="class_property" xsi:type="Combodo-ValueType-Class">
 				<label>UI:Class</label>
-	              <categories-csv>test</categories-csv>
+	            <categories-csv>test</categories-csv>
 	        </node>
 			<node id="class_attribute_property" xsi:type="Combodo-ValueType-ClassAttribute">
 				<label>UI:ClassAttribute</label>
@@ -244,6 +244,10 @@ PHP,
     <nodes>
 	    <node id="sub_tree_collection" xsi:type="Combodo-ValueType-Collection">
 	      <label>UI:SubTree</label>
+	      <xml-format xsi:type="Combodo-XMLFormat-FlatArray">
+	        <count-tag>item_count</count-tag>
+            <tag-format>item_\$rank\$_\$id\$</tag-format>
+	      </xml-format>
 	      <prototype>
 	        <node id="string_property" xsi:type="Combodo-ValueType-String">
 	          <label>UI:String</label>
@@ -580,6 +584,7 @@ PHP,
 	    <nodes>
 	      <node id="coll" xsi:type="Combodo-ValueType-CollectionOfValues">
 	          <label>UI:ClassAttributeValue</label>
+	          <xml-format xsi:type="Combodo-XMLFormat-CSV"/>
               <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
                 <class>Contact</class>
                 <attribute>status</attribute>
@@ -599,6 +604,22 @@ class FormFor__CollectionOfValuesTest extends Combodo\iTop\Forms\Block\Base\Form
 			'multiple' => true,
 		]);
 	}
+}
+PHP,
+			],
+			'Single value' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<property_typeproperty_type id="SingleValueTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+	<extends>Dashlet</extends>
+    <definition xsi:type="Combodo-ValueType-Label">
+      <label>Single Test</label>
+	</definition>
+</property_typeproperty_type>
+XML,
+				'sExpectedPHP' => <<<PHP
+class FormFor__SingleValueTest extends Combodo\iTop\Forms\Block\DataModel\LabelFormBlock
+{
 }
 PHP,
 			],
@@ -731,7 +752,7 @@ XML,
 			'Missing value-type in node specification' => [
 				'sXMLContent'      => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<property_type id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_type id="WrongDefinition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
 	<extends>Dashlet</extends>
     <definition xsi:type="Combodo-ValueType-PropertyTree">
     <nodes>
@@ -743,13 +764,12 @@ XML,
 </property_type>
 XML,
 				'sExpectedClass'   => 'Combodo\iTop\PropertyType\PropertyTypeException',
-				'sExpectedMessage' => 'Node: source_property, missing value-type in node specification',
+				'sExpectedMessage' => '/property_type[WrongDefinition]/definition/nodes/node[source_property]: Missing value-type in node specification',
 			],
-
 			'Wrong class for value-type in node specification' => [
 				'sXMLContent'      => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<property_type id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_type id="WrongDefinition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
 	<extends>Dashlet</extends>
     <definition xsi:type="Combodo-ValueType-PropertyTree">
     <nodes>
@@ -761,7 +781,71 @@ XML,
 </property_type>
 XML,
 				'sExpectedClass'   => 'Combodo\iTop\PropertyType\PropertyTypeException',
-				'sExpectedMessage' => 'Node: source_property, unknown type node class: "Test-Combodo"',
+				'sExpectedMessage' => '/property_type[WrongDefinition]/definition/nodes/node[source_property]: Unknown value-type node class: "Test-Combodo"',
+			],
+			'Wrong class for xml-format in node specification' => [
+				'sXMLContent'      => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<property_type id="WrongDefinition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+	<extends>Dashlet</extends>
+    <definition xsi:type="Combodo-ValueType-PropertyTree">
+	    <nodes>
+	      <node id="coll" xsi:type="Combodo-ValueType-CollectionOfValues">
+	          <label>UI:ClassAttributeValue</label>
+	          <xml-format xsi:type="Combodo-test"/>
+	          <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
+	            <class>Contact</class>
+	            <attribute>status</attribute>
+	          </value-type>
+	      </node>
+		</nodes>
+	</definition>
+</property_type>
+XML,
+				'sExpectedClass'   => 'Combodo\iTop\PropertyType\Serializer\SerializerException',
+				'sExpectedMessage' => '/property_type[WrongDefinition]/definition/nodes/node[coll]/xml-format: Unknown type node class: "Combodo-test"',
+			],
+			'Missing class for xml-format in node specification' => [
+				'sXMLContent'      => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<property_type id="WrongDefinition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+	<extends>Dashlet</extends>
+    <definition xsi:type="Combodo-ValueType-PropertyTree">
+	    <nodes>
+	      <node id="coll" xsi:type="Combodo-ValueType-CollectionOfValues">
+	          <label>UI:ClassAttributeValue</label>
+	          <xml-format/>
+	          <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
+	            <class>Contact</class>
+	            <attribute>status</attribute>
+	          </value-type>
+	      </node>
+		</nodes>
+	</definition>
+</property_type>
+XML,
+				'sExpectedClass'   => 'Combodo\iTop\PropertyType\Serializer\SerializerException',
+				'sExpectedMessage' => '/property_type[WrongDefinition]/definition/nodes/node[coll]/xml-format: Missing xsi:type in node specification',
+			],
+			'Missing tag in xml-format ' => [
+				'sXMLContent'      => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<property_type id="WrongDefinition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+	<extends>Dashlet</extends>
+    <definition xsi:type="Combodo-ValueType-PropertyTree">
+	    <nodes>
+		    <node xsi:type="Combodo-ValueType-CollectionOfValues">
+		      <xml-format xsi:type="Combodo-XMLFormat-ValueAsId">
+			  </xml-format>
+		      <value-type xsi:type="Combodo-ValueType-Class">
+		      </value-type>
+		    </node>
+		</nodes>
+	</definition>
+</property_type>
+XML,
+				'sExpectedClass'   => 'Combodo\iTop\PropertyType\Serializer\SerializerException',
+				'sExpectedMessage' => '/property_type[WrongDefinition]/definition/nodes/node/xml-format: Missing <tag-name> element',
 			],
 		];
 	}

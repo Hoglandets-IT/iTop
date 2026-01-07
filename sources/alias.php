@@ -117,3 +117,7 @@ class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeLabel::class, 'Co
 class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeOQL::class, 'Combodo-ValueType-OQL');
 class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeString::class, 'Combodo-ValueType-String');
 class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeText::class, 'Combodo-ValueType-Text');
+
+class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatCSV::class, 'Combodo-XMLFormat-CSV');
+class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatValueAsId::class, 'Combodo-XMLFormat-ValueAsId');
+class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatFlatArray::class, 'Combodo-XMLFormat-FlatArray');

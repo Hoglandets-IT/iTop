@@ -219,6 +219,11 @@ PHP;
 		}
 	}
 
+	public function GetId(): string
+	{
+		return $this->sId;
+	}
+
 	protected function GetSibling(string $sId): ?AbstractValueType
 	{
 		if (is_null($this->oParent)) {
@@ -228,4 +233,20 @@ PHP;
 		return $this->oParent->GetChild($sId);
 	}
 
+	public function SerializeToDOMNode(mixed $value, DesignElement $oDOMNode): void
+	{
+		$sXmlValue = $value;
+		$oTextNode = $oDOMNode->ownerDocument->createTextNode($sXmlValue);
+		$oDOMNode->appendChild($oTextNode);
+	}
+
+	/**
+	 * @param $oDOMNode
+	 *
+	 * @return mixed
+	 */
+	public function UnserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	{
+		return $oDOMNode->GetText();
+	}
 }

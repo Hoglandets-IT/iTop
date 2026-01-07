@@ -9,19 +9,7 @@ namespace Combodo\iTop\PropertyType\ValueType\Branch;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
-use Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock;
-use Combodo\iTop\Forms\Block\Expression\NumberExpressionFormBlock;
-use Combodo\iTop\Forms\Block\Expression\StringExpressionFormBlock;
-use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
-use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
-use Combodo\iTop\Forms\IO\Format\NumberIOFormat;
-use Combodo\iTop\Forms\IO\Format\StringIOFormat;
-use Combodo\iTop\PropertyType\PropertyTypeException;
-use Combodo\iTop\PropertyType\ValueType\AbstractValueType;
 use Combodo\iTop\PropertyType\ValueType\ValueTypeFactory;
-use Exception;
-use Expression;
-use utils;
 
 /**
  * @since 3.3.0
@@ -85,5 +73,33 @@ PHP;
 		$aPHPFragments[] = $sLocalPHP;
 
 		return $this->GetLocalPHPForValueType($this->sSubTreeClass);
+	}
+
+	public function SerializeToDOMNode(mixed $value, DesignElement $oDOMNode): void
+	{
+		foreach ($this->aChildren as $oChild) {
+			$sId = $oChild->sId;
+			if (isset($value[$sId])) {
+				/** @var DesignElement $oChildNode */
+				$oChildNode = $oDOMNode->ownerDocument->createElement($sId);
+				$oDOMNode->appendChild($oChildNode);
+				$oChild->SerializeToDOMNode($value[$sId], $oChildNode);
+			}
+		}
+	}
+
+	public function UnserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	{
+		$aResults = [];
+
+		foreach ($this->aChildren as $oChild) {
+			$sId = $oChild->sId;
+			$oChildNode = $oDOMNode->GetOptionalElement($sId);
+			if ($oChildNode) {
+				$aResults[$sId] = $oChild->UnserializeFromDOMNode($oChildNode);
+			}
+		}
+
+		return $aResults;
 	}
 }

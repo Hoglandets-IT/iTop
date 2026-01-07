@@ -43,7 +43,7 @@ class PropertyTypeCompiler
 	 * @throws \Combodo\iTop\PropertyType\PropertyTypeException
 	 * @throws \DOMFormatException
 	 */
-	protected function CompilePropertyTypeFromXML(string $sXMLContent): PropertyType
+	public function CompilePropertyTypeFromXML(string $sXMLContent): PropertyType
 	{
 		$oDoc = new DesignDocument();
 		libxml_clear_errors();
@@ -66,7 +66,7 @@ class PropertyTypeCompiler
 	 * @return string
 	 * @throws \Combodo\iTop\PropertyType\Compiler\PropertyTypeCompilerException
 	 */
-	protected function GetXMLContent(string $sId, string $sType): string
+	public function GetXMLContent(string $sId, string $sType): string
 	{
 		$sPath = utils::GetAbsoluteModulePath('core')."property_types/$sType/$sId.xml";
 		if (!file_exists($sPath)) {
@@ -94,21 +94,6 @@ class PropertyTypeCompiler
 	}
 
 	/**
-	 * @param string $sXMLContent
-	 *
-	 * @return string
-	 * @throws \Combodo\iTop\PropertyType\Compiler\PropertyTypeCompilerException
-	 * @throws \Combodo\iTop\PropertyType\PropertyTypeException
-	 * @throws \DOMFormatException
-	 */
-	public function CompileEntityFromXML(string $sXMLContent): string
-	{
-		$oPropertyType = $this->CompilePropertyTypeFromXML($sXMLContent);
-
-		return $oPropertyType->ToPHPEntity();
-	}
-
-	/**
 	 * @param string $sId
 	 * @param string $sType
 	 *
@@ -122,12 +107,5 @@ class PropertyTypeCompiler
 		$sXMLContent = $this->GetXMLContent($sId, $sType);
 
 		return $this->CompileFormFromXML($sXMLContent);
-	}
-
-	public function CompileEntity(string $sId, string $sType): string
-	{
-		$sXMLContent = $this->GetXMLContent($sId, $sType);
-
-		return $this->CompileEntityFromXML($sXMLContent);
 	}
 }

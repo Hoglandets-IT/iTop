@@ -30,7 +30,7 @@ class ValueTypeClass extends AbstractLeafValueType
 	{
 		parent::InitFromDomNode($oDomNode, $oParent);
 
-		$sCategories = $oDomNode->GetChildText('categories-csv');
+		$sCategories = $oDomNode->GetChildText('categories-csv', '');
 		/** @var \ModelReflection $oModelReflection */
 		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
 

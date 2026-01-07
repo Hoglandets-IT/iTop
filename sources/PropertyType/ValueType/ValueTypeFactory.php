@@ -46,7 +46,7 @@ class ValueTypeFactory
 
 		if (utils::IsNullOrEmptyString($sNodeType)) {
 			$sId = $oDomNode->getAttribute('id');
-			throw new PropertyTypeException("Node: $sId, missing value-type in node specification");
+			throw new PropertyTypeException("Missing value-type in node specification", $oDomNode);
 		}
 
 		if (is_a($sNodeType, AbstractValueType::class, true)) {
@@ -57,6 +57,6 @@ class ValueTypeFactory
 		}
 
 		$sId = $oDomNode->getAttribute('id');
-		throw new PropertyTypeException("Node: $sId, unknown type node class: ".json_encode($sNodeType));
+		throw new PropertyTypeException("Unknown value-type node class: ".json_encode($sNodeType), $oDomNode);
 	}
 }
