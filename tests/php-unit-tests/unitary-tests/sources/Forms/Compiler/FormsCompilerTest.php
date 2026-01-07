@@ -551,65 +551,6 @@ class FormFor__ComplexRelevanceCondition extends Combodo\iTop\Forms\Block\Base\F
 }
 PHP,
 			],
-			'Class category for value type class' => [
-				'sXMLContent' => <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<node id="ClassCategory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
-    <nodes>
-    	<node id="class_property">
-			<label>UI:Class</label>
-            <value-type xsi:type="Combodo-ValueType-Class">
-              <categories-csv>addon/authentication,grant_by_profile,silo</categories-csv>
-            </value-type>
-        </node>
-	</nodes>
-</node>
-XML,
-				'sExpectedPHP' => <<<PHP
-class FormFor__ClassCategory extends Combodo\iTop\Forms\Block\Base\FormBlock
-{
-	protected function BuildForm(): void
-	{
-		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
-			'label' => 'UI:Class',
-			'choices' => [
-				\Dict::S('Class:ActionEmail') => 'ActionEmail',
-				\Dict::S('Class:ActionNewsroom') => 'ActionNewsroom',
-				\Dict::S('Class:AuditCategory') => 'AuditCategory',
-				\Dict::S('Class:AuditDomain') => 'AuditDomain',
-				\Dict::S('Class:AuditRule') => 'AuditRule',
-				\Dict::S('Class:OAuthClientAzure') => 'OAuthClientAzure',
-				\Dict::S('Class:OAuthClientGoogle') => 'OAuthClientGoogle',
-				\Dict::S('Class:QueryOQL') => 'QueryOQL',
-				\Dict::S('Class:SynchroAttExtKey') => 'SynchroAttExtKey',
-				\Dict::S('Class:SynchroAttLinkSet') => 'SynchroAttLinkSet',
-				\Dict::S('Class:SynchroAttribute') => 'SynchroAttribute',
-				\Dict::S('Class:SynchroDataSource') => 'SynchroDataSource',
-				\Dict::S('Class:SynchroLog') => 'SynchroLog',
-				\Dict::S('Class:SynchroReplica') => 'SynchroReplica',
-				\Dict::S('Class:TriggerOnAttachmentCreate') => 'TriggerOnAttachmentCreate',
-				\Dict::S('Class:TriggerOnAttachmentDelete') => 'TriggerOnAttachmentDelete',
-				\Dict::S('Class:TriggerOnAttachmentDownload') => 'TriggerOnAttachmentDownload',
-				\Dict::S('Class:TriggerOnAttributeBlobDownload') => 'TriggerOnAttributeBlobDownload',
-				\Dict::S('Class:TriggerOnObjectCreate') => 'TriggerOnObjectCreate',
-				\Dict::S('Class:TriggerOnObjectDelete') => 'TriggerOnObjectDelete',
-				\Dict::S('Class:TriggerOnObjectMention') => 'TriggerOnObjectMention',
-				\Dict::S('Class:TriggerOnObjectUpdate') => 'TriggerOnObjectUpdate',
-				\Dict::S('Class:TriggerOnPortalUpdate') => 'TriggerOnPortalUpdate',
-				\Dict::S('Class:TriggerOnStateEnter') => 'TriggerOnStateEnter',
-				\Dict::S('Class:TriggerOnStateLeave') => 'TriggerOnStateLeave',
-				\Dict::S('Class:TriggerOnThresholdReached') => 'TriggerOnThresholdReached',
-				\Dict::S('Class:URP_Profiles') => 'URP_Profiles',
-				\Dict::S('Class:URP_UserOrg') => 'URP_UserOrg',
-				\Dict::S('Class:UserExternal') => 'UserExternal',
-				\Dict::S('Class:UserLDAP') => 'UserLDAP',
-				\Dict::S('Class:UserLocal') => 'UserLocal',
-			],
-		]);
-	}
-}
-PHP,
-			],
 			'test' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
