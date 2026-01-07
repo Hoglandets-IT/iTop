@@ -32,7 +32,6 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
 		parent::RegisterOptions($oOptionsRegister);
-		$oOptionsRegister->SetOption('multiple', true);
 		$oOptionsRegister->SetOptionArrayValue('attr', 'size', 5);
 		$oOptionsRegister->SetOptionArrayValue('attr', 'style', 'height: auto;');
 	}

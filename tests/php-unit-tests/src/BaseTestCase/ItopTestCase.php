@@ -9,6 +9,7 @@ namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
 use DeprecatedCallsLog;
+use DOMDocument;
 use MySQLTransactionNotClosedException;
 use ParseError;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -716,5 +717,35 @@ abstract class ItopTestCase extends KernelTestCase
 		$sUrl = \MetaModel::GetConfig()->Get('app_root_url')."/$sUri";
 
 		return $this->CallUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
+	}
+
+	/**
+	 * @param $sXML
+	 *
+	 * @return false|string
+	 */
+	protected function CanonicalizeXML($sXML)
+	{
+		// Canonicalize the expected XML (to cope with indentation)
+		$oExpectedDocument = new DOMDocument();
+		$oExpectedDocument->preserveWhiteSpace = false;
+		$oExpectedDocument->formatOutput = true;
+		$oExpectedDocument->loadXML($sXML);
+
+		$sSavedXML = $oExpectedDocument->SaveXML();
+
+		return str_replace(' encoding="UTF-8"', '', $sSavedXML);
+	}
+
+	/**
+	 * @param $sExpected
+	 * @param $sActual
+	 * @param string $sMessage
+	 */
+	protected function AssertEqualiTopXML($sExpected, $sActual, string $sMessage = '')
+	{
+		// Note: assertEquals reports the differences in a diff which is easier to interpret (in PHPStorm)
+		// as compared to the report given by assertEqualXMLStructure
+		static::assertEquals($this->CanonicalizeXML($sExpected), $this->CanonicalizeXML($sActual), $sMessage);
 	}
 }

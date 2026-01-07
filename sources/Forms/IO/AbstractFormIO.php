@@ -9,6 +9,9 @@ namespace Combodo\iTop\Forms\IO;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\IO\Format\AbstractIOFormat;
+use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
+use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Symfony\Component\Form\FormEvents;
 
 /**
@@ -310,6 +313,28 @@ class AbstractFormIO
 	public function GetBindingsToInputs(): array
 	{
 		return $this->aBindingsToInputs;
+	}
+
+	/**
+	 * Compatibility rules
+	 *
+	 * @param \Combodo\iTop\Forms\IO\AbstractFormIO $oFormIO
+	 *
+	 * @return bool
+	 */
+	public function IsCompatibleWith(AbstractFormIO $oFormIO): bool
+	{
+		if ($this->GetDataType() === StringIOFormat::class) {
+			switch ($oFormIO->GetDataType()) {
+				case StringIOFormat::class:
+				case AttributeIOFormat::class:
+				case ClassIOFormat::class:
+					return true;
+				default:
+					return false;
+			}
+		}
+		return  ($oFormIO->GetDataType() === $this->GetDataType());
 	}
 
 }

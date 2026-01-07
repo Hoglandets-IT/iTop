@@ -97,21 +97,27 @@ class_alias(\Combodo\iTop\Core\AttributeDefinition\AttributeURL::class, 'Attribu
 class_alias(\Combodo\iTop\Core\AttributeDefinition\iAttributeNoGroupBy::class, 'iAttributeNoGroupBy');
 class_alias(\Combodo\iTop\Core\AttributeDefinition\MissingColumnException::class, 'MissingColumnException');
 
-class_alias(\Combodo\iTop\PropertyTree\PropertyTree::class, 'Combodo-PropertyTree');
-class_alias(\Combodo\iTop\PropertyTree\Property::class, 'Combodo-Property');
+class_alias(\Combodo\iTop\PropertyType\PropertyType::class, 'Combodo-PropertyType');
 
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeAggregateFunction::class, 'Combodo-ValueType-AggregateFunction');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeBoolean::class, 'Combodo-ValueType-Boolean');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeChoice::class, 'Combodo-ValueType-Choice');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeChoiceFromInput::class, 'Combodo-ValueType-ChoiceFromInput');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClass::class, 'Combodo-ValueType-Class');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttribute::class, 'Combodo-ValueType-ClassAttribute');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeGroupBy::class, 'Combodo-ValueType-ClassAttributeGroupBy');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeValue::class, 'Combodo-ValueType-ClassAttributeValue');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeCollection::class, 'Combodo-ValueType-Collection');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeIcon::class, 'Combodo-ValueType-Icon');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeInteger::class, 'Combodo-ValueType-Integer');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeLabel::class, 'Combodo-ValueType-Label');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeOQL::class, 'Combodo-ValueType-OQL');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeString::class, 'Combodo-ValueType-String');
-class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeText::class, 'Combodo-ValueType-Text');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Branch\ValueTypeCollection::class, 'Combodo-ValueType-Collection');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Branch\ValueTypePropertyTree::class, 'Combodo-ValueType-PropertyTree');
+
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeAggregateFunction::class, 'Combodo-ValueType-AggregateFunction');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeBoolean::class, 'Combodo-ValueType-Boolean');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeChoice::class, 'Combodo-ValueType-Choice');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeChoiceFromInput::class, 'Combodo-ValueType-ChoiceFromInput');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeClass::class, 'Combodo-ValueType-Class');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeClassAttribute::class, 'Combodo-ValueType-ClassAttribute');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeClassAttributeGroupBy::class, 'Combodo-ValueType-ClassAttributeGroupBy');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeClassAttributeValue::class, 'Combodo-ValueType-ClassAttributeValue');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeCollectionOfValues::class, 'Combodo-ValueType-CollectionOfValues');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeIcon::class, 'Combodo-ValueType-Icon');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeInteger::class, 'Combodo-ValueType-Integer');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeLabel::class, 'Combodo-ValueType-Label');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeOQL::class, 'Combodo-ValueType-OQL');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeString::class, 'Combodo-ValueType-String');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeText::class, 'Combodo-ValueType-Text');
+
+class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatCSV::class, 'Combodo-XMLFormat-CSV');
+class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatValueAsId::class, 'Combodo-XMLFormat-ValueAsId');
+class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatFlatArray::class, 'Combodo-XMLFormat-FlatArray');
