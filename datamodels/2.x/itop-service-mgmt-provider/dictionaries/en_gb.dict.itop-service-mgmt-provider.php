@@ -526,7 +526,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:DeliveryModel/Attribute:description' => 'Description',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacts',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'There must be at least one team to enable Ticket assignment',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Customers',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model',
 ]);

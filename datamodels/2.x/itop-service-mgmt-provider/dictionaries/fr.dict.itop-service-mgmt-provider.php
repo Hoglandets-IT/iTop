@@ -511,7 +511,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DeliveryModel/Attribute:description' => 'Description',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacts',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'Tous les contacts (Equipe ou Personne) pour ce modèle de support',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'Il doit y avoir au moins une équipe pour permettre l\'assignation des Tickets',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Clients',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Tous les clients ayant ce modèle de support',
 	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Create:Button+' => 'Créer un %4$s',

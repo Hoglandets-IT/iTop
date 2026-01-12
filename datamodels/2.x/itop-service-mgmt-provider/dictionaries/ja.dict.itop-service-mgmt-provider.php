@@ -499,7 +499,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:DeliveryModel/Attribute:description' => '説明',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => '連絡先',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model~~',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'There must be at least one team to enable Ticket assignment~~',
 	'Class:DeliveryModel/Attribute:customers_list' => '顧客',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 ]);
