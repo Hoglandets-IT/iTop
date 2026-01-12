@@ -214,7 +214,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Service/Attribute:organization_name' => 'Nom fournisseur',
 	'Class:Service/Attribute:organization_name+' => 'Nom commun',
 	'Class:Service/Attribute:servicefamily_id' => 'Famille de service',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Obligatoire pour que ce service soit visible dans le portal utilisateur',
 	'Class:Service/Attribute:servicefamily_name' => 'Nom Famille de service',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:services_list/UI:Links:Create:Button+' => 'Créer un %4$s',

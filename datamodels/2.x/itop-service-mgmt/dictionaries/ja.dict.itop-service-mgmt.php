@@ -215,7 +215,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Service/Attribute:organization_name' => 'プロバイダー名',
 	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'サービスファミリ',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'サービスファミリ名',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:description' => '説明',

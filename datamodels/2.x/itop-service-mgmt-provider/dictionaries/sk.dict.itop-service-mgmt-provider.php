@@ -241,7 +241,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Service/Attribute:description' => 'Popis',
 	'Class:Service/Attribute:description+' => '~~',
 	'Class:Service/Attribute:servicefamily_id' => 'Kategória služieb',
-	'Class:Service/Attribute:servicefamily_id+' => '~~',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Názov rodiny služieb',
 	'Class:Service/Attribute:servicefamily_name+' => '~~',
 	'Class:Service/Attribute:documents_list' => 'Dokumenty',

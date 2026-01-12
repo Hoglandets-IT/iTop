@@ -247,7 +247,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Service/Attribute:description' => 'Description',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Famille de service',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Obligatoire pour que ce service soit visible dans le portal utilisateur',
 	'Class:Service/Attribute:servicefamily_name' => 'Nom Famille de service',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Documents',

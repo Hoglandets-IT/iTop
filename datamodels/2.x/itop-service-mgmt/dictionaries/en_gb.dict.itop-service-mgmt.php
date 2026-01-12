@@ -240,7 +240,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Service/Attribute:organization_name' => 'Provider Name',
 	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Service Family',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Service Family Name',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:description' => 'Description',

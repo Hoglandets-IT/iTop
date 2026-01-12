@@ -242,7 +242,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Service/Attribute:description' => 'Beskrivelse',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Service familie',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Ydelses familie navn',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Dokument',
