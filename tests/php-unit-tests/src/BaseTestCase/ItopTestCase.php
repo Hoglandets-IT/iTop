@@ -14,7 +14,6 @@ use ReflectionMethod;
 use SetupUtils;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
-
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
@@ -149,6 +148,17 @@ abstract class ItopTestCase extends KernelTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
+
+		// Check globals
+		global $fItopStarted;
+		if (is_null($fItopStarted)) {
+			$fItopStarted = microtime(true);
+		}
+
+		global $iItopInitialMemory;
+		if (is_null($iItopInitialMemory)) {
+			$iItopInitialMemory = memory_get_usage(true);
+		}
 
 		// Hack - Required the first time the Portal kernel is booted on a newly installed iTop
 		$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = __DIR__.'/../../../../../env-production/itop-portal-base/portal/public/';
