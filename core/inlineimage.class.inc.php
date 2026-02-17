@@ -259,12 +259,14 @@ class InlineImage extends DBObject
 	 * that refer to an InlineImage (detected via the attribute data-img-id="") so that
 	 * the URL is consistent with the current URL of the application.
 	 *
-	 * @param string $sHtml The HTML fragment to process
+N°8681	 * @param string|null $sHtml The HTML fragment to process
 	 *
 	 * @return string The modified HTML
 	 * @throws \Exception
+	 *
+	 * @since 3.3.0 N°8681 Add type hint for parameters and return value
 	 */
-	public static function FixUrls($sHtml)
+	public static function FixUrls(string|null $sHtml): string
 	{
 		// N°8681 - Ensure to have a string value
 		$sHtml = $sHtml ?? '';
