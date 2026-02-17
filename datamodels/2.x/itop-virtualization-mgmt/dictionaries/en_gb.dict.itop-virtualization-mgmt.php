@@ -22,6 +22,20 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
+//
+// Fieldsets for Virtualization classes
+//
+
+Dict::Add('EN GB', 'British English', 'British English', [
+	'Virtualization:baseinfo' => 'General~~',
+	'Virtualization:moreinfo' => 'Virtualization specifics~~',
+	'Virtualization:otherinfo' => 'Dates and description~~',
+]);
+
+//
+// Class Cloud
+//
+
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Cloud/Name' => '%1$s',
 	'Class:Cloud/ComplementaryName' => '%1$s-%2$s',

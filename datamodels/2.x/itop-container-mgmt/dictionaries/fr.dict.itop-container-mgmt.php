@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -15,6 +16,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Container:moreinfo' => 'Spécificités de la conteneurisation',
 	'Container:otherinfo' => 'Dates et description',
 ]);
+
 //
 // Class Container Image
 //
@@ -153,5 +155,3 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerImageType' => 'Type d\'image',
 	'Class:ContainerImageType+' => 'Typologie d\'images pour container',
 ]);
-
-?>

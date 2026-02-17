@@ -1007,28 +1007,22 @@
         </style>
       </properties>
       <fields>
-        <field id="containerhosts_list" xsi:type="AttributeLinkedSet">
-          <linked_class>ContainerHost</linked_class>
-          <ext_key_to_me>system_id</ext_key_to_me>
-          <tracking_level>list</tracking_level>
-          <edit_mode/>
-          <with_php_constraint>false</with_php_constraint>
-          <with_php_computation>false</with_php_computation>
-          <edit_when/>
-        </field>
-        <field id="location_id" xsi:type="AttributeExternalKey">
-          <sql>location_id</sql>
-          <filter><![CDATA[SELECT Location WHERE org_id=:this->provider_id]]></filter>
-          <is_null_allowed>true</is_null_allowed>
-          <target_class>Location</target_class>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-          <tracking_level>all</tracking_level>
-        </field>
         <field id="provider_id" xsi:type="AttributeExternalKey">
           <sql>provider_id</sql>
           <filter/>
           <is_null_allowed>true</is_null_allowed>
           <target_class>Organization</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalKey">
+          <sql>location_id</sql>
+          <filter><![CDATA[SELECT Location WHERE org_id=:this->provider_id]]></filter>
+          <dependencies>
+            <attribute id="provider_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Location</target_class>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
@@ -1074,7 +1068,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:Container:baseinfo">
+                <item id="fieldset:Virtualization:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -1088,16 +1082,16 @@
                     <item id="business_criticity">
                       <rank>40</rank>
                     </item>
-                    <item id="location_id">
-                      <rank>50</rank>
-                    </item>
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:Container:moreinfo">
+                <item id="fieldset:Virtualization:moreinfo">
                   <items>
                     <item id="provider_id">
                       <rank>10</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -1107,7 +1101,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Container:otherinfo">
+                <item id="fieldset:Virtualization:otherinfo">
                   <items>
                     <item id="move2production">
                       <rank>50</rank>
@@ -1123,9 +1117,6 @@
             </item>
             <item id="virtualmachine_list">
               <rank>30</rank>
-            </item>
-            <item id="containerhosts_list">
-              <rank>40</rank>
             </item>
             <item id="contacts_list">
               <rank>50</rank>
@@ -1158,16 +1149,6 @@
           </items>
         </default_search>
       </presentation>
-      <relations>
-        <relation id="impacts">
-          <neighbours>
-            <neighbour id="containerhosts">
-              <attribute>containerhosts_list</attribute>
-              <direction>both</direction>
-            </neighbour>
-          </neighbours>
-        </relation>
-      </relations>
     </class>
     <class id="Server">
       <relations>

@@ -11,10 +11,24 @@
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
+//
+// Fieldsets for Virtualization classes
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Virtualization:baseinfo' => 'General~~',
+	'Virtualization:moreinfo' => 'Virtualization specifics~~',
+	'Virtualization:otherinfo' => 'Dates and description~~',
+]);
+
+//
+// Class Cloud
+//
+
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Cloud/Name' => '%1$s',
 	'Class:Cloud/ComplementaryName' => '%1$s-%2$s',
-	'Class:Cloud' => 'Cloud',
+	'Class:Cloud' => 'Cloud~~',
 	'Class:Cloud+' => 'A Virtual Host operated by a Cloud provider. It can host Virtual Machines and Container Hosts.~~',
 	'Class:Cloud/Attribute:provider_id+' => 'Who provides the cloud~~',
 	'Class:Cloud/Attribute:location_id' => 'Location~~',

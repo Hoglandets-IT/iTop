@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="ContainerImage" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -1195,6 +1195,38 @@
           </items>
         </details>
       </presentation>
+    </class>
+    <class id="Cloud" _delta="must_exist">
+      <fields>
+        <field id="containerhosts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerHost</linked_class>
+          <ext_key_to_me>system_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerhosts_list" _delta="define">
+              <rank>40</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <relations>
+        <relation id="impacts" _delta="merge">
+          <neighbours>
+            <neighbour id="containerhosts" _delta="define">
+              <attribute>containerhosts_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
   </classes>
   <menus>

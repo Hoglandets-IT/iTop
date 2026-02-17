@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -93,8 +94,6 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ContainerVirtualHost/Attribute:status+' => 'Status of the container platform',
 	'Class:ContainerVirtualHost/Attribute:containerapplications_list' => 'Applications',
 	'Class:ContainerVirtualHost/Attribute:containerapplications_list+' => 'Applications running on this container environment',
-
-
 ]);
 
 //
@@ -155,6 +154,3 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ContainerImageType' => 'Container Image Type',
 	'Class:ContainerImageType+' => 'Typology of container images',
 ]);
-
-
-?>

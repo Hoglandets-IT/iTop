@@ -23,6 +23,16 @@
  */
 
 //
+// Fieldsets for Virtualization classes
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Virtualization:baseinfo' => 'Informations générales',
+	'Virtualization:moreinfo' => 'Spécificités de la virtualisation',
+	'Virtualization:otherinfo' => 'Dates et description',
+]);
+
+//
 // Class Cloud
 //
 
