@@ -221,16 +221,16 @@ class LoginWebPage extends NiceWebPage
 
 			if ($oUser != null) {
 				if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token')) {
-                    throw new ForgotPasswordUserInputException('External accounts do not allow password reset');
-                }
-                if (!$oUser->CanChangePassword()) {
-                    throw new ForgotPasswordUserInputException('The account does not allow password reset');
-                }
+					throw new ForgotPasswordUserInputException('External accounts do not allow password reset');
+				}
+				if (!$oUser->CanChangePassword()) {
+					throw new ForgotPasswordUserInputException('The account does not allow password reset');
+				}
 
-                $sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
-                if ($sTo == '') {
-                    throw new ForgotPasswordUserInputException('Missing email address for this account');
-                }
+				$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
+				if ($sTo == '') {
+					throw new ForgotPasswordUserInputException('Missing email address for this account');
+				}
 
 				// This token allows the user to change the password without knowing the previous one
 				$sToken = bin2hex(random_bytes(32));
@@ -255,16 +255,16 @@ class LoginWebPage extends NiceWebPage
 
 					case EMAIL_SEND_ERROR:
 					default:
-                    throw new ForgotPasswordApplicationException('Failed to send the password reset email for ' . $oUser->Get('friendlyname') . ': ' . implode(', ', $aIssues));
+						throw new ForgotPasswordApplicationException('Failed to send the password reset email for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
 				}
 			}
 
-        } catch (ForgotPasswordApplicationException $e) {
-            IssueLog::Error('Failed to process the forgot password request for user "' . $sAuthUser . '" [reason=' . get_class($e) . ']: ' . $e->getMessage());
-        } catch (ForgotPasswordUserInputException $e) {
-            IssueLog::Info('Failed to process the forgot password request for user "' . $sAuthUser . '" [reason=' . get_class($e) . ']: ' . $e->getMessage());
-        } catch (\Throwable $e) {
-            IssueLog::Error('Unexpected error while processing the forgot password request for user "' . $sAuthUser . '": ' . $e->getMessage());
+		} catch (ForgotPasswordApplicationException $e) {
+			IssueLog::Error('Failed to process the forgot password request for user "'.$sAuthUser.'" [reason='.get_class($e).']: '.$e->getMessage());
+		} catch (ForgotPasswordUserInputException $e) {
+			IssueLog::Info('Failed to process the forgot password request for user "'.$sAuthUser.'" [reason='.get_class($e).']: '.$e->getMessage());
+		} catch (\Throwable $e) {
+			IssueLog::Error('Unexpected error while processing the forgot password request for user "'.$sAuthUser.'": '.$e->getMessage());
 		}
 
 		$oTwigContext = new LoginTwigRenderer();
