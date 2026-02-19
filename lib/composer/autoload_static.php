@@ -127,6 +127,10 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php83',
         ),
+        'Symfony\\Polyfill\\Php80\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
@@ -1103,6 +1107,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Firebase\\JWT\\JWTExceptionWithPayloadInterface' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWTExceptionWithPayloadInterface.php',
         'Firebase\\JWT\\Key' => __DIR__ . '/..' . '/firebase/php-jwt/src/Key.php',
         'Firebase\\JWT\\SignatureInvalidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/SignatureInvalidException.php',
+        'ForgotPasswordApplicationException' => __DIR__ . '/../..' . '/application/exceptions/ForgotPasswordApplicationException.php',
+        'ForgotPasswordUserInputException' => __DIR__ . '/../..' . '/application/exceptions/ForgotPasswordUserInputException.php',
         'FunctionExpression' => __DIR__ . '/../..' . '/core/oql/expression.class.inc.php',
         'FunctionOqlExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'GraphEdge' => __DIR__ . '/../..' . '/core/simplegraph.class.inc.php',
@@ -3542,7 +3548,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        'Â©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
