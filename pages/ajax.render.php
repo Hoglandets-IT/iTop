@@ -986,7 +986,7 @@ JS
 						<<<JS
 			$('.ibo-dashboard#{$sDashboardDivId}').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardIdEncoded}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURLEncoded}'},
+			   { operation: 'reload_dashboard', dashboard_id: {$sDashboardIdEncoded}, file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: {$sReloadURLEncoded}},
 			   function(data){
 				 $('.ibo-dashboard#{$sDashboardDivId}').html(data);
 				 $('.ibo-dashboard#{$sDashboardDivId}').unblock();
@@ -1012,7 +1012,7 @@ JS
 					<<<EOF
 			$('.ibo-dashboard#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardIdEncoded', file: '$sFile', reload_url: '$sReloadURLEncoded'},
+			   { operation: 'reload_dashboard', dashboard_id: $sDashboardIdEncoded, file: '$sFile', reload_url: $sReloadURLEncoded},
 			   function(data){
 				 $('.ibo-dashboard#$sDivId').html(data);
 				 $('.ibo-dashboard#$sDivId').unblock();
