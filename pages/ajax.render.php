@@ -980,11 +980,13 @@ try {
 JS
 					);
 				} else {
+					$sDashboardIdEncoded = json_encode($sDashboardId);
+					$sReloadURLEncoded = json_encode($sReloadURL);
 					$oPage->add_script(
 						<<<JS
 			$('.ibo-dashboard#{$sDashboardDivId}').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardId}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURL}'},
+			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardIdEncoded}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURLEncoded}'},
 			   function(data){
 				 $('.ibo-dashboard#{$sDashboardDivId}').html(data);
 				 $('.ibo-dashboard#{$sDashboardDivId}').unblock();
@@ -1004,11 +1006,13 @@ JS
 				$sFile = addslashes($oDashboard->GetDefinitionFile());
 				$sDivId = utils::Sanitize($sDashboardId, '', 'element_identifier');
 				// trigger a reload of the current page since the dashboard just changed
+				$sDashboardIdEncoded = json_encode($sDashboardId);
+				$sReloadURLEncoded = json_encode($sReloadURL);
 				$oPage->add_script(
 					<<<EOF
 			$('.ibo-dashboard#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', reload_url: '$sReloadURL'},
+			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardIdEncoded', file: '$sFile', reload_url: '$sReloadURLEncoded'},
 			   function(data){
 				 $('.ibo-dashboard#$sDivId').html(data);
 				 $('.ibo-dashboard#$sDivId').unblock();
