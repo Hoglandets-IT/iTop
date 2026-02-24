@@ -128,7 +128,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	{
 		parent::setUp();
 
-		\IssueLog::Info("Running phpunit test: " . $this->getName());
+		\IssueLog::Info("Running phpunit test: ".$this->getName());
 
 		$this->PrepareEnvironment();
 
